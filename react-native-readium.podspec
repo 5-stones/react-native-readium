@@ -10,10 +10,16 @@ Pod::Spec.new do |s|
   s.license      = package["license"]
   s.authors      = package["author"]
 
-  s.platforms    = { :ios => "10.0" }
+  s.platforms    = { :ios => "13.0" }
   s.source       = { :git => "http://github.com/5-stones/react-native-readium.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"
 
   s.dependency "React-Core"
+
+  # this is an issue as these aren't currently published on cocoapods.org
+  s.dependency "R2Shared"
+  s.dependency "R2Streamer"
+  s.dependency "R2Navigator"
+  s.dependency "ReadiumOPDS"
 end

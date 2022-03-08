@@ -2,6 +2,9 @@
 
 @interface RCT_EXTERN_MODULE(ReadiumViewManager, RCTViewManager)
 
-RCT_EXPORT_VIEW_PROPERTY(color, NSString)
+RCT_EXPORT_VIEW_PROPERTY(file, NSDictionary *)
+RCT_EXPORT_VIEW_PROPERTY(location, NSDictionary *)
+RCT_EXPORT_VIEW_PROPERTY(settings, NSDictionary *)
+RCT_EXPORT_VIEW_PROPERTY(onLocationChange, RCTDirectEventBlock)
 
 @end
