@@ -4,6 +4,8 @@ A react-native wrapper for https://readium.org/
 
 ## Installation
 
+
+#### Install Module
 **NPM**
 
 ```sh
@@ -15,6 +17,33 @@ npm install react-native-readium
 ```sh
 yarn add react-native-readium
 ```
+
+
+#### Pod Install
+
+Due to the current state of the `Readium` swift libraries you need to manually
+update your `Podfile` ([see more on that here](https://github.com/readium/swift-toolkit/issues/38)).
+
+```rb
+# ./ios/Podfile
+...
+
+target 'ExampleApp' do
+  config = use_native_modules!
+  ...
+  pod 'GCDWebServer', podspec: 'https://raw.githubusercontent.com/readium/GCDWebServer/a8edee9790ef0995b2cf620ba1a9b5cf146b7221/GCDWebServer.podspec', modular_headers: true
+  pod 'R2Shared', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.2.0/Support/CocoaPods/ReadiumShared.podspec'
+  pod 'R2Streamer', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.2.0/Support/CocoaPods/ReadiumStreamer.podspec'
+  pod 'R2Navigator', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.2.0/Support/CocoaPods/ReadiumNavigator.podspec'
+  pod 'ReadiumOPDS', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.2.0/Support/CocoaPods/ReadiumOPDS.podspec'
+  pod 'Minizip', modular_headers: true
+  ...
+end
+```
+
+Finally, install the pods:
+
+`pod install`
 
 ## Usage
 
