@@ -13,6 +13,9 @@ import {
   clamp,
 } from '../utils';
 
+/**
+ * A reader settings object with sensible defaults.
+ */
 export class Settings {
   // TODO:
   // - ligatures

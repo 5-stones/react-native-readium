@@ -1,3 +1,6 @@
+/**
+ * An interface representing the Readium Locator object.
+ */
 export interface Locator {
   href: string;
   type: string;
