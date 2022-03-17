@@ -12,6 +12,6 @@ class ReadiumPackage : ReactPackage {
     }
 
     override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
-        return listOf(ReadiumViewManager())
+        return listOf(ReadiumViewManager(reactContext))
     }
 }
