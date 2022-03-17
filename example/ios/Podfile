@@ -6,7 +6,11 @@ platform :ios, '13.0'
 target 'ReadiumExample' do
   config = use_native_modules!
 
-  use_react_native!(:path => config["reactNativePath"])
+  use_react_native!(
+    :path => config[:reactNativePath],
+    # to enable hermes on iOS, change `false` to `true` and then install pods
+    :hermes_enabled => false
+  )
   pod 'react-native-readium', :path => '../..'
 
   pod 'GCDWebServer', podspec: 'https://raw.githubusercontent.com/readium/GCDWebServer/a8edee9790ef0995b2cf620ba1a9b5cf146b7221/GCDWebServer.podspec', modular_headers: true
@@ -21,9 +25,10 @@ target 'ReadiumExample' do
   # #
   # # Note that if you have use_frameworks! enabled, Flipper will not work and
   # # you should disable these next few lines.
-  # use_flipper!({ 'Flipper' => '0.80.0' })
+  # use_flipper!()
   # post_install do |installer|
-  #   flipper_post_install(installer)
+  #   react_native_post_install(installer)
+  #   __apply_Xcode_12_5_M1_post_install_workaround(installer)
   # end
 
 end
