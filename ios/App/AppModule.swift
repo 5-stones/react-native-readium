@@ -28,8 +28,6 @@ final class AppModule {
       fatalError("Can't start publication server")
     }
 
-    let httpClient = DefaultHTTPClient()
-
     reader = ReaderModule(delegate: self, resourcesServer: server)
     // opds = OPDSModule(delegate: self)
 

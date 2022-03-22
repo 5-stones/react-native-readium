@@ -51,9 +51,7 @@ final class ReaderModule: ReaderModuleAPI {
     guard let module = self.formatModules.first(
       where:{ $0.publicationFormats.contains(publication.format) }
     ) else {
-      // delegate.presentError(ReaderError.formatNotSupported, from: rootViewController)
-      // completion()
-      print(">>>>>>>> woof 1")
+      print("Unable to display the publication due to an unsupported format.")
       return nil
     }
 
@@ -65,10 +63,9 @@ final class ReaderModule: ReaderModuleAPI {
         resourcesServer: resourcesServer
       )
     } catch {
-      print(">>>>>>>> woof 2")
+      print("An unexpected error occurred when attempting to build the reader view.")
       print(error)
       return nil
-      // delegate.presentError(error, from: rootViewController)
     }
   }
 

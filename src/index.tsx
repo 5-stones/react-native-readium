@@ -59,10 +59,12 @@ export const ReadiumView: React.FC<ReadiumProps> = ({
   return (
     <View
       style={{ width: '100%', height: '100%' }}
-      onLayout={({ nativeEvent: { layout }}) => setDimensions({
-        width: PixelRatio.getPixelSizeForLayoutSize(layout.width),
-        height: PixelRatio.getPixelSizeForLayoutSize(layout.height),
-      })}
+      onLayout={({ nativeEvent: { layout: { width, height } }}) => {
+        setDimensions({
+          width: Platform.OS === 'android' ? PixelRatio.getPixelSizeForLayoutSize(width) : width,
+          height: Platform.OS === 'android' ? PixelRatio.getPixelSizeForLayoutSize(height) : height,
+        })
+      }}
     >
       <BaseReadiumView
         height={height}
