@@ -2,10 +2,6 @@
 
 A react-native wrapper for https://readium.org/
 
-| Dark Mode| Light Mode |
-|---|---|
-| ![Dark Mode](https://github.com/5-stones/react-native-readium/blob/main/docs/demo-dark-mode.gif) | ![Light Mode](https://github.com/5-stones/react-native-readium/blob/main/docs/demo-light-mode.gif) |
-
 - [Installation](#installation)
 - [Usage](#usage)
 - [Supported Formats & DRM](#supported-formats--drm)
@@ -13,6 +9,10 @@ A react-native wrapper for https://readium.org/
 - [Contributing](#contributing)
 - [Release](#release)
 - [License](#license)
+
+| Dark Mode| Light Mode |
+|---|---|
+| ![Dark Mode](https://github.com/5-stones/react-native-readium/blob/main/docs/demo-dark-mode.gif) | ![Light Mode](https://github.com/5-stones/react-native-readium/blob/main/docs/demo-light-mode.gif) |
 
 ## Installation
 
