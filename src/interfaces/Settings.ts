@@ -1,5 +1,3 @@
-import { Platform } from 'react-native';
-
 import {
   Appearance,
   FontFamily,
@@ -22,14 +20,14 @@ export class Settings {
   // - paraIndent
   appearance: Appearance = Appearance.DEFAULT;
   fontFamily: FontFamily = FontFamily.ORIGINAL;
-  textAlignment: TextAlignment = TextAlignment.JUSTIFY;
-  columnCount: ColumnCount = ColumnCount.AUTO;
+  textAlign: TextAlignment = TextAlignment.JUSTIFY;
+  colCount: ColumnCount = ColumnCount.AUTO;
 
   scroll: boolean = false;
   fontOverride: boolean = false;
   verticalScroll: boolean = false;
-  hyphens: boolean = false;
-  publisherDefaults: boolean = true;
+  bodyHyphens: boolean = false;
+  advancedSettings: boolean = true;
 
   /**
    * Range: 100.0 - 300.0
@@ -74,21 +72,13 @@ export class Settings {
 
     mapped.appearance = indexOfObjectValue(Appearance, mapped.appearance);
     mapped.fontFamily = indexOfObjectValue(FontFamily, mapped.fontFamily);
-    mapped.textAlignment = indexOfObjectValue(TextAlignment, mapped.textAlignment);
-    mapped.columnCount = indexOfObjectValue(ColumnCount, mapped.columnCount);
+    mapped.textAlign = indexOfObjectValue(TextAlignment, mapped.textAlign);
+    mapped.colCount = indexOfObjectValue(ColumnCount, mapped.colCount);
 
     Object.keys(RANGES).forEach((key: string) => {
       // @ts-ignore
       mapped[key] = clamp(mapped[key], RANGES[key][0], RANGES[key][1]);
     });
-
-    // map ios values
-    if (Platform.OS === 'ios') {
-      mapped.advancedSettings = mapped.publisherDefault;
-      mapped.textAlign = mapped.textAlignment;
-      mapped.colCount = mapped.columnCount;
-      mapped.bodyHyphens = mapped.hyphens;
-    }
 
     return mapped;
   }

@@ -1,12 +1,14 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   requireNativeComponent,
   UIManager,
   Platform,
   ViewStyle,
+  View,
+  PixelRatio,
 } from 'react-native';
 
-import type { Locator, File } from './interfaces';
+import type { Locator, File, Dimensions } from './interfaces';
 import { Settings } from './interfaces';
 
 export * from './enums';
@@ -24,6 +26,9 @@ type ReadiumProps = {
   settings?: Partial<Settings>;
   style?: ViewStyle;
   onLocationChange?: (locator: Locator) => void;
+  ref?: any;
+  height?: number;
+  width?: number;
 };
 
 const ComponentName = 'ReadiumView';
@@ -35,13 +40,16 @@ const BaseReadiumView =
         throw new Error(LINKING_ERROR);
       };
 
-
 export const ReadiumView: React.FC<ReadiumProps> = ({
   onLocationChange: wrappedOnLocationChange,
   settings: unmappedSettings,
   ...props
 }) => {
 
+  const [{ height, width }, setDimensions] = useState<Dimensions>({
+    width: 0,
+    height: 0,
+  });
   const onLocationChange = useCallback((event: any) => {
     if (wrappedOnLocationChange) {
       wrappedOnLocationChange(event.nativeEvent);
@@ -49,10 +57,22 @@ export const ReadiumView: React.FC<ReadiumProps> = ({
   }, [wrappedOnLocationChange]);
 
   return (
-    <BaseReadiumView
-      {...props}
-      onLocationChange={onLocationChange}
-      settings={unmappedSettings ? Settings.map(unmappedSettings) : undefined}
-    />
+    <View
+      style={{ width: '100%', height: '100%' }}
+      onLayout={({ nativeEvent: { layout: { width, height } }}) => {
+        setDimensions({
+          width: Platform.OS === 'android' ? PixelRatio.getPixelSizeForLayoutSize(width) : width,
+          height: Platform.OS === 'android' ? PixelRatio.getPixelSizeForLayoutSize(height) : height,
+        })
+      }}
+    >
+      <BaseReadiumView
+        height={height}
+        width={width}
+        {...props}
+        onLocationChange={onLocationChange}
+        settings={unmappedSettings ? Settings.map(unmappedSettings) : undefined}
+      />
+    </View>
   );
 };

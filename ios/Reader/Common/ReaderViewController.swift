@@ -139,9 +139,9 @@ class ReaderViewController: UIViewController, Loggable {
   // MARK: - Bookmarks
 
   @objc func bookmarkCurrentPosition() {
-    guard let bookmark = currentBookmark else {
-      return
-    }
+    // guard let bookmark = currentBookmark else {
+    //   return
+    // }
 
     // TODO: this should call a react callback
     // bookmarks.add(bookmark)

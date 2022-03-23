@@ -36,12 +36,11 @@ class ReadiumView : UIView, Loggable {
 
   func loadBook(url: String) {
     guard let rootViewController = UIApplication.shared.delegate?.window??.rootViewController else { return }
-    let bookId: String = "http://www.feedbooks.com/book/54/moby-dick"
     let locator: Locator? = self.getLocator()
 
     self.readerService.buildViewController(
       url: url,
-      bookId: bookId,
+      bookId: url,
       locator: locator,
       sender: rootViewController,
       completion: { vc in
@@ -88,7 +87,6 @@ class ReadiumView : UIView, Loggable {
       let userProperties = navigator.userSettings.userProperties
 
       for property in userProperties.properties {
-        let key = property.reference
         let value = settings?[property.reference]
 
         if (value == nil) {
@@ -143,7 +141,16 @@ class ReadiumView : UIView, Loggable {
     let rootViewController = UIApplication.shared.delegate?.window??.rootViewController
     rootViewController?.addChild(readerViewController!)
     readerViewController!.view.frame = self.superview!.frame
-    self.addSubview(self.readerViewController!.view!)
+    let rootView = self.readerViewController!.view!
+    self.addSubview(rootView)
+
+    // bind the reader's view to be constrained to its parent
+    rootView.translatesAutoresizingMaskIntoConstraints = false
+    rootView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+    rootView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+    rootView.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
+    rootView.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
+
     self.readerViewController!.didMove(toParent: rootViewController)
   }
 }
