@@ -33,7 +33,7 @@
     "version": "yarn changelog && git add CHANGELOG.md",
     "postversion": "npm run publish:git && npm run publish:npm",
     "publish:git": "git push && git push --tags",
-    "publish:npm": "yarn prepare && yarn publish --access public",
+    "publish:npm": "npm run prepare && npm publish --access public",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
   },
   "keywords": [
