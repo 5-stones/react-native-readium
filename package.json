@@ -37,7 +37,13 @@
   "keywords": [
     "react-native",
     "ios",
-    "android"
+    "android",
+    "readium",
+    "ebook",
+    "epub",
+    "ereader",
+    "e-reader",
+    "read"
   ],
   "repository": "http://github.com/5-stones/react-native-readium",
   "author": "Jacob Spizziri <jspizziri@weare5stones.com> (https://github.com/jspizziri)",

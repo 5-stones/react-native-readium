@@ -2,6 +2,14 @@
 
 A react-native wrapper for https://readium.org/
 
+- [Installation](#installation)
+- [Usage](#usage)
+- [Supported Formats & DRM](#supported-formats--drm)
+- [API](#api)
+- [Contributing](#contributing)
+- [Release](#release)
+- [License](#license)
+
 ## Installation
 
 
@@ -66,6 +74,23 @@ const MyComponent: React.FC = () => {
 ```
 
 [Take a look at the Example App](https://github.com/5-stones/react-native-readium/blob/main/example/src/App.tsx) for a more complex usage example.
+
+## Supported Formats & DRM
+
+#### Format Support
+
+| Format | Support | Notes |
+|--------|---------|-------|
+| Epub 2 | :white_check_mark: | |
+| Epub 3 | :white_check_mark: | |
+| PDF | :x: | On the roadmap, feel free to submit a PR or ask for direction. |
+| CBZ | :x: | On the roadmap, feel free to submit a PR or ask for direction. |
+
+**Missing a format you need?** Reach out and see if it can be added to the roadmap.
+
+#### DRM Support
+
+DRM is not supported at this time. However, there is a clear path to [support it via LCP](https://www.edrlab.org/readium-lcp/) and the intention is to eventually implement it.
 
 ## API
 
