@@ -1,3 +1,17 @@
+# [1.0.0-alpha.2](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2022-03-24)
+
+
+### Bug Fixes
+
+* **podspec:** specify swift version in podspec ([cc7d7cd](https://github.com/5-stones/react-native-readium/commit/cc7d7cd8ae7fc65623b06825f0431b7b79612ec1))
+
+
+### Features
+
+* **ios, android:** remove unused dependencies and code ([1d35cdd](https://github.com/5-stones/react-native-readium/commit/1d35cdd6ba9bfda33f72381bb880cb4a401e4154))
+
+
+
 # [1.0.0-alpha.1](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.0...v1.0.0-alpha.1) (2022-03-23)
 
 
