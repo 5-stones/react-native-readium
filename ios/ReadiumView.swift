@@ -9,6 +9,10 @@ import R2Navigator
 class ReadiumView : UIView, Loggable {
   var readerService: ReaderService = ReaderService()
   var readerViewController: ReaderViewController?
+  var viewController: UIViewController? {
+    let viewController = sequence(first: self, next: { $0.next }).first(where: { $0 is UIViewController })
+    return viewController as? UIViewController
+  }
   private var subscriptions = Set<AnyCancellable>()
 
   @objc var file: NSDictionary? = nil {
@@ -138,11 +142,12 @@ class ReadiumView : UIView, Loggable {
       self.updateUserSettings(settings)
     }
 
-    let rootViewController = UIApplication.shared.delegate?.window??.rootViewController
-    rootViewController?.addChild(readerViewController!)
     readerViewController!.view.frame = self.superview!.frame
+    self.viewController!.addChild(readerViewController!)
     let rootView = self.readerViewController!.view!
     self.addSubview(rootView)
+    self.viewController!.addChild(readerViewController!)
+    self.readerViewController!.didMove(toParent: self.viewController!)
 
     // bind the reader's view to be constrained to its parent
     rootView.translatesAutoresizingMaskIntoConstraints = false
@@ -150,7 +155,5 @@ class ReadiumView : UIView, Loggable {
     rootView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
     rootView.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
     rootView.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
-
-    self.readerViewController!.didMove(toParent: rootViewController)
   }
 }
