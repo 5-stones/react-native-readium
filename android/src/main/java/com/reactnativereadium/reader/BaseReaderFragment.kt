@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.readium.r2.navigator.*
 import org.readium.r2.shared.publication.Locator
-import com.reactnativereadium.R
 import com.reactnativereadium.utils.EventChannel
 import kotlinx.coroutines.channels.Channel
 
@@ -46,26 +45,6 @@ abstract class BaseReaderFragment : Fragment() {
         super.onHiddenChanged(hidden)
         setMenuVisibility(!hidden)
         requireActivity().invalidateOptionsMenu()
-    }
-
-    // TODO: this should probably be removed
-    override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
-        menuInflater.inflate(R.menu.menu_reader, menu)
-        menu.findItem(R.id.drm).isVisible = false
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.toc -> {
-                model.channel.send(ReaderViewModel.Event.OpenOutlineRequested)
-                true
-            }
-            R.id.drm -> {
-                model.channel.send(ReaderViewModel.Event.OpenDrmManagementRequested)
-                true
-            }
-            else -> false
-        }
     }
 
     fun go(locator: Locator, animated: Boolean): Boolean {

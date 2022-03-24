@@ -20,7 +20,6 @@ final class AppModule {
 
   // App modules
   var reader: ReaderModuleAPI! = nil
-  // var opds: OPDSModuleAPI! = nil
 
   init() throws {
     guard let server = PublicationServer() else {
@@ -29,7 +28,6 @@ final class AppModule {
     }
 
     reader = ReaderModule(delegate: self, resourcesServer: server)
-    // opds = OPDSModule(delegate: self)
 
     // Set Readium 2's logging minimum level.
     R2EnableLog(withMinimumSeverityLevel: .debug)

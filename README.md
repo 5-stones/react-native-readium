@@ -16,8 +16,8 @@ A react-native wrapper for https://readium.org/
 
 ## Installation
 
-
 #### Install Module
+
 **NPM**
 
 ```sh
@@ -30,8 +30,13 @@ npm install react-native-readium
 yarn add react-native-readium
 ```
 
+#### iOS
 
-#### Pod Install
+###### Requirements
+
+This project requires an iOS target >= `13.0`.
+
+###### Pod Install
 
 Due to the current state of the `Readium` swift libraries you need to manually
 update your `Podfile` ([see more on that here](https://github.com/readium/swift-toolkit/issues/38)).
@@ -47,7 +52,6 @@ target 'ExampleApp' do
   pod 'R2Shared', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.2.0/Support/CocoaPods/ReadiumShared.podspec'
   pod 'R2Streamer', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.2.0/Support/CocoaPods/ReadiumStreamer.podspec'
   pod 'R2Navigator', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.2.0/Support/CocoaPods/ReadiumNavigator.podspec'
-  pod 'ReadiumOPDS', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.2.0/Support/CocoaPods/ReadiumOPDS.podspec'
   pod 'Minizip', modular_headers: true
   ...
 end

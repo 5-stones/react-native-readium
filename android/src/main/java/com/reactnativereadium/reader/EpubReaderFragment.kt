@@ -97,28 +97,6 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
                     /* selectionActionModeCallback = customSelectionActionModeCallback */
                 }
             )
-// TODO: add search back in
-//        childFragmentManager.setFragmentResultListener(
-//            SearchFragment::class.java.name,
-//            this,
-//            FragmentResultListener { _, result ->
-//                menuSearch.collapseActionView()
-//                result.getParcelable<Locator>(SearchFragment::class.java.name)?.let {
-//                    navigatorFragment.go(it)
-//                }
-//            }
-//        )
-// TODO: add TTS back in
-//        childFragmentManager.setFragmentResultListener(
-//            ScreenReaderContract.REQUEST_KEY,
-//            this,
-//            FragmentResultListener { _, result ->
-//                val locator = ScreenReaderContract.parseResult(result).locator
-//                if (locator.href != navigator.currentLocator.value.href) {
-//                    navigator.go(locator)
-//                }
-//            }
-//        )
 
         setHasOptionsMenu(true)
 
@@ -182,134 +160,16 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, menuInflater)
-        menuInflater.inflate(R.menu.menu_epub, menu)
-
-        menuScreenReader = menu.findItem(R.id.screen_reader)
-        menuSearch = menu.findItem(R.id.search)
-        menuSearchView = menuSearch.actionView as SearchView
-
-        /* connectSearch() */
-        if (!isSearchViewIconified) menuSearch.expandActionView()
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(IS_SCREEN_READER_VISIBLE_KEY, isScreenReaderVisible)
         outState.putBoolean(IS_SEARCH_VIEW_ICONIFIED, isSearchViewIconified)
-    }
-// TODO: add search
-//    private fun connectSearch() {
-//        menuSearch.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-//
-//            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-//                if (isSearchViewIconified) { // It is not a state restoration.
-//                    showSearchFragment()
-//                }
-//
-//                isSearchViewIconified = false
-//                return true
-//            }
-//
-//            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-//                isSearchViewIconified = true
-//                childFragmentManager.popBackStack()
-//                menuSearchView.clearFocus()
-//
-//                return true
-//            }
-//        })
-//
-//        menuSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//
-//            override fun onQueryTextSubmit(query: String): Boolean {
-//                model.search(query)
-//                menuSearchView.clearFocus()
-//
-//                return false
-//            }
-//
-//            override fun onQueryTextChange(s: String): Boolean {
-//                return false
-//            }
-//        })
-//
-//        menuSearchView.findViewById<ImageView>(R.id.search_close_btn).setOnClickListener {
-//            menuSearchView.requestFocus()
-//            model.cancelSearch()
-//            menuSearchView.setQuery("", false)
-//
-//            (activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)?.showSoftInput(
-//                this.view, InputMethodManager.SHOW_FORCED
-//            )
-//        }
-//    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (super.onOptionsItemSelected(item)) {
-            return true
-        }
-
-       return when (item.itemId) {
-           R.id.settings -> {
-               /* TODO: this should be stripped out */
-               /* userSettings.userSettingsPopUp().showAsDropDown(requireActivity().findViewById(R.id.settings), 0, 0, Gravity.END) */
-               true
-           }
-           R.id.search -> {
-               super.onOptionsItemSelected(item)
-           }
-
-           android.R.id.home -> {
-               menuSearch.collapseActionView()
-               true
-           }
-
-//         TODO: tts
-//           R.id.screen_reader -> {
-//               if (isScreenReaderVisible) {
-//                   closeScreenReaderFragment()
-//               } else {
-//                   showScreenReaderFragment()
-//               }
-//               true
-//           }
-            else -> false
-        }
     }
 
     override fun onTap(point: PointF): Boolean {
         requireActivity().toggleSystemUi()
         return true
     }
-// TODO: search
-//    private fun showSearchFragment() {
-//        childFragmentManager.commit {
-//            childFragmentManager.findFragmentByTag(SEARCH_FRAGMENT_TAG)?.let { remove(it) }
-//            add(R.id.fragment_reader_container, SearchFragment::class.java, Bundle(), SEARCH_FRAGMENT_TAG)
-//            hide(navigatorFragment)
-//            addToBackStack(SEARCH_FRAGMENT_TAG)
-//        }
-//    }
-
-//  TODO: tts
-//    private fun showScreenReaderFragment() {
-//        menuScreenReader.title = resources.getString(R.string.epubactivity_read_aloud_stop)
-//        isScreenReaderVisible = true
-//        val arguments = ScreenReaderContract.createArguments(navigator.currentLocator.value)
-//        childFragmentManager.commit {
-//            add(R.id.fragment_reader_container, ScreenReaderFragment::class.java, arguments)
-//            hide(navigatorFragment)
-//            addToBackStack(null)
-//        }
-//    }
-//
-//    private fun closeScreenReaderFragment() {
-//        menuScreenReader.title = resources.getString(R.string.epubactivity_read_aloud_start)
-//        isScreenReaderVisible = false
-//        childFragmentManager.popBackStack()
-//    }
 
     companion object {
 
@@ -330,46 +190,3 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
         }
     }
 }
-
-/* TODO: remove */
-// /**
-//  * Example of an HTML template for a custom Decoration Style.
-//  *
-//  * This one will display a tinted "pen" icon in the page margin to show that a highlight has an
-//  * associated note.
-//  */
-// @OptIn(ExperimentalDecorator::class)
-// private fun annotationMarkTemplate(context: Context, @ColorInt defaultTint: Int = Color.YELLOW): HtmlDecorationTemplate {
-//     // Converts the pen icon to a base 64 data URL, to be embedded in the decoration stylesheet.
-//     // Alternatively, serve the image with the local HTTP server and use its URL.
-//     val imageUrl = ContextCompat.getDrawable(context, R.drawable.ic_baseline_edit_24)
-//         ?.toBitmap()?.toDataUrl()
-//     requireNotNull(imageUrl)
-//
-//     val className = "testapp-annotation-mark"
-//     return HtmlDecorationTemplate(
-//         layout = HtmlDecorationTemplate.Layout.BOUNDS,
-//         width = HtmlDecorationTemplate.Width.PAGE,
-//         element = { decoration ->
-//             val style = decoration.style as? DecorationStyleAnnotationMark
-//             val tint = style?.tint ?: defaultTint
-//             // Using `data-activable=1` prevents the whole decoration container from being
-//             // clickable. Only the icon will respond to activation events.
-//             """
-//             <div><div data-activable="1" class="$className" style="background-color: ${tint.toCss()} !important"/></div>"
-//             """
-//         },
-//         stylesheet = """
-//             .$className {
-//                 float: left;
-//                 margin-left: 8px;
-//                 width: 30px;
-//                 height: 30px;
-//                 border-radius: 50%;
-//                 background: url('$imageUrl') no-repeat center;
-//                 background-size: auto 50%;
-//                 opacity: 0.8;
-//             }
-//             """
-//     )
-// }
