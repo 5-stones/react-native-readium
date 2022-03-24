@@ -8,7 +8,6 @@ import {
   Appearance,
 } from 'react-native-readium';
 import type { Locator, File } from 'react-native-readium';
-import Screens from 'react-native-screens';
 
 const EPUB_URL = `https://test.opds.io/assets/moby/file.epub`;
 const EPUB_PATH = `${RNFS.DocumentDirectoryPath}/moby-dick.epub`;
@@ -109,7 +108,6 @@ const Reader: React.FC = () => {
             location={location}
             settings={settings}
             onLocationChange={(locator) => setLocation(locator)}
-            WrapperView={Screens.Screen}
           />
         </View>
       </View>
