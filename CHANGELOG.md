@@ -1,3 +1,12 @@
+# [1.0.0-alpha.4](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.3...v1.0.0-alpha.4) (2022-03-24)
+
+
+### Bug Fixes
+
+* **ios:** fix an issue causing crash when used in conjunction with react-native-screens ([d250bf8](https://github.com/5-stones/react-native-readium/commit/d250bf8294e133a7fd29d3eb92e68f9682f46f63))
+
+
+
 # [1.0.0-alpha.3](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2022-03-24)
 
 
