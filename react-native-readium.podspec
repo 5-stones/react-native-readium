@@ -15,6 +15,8 @@ Pod::Spec.new do |s|
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"
 
+  s.swift_version = "5.0"
+
   s.dependency "React-Core"
 
   # this is an issue as these aren't currently published on cocoapods.org
