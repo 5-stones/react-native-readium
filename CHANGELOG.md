@@ -1,3 +1,12 @@
+# [1.0.0-alpha.3](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2022-03-24)
+
+
+### Bug Fixes
+
+* **ios:** add ios.deployment_target of 13.0 ([ca1b199](https://github.com/5-stones/react-native-readium/commit/ca1b199bae3dea3347aed26135f1e1de61c61fff))
+
+
+
 # [1.0.0-alpha.2](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2022-03-24)
 
 
