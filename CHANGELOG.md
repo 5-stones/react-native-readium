@@ -1,3 +1,12 @@
+# [1.0.0-alpha.5](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.4...v1.0.0-alpha.5) (2022-03-28)
+
+
+### Bug Fixes
+
+* **android:** remove unused exoplayer deps to prevent conflicts with other projects ([96086b4](https://github.com/5-stones/react-native-readium/commit/96086b4cf0305b9799b6c632c4c6e57422375479))
+
+
+
 # [1.0.0-alpha.4](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.3...v1.0.0-alpha.4) (2022-03-24)
 
 
