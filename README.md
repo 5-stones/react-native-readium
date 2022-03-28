@@ -18,8 +18,8 @@ A react-native wrapper for https://readium.org/
 
 #### Prerequisites
 
-1. **iOS**: Requires an iOS target >= `13.0`.
-2. **Android**: Requires `compileSdkVersion` >= `31`
+1. **iOS**: Requires an iOS target >= `13.0` (see the iOS section for more details).
+2. **Android**: Requires `compileSdkVersion` >= `31` (see the Android section for more details).
 
 #### Install Module
 
@@ -43,6 +43,9 @@ update your `Podfile` ([see more on that here](https://github.com/readium/swift-
 ```rb
 # ./ios/Podfile
 ...
+platform :ios, '13.0'
+
+...
 
 target 'ExampleApp' do
   config = use_native_modules!
@@ -59,6 +62,21 @@ end
 Finally, install the pods:
 
 `pod install`
+
+#### Android
+
+If you're not using `compileSdkVersion` >= 31 you'll need to update that:
+
+```groovy
+// android/build.gradle
+...
+buildscript {
+    ...
+    ext {
+        ...
+        compileSdkVersion = 31
+...
+```
 
 ## Usage
 
