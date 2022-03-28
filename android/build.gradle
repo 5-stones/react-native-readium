@@ -142,7 +142,11 @@ dependencies {
   // readium deps
   implementation "com.github.readium.kotlin-toolkit:readium-shared:$readium_version"
   implementation "com.github.readium.kotlin-toolkit:readium-streamer:$readium_version"
-  implementation "com.github.readium.kotlin-toolkit:readium-navigator:$readium_version"
+  implementation ("com.github.readium.kotlin-toolkit:readium-navigator:$readium_version") {
+    // this package doesn't provide audio playback, so remove exoplayer
+    // transitive deps to avoid potential collisions with other projects.
+    exclude group: "com.google.android.exoplayer"
+  }
 
   // other deps
   implementation "androidx.core:core-ktx:1.6.0"
