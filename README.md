@@ -16,6 +16,11 @@ A react-native wrapper for https://readium.org/
 
 ## Installation
 
+#### Prerequisites
+
+1. **iOS**: Requires an iOS target >= `13.0`.
+2. **Android**: Requires `compileSdkVersion` >= `31`
+
 #### Install Module
 
 **NPM**
@@ -31,12 +36,6 @@ yarn add react-native-readium
 ```
 
 #### iOS
-
-###### Requirements
-
-This project requires an iOS target >= `13.0`.
-
-###### Pod Install
 
 Due to the current state of the `Readium` swift libraries you need to manually
 update your `Podfile` ([see more on that here](https://github.com/readium/swift-toolkit/issues/38)).
