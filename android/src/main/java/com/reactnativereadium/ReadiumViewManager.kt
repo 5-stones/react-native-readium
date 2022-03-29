@@ -35,7 +35,8 @@ class ReadiumViewManager(
 
   @ReactProp(name = "file")
   fun setFile(view: ReadiumView, file: ReadableMap) {
-    val path = file.getString("url")
+    val path = (file.getString("url") ?: "")
+      .replace("^(file:/+)?(/.*)$".toRegex(), "$2")
     val locatorMap = file.getMap("initialLocation")
     var initialLocation: Locator? = null
 
@@ -44,7 +45,7 @@ class ReadiumViewManager(
     }
 
     runBlocking {
-      svc.openPublication(path!!, initialLocation) { fragment ->
+      svc.openPublication(path, initialLocation) { fragment ->
         view.addFragment(fragment)
       }
     }
