@@ -1,3 +1,12 @@
+# [1.0.0-alpha.6](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.5...v1.0.0-alpha.6) (2022-03-29)
+
+
+### Features
+
+* **android:** strip the 'file://' prefix from the path if it's passed ([1171f1e](https://github.com/5-stones/react-native-readium/commit/1171f1e2ec553f51c7be1aa1b3973433f3bd6939))
+
+
+
 # [1.0.0-alpha.5](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.4...v1.0.0-alpha.5) (2022-03-28)
 
 
