@@ -38,6 +38,7 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
     private lateinit var publication: Publication
     lateinit var navigatorFragment: EpubNavigatorFragment
     private lateinit var factory: ReaderViewModel.Factory
+    private var initialSettingsMap: Map<String, Any>? = null
 
     private lateinit var menuScreenReader: MenuItem
     private lateinit var menuSearch: MenuItem
@@ -61,8 +62,11 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
     }
 
     fun updateSettingsFromMap(map: Map<String, Any>) {
-      if (userSettings != null) {
+      if (this::userSettings.isInitialized) {
         userSettings.updateSettingsFromMap(map)
+        initialSettingsMap = null
+      } else {
+        initialSettingsMap = map
       }
     }
 
@@ -122,7 +126,11 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
         super.onViewCreated(view, savedInstanceState)
 
         val activity = requireActivity()
-        userSettings = UserSettings(navigatorFragment.preferences, activity, publication.userSettingsUIPreset)
+        userSettings = UserSettings(
+          navigatorFragment.preferences,
+          activity,
+          publication.userSettingsUIPreset
+        )
 
        // This is a hack to draw the right background color on top and bottom blank spaces
         navigatorFragment.lifecycleScope.launchWhenStarted {
@@ -137,6 +145,7 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
         val activity = requireActivity()
 
         userSettings.resourcePager = navigatorFragment.resourcePager
+        initialSettingsMap?.let { updateSettingsFromMap(it) }
 
         // If TalkBack or any touch exploration service is activated we force scroll mode (and
         // override user preferences)
