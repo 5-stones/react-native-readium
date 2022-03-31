@@ -1,3 +1,12 @@
+# [1.0.0-alpha.8](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.7...v1.0.0-alpha.8) (2022-03-31)
+
+
+### Bug Fixes
+
+* **android:** fix an issue with android crashing due to a "no view found for id" exception ([5440662](https://github.com/5-stones/react-native-readium/commit/54406625dfbca5c1dcfa23030df8325d53d2ddbb))
+
+
+
 # [1.0.0-alpha.7](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.6...v1.0.0-alpha.7) (2022-03-31)
 
 
