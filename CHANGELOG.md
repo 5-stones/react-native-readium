@@ -1,3 +1,12 @@
+# [1.0.0-alpha.7](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.6...v1.0.0-alpha.7) (2022-03-31)
+
+
+### Bug Fixes
+
+* **android:** fix a race-condition with the settings prop causing crashes ([11ebde3](https://github.com/5-stones/react-native-readium/commit/11ebde35184622ff045a41e8f971b46a389c0dc0))
+
+
+
 # [1.0.0-alpha.6](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.5...v1.0.0-alpha.6) (2022-03-29)
 
 

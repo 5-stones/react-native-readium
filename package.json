@@ -1,6 +1,6 @@
 {
   "name": "react-native-readium",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "description": "A react-native wrapper for https://readium.org/",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
