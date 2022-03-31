@@ -4,11 +4,11 @@
 export interface Locator {
   href: string;
   type: string;
-  target: number;
+  target?: number;
   title?: string;
-  locations: {
-    position: number;
+  locations?: {
     progression: number;
-    totalProgression: number;
+    position?: number;
+    totalProgression?: number;
   };
 }
