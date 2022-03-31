@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 
 import type { Settings, Locator, File, } from '../interfaces';
-import { LINKING_ERROR } from '../utils';
+import { COMPONENT_NAME, LINKING_ERROR } from '../utils';
 
 export type BaseReadiumViewProps = {
   file: File;
@@ -18,11 +18,9 @@ export type BaseReadiumViewProps = {
   width?: number;
 };
 
-const ComponentName = 'ReadiumView';
-
 export const BaseReadiumView =
-  UIManager.getViewManagerConfig(ComponentName) != null
-    ? requireNativeComponent<BaseReadiumViewProps>(ComponentName)
+  UIManager.getViewManagerConfig(COMPONENT_NAME) != null
+    ? requireNativeComponent<BaseReadiumViewProps>(COMPONENT_NAME)
     : () => {
         throw new Error(LINKING_ERROR);
       };

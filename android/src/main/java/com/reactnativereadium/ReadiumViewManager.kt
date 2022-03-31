@@ -7,6 +7,7 @@ import com.facebook.react.uimanager.annotations.ReactPropGroup
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewGroupManager
 import com.reactnativereadium.reader.ReaderService
+import com.reactnativereadium.utils.File
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import org.readium.r2.shared.publication.Locator
@@ -33,6 +34,28 @@ class ReadiumViewManager(
     ).build()
   }
 
+  override fun getCommandsMap(): MutableMap<String, Int> {
+    return MapBuilder.of("create", COMMAND_CREATE)
+  }
+
+  override fun receiveCommand(view: ReadiumView, commandId: String?, args: ReadableArray?) {
+    super.receiveCommand(view, commandId, args)
+    val reactNativeViewId = args!!.getInt(0)
+    val commandIdInt = commandId!!.toInt()
+
+    when (commandIdInt) {
+      COMMAND_CREATE -> {
+        view.isViewInitialized = true
+
+        if (view.file != null) {
+          buildForViewIfReady(view)
+        }
+      }
+      else -> {
+      }
+    }
+  }
+
   @ReactProp(name = "file")
   fun setFile(view: ReadiumView, file: ReadableMap) {
     val path = (file.getString("url") ?: "")
@@ -44,11 +67,8 @@ class ReadiumViewManager(
       initialLocation = Locator.fromJSON(JSONObject(locatorMap.toHashMap()))
     }
 
-    runBlocking {
-      svc.openPublication(path, initialLocation) { fragment ->
-        view.addFragment(fragment)
-      }
-    }
+    view.file = File(path, initialLocation)
+    this.buildForViewIfReady(view)
   }
 
   @ReactProp(name = "location")
@@ -75,7 +95,19 @@ class ReadiumViewManager(
     }
   }
 
+  private fun buildForViewIfReady(view: ReadiumView) {
+    var file = view.file
+    if (file != null && view.isViewInitialized) {
+      runBlocking {
+        svc.openPublication(file.path, file.initialLocation) { fragment ->
+          view.addFragment(fragment)
+        }
+      }
+    }
+  }
+
   companion object {
     var ON_LOCATION_CHANGE = "onLocationChange"
+    var COMMAND_CREATE = 1
   }
 }

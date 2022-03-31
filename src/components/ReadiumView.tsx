@@ -1,9 +1,9 @@
-import React, { useCallback, useState } from 'react';
-import { View } from 'react-native';
+import React, { useCallback, useState, useRef, useEffect } from 'react';
+import { View, Platform, findNodeHandle, StyleSheet } from 'react-native';
 
 import type { Dimensions } from '../interfaces';
 import { Settings } from '../interfaces';
-import { getWidthOrHeightValue as dimension } from '../utils';
+import { createFragment, getWidthOrHeightValue as dimension } from '../utils';
 import type { BaseReadiumViewProps } from './BaseReadiumView';
 import { BaseReadiumView } from './BaseReadiumView';
 
@@ -14,6 +14,7 @@ export const ReadiumView: React.FC<ReadiumProps> = ({
   settings: unmappedSettings,
   ...props
 }) => {
+  const ref = useRef(null);
   const [{ height, width }, setDimensions] = useState<Dimensions>({
     width: 0,
     height: 0,
@@ -32,9 +33,16 @@ export const ReadiumView: React.FC<ReadiumProps> = ({
     }
   }, [wrappedOnLocationChange]);
 
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      const viewId = findNodeHandle(ref.current);
+      createFragment(viewId);
+    }
+  }, [])
+
   return (
     <View
-      style={{ width: '100%', height: '100%' }}
+      style={styles.container}
       onLayout={onLayout}
     >
       <BaseReadiumView
@@ -43,7 +51,12 @@ export const ReadiumView: React.FC<ReadiumProps> = ({
         {...props}
         onLocationChange={onLocationChange}
         settings={unmappedSettings ? Settings.map(unmappedSettings) : undefined}
+        ref={ref}
       />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: { width: '100%', height: '100%' },
+});

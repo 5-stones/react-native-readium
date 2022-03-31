@@ -10,6 +10,7 @@ import com.reactnativereadium.reader.BaseReaderFragment
 import com.reactnativereadium.reader.EpubReaderFragment
 import com.reactnativereadium.reader.ReaderViewModel
 import com.reactnativereadium.utils.Dimensions
+import com.reactnativereadium.utils.File
 import org.readium.r2.shared.extensions.toMap
 import org.readium.r2.shared.publication.Locator
 
@@ -17,7 +18,9 @@ class ReadiumView(
   val reactContext: ThemedReactContext
 ) : FrameLayout(reactContext) {
   var dimensions: Dimensions = Dimensions(0,0)
+  var file: File? = null
   var fragment: BaseReaderFragment? = null
+  var isViewInitialized: Boolean = false
 
   fun updateLocation(locator: Locator) : Boolean {
     if (fragment == null) {
