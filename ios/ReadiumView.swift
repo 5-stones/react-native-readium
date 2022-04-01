@@ -37,6 +37,7 @@ class ReadiumView : UIView, Loggable {
     }
   }
   @objc var onLocationChange: RCTDirectEventBlock?
+  @objc var onTableOfContents: RCTDirectEventBlock?
 
   func loadBook(url: String) {
     guard let rootViewController = UIApplication.shared.delegate?.window??.rootViewController else { return }
@@ -128,9 +129,7 @@ class ReadiumView : UIView, Loggable {
   private func addViewControllerAsSubview(_ vc: ReaderViewController) {
     vc.publisher.sink(
       receiveValue: { locator in
-        if (self.onLocationChange != nil) {
-          self.onLocationChange!(locator.json)
-        }
+        self.onLocationChange?(locator.json)
       }
     )
     .store(in: &self.subscriptions)
@@ -155,5 +154,11 @@ class ReadiumView : UIView, Loggable {
     rootView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
     rootView.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
     rootView.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
+
+    self.onTableOfContents?([
+      "toc": vc.publication.tableOfContents.map({ link in
+        return link.json
+      })
+    ])
   }
 }

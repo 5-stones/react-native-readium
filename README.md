@@ -1,6 +1,19 @@
 # react-native-readium
 
-A react-native wrapper for https://readium.org/
+A react-native wrapper for https://readium.org/. At a high level this package
+allows you to do things like:
+
+- Render an ebook view.
+- Register for location changes (as the user pages through the book).
+- Register for the Table of Contents (so that you can display things like chapters in your app)
+- Control settings of the Reader. Things like:
+  - Dark Mode, Light Mode, Sepia Mode
+  - Font Size
+  - Page Margins
+  - More (see the `Settings` documentation in the [API section](#api))
+- Etc. (read on for more details. :book:)
+
+## Overview
 
 - [Installation](#installation)
 - [Usage](#usage)
@@ -128,6 +141,7 @@ DRM is not supported at this time. However, there is a clear path to [support it
 | `settings` | [`Partial<Settings>`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/Settings.ts)  | :white_check_mark: | An object that allows you to control various aspects of the reader's UI (epub only) |
 | `style`    | `ViewStyle`          | :white_check_mark: | A traditional style object. |
 | `onLocationChange` | `(locator: Locator) => void` | :white_check_mark: | A callback that fires whenever the location is changed (e.g. the user transitions to a new page)|
+| `onTableOfContents` | `(toc: Link[] \| null) => void` | :white_check_mark: | A callback that fires once the file is parsed and emits the table of contents embedded in the file. Returns `null` or an empty `[]` if no TOC exists. See the [`Link`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/Link.ts) interface for more info. |
 
 ## Contributing
 

@@ -45,9 +45,9 @@ class ReadiumView(
       .replace(this.id, frag, this.id.toString())
       .commit()
 
+    val module = reactContext.getJSModule(RCTEventEmitter::class.java)
     // subscribe to reader events
     frag.channel.receive(frag) { event ->
-      val module = reactContext.getJSModule(RCTEventEmitter::class.java)
       when (event) {
         is ReaderViewModel.Event.LocatorUpdate -> {
           val json = event.locator.toJSON()
@@ -55,6 +55,15 @@ class ReadiumView(
           module.receiveEvent(
             this.id.toInt(),
             ReadiumViewManager.ON_LOCATION_CHANGE,
+            payload
+          )
+        }
+        is ReaderViewModel.Event.TableOfContentsLoaded -> {
+          val map = event.toc.map { it.toJSON().toMap() }
+          val payload = Arguments.makeNativeMap(mapOf("toc" to map))
+          module.receiveEvent(
+            this.id.toInt(),
+            ReadiumViewManager.ON_TABLE_OF_CONTENTS,
             payload
           )
         }

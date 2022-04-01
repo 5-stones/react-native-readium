@@ -25,13 +25,22 @@ class ReadiumViewManager(
   }
 
   override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any> {
-    return MapBuilder.builder<String, Any>().put(
-      ON_LOCATION_CHANGE,
-      MapBuilder.of(
-        "phasedRegistrationNames",
-        MapBuilder.of("bubbled", ON_LOCATION_CHANGE)
+    return MapBuilder.builder<String, Any>()
+      .put(
+        ON_LOCATION_CHANGE,
+        MapBuilder.of(
+          "phasedRegistrationNames",
+          MapBuilder.of("bubbled", ON_LOCATION_CHANGE)
+        )
       )
-    ).build()
+      .put(
+        ON_TABLE_OF_CONTENTS,
+        MapBuilder.of(
+          "phasedRegistrationNames",
+          MapBuilder.of("bubbled", ON_TABLE_OF_CONTENTS)
+        )
+      )
+      .build()
   }
 
   override fun getCommandsMap(): MutableMap<String, Int> {
@@ -108,6 +117,7 @@ class ReadiumViewManager(
 
   companion object {
     var ON_LOCATION_CHANGE = "onLocationChange"
+    var ON_TABLE_OF_CONTENTS = "onTableOfContents"
     var COMMAND_CREATE = 1
   }
 }
