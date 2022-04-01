@@ -1,3 +1,17 @@
+# [1.0.0-alpha.9](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.8...v1.0.0-alpha.9) (2022-04-01)
+
+
+### Bug Fixes
+
+* **locator:** update the Locator interface to represent the minimum data required ([61c8be1](https://github.com/5-stones/react-native-readium/commit/61c8be1073e92a9c408ecde995e764502f2a5538))
+
+
+### Features
+
+* **android, ios, example:** add the ability to register to receive the table of contents ([94ef6ae](https://github.com/5-stones/react-native-readium/commit/94ef6ae790efe53cce8b3b945bfc4f0bd712e178))
+
+
+
 # [1.0.0-alpha.8](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.7...v1.0.0-alpha.8) (2022-03-31)
 
 
