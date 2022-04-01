@@ -1,6 +1,19 @@
 # react-native-readium
 
-A react-native wrapper for https://readium.org/
+A react-native wrapper for https://readium.org/. At a high level this package
+allows you to do things like:
+
+- Render an ebook view.
+- Register for location changes (as the user pages through the book).
+- Register for the Table of Contents (so that you can display things like chapters in your app)
+- Control settings of the Reader. Things like:
+  - Dark Mode, Light Mode, Sepia Mode
+  - Font Size
+  - Page Margins
+  - More (see the `Settings` documentation in the [API section](#api))
+- Etc. (read on for more details. :book:)
+
+## Overview
 
 - [Installation](#installation)
 - [Usage](#usage)
