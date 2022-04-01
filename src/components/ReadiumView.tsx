@@ -11,6 +11,7 @@ type ReadiumProps = BaseReadiumViewProps;
 
 export const ReadiumView: React.FC<ReadiumProps> = ({
   onLocationChange: wrappedOnLocationChange,
+  onTableOfContents: wrappedOnTableOfContents,
   settings: unmappedSettings,
   ...props
 }) => {
@@ -33,6 +34,13 @@ export const ReadiumView: React.FC<ReadiumProps> = ({
     }
   }, [wrappedOnLocationChange]);
 
+  const onTableOfContents = useCallback((event: any) => {
+    if (wrappedOnTableOfContents) {
+      const toc = event.nativeEvent.toc || null;
+      wrappedOnTableOfContents(toc);
+    }
+  }, [wrappedOnTableOfContents]);
+
   useEffect(() => {
     if (Platform.OS === 'android') {
       const viewId = findNodeHandle(ref.current);
@@ -50,6 +58,7 @@ export const ReadiumView: React.FC<ReadiumProps> = ({
         width={width}
         {...props}
         onLocationChange={onLocationChange}
+        onTableOfContents={onTableOfContents}
         settings={unmappedSettings ? Settings.map(unmappedSettings) : undefined}
         ref={ref}
       />

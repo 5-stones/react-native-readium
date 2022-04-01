@@ -10,6 +10,7 @@ import org.readium.r2.navigator.*
 import org.readium.r2.shared.publication.Locator
 import com.reactnativereadium.utils.EventChannel
 import kotlinx.coroutines.channels.Channel
+import org.readium.r2.shared.publication.Link
 
 /*
  * Base reader fragment class
@@ -24,37 +25,38 @@ abstract class BaseReaderFragment : Fragment() {
   )
 
   protected abstract val model: ReaderViewModel
-    protected abstract val navigator: Navigator
+  protected abstract val navigator: Navigator
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        setHasOptionsMenu(true)
-        super.onCreate(savedInstanceState)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    setHasOptionsMenu(true)
+    super.onCreate(savedInstanceState)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    val viewScope = viewLifecycleOwner.lifecycleScope
+
+    channel.send(ReaderViewModel.Event.TableOfContentsLoaded(model.publication.tableOfContents))
+    navigator.currentLocator
+      .onEach { channel.send(ReaderViewModel.Event.LocatorUpdate(it)) }
+      .launchIn(viewScope)
+  }
+
+  override fun onHiddenChanged(hidden: Boolean) {
+    super.onHiddenChanged(hidden)
+    setMenuVisibility(!hidden)
+    requireActivity().invalidateOptionsMenu()
+  }
+
+  fun go(locator: Locator, animated: Boolean): Boolean {
+    // don't attempt to navigate if we're already there
+    val currentLocator = navigator.currentLocator.value
+    if (locator.hashCode() == currentLocator.hashCode()) {
+      return true
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val viewScope = viewLifecycleOwner.lifecycleScope
-
-        navigator.currentLocator
-            .onEach { channel.send(ReaderViewModel.Event.LocatorUpdate(it))  }
-            .launchIn(viewScope)
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        setMenuVisibility(!hidden)
-        requireActivity().invalidateOptionsMenu()
-    }
-
-    fun go(locator: Locator, animated: Boolean): Boolean {
-      // don't attempt to navigate if we're already there
-      val currentLocator = navigator.currentLocator.value
-      if (locator.hashCode() == currentLocator.hashCode()) {
-        return true
-      }
-
-      return navigator.go(locator, animated)
-    }
+    return navigator.go(locator, animated)
+  }
 
 }

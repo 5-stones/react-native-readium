@@ -4,7 +4,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import type { Settings, Locator, File, } from '../interfaces';
+import type { Settings, Link, Locator, File, } from '../interfaces';
 import { COMPONENT_NAME, LINKING_ERROR } from '../utils';
 
 export type BaseReadiumViewProps = {
@@ -13,6 +13,7 @@ export type BaseReadiumViewProps = {
   settings?: Partial<Settings>;
   style?: ViewStyle;
   onLocationChange?: (locator: Locator) => void;
+  onTableOfContents?: (toc: Link[] | null) => void;
   ref?: any;
   height?: number;
   width?: number;

@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import RNFS from 'react-native-fs';
 import { StyleSheet, View, Text } from 'react-native';
-import { Button } from 'react-native-elements';
 import {
   ReadiumView,
   Settings,
-  Appearance,
 } from 'react-native-readium';
-import type { Locator, File } from 'react-native-readium';
+import type { Link, Locator, File } from 'react-native-readium';
 
-const EPUB_URL = `https://test.opds.io/assets/moby/file.epub`;
-const EPUB_PATH = `${RNFS.DocumentDirectoryPath}/moby-dick.epub`;
-
-const defaultSettings = new Settings();
-defaultSettings.appearance = Appearance.NIGHT;
+import {
+  EPUB_URL,
+  EPUB_PATH,
+  INITIAL_LOCATION,
+  DEFAULT_SETTINGS,
+} from './consts';
+import { TableOfContents } from './TableOfContents';
+import { Settings as ReaderSettings } from './Settings';
 
 const Reader: React.FC = () => {
+  const [toc, setToc] = useState<Link[] | null>([]);
   const [file, setFile] = useState<File>();
   const [location, setLocation] = useState<Locator>();
-  const [settings, setSettings] = useState<Partial<Settings>>(defaultSettings);
+  const [settings, setSettings] = useState<Partial<Settings>>(DEFAULT_SETTINGS);
 
   useEffect(() => {
     async function run() {
@@ -41,17 +43,7 @@ const Reader: React.FC = () => {
 
       setFile({
         url: EPUB_PATH,
-        initialLocation: {
-          href: '/OPS/main3.xml',
-          title: 'Chapter 2 - The Carpet-Bag',
-          type: 'application/xhtml+xml',
-          target: 27,
-          locations: {
-            position: 24,
-            progression: 0,
-            totalProgression: 0.03392330383480826
-          },
-        },
+        initialLocation: INITIAL_LOCATION,
       });
     }
 
@@ -61,45 +53,22 @@ const Reader: React.FC = () => {
   if (file) {
     return (
       <View style={styles.container}>
-        <View style={{ height: '10%', flexDirection: 'row' }}>
-          <Button
-            containerStyle={{ flex: 1 }}
-            buttonStyle={styles.button}
-            title="Update Settings"
-            onPress={() => {
-              setSettings((s: any) => {
-                let ns: Partial<Settings> = { fontSize: 100 };
-
-                if (s) {
-                  const max = (s.fontSize + 25) % 300;
-                  ns = {
-                    ...s,
-                    fontSize: max > 100 ? max : 100,
-                    appearance: s.fontSize % 2 ? Appearance.NIGHT : Appearance.DEFAULT,
-                  };
-                }
-
-                return ns;
-              })
+        <View style={{
+          height: '10%',
+          flexDirection: 'row',
+        }}>
+          <TableOfContents
+            items={toc}
+            onPress={(link) => {
+              setLocation({
+                href: link.href,
+                type: 'application/xhtml+xml',
+              });
             }}
           />
-          <Button
-            containerStyle={{ flex: 1 }}
-            buttonStyle={styles.button}
-            title="Chapter 3"
-            onPress={() => {
-              setLocation({
-                href: '/OPS/main4.xml',
-                title: 'Chapter 3 - The Spouter-Inn',
-                type: 'application/xhtml+xml',
-                target: 39,
-                locations: {
-                  position: 29,
-                  progression: 0,
-                  totalProgression: 0.04129793510324484,
-                },
-              })
-            }}
+          <ReaderSettings
+            settings={settings}
+            onSettingsChanged={(s) => setSettings(s)}
           />
         </View>
         <View style={{ height: '90%' }}>
@@ -108,6 +77,7 @@ const Reader: React.FC = () => {
             location={location}
             settings={settings}
             onLocationChange={(locator) => setLocation(locator)}
+            onTableOfContents={(toc) => setToc(toc)}
           />
         </View>
       </View>
