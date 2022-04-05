@@ -100,6 +100,13 @@ class ReadiumView : UIView, Loggable {
 
         if let e = property as? Enumerable {
           e.index = value as! Int
+
+          // synchronize background color
+          if property.reference == ReadiumCSSReference.appearance.rawValue {
+            if let vc = readerViewController as? EPUBViewController {
+              vc.setUIColor(for: property)
+            }
+          }
         } else if let i = property as? Incrementable {
           i.value = value as! Float
         } else if let s = property as? Switchable {

@@ -2,6 +2,7 @@ package com.reactnativereadium.epub
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import org.json.JSONArray
 import org.readium.r2.navigator.R2BasicWebView
@@ -77,6 +78,21 @@ class UserSettings(
           is Enumerable -> updateEnumerableFromKeyValue(property, key, value)
           is Incremental -> updateIncrementalFromKeyValue(property, key, value)
           is Switchable -> updateSwitchableFromKeyValue(property, key, value)
+        }
+
+        // update the resourcePager background to match the newly selected theme
+        if (isPropertyModified && property is Enumerable && property.ref == APPEARANCE_REF) {
+          when (property.index) {
+            0 -> {
+              resourcePager.setBackgroundColor(Color.parseColor("#ffffff"))
+            }
+            1 -> {
+              resourcePager.setBackgroundColor(Color.parseColor("#faf4e8"))
+            }
+            2 -> {
+              resourcePager.setBackgroundColor(Color.parseColor("#000000"))
+            }
+          }
         }
 
         // apply the changes to the view
