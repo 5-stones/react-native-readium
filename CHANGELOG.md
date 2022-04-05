@@ -1,3 +1,12 @@
+# [1.0.0-alpha.10](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.9...v1.0.0-alpha.10) (2022-04-05)
+
+
+### Bug Fixes
+
+* **android, ios:** fix an issue with background color not staying in sync with appearance setting ([fca2f8e](https://github.com/5-stones/react-native-readium/commit/fca2f8e20e3ed0b5558caf1b3f2abd5f4f8bb3d5))
+
+
+
 # [1.0.0-alpha.9](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.8...v1.0.0-alpha.9) (2022-04-01)
 
 
