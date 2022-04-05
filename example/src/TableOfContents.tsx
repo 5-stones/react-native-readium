@@ -33,7 +33,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
         }}
       >
         <ScrollView>
-          <Text>Table f Contents</Text>
+          <Text>Table of Contents</Text>
           {items.map((item, idx) => (
             <ListItem
               key={item.href}
