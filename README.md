@@ -78,6 +78,23 @@ Finally, install the pods:
 
 #### Android
 
+You might need to [add `jcenter` if you're getting a build failure on android](https://github.com/readium/kotlin-toolkit/issues/31):
+
+```groovy
+// android/build.gradle
+...
+
+allprojects {
+    repositories {
+        ...
+        // required by react-native-readium https://github.com/readium/kotlin-toolkit/issues/31
+        jcenter()
+    }
+    ...
+}
+...
+```
+
 If you're not using `compileSdkVersion` >= 31 you'll need to update that:
 
 ```groovy
