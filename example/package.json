@@ -5,10 +5,10 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
+    "android:ide": "open -a /Applications/Android\\ Studio.app ./android",
     "ios": "react-native run-ios",
+    "ios:ide": "open ios/ReadiumExample.xcworkspace/",
     "start": "react-native start",
-    "open:xcode": "open ios/ReadiumExample.xcworkspace/",
-    "open:android": "open -a /Applications/Android\\ Studio.app ./android",
     "clean": "react-native-clean-project"
   },
   "dependencies": {
