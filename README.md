@@ -53,6 +53,11 @@ yarn add react-native-readium
 Due to the current state of the `Readium` swift libraries you need to manually
 update your `Podfile` ([see more on that here](https://github.com/readium/swift-toolkit/issues/38)).
 
+Additionally, note that the GitHub URL's below are pointing to the `develop`
+branch. [This is currently necessary as a fix for CocoaPods was merged but has
+not yet been released](https://github.com/readium/swift-toolkit/pull/76#issuecomment-1213170966).
+It will land in the next release (after v2.3.0).
+
 ```rb
 # ./ios/Podfile
 ...
@@ -64,9 +69,9 @@ target 'ExampleApp' do
   config = use_native_modules!
   ...
   pod 'GCDWebServer', podspec: 'https://raw.githubusercontent.com/readium/GCDWebServer/a8edee9790ef0995b2cf620ba1a9b5cf146b7221/GCDWebServer.podspec', modular_headers: true
-  pod 'R2Shared', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.2.0/Support/CocoaPods/ReadiumShared.podspec'
-  pod 'R2Streamer', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.2.0/Support/CocoaPods/ReadiumStreamer.podspec'
-  pod 'R2Navigator', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.2.0/Support/CocoaPods/ReadiumNavigator.podspec'
+  pod 'R2Shared', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/develop/Support/CocoaPods/ReadiumShared.podspec'
+  pod 'R2Streamer', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/develop/Support/CocoaPods/ReadiumStreamer.podspec'
+  pod 'R2Navigator', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/develop/Support/CocoaPods/ReadiumNavigator.podspec'
   pod 'Minizip', modular_headers: true
   ...
 end

@@ -175,12 +175,12 @@
 			sourceTree = "<group>";
 		};
 		EFB246D809604331A20C1ABD /* Resources */ = {
-			isa = "PBXGroup";
+			isa = PBXGroup;
 			children = (
 			);
 			name = Resources;
-			sourceTree = "<group>";
 			path = "";
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
@@ -400,10 +400,9 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ReadiumExample/Pods-ReadiumExample-resources.sh",
-				"${PODS_ROOT}/R2Navigator/Sources/Navigator/Resources/en.lproj",
-				"${PODS_ROOT}/R2Navigator/Sources/Navigator/EPUB/Assets",
-				"${PODS_ROOT}/R2Shared/Sources/Shared/Resources/en.lproj",
-				"${PODS_ROOT}/R2Streamer/Sources/Streamer/Assets",
+				"${PODS_CONFIGURATION_BUILD_DIR}/R2Navigator/ReadiumNavigator.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/R2Shared/ReadiumShared.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/R2Streamer/ReadiumStreamer.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
@@ -424,8 +423,9 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/en.lproj",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ReadiumNavigator.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ReadiumShared.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ReadiumStreamer.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EvilIcons.ttf",
