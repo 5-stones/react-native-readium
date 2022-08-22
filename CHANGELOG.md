@@ -1,3 +1,7 @@
+# [1.0.0](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.10...v1.0.0) (2022-08-22)
+
+
+
 # [1.0.0-alpha.10](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.9...v1.0.0-alpha.10) (2022-04-05)
 
 
