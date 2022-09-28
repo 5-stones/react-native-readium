@@ -53,11 +53,6 @@ yarn add react-native-readium
 Due to the current state of the `Readium` swift libraries you need to manually
 update your `Podfile` ([see more on that here](https://github.com/readium/swift-toolkit/issues/38)).
 
-Additionally, note that the GitHub URL's below are pointing to the `develop`
-branch. [This is currently necessary as a fix for CocoaPods was merged but has
-not yet been released](https://github.com/readium/swift-toolkit/pull/76#issuecomment-1213170966).
-It will land in the next release (after v2.3.0).
-
 ```rb
 # ./ios/Podfile
 ...
