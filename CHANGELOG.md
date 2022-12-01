@@ -1,3 +1,12 @@
+## [1.0.1](https://github.com/5-stones/react-native-readium/compare/v1.0.0...v1.0.1) (2022-12-01)
+
+
+### Bug Fixes
+
+* **android:** update readium dependencies to deal with removed nanohttpd dependency ([764f6eb](https://github.com/5-stones/react-native-readium/commit/764f6ebc1de0ddd509b7ca89dd736eace4348d3d))
+
+
+
 # [1.0.0](https://github.com/5-stones/react-native-readium/compare/v1.0.0-alpha.10...v1.0.0) (2022-08-22)
 
 
