@@ -94,7 +94,7 @@ class ReaderViewModel(
       private val publication: Publication,
       private val initialLocation: Locator?
     ) : ViewModelProvider.NewInstanceFactory() {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T =
+        override fun <T : ViewModel> create(modelClass: Class<T>): T =
             modelClass
               .getDeclaredConstructor(
                 Publication::class.java,

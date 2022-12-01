@@ -1,7 +1,7 @@
 buildscript {
   // Buildscript is evaluated before everything else so we can't use getExtOrDefault
   def kotlin_version = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : project.properties['Readium_kotlinVersion']
-  ext.readium_version = '2.1.1'
+  ext.readium_version = '2.2.1'
 
   repositories {
     google()
@@ -165,14 +165,6 @@ dependencies {
   implementation "androidx.recyclerview:recyclerview:1.2.1"
   implementation "androidx.viewpager2:viewpager2:1.0.0"
   implementation "androidx.webkit:webkit:1.4.0"
-  //noinspection GradleDependency
-  implementation ("com.github.edrlab.nanohttpd:nanohttpd:master-SNAPSHOT") {
-      exclude group: 'org.parboiled'
-  }
-  //noinspection GradleDependency
-  implementation ("com.github.edrlab.nanohttpd:nanohttpd-nanolets:master-SNAPSHOT") {
-      exclude group: 'org.parboiled'
-  }
   implementation "com.google.android.material:material:1.4.0"
   implementation "com.jakewharton.timber:timber:4.7.1"
   // AM NOTE: needs to stay this version for now (June 24,2020)
