@@ -108,6 +108,20 @@ buildscript {
 ...
 ```
 
+For release builds to work properly, you'll need to update your `android/app/src/main/AndroidManifest.xml`
+file to allow clear text traffic. If you don't do this you'll get a
+`net::ERR_CLEARTEXT_NOT_PERMITTED` error on release builds.
+
+```xml
+<application
+    ....
+    android:usesCleartextTraffic="true"
+    ....>
+```
+
+You can see more info [here](https://stackoverflow.com/a/52708032/2811583) and
+[here](https://github.com/5-stones/react-native-readium/issues/15#issuecomment-1333991759).
+
 ## Usage
 
 ```tsx
