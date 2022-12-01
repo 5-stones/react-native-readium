@@ -1,3 +1,12 @@
+## [1.0.2](https://github.com/5-stones/react-native-readium/compare/v1.0.1...v1.0.2) (2022-12-01)
+
+
+### Bug Fixes
+
+* **android:** fix android release builds by adding networking security config ([f9b0ff8](https://github.com/5-stones/react-native-readium/commit/f9b0ff80676f9e673352546857faab2163e8a1bb))
+
+
+
 ## [1.0.1](https://github.com/5-stones/react-native-readium/compare/v1.0.0...v1.0.1) (2022-12-01)
 
 
