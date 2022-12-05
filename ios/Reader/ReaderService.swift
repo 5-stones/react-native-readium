@@ -19,11 +19,40 @@ final class ReaderService: Loggable {
       print(error)
     }
   }
+  
+  static func locatorFromLocation(
+    _ location: NSDictionary?,
+    _ publication: Publication?
+  ) -> Locator? {
+    guard location != nil else {
+      return nil
+    }
+
+    let hasLocations = location?["locations"] != nil
+    let hasChildren = location?["children"] != nil
+    let hasHashHref = (location!["href"] as! String).contains("#")
+
+    // check that we're not dealing with a Link
+    if ((hasChildren || hasHashHref) && !hasLocations) {
+      guard let publication = publication else {
+        return nil
+      }
+      guard let link = try? Link(json: location) else {
+        return nil
+      }
+
+      return publication.locate(link)
+    } else {
+      return try? Locator(json: location)
+    }
+    
+    return nil
+  }
 
   func buildViewController(
     url: String,
     bookId: String,
-    locator: Locator?,
+    location: NSDictionary?,
     sender: UIViewController?,
     completion: @escaping (ReaderViewController) -> Void
   ) {
@@ -37,6 +66,7 @@ final class ReaderService: Loggable {
         },
         receiveValue: { pub in
           self.preparePresentation(of: pub)
+          let locator: Locator? = ReaderService.locatorFromLocation(location, pub)
           let vc = reader.getViewController(
             for: pub,
             bookId: bookId,

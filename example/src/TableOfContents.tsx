@@ -5,7 +5,7 @@ import type { Link } from 'react-native-readium';
 
 export interface TableOfContentsProps {
   items?: Link[] | null;
-  onPress?: (link: Link) => void;
+  onPress?: (locator: Link) => void;
 }
 
 export const TableOfContents: React.FC<TableOfContentsProps> = ({
@@ -36,7 +36,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
           <Text>Table of Contents</Text>
           {items.map((item, idx) => (
             <ListItem
-              key={item.href}
+              key={idx}
               onPress={() => {
                 if (onPress) {
                   onPress(item);

@@ -19,7 +19,7 @@ import { Settings as ReaderSettings } from './Settings';
 const Reader: React.FC = () => {
   const [toc, setToc] = useState<Link[] | null>([]);
   const [file, setFile] = useState<File>();
-  const [location, setLocation] = useState<Locator>();
+  const [location, setLocation] = useState<Locator | Link>();
   const [settings, setSettings] = useState<Partial<Settings>>(DEFAULT_SETTINGS);
 
   useEffect(() => {
@@ -59,12 +59,7 @@ const Reader: React.FC = () => {
         }}>
           <TableOfContents
             items={toc}
-            onPress={(link) => {
-              setLocation({
-                href: link.href,
-                type: 'application/xhtml+xml',
-              });
-            }}
+            onPress={(loc) => setLocation(loc)}
           />
           <ReaderSettings
             settings={settings}

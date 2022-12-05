@@ -9,7 +9,7 @@ import { COMPONENT_NAME, LINKING_ERROR } from '../utils';
 
 export type BaseReadiumViewProps = {
   file: File;
-  location?: Locator;
+  location?: Locator | Link;
   settings?: Partial<Settings>;
   style?: ViewStyle;
   onLocationChange?: (locator: Locator) => void;
