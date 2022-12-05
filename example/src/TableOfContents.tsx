@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Text, ScrollView } from 'react-native';
 import { ListItem, Overlay, Icon } from '@rneui/themed';
-import type { Link } from 'react-native-readium';
+import type { Locator } from 'react-native-readium';
 
 export interface TableOfContentsProps {
-  items?: Link[] | null;
-  onPress?: (link: Link) => void;
+  items?: Locator[] | null;
+  onPress?: (locator: Locator) => void;
 }
 
 export const TableOfContents: React.FC<TableOfContentsProps> = ({
@@ -36,7 +36,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
           <Text>Table of Contents</Text>
           {items.map((item, idx) => (
             <ListItem
-              key={item.href}
+              key={idx}
               onPress={() => {
                 if (onPress) {
                   onPress(item);

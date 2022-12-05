@@ -20,7 +20,6 @@ import org.readium.r2.shared.publication.services.search.SearchIterator
 import org.readium.r2.shared.publication.services.search.SearchTry
 import org.readium.r2.shared.Search
 import org.readium.r2.shared.UserException
-import org.readium.r2.shared.publication.Link
 import org.readium.r2.shared.util.Try
 
 @OptIn(Search::class, ExperimentalDecorator::class)
@@ -112,7 +111,7 @@ class ReaderViewModel(
         object StartNewSearch : Event()
         class Failure(val error: UserException) : Event()
         class LocatorUpdate(val locator: Locator) : Event()
-        class TableOfContentsLoaded(val toc: List<Link>) : Event()
+        class TableOfContentsLoaded(val toc: List<Locator>) : Event()
     }
 
     sealed class FeedbackEvent {

@@ -10,7 +10,6 @@ import org.readium.r2.navigator.*
 import org.readium.r2.shared.publication.Locator
 import com.reactnativereadium.utils.EventChannel
 import kotlinx.coroutines.channels.Channel
-import org.readium.r2.shared.publication.Link
 
 /*
  * Base reader fragment class
@@ -37,7 +36,11 @@ abstract class BaseReaderFragment : Fragment() {
 
     val viewScope = viewLifecycleOwner.lifecycleScope
 
-    channel.send(ReaderViewModel.Event.TableOfContentsLoaded(model.publication.tableOfContents))
+    val tocLocators: List<Locator> = model.publication.tableOfContents.mapNotNull {
+      model.publication.locatorFromLink(it)
+    }
+
+    channel.send(ReaderViewModel.Event.TableOfContentsLoaded(tocLocators))
     navigator.currentLocator
       .onEach { channel.send(ReaderViewModel.Event.LocatorUpdate(it)) }
       .launchIn(viewScope)

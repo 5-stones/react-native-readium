@@ -5,7 +5,7 @@ import {
   ReadiumView,
   Settings,
 } from 'react-native-readium';
-import type { Link, Locator, File } from 'react-native-readium';
+import type { Locator, File } from 'react-native-readium';
 
 import {
   EPUB_URL,
@@ -17,7 +17,7 @@ import { TableOfContents } from './TableOfContents';
 import { Settings as ReaderSettings } from './Settings';
 
 const Reader: React.FC = () => {
-  const [toc, setToc] = useState<Link[] | null>([]);
+  const [toc, setToc] = useState<Locator[] | null>([]);
   const [file, setFile] = useState<File>();
   const [location, setLocation] = useState<Locator>();
   const [settings, setSettings] = useState<Partial<Settings>>(DEFAULT_SETTINGS);
@@ -59,12 +59,7 @@ const Reader: React.FC = () => {
         }}>
           <TableOfContents
             items={toc}
-            onPress={(link) => {
-              setLocation({
-                href: link.href,
-                type: 'application/xhtml+xml',
-              });
-            }}
+            onPress={(loc) => setLocation(loc)}
           />
           <ReaderSettings
             settings={settings}

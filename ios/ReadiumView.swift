@@ -163,8 +163,11 @@ class ReadiumView : UIView, Loggable {
     rootView.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
 
     self.onTableOfContents?([
-      "toc": vc.publication.tableOfContents.map({ link in
-        return link.json
+      "toc": vc.publication.tableOfContents.compactMap({ (link) -> [String: Any]? in
+        guard let locator = vc.publication.locate(link) else {
+            return nil
+        }
+        return locator.json
       })
     ])
   }
