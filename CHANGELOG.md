@@ -1,3 +1,12 @@
+## [1.0.3](https://github.com/5-stones/react-native-readium/compare/v1.0.2...v1.0.3) (2022-12-05)
+
+
+### Bug Fixes
+
+* **android, ios:** allow location and initialLocation to be either Link or Locator objects ([ebc1030](https://github.com/5-stones/react-native-readium/commit/ebc103075d305bcdf8db263d7455d5b07536288b))
+
+
+
 ## [1.0.2](https://github.com/5-stones/react-native-readium/compare/v1.0.1...v1.0.2) (2022-12-01)
 
 
