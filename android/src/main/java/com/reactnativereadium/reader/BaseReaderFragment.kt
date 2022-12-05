@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.reactnativereadium.utils.LinkOrLocator
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.readium.r2.navigator.*
 import org.readium.r2.shared.publication.Locator
 import com.reactnativereadium.utils.EventChannel
 import kotlinx.coroutines.channels.Channel
-import org.readium.r2.shared.publication.Link
 
 /*
  * Base reader fragment class
@@ -49,7 +49,21 @@ abstract class BaseReaderFragment : Fragment() {
     requireActivity().invalidateOptionsMenu()
   }
 
-  fun go(locator: Locator, animated: Boolean): Boolean {
+  fun go(location: LinkOrLocator, animated: Boolean): Boolean {
+    var locator: Locator? = null
+    when (location) {
+      is LinkOrLocator.Link -> {
+        locator = navigator.publication.locatorFromLink(location.link)
+      }
+      is LinkOrLocator.Locator -> {
+        locator = location.locator
+      }
+    }
+
+    if (locator == null) {
+      return false
+    }
+
     // don't attempt to navigate if we're already there
     val currentLocator = navigator.currentLocator.value
     if (locator.hashCode() == currentLocator.hashCode()) {

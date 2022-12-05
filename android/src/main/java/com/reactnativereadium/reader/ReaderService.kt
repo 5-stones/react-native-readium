@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModelStore
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.util.RNLog
+import com.reactnativereadium.utils.LinkOrLocator
 import java.io.File
 import java.io.IOException
 import java.net.ServerSocket
@@ -46,9 +47,28 @@ class ReaderService(
     this.startServer()
   }
 
+  fun locatorFromLinkOrLocator(
+    location: LinkOrLocator?,
+    publication: Publication,
+  ): Locator? {
+
+    if (location == null) return null
+
+    when (location) {
+      is LinkOrLocator.Link -> {
+        return publication.locatorFromLink(location.link)
+      }
+      is LinkOrLocator.Locator -> {
+        return location.locator
+      }
+    }
+
+    return null
+  }
+
   suspend fun openPublication(
     fileName: String,
-    initialLocation: Locator?,
+    initialLocation: LinkOrLocator?,
     callback: suspend (fragment: BaseReaderFragment) -> Unit
   ) {
     val file = File(fileName)
@@ -62,8 +82,9 @@ class ReaderService(
       .onSuccess {
         val url = prepareToServe(it)
         if (url != null) {
+          val locator = locatorFromLinkOrLocator(initialLocation, it)
           val readerFragment = EpubReaderFragment.newInstance(url)
-          readerFragment.initFactory(it, initialLocation)
+          readerFragment.initFactory(it, locator)
           callback.invoke(readerFragment)
         }
       }

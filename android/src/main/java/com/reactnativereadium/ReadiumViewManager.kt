@@ -8,10 +8,11 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewGroupManager
 import com.reactnativereadium.reader.ReaderService
 import com.reactnativereadium.utils.File
+import com.reactnativereadium.utils.LinkOrLocator
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
+import org.readium.r2.shared.publication.Link
 import org.readium.r2.shared.publication.Locator
-
 
 class ReadiumViewManager(
   val reactContext: ReactApplicationContext
@@ -69,23 +70,45 @@ class ReadiumViewManager(
   fun setFile(view: ReadiumView, file: ReadableMap) {
     val path = (file.getString("url") ?: "")
       .replace("^(file:/+)?(/.*)$".toRegex(), "$2")
-    val locatorMap = file.getMap("initialLocation")
-    var initialLocation: Locator? = null
+    val location = file.getMap("initialLocation")
+    var initialLocation: LinkOrLocator? = null
 
-    if (locatorMap != null) {
-      initialLocation = Locator.fromJSON(JSONObject(locatorMap.toHashMap()))
+    if (location != null) {
+      initialLocation = locationToLinkOrLocator(location)
     }
 
     view.file = File(path, initialLocation)
     this.buildForViewIfReady(view)
   }
 
+  fun locationToLinkOrLocator(location: ReadableMap): LinkOrLocator? {
+    val json = JSONObject(location.toHashMap())
+    val hasLocations = json.has("locations")
+    val hasChildren = json.has("children")
+    val hasHashHref = (json.get("href") as String).contains("#")
+    var linkOrLocator: LinkOrLocator? = null
+
+    if ((hasChildren || hasHashHref) && !hasLocations) {
+      val link = Link.fromJSON(json)
+      if (link != null) {
+        linkOrLocator = LinkOrLocator.Link(link)
+      }
+    } else {
+      val locator = Locator.fromJSON(json)
+      if (locator != null) {
+        linkOrLocator = LinkOrLocator.Locator(locator)
+      }
+    }
+
+    return linkOrLocator;
+  }
+
   @ReactProp(name = "location")
   fun setLocation(view: ReadiumView, location: ReadableMap) {
-    val locator = Locator.fromJSON(JSONObject(location.toHashMap()))
+    var linkOrLocator: LinkOrLocator? = locationToLinkOrLocator(location)
 
-    if (locator != null) {
-      view.updateLocation(locator)
+    if (linkOrLocator != null) {
+      view.updateLocation(linkOrLocator)
     }
   }
 

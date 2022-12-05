@@ -11,8 +11,8 @@ import com.reactnativereadium.reader.EpubReaderFragment
 import com.reactnativereadium.reader.ReaderViewModel
 import com.reactnativereadium.utils.Dimensions
 import com.reactnativereadium.utils.File
+import com.reactnativereadium.utils.LinkOrLocator
 import org.readium.r2.shared.extensions.toMap
-import org.readium.r2.shared.publication.Locator
 
 class ReadiumView(
   val reactContext: ThemedReactContext
@@ -22,11 +22,11 @@ class ReadiumView(
   var fragment: BaseReaderFragment? = null
   var isViewInitialized: Boolean = false
 
-  fun updateLocation(locator: Locator) : Boolean {
+  fun updateLocation(location: LinkOrLocator) : Boolean {
     if (fragment == null) {
       return false
     } else {
-      return this.fragment!!.go(locator, true)
+      return this.fragment!!.go(location, true)
     }
   }
 

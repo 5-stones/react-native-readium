@@ -17,12 +17,9 @@ class ReadiumView : UIView, Loggable {
 
   @objc var file: NSDictionary? = nil {
     didSet {
-      if let initialLocation = file?["initialLocation"] as? NSDictionary {
-        location = initialLocation
-      }
-
+      let initialLocation = file?["initialLocation"] as? NSDictionary
       if let url = file?["url"] as? String {
-        self.loadBook(url: url)
+        self.loadBook(url: url, location: initialLocation)
       }
     }
   }
@@ -39,27 +36,26 @@ class ReadiumView : UIView, Loggable {
   @objc var onLocationChange: RCTDirectEventBlock?
   @objc var onTableOfContents: RCTDirectEventBlock?
 
-  func loadBook(url: String) {
+  func loadBook(
+    url: String,
+    location: NSDictionary?
+  ) {
     guard let rootViewController = UIApplication.shared.delegate?.window??.rootViewController else { return }
-    let locator: Locator? = self.getLocator()
 
     self.readerService.buildViewController(
       url: url,
       bookId: url,
-      locator: locator,
+      location: location,
       sender: rootViewController,
       completion: { vc in
         self.addViewControllerAsSubview(vc)
+        self.location = location
       }
     )
   }
 
   func getLocator() -> Locator? {
-    if (location != nil) {
-      return try? Locator(json: location)
-    } else {
-      return nil
-    }
+    return ReaderService.locatorFromLocation(location, readerViewController?.publication)
   }
 
   func updateLocation() {
