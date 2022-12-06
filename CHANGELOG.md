@@ -1,3 +1,12 @@
+## [1.0.4](https://github.com/5-stones/react-native-readium/compare/v1.0.3...v1.0.4) (2022-12-06)
+
+
+### Bug Fixes
+
+* **android:** fix an issue resulting in initial android settings not being applied correctly ([9f48874](https://github.com/5-stones/react-native-readium/commit/9f488746759f51effdbf62b3da1ffe036369bffd))
+
+
+
 ## [1.0.3](https://github.com/5-stones/react-native-readium/compare/v1.0.2...v1.0.3) (2022-12-05)
 
 
