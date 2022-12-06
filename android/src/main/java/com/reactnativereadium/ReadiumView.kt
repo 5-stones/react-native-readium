@@ -21,6 +21,7 @@ class ReadiumView(
   var file: File? = null
   var fragment: BaseReaderFragment? = null
   var isViewInitialized: Boolean = false
+  var lateInitSettings: Map<String, Any>? = null
 
   fun updateLocation(location: LinkOrLocator) : Boolean {
     if (fragment == null) {
@@ -30,15 +31,25 @@ class ReadiumView(
     }
   }
 
-  fun updateSettingsFromMap(map: Map<String, Any>) {
-    if (fragment != null && fragment is EpubReaderFragment) {
+  fun updateSettingsFromMap(map: Map<String, Any>?) {
+    if (map == null) {
+      return
+    } else if (fragment == null) {
+      lateInitSettings = map
+      return
+    }
+
+    if (fragment is EpubReaderFragment) {
       (fragment as EpubReaderFragment).updateSettingsFromMap(map)
     }
+
+    lateInitSettings = null
   }
 
   fun addFragment(frag: BaseReaderFragment) {
     fragment = frag
     setupLayout()
+    updateSettingsFromMap(lateInitSettings)
     val activity: FragmentActivity? = reactContext.currentActivity as FragmentActivity?
     activity!!.supportFragmentManager
       .beginTransaction()
