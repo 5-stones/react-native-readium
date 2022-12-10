@@ -1,3 +1,12 @@
+# [1.1.0](https://github.com/5-stones/react-native-readium/compare/v1.0.4...v1.1.0) (2022-12-10)
+
+
+### Features
+
+* **web:** add basic web implementation and example ([d55a457](https://github.com/5-stones/react-native-readium/commit/d55a457b71213de4536294709788b50b74076622))
+
+
+
 ## [1.0.4](https://github.com/5-stones/react-native-readium/compare/v1.0.3...v1.0.4) (2022-12-06)
 
 
