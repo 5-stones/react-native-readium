@@ -7,7 +7,7 @@ import { createFragment, getWidthOrHeightValue as dimension } from '../utils';
 import type { BaseReadiumViewProps } from './BaseReadiumView';
 import { BaseReadiumView } from './BaseReadiumView';
 
-type ReadiumProps = BaseReadiumViewProps;
+export type ReadiumProps = BaseReadiumViewProps;
 
 export const ReadiumView: React.FC<ReadiumProps> = ({
   onLocationChange: wrappedOnLocationChange,
@@ -21,7 +21,7 @@ export const ReadiumView: React.FC<ReadiumProps> = ({
     height: 0,
   });
   // set the view dimensions on layout
-  const onLayout = useCallback(({ nativeEvent: { layout: { width, height } }}) => {
+  const onLayout = useCallback(({ nativeEvent: { layout: { width, height } }}: any) => {
     setDimensions({
       width: dimension(width),
       height: dimension(height),

@@ -160,9 +160,19 @@ DRM is not supported at this time. However, there is a clear path to [support it
 | `onLocationChange` | `(locator: Locator) => void` | :white_check_mark: | A callback that fires whenever the location is changed (e.g. the user transitions to a new page)|
 | `onTableOfContents` | `(toc: Link[] \| null) => void` | :white_check_mark: | A callback that fires once the file is parsed and emits the table of contents embedded in the file. Returns `null` or an empty `[]` if no TOC exists. See the [`Link`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/Link.ts) interface for more info. |
 
+#### :warning: Web vs Native File URLs
+
+Please note that on `web` the `File.url` should be a web accessible URL path to
+the `manifest.json` of the unpacked epub. In native contexts it needs to be a
+local filepath to the epub file itself on disk. If you're not sure how to
+serve epub books [take a look at this example](https://github.com/d-i-t-a/R2D2BC/blob/production/examples/server.ts)
+which is based on the `dita-streamer-js` project (which is built on all the
+readium [r2-*-js](https://github.com/readium?q=js) libraries)
+
 ## Contributing
 
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
+See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the
+repository and the development workflow.
 
 ## Release
 
