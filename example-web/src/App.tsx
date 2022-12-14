@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { View } from 'react-native';
 import './App.css';
 // @ts-ignore - FIXME: webpack not resolving types
@@ -9,12 +9,14 @@ import type { Locator, Link } from 'react-native-readium';
 import {
   Settings as ReaderSettings,
   TableOfContents,
+  ReaderButton,
 } from './components';
 
 const DEFAULT_SETTINGS = new Settings();
 DEFAULT_SETTINGS.appearance = Appearance.NIGHT;
 
 function App() {
+  const ref = useRef<any>();
   const [toc, setToc] = useState<Link[]>([]);
   const [location, setLocation] = useState<Link | Locator>();
   const [settings, setSettings] = useState<Partial<Settings>>(DEFAULT_SETTINGS);
@@ -34,8 +36,11 @@ function App() {
           onSettingsChanged={(s) => setSettings(s)}
         />
       </View>
-      <View style={{ height: '90%' }}>
+      <View style={{ flexDirection: 'row', width: '100%', height: '90%' }}>
+        <ReaderButton name="chevron-left" onPress={() => ref.current?.nextPage() } />
+        <View style={{ width: '80%', height: '100%' }}>
         <ReadiumView
+          ref={ref}
           file={{
             url: 'https://alice.dita.digital/manifest.json',
             initialLocation: {
@@ -54,6 +59,8 @@ function App() {
             if (toc) setToc(toc)
           }}
         />
+      </View>
+        <ReaderButton name="chevron-right" onPress={() => ref.current?.prevPage() } />
       </View>
     </div>
   );

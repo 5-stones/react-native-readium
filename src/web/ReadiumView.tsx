@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useImperativeHandle } from 'react';
+import type { CSSProperties } from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import type { ReadiumProps } from '../components/ReadiumView';
@@ -8,13 +9,19 @@ import {
   useLocationObserver,
 } from './hooks';
 
-export const ReadiumView: React.FC<ReadiumProps> = ({
+export const ReadiumView = React.forwardRef<{
+  nextPage: () => void;
+  prevPage: () => void;
+}, ReadiumProps>(({
   file,
   settings,
   location,
   onLocationChange,
   onTableOfContents,
-}) => {
+  style = {},
+  height,
+  width,
+}, ref) => {
   const readerRef = useReaderRef({
     file,
     onLocationChange,
@@ -22,27 +29,42 @@ export const ReadiumView: React.FC<ReadiumProps> = ({
   });
   const reader = readerRef.current;
 
+  useImperativeHandle(ref, () => ({
+    nextPage: () => {
+      readerRef.current?.nextPage();
+    },
+    prevPage: () => {
+      readerRef.current?.previousPage();
+    },
+  }));
+
   useSettingsObserver(reader, settings);
   useLocationObserver(reader, location);
+
+  const mainStyle = {
+    ...styles.maximize,
+    ...(style as CSSProperties),
+  };
+
+  if (height) mainStyle.height = height;
+  if (width) mainStyle.width = width;
 
   return (
     <View style={styles.container}>
       {!reader && <div style={styles.loader}>Loading reader...</div>}
       <div id="D2Reader-Container" style={styles.d2Container}>
-        {reader && <button onClick={reader.previousPage} style={styles.button}>&lsaquo;</button>}
         <main
-          style={styles.maximize}
+          style={mainStyle}
           tabIndex={-1}
           id="iframe-wrapper"
         >
           <div id="reader-loading" className="loading" style={styles.loader}></div>
           <div id="reader-error" className="error"></div>
         </main>
-        {reader && <button onClick={reader.nextPage} style={styles.button}>&rsaquo;</button>}
       </div>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -55,7 +77,7 @@ const styles = StyleSheet.create({
     display: 'flex',
   },
   maximize: {
-    width: 'calc(100% - 100px)',
+    width: '100%',
     height: '100%',
     display: 'flex',
   },

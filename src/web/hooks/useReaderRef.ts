@@ -15,6 +15,7 @@ export const useReaderRef = ({
     D2Reader.load({
       url: new URL(file.url),
       lastReadingPosition: file.initialLocation,
+      userSettings: { verticalScroll: false },
       api: {
         updateCurrentLocation: async (location: Locator) => {
           if (onLocationChange) onLocationChange(location);
