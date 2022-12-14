@@ -1,3 +1,12 @@
+# [1.2.0](https://github.com/5-stones/react-native-readium/compare/v1.1.0...v1.2.0) (2022-12-14)
+
+
+### Features
+
+* **web:** remove next and previous buttons in favor of a ref api ([0e03366](https://github.com/5-stones/react-native-readium/commit/0e033667eef2abf06dfb949ef831b68f9dc51d2c))
+
+
+
 # [1.1.0](https://github.com/5-stones/react-native-readium/compare/v1.0.4...v1.1.0) (2022-12-10)
 
 
