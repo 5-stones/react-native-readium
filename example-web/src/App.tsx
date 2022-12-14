@@ -37,7 +37,7 @@ function App() {
         />
       </View>
       <View style={{ flexDirection: 'row', width: '100%', height: '90%' }}>
-        <ReaderButton name="chevron-left" onPress={() => ref.current?.nextPage() } />
+        <ReaderButton name="chevron-left" onPress={() => ref.current?.prevPage() } />
         <View style={{ width: '80%', height: '100%' }}>
         <ReadiumView
           ref={ref}
@@ -60,7 +60,7 @@ function App() {
           }}
         />
       </View>
-        <ReaderButton name="chevron-right" onPress={() => ref.current?.prevPage() } />
+        <ReaderButton name="chevron-right" onPress={() => ref.current?.nextPage() } />
       </View>
     </div>
   );
