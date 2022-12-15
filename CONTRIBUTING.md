@@ -28,7 +28,7 @@ you need faster: [Be A Champion](#be-a-champion).
 ## Be A Champion
 
 Being a _champion_ makes it easy for us to help you. Which is what we all want!
-So how can you be a champion? [Sponsor the Project](https://github.com/sponsors/DoubleSymmetry) or _be willing to write some code_.
+So how can you be a champion? [Sponsor an Issue](https://issuehunt.io/r/5-stones/react-native-readium) or _be willing to write some code_.
 
 **If _you're willing_** to write some code **_we're willing_** to:
 
