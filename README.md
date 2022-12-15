@@ -1,5 +1,26 @@
 # react-native-readium
 
+[![NPM version](https://img.shields.io/npm/v/react-native-readium.svg?color=success&label=npm%20package&logo=npm)](https://www.npmjs.com/package/react-native-readium)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+![PRs welcome!](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+![This project is released under the MIT license](https://img.shields.io/badge/license-MIT-blue.svg)
+
+----
+
+## Have A Bug/Feature You Care About?
+
+We :heart: open source. We work on the things that are important to us when
+we're able to work on them. Have an issue you care about?
+
+- [Dive Into The Code!](CONTRIBUTING.md)
+- [Sponsor Your Issue](https://issuehunt.io/r/5-stones/react-native-readium).
+
+[![Issue Hunt](https://issuehunt.io/static/embed/issuehunt-button-v1.svg)](https://issuehunt.io/r/5-stones/react-native-readium)
+
+----
+
+## Overview
+
 A react-native wrapper for https://readium.org/. At a high level this package
 allows you to do things like:
 
@@ -13,7 +34,7 @@ allows you to do things like:
   - More (see the `Settings` documentation in the [API section](#api))
 - Etc. (read on for more details. :book:)
 
-## Overview
+## Table of Contents
 
 - [Installation](#installation)
 - [Usage](#usage)
@@ -24,7 +45,7 @@ allows you to do things like:
 - [License](#license)
 
 | Dark Mode| Light Mode |
-|---|---|
+|----------|------------|
 | ![Dark Mode](https://github.com/5-stones/react-native-readium/blob/main/docs/demo-dark-mode.gif) | ![Light Mode](https://github.com/5-stones/react-native-readium/blob/main/docs/demo-light-mode.gif) |
 
 ## Installation
