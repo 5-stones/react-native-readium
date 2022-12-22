@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet, View, Text, Platform } from 'react-native';
 import {
   ReadiumView,
@@ -13,6 +13,7 @@ import {
   INITIAL_LOCATION,
   DEFAULT_SETTINGS,
 } from '../consts';
+import { ReaderButton } from './ReaderButton';
 import { TableOfContents } from './TableOfContents';
 import { Settings as ReaderSettings } from './Settings';
 
@@ -21,6 +22,7 @@ export const Reader: React.FC = () => {
   const [file, setFile] = useState<File>();
   const [location, setLocation] = useState<Locator | Link>();
   const [settings, setSettings] = useState<Partial<Settings>>(DEFAULT_SETTINGS);
+  const ref = useRef<any>();
 
   useEffect(() => {
     async function run() {
@@ -74,14 +76,34 @@ export const Reader: React.FC = () => {
             />
           </View>
         </View>
+
         <View style={styles.reader}>
-          <ReadiumView
-            file={file}
-            location={location}
-            settings={settings}
-            onLocationChange={(locator) => setLocation(locator)}
-            onTableOfContents={(toc) => setToc(toc)}
-          />
+          {Platform.OS === 'web' ? (
+            <ReaderButton
+              name="chevron-left"
+              style={{ width: '10%' }}
+              onPress={() => ref.current?.prevPage()}
+            />
+          ) : null}
+          <View style={styles.readiumContainer}>
+            <ReadiumView
+              ref={ref}
+              file={file}
+              location={location}
+              settings={settings}
+              onLocationChange={(locator: Locator) => setLocation(locator)}
+              onTableOfContents={(toc: Link[] | null) => {
+                if (toc) setToc(toc)
+              }}
+            />
+          </View>
+          {Platform.OS === 'web' ? (
+            <ReaderButton
+              name="chevron-right"
+              style={{ width: '10%' }}
+              onPress={() => ref.current?.nextPage()}
+            />
+          ) : null}
         </View>
       </View>
     );
@@ -99,7 +121,13 @@ const styles = StyleSheet.create({
     height: Platform.OS === 'web' ? '100vh' : '100%',
   },
   reader: {
-    flex: 1,
+    flexDirection: 'row',
+    width: '100%',
+    height: '90%',
+  },
+  readiumContainer: {
+    width: Platform.OS === 'web' ? '80%' : '100%',
+    height: '100%',
   },
   controls: {
     flexDirection: 'row',
