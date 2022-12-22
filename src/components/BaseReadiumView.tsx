@@ -1,23 +1,10 @@
 import {
   requireNativeComponent,
   UIManager,
-  ViewStyle,
 } from 'react-native';
 
-import type { Settings, Link, Locator, File, } from '../interfaces';
+import type { BaseReadiumViewProps } from '../interfaces';
 import { COMPONENT_NAME, LINKING_ERROR } from '../utils';
-
-export type BaseReadiumViewProps = {
-  file: File;
-  location?: Locator | Link;
-  settings?: Partial<Settings>;
-  style?: ViewStyle;
-  onLocationChange?: (locator: Locator) => void;
-  onTableOfContents?: (toc: Link[] | null) => void;
-  ref?: any;
-  height?: number;
-  width?: number;
-};
 
 export const BaseReadiumView =
   UIManager.getViewManagerConfig(COMPONENT_NAME) != null

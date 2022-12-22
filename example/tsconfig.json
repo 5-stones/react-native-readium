@@ -1,9 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
-    "paths": {
-      "react-native-readium": ["./src/index"]
-    },
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
     "declaration": true,
@@ -12,14 +8,16 @@
     "jsx": "react-native",
     "lib": ["es2017", "DOM", "DOM.Iterable"],
     "moduleResolution": "node",
-    "outDir": "./lib",
+    "baseUrl": ".",
+    "paths": {
+      "react-native-readium": [
+        "../src/index.tsx"
+      ]
+    },
     "strict": true,
     "target": "esnext",
     "skipLibCheck": true
   },
   "include": ["src"],
-  "exclude": [
-    "**/__tests__/*",
-    "example"
-  ]
+  "exclude": ["node_modules", "**/__tests__/*"]
 }

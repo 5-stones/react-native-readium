@@ -8,6 +8,8 @@
     "android:ide": "open -a /Applications/Android\\ Studio.app ./android",
     "ios": "react-native run-ios",
     "ios:ide": "open ios/ReadiumExample.xcworkspace/",
+    "web:start": "craco start",
+    "web:build": "craco build",
     "start": "react-native start",
     "clean": "react-native-clean-project"
   },
@@ -18,22 +20,41 @@
     "@rneui/base": "^4.0.0-rc.1",
     "@rneui/themed": "^4.0.0-rc.1",
     "react": "17.0.2",
+    "react-dom": "^17.0.2",
     "react-native": "0.67.5",
     "react-native-fs": "^2.19.0",
     "react-native-safe-area-context": "^4.2.2",
     "react-native-screens": "^3.13.1",
-    "react-native-vector-icons": "^9.1.0"
+    "react-native-vector-icons": "^9.1.0",
+    "react-native-web": "^0.18.10"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@babel/runtime": "^7.12.5",
-    "@react-native-community/eslint-config": "^2.0.0",
+    "@craco/craco": "^7.0.0",
+    "@dealmore/craco-plugin-babel-include": "^1.0.0",
+    "@types/react": "^17.0.52",
+    "@types/react-dom": "^17.0.1",
     "babel-jest": "^26.6.3",
     "babel-plugin-module-resolver": "^4.0.0",
     "eslint": "7.14.0",
     "jest": "^26.6.3",
     "metro-react-native-babel-preset": "^0.66.2",
+    "react-app-alias-ex": "^2.1.0",
     "react-native-clean-project": "^4.0.1",
+    "react-scripts": "5.0.1",
     "react-test-renderer": "17.0.2"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

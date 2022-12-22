@@ -1,10 +1,9 @@
 import React, { useCallback, useState, useRef, useEffect } from 'react';
 import { View, Platform, findNodeHandle, StyleSheet } from 'react-native';
 
-import type { Dimensions } from '../interfaces';
+import type { BaseReadiumViewProps, Dimensions } from '../interfaces';
 import { Settings } from '../interfaces';
 import { createFragment, getWidthOrHeightValue as dimension } from '../utils';
-import type { BaseReadiumViewProps } from './BaseReadiumView';
 import { BaseReadiumView } from './BaseReadiumView';
 
 export type ReadiumProps = BaseReadiumViewProps;
