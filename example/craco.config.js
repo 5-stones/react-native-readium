@@ -4,6 +4,7 @@ const babelInclude = require('@dealmore/craco-plugin-babel-include');
 const webpack = require('webpack');
 
 const LIB_PATH = `../src`;
+const WEB_PATH = `../web`;
 
 module.exports = {
   // eslint has a dumb error, don't really care if the example is linted so disable it
@@ -50,6 +51,7 @@ module.exports = {
           path.resolve(__dirname, 'node_modules/react-native-vector-icons'),
           path.resolve(__dirname, 'node_modules/react-native-ratings'),
           path.resolve(__dirname, LIB_PATH),
+          path.resolve(__dirname, WEB_PATH),
         ],
       },
     },
