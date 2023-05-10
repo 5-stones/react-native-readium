@@ -1,6 +1,4 @@
 import { useDeepCompareEffect } from 'use-deep-compare';
-import type D2Reader from '@d-i-t-a/reader';
-import type { Locator as R2Locator } from '@d-i-t-a/reader';
 
 import type { Link, Locator } from '../../src/interfaces';
 

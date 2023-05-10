@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import D2Reader from '@d-i-t-a/reader';
 
 import type { ReadiumProps } from '../../src/components/ReadiumView';
 import type { Locator } from '../../src/interfaces';
@@ -12,23 +11,27 @@ export const useReaderRef = ({
   const readerRef = useRef<D2Reader | null>(null);
 
   useEffect(() => {
-    D2Reader.load({
-      url: new URL(file.url),
-      lastReadingPosition: file.initialLocation,
-      userSettings: { verticalScroll: false },
-      api: {
-        updateCurrentLocation: async (location: Locator) => {
-          if (onLocationChange) onLocationChange(location);
-          return location;
+    async function run() {
+      const D2Reader = await import('@d-i-t-a/reader');
+      const ref = await D2Reader.load({
+        url: new URL(file.url),
+        lastReadingPosition: file.initialLocation,
+        userSettings: { verticalScroll: false },
+        api: {
+          updateCurrentLocation: async (location: Locator) => {
+            if (onLocationChange) onLocationChange(location);
+            return location;
+          },
         },
-      },
-      injectables: injectables,
-    }).then((r) => {
+        injectables: injectables,
+      });
+
       if (onTableOfContents) {
-        onTableOfContents(r.tableOfContents);
+        onTableOfContents(ref.tableOfContents);
       }
-      readerRef.current = r;
-    });
+      readerRef.current = ref;
+    }
+    run();
   }, []);
 
   return readerRef

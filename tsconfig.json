@@ -15,9 +15,10 @@
     "outDir": "./lib",
     "strict": true,
     "target": "esnext",
+    "module": "esnext",
     "skipLibCheck": true
   },
-  "include": ["src"],
+  "include": ["src", "dita.d.ts"],
   "exclude": [
     "**/__tests__/*",
     "example"
