@@ -1,6 +1,6 @@
 {
   "name": "react-native-readium",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A react-native wrapper for https://readium.org/",
   "main": "lib/src/index",
   "types": "lib/src/index.d.ts",

@@ -1,3 +1,12 @@
+## [1.2.1](https://github.com/5-stones/react-native-readium/compare/v1.2.0...v1.2.1) (2023-05-10)
+
+
+### Bug Fixes
+
+* **web:** restructure reader imports in order to fix SSR ([37a2e6a](https://github.com/5-stones/react-native-readium/commit/37a2e6ae8380b902f8e2b38b46e027b1965bfde6))
+
+
+
 # [1.2.0](https://github.com/5-stones/react-native-readium/compare/v1.1.0...v1.2.0) (2022-12-14)
 
 
