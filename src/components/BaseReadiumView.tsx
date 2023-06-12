@@ -1,14 +1,13 @@
-import {
-  requireNativeComponent,
-  UIManager,
-} from 'react-native';
-
-import type { BaseReadiumViewProps } from '../interfaces';
-import { COMPONENT_NAME, LINKING_ERROR } from '../utils';
+import { type RefAttributes } from 'react';
+import { requireNativeComponent, UIManager } from 'react-native';
+import type { BaseReadiumViewProps, BaseReadiumViewRef } from '../interfaces';
+import { componentName, linkingError } from '../utils';
 
 export const BaseReadiumView =
-  UIManager.getViewManagerConfig(COMPONENT_NAME) != null
-    ? requireNativeComponent<BaseReadiumViewProps>(COMPONENT_NAME)
+  UIManager.getViewManagerConfig(componentName) != null
+    ? requireNativeComponent<
+        BaseReadiumViewProps & RefAttributes<BaseReadiumViewRef>
+      >(componentName)
     : () => {
-        throw new Error(LINKING_ERROR);
+        throw new Error(linkingError);
       };

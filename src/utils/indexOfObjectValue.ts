@@ -1,3 +1,6 @@
-export const indexOfObjectValue = (obj: any, val: any): number => {
+export const indexOfObjectValue = (
+  obj: Record<string, unknown>,
+  val: unknown
+): number => {
   return Object.values(obj).indexOf(val);
-}
+};

@@ -1,7 +1,5 @@
 // Generate required css
-// @ts-ignore
 import faIconFont from 'react-native-vector-icons/Fonts/FontAwesome.ttf';
-// @ts-ignore
 import miIconFont from 'react-native-vector-icons/Fonts/MaterialIcons.ttf';
 
 export default () => {
@@ -19,9 +17,10 @@ export default () => {
   // Create stylesheet
   const style = document.createElement('style');
   style.type = 'text/css';
-  // @ts-ignore
+
+  // @ts-expect-error Property 'styleSheet' does not exist
   if (style.styleSheet) {
-    // @ts-ignore
+    // @ts-expect-error Property 'styleSheet' does not exist
     style.styleSheet.cssText = faIconFontStyles;
   } else {
     style.appendChild(document.createTextNode(faIconFontStyles));
@@ -29,4 +28,4 @@ export default () => {
 
   // Inject stylesheet
   document.head.appendChild(style);
-}
+};

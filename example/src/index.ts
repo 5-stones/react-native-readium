@@ -1,7 +1,7 @@
 /************************************************
  * NOTE: this is the entrypoint for web
  ************************************************/
-import {AppRegistry} from 'react-native';
+import { AppRegistry } from 'react-native';
 import App from './App';
 import configureRNVI from './utils/configureRNVI';
 

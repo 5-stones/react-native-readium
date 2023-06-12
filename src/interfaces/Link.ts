@@ -1,18 +1,18 @@
 /**
  * An interface representing the Readium Link object.
  */
-export interface Link {
+export type Link = {
   href: string;
   templated: boolean;
-  type?: string | null;
-  title?: string | null;
+  type?: string | undefined;
+  title?: string | undefined;
   rels?: Set<string>;
   properties?: any;
-  height?: number | null;
-  width?: number | null;
-  bitrate?: number | null;
-  duration?: number | null;
+  height?: number | undefined;
+  width?: number | undefined;
+  bitrate?: number | undefined;
+  duration?: number | undefined;
   languages?: string[];
   alternates?: Link[];
   children?: Link[];
-}
+};

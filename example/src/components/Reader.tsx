@@ -1,62 +1,63 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, View, Text, Platform } from 'react-native';
-import {
-  ReadiumView,
-  Settings,
+import React, { createRef, useEffect, useState } from 'react';
+import { Platform, StyleSheet, Text, View } from 'react-native';
+import type {
+  BaseReadiumViewRef,
+  File,
+  Link,
+  Locator,
 } from 'react-native-readium';
-import type { Link, Locator, File } from 'react-native-readium';
+import { ReadiumView, type Settings } from 'react-native-readium';
 
-import RNFS from '../utils/RNFS';
 import {
-  EPUB_URL,
-  EPUB_PATH,
-  INITIAL_LOCATION,
   DEFAULT_SETTINGS,
+  epubPath,
+  epubUrl,
+  initialLocation,
 } from '../consts';
+import RNFS from '../utils/RNFS';
 import { ReaderButton } from './ReaderButton';
-import { TableOfContents } from './TableOfContents';
 import { Settings as ReaderSettings } from './Settings';
+import { TableOfContents } from './TableOfContents';
 
 export const Reader: React.FC = () => {
   const [toc, setToc] = useState<Link[] | null>([]);
   const [file, setFile] = useState<File>();
   const [location, setLocation] = useState<Locator | Link>();
   const [settings, setSettings] = useState<Partial<Settings>>(DEFAULT_SETTINGS);
-  const ref = useRef<any>();
+  const ref = createRef<BaseReadiumViewRef>();
 
   useEffect(() => {
     async function run() {
-
       if (Platform.OS === 'web') {
         setFile({
-          url: EPUB_URL,
-          initialLocation: INITIAL_LOCATION,
+          url: epubUrl,
+          initialLocation,
         });
       } else {
-        const exists = await RNFS.exists(EPUB_PATH);
+        const exists = await RNFS.exists(epubPath);
         if (!exists) {
-          console.log(`Downloading file: '${EPUB_URL}'`);
+          console.log(`Downloading file: '${epubUrl}'`);
           const { promise } = RNFS.downloadFile({
-            fromUrl: EPUB_URL,
-            toFile: EPUB_PATH,
+            fromUrl: epubUrl,
+            toFile: epubPath,
             background: true,
             discretionary: true,
           });
 
-          // wait for the download to complete
+          // Wait for the download to complete
           await promise;
         } else {
           console.log(`File already exists. Skipping download.`);
         }
 
         setFile({
-          url: EPUB_PATH,
-          initialLocation: INITIAL_LOCATION,
+          url: epubPath,
+          initialLocation,
         });
       }
     }
 
-    run()
+    void run();
   }, []);
 
   if (file) {
@@ -66,13 +67,17 @@ export const Reader: React.FC = () => {
           <View style={styles.button}>
             <TableOfContents
               items={toc}
-              onPress={(loc) => setLocation(loc)}
+              onPress={(loc) => {
+                setLocation(loc);
+              }}
             />
           </View>
           <View style={styles.button}>
             <ReaderSettings
               settings={settings}
-              onSettingsChanged={(s) => setSettings(s)}
+              onSettingsChanged={(s) => {
+                setSettings(s);
+              }}
             />
           </View>
         </View>
@@ -91,9 +96,11 @@ export const Reader: React.FC = () => {
               file={file}
               location={location}
               settings={settings}
-              onLocationChange={(locator: Locator) => setLocation(locator)}
-              onTableOfContents={(toc: Link[] | null) => {
-                if (toc) setToc(toc)
+              onLocationChange={(locator: Locator) => {
+                setLocation(locator);
+              }}
+              onTableOfContents={(links: Link[] | null) => {
+                if (links) setToc(links);
               }}
             />
           </View>
@@ -114,7 +121,7 @@ export const Reader: React.FC = () => {
       <Text>downloading file</Text>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
