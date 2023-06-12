@@ -16,3 +16,8 @@ export type BaseReadiumViewProps = {
   height?: number;
   width?: number;
 };
+
+export type BaseReadiumViewRef = {
+  nextPage: () => void;
+  prevPage: () => void;
+};
