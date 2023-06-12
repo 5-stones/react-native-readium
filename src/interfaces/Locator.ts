@@ -1,7 +1,7 @@
 /**
  * An interface representing the Readium Locator object.
  */
-export interface Locator {
+export type Locator = {
   href: string;
   type: string;
   target?: number;
@@ -11,4 +11,4 @@ export interface Locator {
     position?: number;
     totalProgression?: number;
   };
-}
+};

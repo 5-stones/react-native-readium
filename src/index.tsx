@@ -1,4 +1,4 @@
+export * from './components/ReadiumView';
 export * from './enums';
 export * from './interfaces';
-export { RANGES } from './utils';
-export * from './components/ReadiumView';
+export { ranges as RANGES } from './utils';

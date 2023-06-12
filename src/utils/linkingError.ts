@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 
-export const LINKING_ERROR =
+export const linkingError =
   `The package 'react-native-readium' doesn't seem to be linked. Make sure: \n\n` +
   Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
   '- You rebuilt the app after installing the package\n' +

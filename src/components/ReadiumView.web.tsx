@@ -1,70 +1,78 @@
-import React, { useImperativeHandle } from 'react';
 import type { CSSProperties } from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useImperativeHandle } from 'react';
+import { StyleSheet, View } from 'react-native';
 
-import type { ReadiumProps } from '../components/ReadiumView';
 import {
+  useLocationObserver,
   useReaderRef,
   useSettingsObserver,
-  useLocationObserver,
 } from '../../web/hooks';
+import type { ReadiumProps } from '../components/ReadiumView';
 
-export const ReadiumView = React.forwardRef<{
-  nextPage: () => void;
-  prevPage: () => void;
-}, ReadiumProps>(({
-  file,
-  settings,
-  location,
-  onLocationChange,
-  onTableOfContents,
-  style = {},
-  height,
-  width,
-}, ref) => {
-  const readerRef = useReaderRef({
-    file,
-    onLocationChange,
-    onTableOfContents,
-  });
-  const reader = readerRef.current;
-
-  useImperativeHandle(ref, () => ({
-    nextPage: () => {
-      readerRef.current?.nextPage();
+export const ReadiumView = React.forwardRef<
+  {
+    nextPage: () => void;
+    prevPage: () => void;
+  },
+  ReadiumProps
+>(
+  (
+    {
+      file,
+      settings,
+      location,
+      onLocationChange,
+      onTableOfContents,
+      style = {},
+      height,
+      width,
     },
-    prevPage: () => {
-      readerRef.current?.previousPage();
-    },
-  }));
+    ref
+  ) => {
+    const readerRef = useReaderRef({
+      file,
+      onLocationChange,
+      onTableOfContents,
+    });
+    const reader = readerRef.current;
 
-  useSettingsObserver(reader, settings);
-  useLocationObserver(reader, location);
+    useImperativeHandle(ref, () => ({
+      nextPage() {
+        void readerRef.current?.nextPage();
+      },
+      prevPage() {
+        void readerRef.current?.previousPage();
+      },
+    }));
 
-  const mainStyle = {
-    ...styles.maximize,
-    ...(style as CSSProperties),
-  };
+    useSettingsObserver(reader, settings);
+    useLocationObserver(reader, location);
 
-  if (height) mainStyle.height = height;
-  if (width) mainStyle.width = width;
+    const mainStyle = {
+      ...styles.maximize,
+      ...(style as CSSProperties),
+    };
 
-  return (
-    <View style={styles.container}>
-      {!reader && <div style={styles.loader}>Loading reader...</div>}
-      <div id="D2Reader-Container" style={styles.d2Container}>
-        <main
-          style={mainStyle}
-          tabIndex={-1}
-          id="iframe-wrapper"
-        >
-          <div id="reader-loading" className="loading" style={styles.loader}></div>
-          <div id="reader-error" className="error"></div>
-        </main>
-      </div>
-    </View>
-  );
-});
+    if (height) mainStyle.height = height;
+    if (width) mainStyle.width = width;
+
+    return (
+      <View style={styles.container}>
+        {!reader && <div style={styles.loader}>Loading reader...</div>}
+        <div id="D2Reader-Container" style={styles.d2Container}>
+          <main style={mainStyle} tabIndex={-1} id="iframe-wrapper">
+            <div
+              id="reader-loading"
+              className="loading"
+              style={styles.loader}
+            />
+            <div id="reader-error" className="error" />
+          </main>
+        </div>
+      </View>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   container: {

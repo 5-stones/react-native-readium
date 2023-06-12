@@ -1,15 +1,14 @@
 import { UIManager } from 'react-native';
 
-import { COMPONENT_NAME } from './COMPONENT_NAME';
+import { componentName } from './componentName';
 
 export const createFragment = (viewId: number | null) => {
   if (viewId !== null) {
     UIManager.dispatchViewManagerCommand(
       viewId,
-      // we are calling the 'create' command
-      // @ts-ignore
-      UIManager.getViewManagerConfig(COMPONENT_NAME).Commands.create.toString(),
-      [viewId],
+      // We are calling the 'create' command
+      UIManager.getViewManagerConfig(componentName).Commands.create.toString(),
+      [viewId]
     );
   }
-}
+};

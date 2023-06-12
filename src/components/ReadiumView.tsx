@@ -1,67 +1,113 @@
-import React, { useCallback, useState, useEffect, forwardRef } from 'react';
-import { View, Platform, findNodeHandle, StyleSheet } from 'react-native';
-import type { BaseReadiumViewProps, BaseReadiumViewRef, Dimensions } from '../interfaces';
+import React, { forwardRef, useCallback, useEffect, useState } from 'react';
+import {
+  Platform,
+  StyleSheet,
+  View,
+  findNodeHandle,
+  type LayoutChangeEvent,
+} from 'react-native';
+import type {
+  BaseReadiumViewProps,
+  BaseReadiumViewRef,
+  Dimensions,
+  Link,
+  Locator,
+} from '../interfaces';
 import { Settings } from '../interfaces';
-import { createFragment, getWidthOrHeightValue as dimension } from '../utils';
+import { createFragment, getWidthOrHeightValue } from '../utils';
 import { BaseReadiumView } from './BaseReadiumView';
 
-export type ReadiumProps = BaseReadiumViewProps;
+export type ReadiumProps = Omit<
+  BaseReadiumViewProps,
+  'onLocationChange' | 'onTableOfContents'
+> & {
+  onLocationChange?: (locator: Locator) => void;
+  onTableOfContents?: (toc: Link[] | null) => void;
+};
 
-export const ReadiumView = forwardRef<BaseReadiumViewRef, ReadiumProps>(({
-  onLocationChange: wrappedOnLocationChange,
-  onTableOfContents: wrappedOnTableOfContents,
-  settings: unmappedSettings,
-  ...props
-}, ref) => {
-  const [{ height, width }, setDimensions] = useState<Dimensions>({
-    width: 0,
-    height: 0,
-  });
-  // set the view dimensions on layout
-  const onLayout = useCallback(({ nativeEvent: { layout: { width, height } } }: any) => {
-    setDimensions({
-      width: dimension(width),
-      height: dimension(height),
+export const ReadiumView = forwardRef<BaseReadiumViewRef, ReadiumProps>(
+  (
+    {
+      onLocationChange: wrappedOnLocationChange,
+      onTableOfContents: wrappedOnTableOfContents,
+      settings: unmappedSettings,
+      ...props
+    },
+    ref
+  ) => {
+    const [dimensions, setDimensions] = useState<Dimensions>({
+      width: 0,
+      height: 0,
     });
-  }, []);
-  // wrap the native onLocationChange and extract the raw event value
-  const onLocationChange = useCallback((event: any) => {
-    if (wrappedOnLocationChange) {
-      wrappedOnLocationChange(event.nativeEvent);
-    }
-  }, [wrappedOnLocationChange]);
+    // Set the view dimensions on layout
+    const onLayout = useCallback(
+      ({
+        nativeEvent: {
+          layout: { width, height },
+        },
+      }: LayoutChangeEvent) => {
+        setDimensions({
+          width: getWidthOrHeightValue(width),
+          height: getWidthOrHeightValue(height),
+        });
+      },
+      []
+    );
+    // Wrap the native onLocationChange and extract the raw event value
+    const onLocationChange = useCallback<
+      Required<BaseReadiumViewProps>['onLocationChange']
+    >(
+      (event) => {
+        if (wrappedOnLocationChange) {
+          wrappedOnLocationChange(event.nativeEvent);
+        }
+      },
+      [wrappedOnLocationChange]
+    );
 
-  const onTableOfContents = useCallback((event: any) => {
-    if (wrappedOnTableOfContents) {
-      const toc = event.nativeEvent.toc || null;
-      wrappedOnTableOfContents(toc);
-    }
-  }, [wrappedOnTableOfContents]);
+    const onTableOfContents = useCallback<
+      Required<BaseReadiumViewProps>['onTableOfContents']
+    >(
+      (event) => {
+        if (wrappedOnTableOfContents) {
+          const toc = event.nativeEvent.toc ?? null;
+          wrappedOnTableOfContents(toc);
+        }
+      },
+      [wrappedOnTableOfContents]
+    );
 
-  useEffect(() => {
-    if (Platform.OS === 'android') {
-      const viewId = findNodeHandle(ref.current);
-      createFragment(viewId);
-    }
-  }, [])
+    useEffect(() => {
+      if (
+        Platform.OS === 'android' &&
+        ref != null &&
+        typeof ref !== 'function'
+      ) {
+        const viewId = findNodeHandle(ref.current);
+        createFragment(viewId);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-  return (
-    <View
-      style={styles.container}
-      onLayout={onLayout}
-    >
-      <BaseReadiumView
-        height={height}
-        width={width}
-        {...props}
-        onLocationChange={onLocationChange}
-        onTableOfContents={onTableOfContents}
-        settings={unmappedSettings ? Settings.map(unmappedSettings) : undefined}
-        ref={ref}
-      />
-    </View>
-  );
-});
+    return (
+      <View style={styles.container} onLayout={onLayout}>
+        <BaseReadiumView
+          height={dimensions.height}
+          width={dimensions.width}
+          {...props}
+          ref={ref}
+          settings={
+            unmappedSettings ? Settings.map(unmappedSettings) : undefined
+          }
+          onLocationChange={onLocationChange}
+          onTableOfContents={onTableOfContents}
+        />
+      </View>
+    );
+  }
+);
+
+ReadiumView.displayName = 'ReadiumView';
 
 const styles = StyleSheet.create({
   container: { width: '100%', height: '100%' },

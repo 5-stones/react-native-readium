@@ -1,12 +1,12 @@
 import React from 'react';
-import { StyleSheet, ViewStyle } from 'react-native';
+import { StyleSheet, type ViewStyle } from 'react-native';
 import { Button, Icon } from '@rneui/themed';
 
-export interface ReaderButtonProps {
+export type ReaderButtonProps = {
   name: string;
   onPress: () => void;
   style?: ViewStyle;
-}
+};
 
 export const ReaderButton: React.FC<ReaderButtonProps> = ({
   name,
@@ -16,13 +16,13 @@ export const ReaderButton: React.FC<ReaderButtonProps> = ({
   return (
     <Button
       icon={<Icon name={name} size={60} />}
-      onPress={onPress}
       containerStyle={[style, styles.height]}
       style={styles.height}
       buttonStyle={styles.height}
+      onPress={onPress}
     />
   );
-}
+};
 
 const styles = StyleSheet.create({
   height: {
