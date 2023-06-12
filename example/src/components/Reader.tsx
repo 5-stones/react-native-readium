@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, createRef } from 'react';
 import { StyleSheet, View, Text, Platform } from 'react-native';
 import {
   ReadiumView,
   Settings,
 } from 'react-native-readium';
-import type { Link, Locator, File } from 'react-native-readium';
+import type { Link, Locator, File, BaseReadiumViewRef } from 'react-native-readium';
 
 import RNFS from '../utils/RNFS';
 import {
@@ -22,7 +22,7 @@ export const Reader: React.FC = () => {
   const [file, setFile] = useState<File>();
   const [location, setLocation] = useState<Locator | Link>();
   const [settings, setSettings] = useState<Partial<Settings>>(DEFAULT_SETTINGS);
-  const ref = useRef<any>();
+  const ref = createRef<BaseReadiumViewRef>();
 
   useEffect(() => {
     async function run() {

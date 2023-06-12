@@ -1,26 +1,24 @@
-import React, { useCallback, useState, useRef, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, forwardRef } from 'react';
 import { View, Platform, findNodeHandle, StyleSheet } from 'react-native';
-
-import type { BaseReadiumViewProps, Dimensions } from '../interfaces';
+import type { BaseReadiumViewProps, BaseReadiumViewRef, Dimensions } from '../interfaces';
 import { Settings } from '../interfaces';
 import { createFragment, getWidthOrHeightValue as dimension } from '../utils';
 import { BaseReadiumView } from './BaseReadiumView';
 
 export type ReadiumProps = BaseReadiumViewProps;
 
-export const ReadiumView: React.FC<ReadiumProps> = ({
+export const ReadiumView = forwardRef<BaseReadiumViewRef, ReadiumProps>(({
   onLocationChange: wrappedOnLocationChange,
   onTableOfContents: wrappedOnTableOfContents,
   settings: unmappedSettings,
   ...props
-}) => {
-  const ref = useRef(null);
+}, ref) => {
   const [{ height, width }, setDimensions] = useState<Dimensions>({
     width: 0,
     height: 0,
   });
   // set the view dimensions on layout
-  const onLayout = useCallback(({ nativeEvent: { layout: { width, height } }}: any) => {
+  const onLayout = useCallback(({ nativeEvent: { layout: { width, height } } }: any) => {
     setDimensions({
       width: dimension(width),
       height: dimension(height),
@@ -63,7 +61,7 @@ export const ReadiumView: React.FC<ReadiumProps> = ({
       />
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: { width: '100%', height: '100%' },
