@@ -175,6 +175,7 @@ dependencies {
   // AM NOTE: needs to stay this version for now (June 24,2020)
   //noinspection GradleDependency
   implementation "org.jsoup:jsoup:1.13.1"
+  implementation 'androidx.datastore:datastore-preferences-core:1.0.0'
 
   // Room database
   final room_version = "2.4.0-beta01"
