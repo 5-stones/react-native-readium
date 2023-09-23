@@ -87,17 +87,17 @@ PODS:
   - libevent (2.1.12)
   - Minizip (1.0.0)
   - OpenSSL-Universal (1.1.1100)
-  - R2Navigator (2.5.0):
+  - R2Navigator (2.6.0):
     - DifferenceKit (~> 1.0)
     - R2Shared
     - ReadiumInternal
     - SwiftSoup (<= 2.5.3)
-  - R2Shared (2.5.0):
+  - R2Shared (2.6.0):
     - Fuzi (~> 3.0)
     - Minizip (~> 1.0)
     - ReadiumInternal
     - SwiftSoup (<= 2.5.3)
-  - R2Streamer (2.5.0):
+  - R2Streamer (2.6.0):
     - CryptoSwift (<= 1.5.1)
     - Fuzi (~> 3.0)
     - GCDWebServer (~> 3.0)
@@ -420,7 +420,7 @@ PODS:
     - React-jsi (= 0.71.10)
     - React-logger (= 0.71.10)
     - React-perflogger (= 0.71.10)
-  - ReadiumInternal (2.5.0)
+  - ReadiumInternal (2.6.0)
   - RNFS (2.19.0):
     - React-Core
   - RNScreens (3.20.0):
@@ -464,9 +464,9 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - Minizip
   - OpenSSL-Universal (= 1.1.1100)
-  - R2Navigator (from `https://raw.githubusercontent.com/readium/swift-toolkit/develop/Support/CocoaPods/ReadiumNavigator.podspec`)
-  - R2Shared (from `https://raw.githubusercontent.com/readium/swift-toolkit/develop/Support/CocoaPods/ReadiumShared.podspec`)
-  - R2Streamer (from `https://raw.githubusercontent.com/readium/swift-toolkit/develop/Support/CocoaPods/ReadiumStreamer.podspec`)
+  - R2Navigator (from `https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumNavigator.podspec`)
+  - R2Shared (from `https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumShared.podspec`)
+  - R2Streamer (from `https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumStreamer.podspec`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -499,7 +499,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
-  - ReadiumInternal (from `https://raw.githubusercontent.com/readium/swift-toolkit/develop/Support/CocoaPods/ReadiumInternal.podspec`)
+  - ReadiumInternal (from `https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumInternal.podspec`)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
@@ -542,11 +542,11 @@ EXTERNAL SOURCES:
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   R2Navigator:
-    :podspec: https://raw.githubusercontent.com/readium/swift-toolkit/develop/Support/CocoaPods/ReadiumNavigator.podspec
+    :podspec: https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumNavigator.podspec
   R2Shared:
-    :podspec: https://raw.githubusercontent.com/readium/swift-toolkit/develop/Support/CocoaPods/ReadiumShared.podspec
+    :podspec: https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumShared.podspec
   R2Streamer:
-    :podspec: https://raw.githubusercontent.com/readium/swift-toolkit/develop/Support/CocoaPods/ReadiumStreamer.podspec
+    :podspec: https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumStreamer.podspec
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -608,7 +608,7 @@ EXTERNAL SOURCES:
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
   ReadiumInternal:
-    :podspec: https://raw.githubusercontent.com/readium/swift-toolkit/develop/Support/CocoaPods/ReadiumInternal.podspec
+    :podspec: https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumInternal.podspec
   RNFS:
     :path: "../node_modules/react-native-fs"
   RNScreens:
@@ -656,9 +656,9 @@ SPEC CHECKSUMS:
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   Minizip: 188cb3e39a1195c283ae03bf673d182596fefd0b
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
-  R2Navigator: aec49d5917961e6efa1f0241636cd0ee1c0066c0
-  R2Shared: c9ec817818c3c37fa3356415e28f8a7515bf7d9f
-  R2Streamer: 4f8fbcc53eaaf6dc7275931075519857bf8c42f8
+  R2Navigator: 4b53a3d10dd7282c9d9cd6d2188e68f0041840fc
+  R2Shared: fa34e56aa6e67e34608bf6ef72acf2631cbc4b5e
+  R2Streamer: d2501f0395c868cb65329ec46e3ab604b8b98687
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: 8ef706f91e2b643cd32c26a57700b5f24fab0585
   RCTTypeSafety: 5fbddd8eb9242b91ac0d901c01da3673f358b1b7
@@ -689,7 +689,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: d13cc2d63286c633393d3a7f6f607cc2a09ec011
   React-runtimeexecutor: a9a1cd79996c9a0846e3232ecb25c64e1cc0172e
   ReactCommon: 86289421205f793f8b50106aabca54f0b4abb574
-  ReadiumInternal: f74231568731b211721711f04c1a356120d3655d
+  ReadiumInternal: a74f61e9c0fbe2407f4e5c53aa032aa92193f3d5
   RNFS: fc610f78fdf8bfc89a9e5cc2f898519f4dba1002
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   RNVectorIcons: 7923e585eaeb139b9f4531d25a125a1500162a0b
@@ -698,6 +698,6 @@ SPEC CHECKSUMS:
   Yoga: e7ea9e590e27460d28911403b894722354d73479
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 2a8be7561bf6f22356bafd571e858772c5f66722
+PODFILE CHECKSUM: 003c7f046b9d885a8d35a4491423f514e504d189
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.1
