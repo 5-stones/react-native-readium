@@ -23,16 +23,10 @@ class ReaderService(
   private val reactContext: ReactApplicationContext
 ) {
   private var streamer = Streamer(reactContext)
-  // see R2App.onCreate
-  private var server: Server
   // val channel = EventChannel(Channel<Event>(Channel.BUFFERED), viewModelScope)
   private var store = ViewModelStore()
 
   companion object {
-    @SuppressLint("StaticFieldLeak")
-    lateinit var server: Server
-      private set
-
     lateinit var R2DIRECTORY: String
       private set
 
@@ -41,10 +35,6 @@ class ReaderService(
   }
 
   init {
-    val s = ServerSocket(0)
-    s.close()
-    server = Server(s.localPort, reactContext)
-    this.startServer()
   }
 
   fun locatorFromLinkOrLocator(
@@ -80,46 +70,16 @@ class ReaderService(
       sender = reactContext
     )
       .onSuccess {
-        val url = prepareToServe(it)
-        if (url != null) {
           val locator = locatorFromLinkOrLocator(initialLocation, it)
-          val readerFragment = EpubReaderFragment.newInstance(url)
+          val readerFragment = EpubReaderFragment.newInstance()
           readerFragment.initFactory(it, locator)
           callback.invoke(readerFragment)
-        }
       }
       .onFailure {
         tryOrNull { asset.file.delete() }
         RNLog.w(reactContext, "Error executing ReaderService.openPublication")
         // TODO: implement failure event
       }
-  }
-
-  private fun prepareToServe(publication: Publication): URL? {
-    val userProperties =
-      reactContext.filesDir.path + "/" + Injectable.Style.rawValue + "/UserProperties.json"
-    return server.addPublication(
-      publication,
-      userPropertiesFile = File(userProperties)
-    )
-  }
-
-  private fun startServer() {
-    if (!server.isAlive) {
-      try {
-        server.start()
-      } catch (e: IOException) {
-        RNLog.e(reactContext, "Unable to start the Readium server.")
-      }
-      if (server.isAlive) {
-        // // Add your own resources here
-        // server.loadCustomResource(assets.open("scripts/test.js"), "test.js")
-        // server.loadCustomResource(assets.open("styles/test.css"), "test.css")
-        // server.loadCustomFont(assets.open("fonts/test.otf"), applicationContext, "test.otf")
-
-        isServerStarted = true
-      }
-    }
   }
 
   sealed class Event {

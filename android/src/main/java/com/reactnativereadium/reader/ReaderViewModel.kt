@@ -30,6 +30,11 @@ class ReaderViewModel(
 ) : ViewModel() {
     val channel = EventChannel(Channel<Event>(Channel.BUFFERED), viewModelScope)
 
+  val settings: UserPreferencesViewModel<*, *>? = UserPreferencesViewModel(
+    viewModelScope = viewModelScope,
+    readerInitData = readerInitData
+  )
+
     fun search(query: String) = viewModelScope.launch {
         if (query == lastSearchQuery) return@launch
         lastSearchQuery = query

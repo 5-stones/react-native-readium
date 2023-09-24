@@ -24,6 +24,8 @@ import kotlinx.coroutines.delay
 import org.readium.r2.navigator.epub.EpubNavigatorFragment
 import org.readium.r2.navigator.ExperimentalDecorator
 import org.readium.r2.navigator.Navigator
+import org.readium.r2.navigator.VisualNavigator
+import org.readium.r2.navigator.util.EdgeTapNavigation
 import org.readium.r2.shared.APPEARANCE_REF
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
@@ -86,12 +88,9 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
             publication = it.publication
           }
 
-        val baseUrl = checkNotNull(requireArguments().getString(BASE_URL_ARG))
-
         childFragmentManager.fragmentFactory =
             EpubNavigatorFragment.createFactory(
                 publication = publication,
-                baseUrl = baseUrl,
                 initialLocator = model.initialLocation,
                 listener = this,
                 config = EpubNavigatorFragment.Configuration().apply {
@@ -176,8 +175,18 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
     }
 
     override fun onTap(point: PointF): Boolean {
+      val navigated = edgeTapNavigation.onTap(point, requireView())
+
+      if (!navigated) {
         requireActivity().toggleSystemUi()
-        return true
+      }
+      return true
+    }
+
+    private val edgeTapNavigation by lazy {
+      EdgeTapNavigation(
+        navigator = navigator as VisualNavigator
+      )
     }
 
     companion object {
@@ -190,12 +199,8 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
 
         private const val IS_SEARCH_VIEW_ICONIFIED = "isSearchViewIconified"
 
-        fun newInstance(baseUrl: URL): EpubReaderFragment {
-            return EpubReaderFragment().apply {
-                arguments = Bundle().apply {
-                    putString(BASE_URL_ARG, baseUrl.toString())
-                }
-            }
+        fun newInstance(): EpubReaderFragment {
+            return EpubReaderFragment()
         }
     }
 }
