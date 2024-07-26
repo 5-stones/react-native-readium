@@ -1,3 +1,12 @@
+# [2.0.0-rc.0](https://github.com/5-stones/react-native-readium/compare/v1.2.1...v2.0.0-rc.0) (2024-07-26)
+
+
+### Features
+
+* **android, example:** upgrade react-native support to 0.74.3 and android to kotlin-toolkit@2.4.1 ([1479382](https://github.com/5-stones/react-native-readium/commit/1479382214d1acd59d7f76690d933459c745c5c7))
+
+
+
 ## [1.2.1](https://github.com/5-stones/react-native-readium/compare/v1.2.0...v1.2.1) (2023-05-10)
 
 
