@@ -51,20 +51,28 @@ export const ReadiumView = React.forwardRef<{
 
   return (
     <View style={styles.container}>
-      {!reader && <div style={styles.loader}>Loading reader...</div>}
+      {!reader && <div style={loaderStyle}>Loading reader...</div>}
       <div id="D2Reader-Container" style={styles.d2Container}>
         <main
           style={mainStyle}
           tabIndex={-1}
           id="iframe-wrapper"
         >
-          <div id="reader-loading" className="loading" style={styles.loader}></div>
+          <div id="reader-loading" className="loading" style={loaderStyle}></div>
           <div id="reader-error" className="error"></div>
         </main>
       </div>
     </View>
   );
 });
+
+const loaderStyle: React.CSSProperties = {
+  width: '100%',
+  height: '100%',
+  textAlign: 'center',
+  position: 'relative',
+  top: 'calc(50% - 10px)',
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -80,18 +88,5 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     display: 'flex',
-  },
-  button: {
-    width: 50,
-    fontSize: 100,
-    backgroundColor: 'transparent',
-    border: 'none',
-  },
-  loader: {
-    width: '100%',
-    height: '100%',
-    textAlign: 'center',
-    position: 'relative',
-    top: 'calc(50% - 10px)',
   },
 });

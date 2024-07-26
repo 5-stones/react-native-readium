@@ -85,9 +85,9 @@ target 'ExampleApp' do
   config = use_native_modules!
   ...
   pod 'GCDWebServer', podspec: 'https://raw.githubusercontent.com/readium/GCDWebServer/3.7.5/GCDWebServer.podspec', modular_headers: true
+  pod 'R2Navigator', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumNavigator.podspec'
   pod 'R2Shared', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumShared.podspec'
   pod 'R2Streamer', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumStreamer.podspec'
-  pod 'R2Navigator', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumNavigator.podspec'
   pod 'ReadiumInternal', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumInternal.podspec'
   pod 'Minizip', modular_headers: true
   ...
@@ -99,23 +99,6 @@ Finally, install the pods:
 `pod install`
 
 #### Android
-
-You might need to [add `jcenter` if you're getting a build failure on android](https://github.com/readium/kotlin-toolkit/issues/31):
-
-```groovy
-// android/build.gradle
-...
-
-allprojects {
-    repositories {
-        ...
-        // required by react-native-readium https://github.com/readium/kotlin-toolkit/issues/31
-        jcenter()
-    }
-    ...
-}
-...
-```
 
 If you're not using `compileSdkVersion` >= 31 you'll need to update that:
 
