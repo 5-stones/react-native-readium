@@ -61,12 +61,6 @@ class UserSettings(
         pageMargins = preferences.getFloat(PAGE_MARGINS_REF, pageMargins)
         lineHeight = preferences.getFloat(LINE_HEIGHT_REF, lineHeight)
         userProperties = getUserSettings()
-
-        //Setting up screen brightness
-        val backLightValue = preferences.getInt("reader_brightness", 50).toFloat() / 100
-        val layoutParams = (context as AppCompatActivity).window.attributes
-        layoutParams.screenBrightness = backLightValue
-        context.window.attributes = layoutParams
     }
 
     fun updateSettingsFromMap(map: Map<String, Any>) {
