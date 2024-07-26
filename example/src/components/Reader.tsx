@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, View, Text, Platform } from 'react-native';
+import { StyleSheet, View, Text, Platform, DimensionValue } from 'react-native';
 import {
   ReadiumView,
   Settings,
@@ -66,7 +66,11 @@ export const Reader: React.FC = () => {
           <View style={styles.button}>
             <TableOfContents
               items={toc}
-              onPress={(loc) => setLocation({ href: loc.href, type: 'application/xhtml+xml', title: loc.title })}
+              onPress={(loc) => setLocation({
+                href: loc.href,
+                type: 'application/xhtml+xml',
+                title: loc.title || '',
+              })}
             />
           </View>
           <View style={styles.button}>
@@ -118,7 +122,7 @@ export const Reader: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    height: Platform.OS === 'web' ? '100vh' : '100%',
+    height: (Platform.OS === 'web' ? '100vh' : '100%') as DimensionValue,
   },
   reader: {
     flexDirection: 'row',

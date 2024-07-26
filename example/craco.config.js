@@ -1,5 +1,4 @@
 const path = require('path');
-const {CracoAliasPlugin} = require('react-app-alias-ex');
 const babelInclude = require('@dealmore/craco-plugin-babel-include');
 const webpack = require('webpack');
 
@@ -31,17 +30,8 @@ module.exports = {
       '@babel/preset-react',
       '@babel/preset-typescript',
     ],
-    plugins: [
-      '@babel/plugin-proposal-private-methods',
-      '@babel/plugin-proposal-class-properties',
-      '@babel/plugin-proposal-private-property-in-object',
-    ],
   },
   plugins: [
-    {
-        plugin: CracoAliasPlugin,
-        options: {}
-    },
     {
       plugin: babelInclude,
       options: {
