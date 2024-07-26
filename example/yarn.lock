@@ -13873,22 +13873,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-app-alias-ex@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "react-app-alias-ex@npm:2.1.0"
-  dependencies:
-    react-app-alias: ^2.0.0
-  checksum: d85fb605eea8795880bf26f8d5d6910637155c5f7b693fcc3ef8e02d59842b68d7968e5e475150936f3582d051826bca43ee5418118ec4e5842121f9e40a8338
-  languageName: node
-  linkType: hard
-
-"react-app-alias@npm:^2.0.0":
-  version: 2.2.2
-  resolution: "react-app-alias@npm:2.2.2"
-  checksum: f34d8047b599ce17c7dd32cdef7a93fdb69d466621db63a9d589bd720a0ca6298b186e6c340c1ee33f8d614d3dceed87375a81bcd2d57373504c677cb58270f9
-  languageName: node
-  linkType: hard
-
 "react-app-polyfill@npm:^3.0.0":
   version: 3.0.0
   resolution: "react-app-polyfill@npm:3.0.0"
@@ -14060,7 +14044,6 @@ __metadata:
     jest: ^29.6.3
     prettier: 2.8.8
     react: 18.2.0
-    react-app-alias-ex: ^2.1.0
     react-dom: ^18.2.0
     react-native: 0.74.3
     react-native-clean-project: ^4.0.1
