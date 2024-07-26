@@ -1,3 +1,13 @@
+## [2.0.0-rc.1](https://github.com/5-stones/react-native-readium/compare/v2.0.0-rc.0...v2.0.0-rc.1) (2024-07-26)
+
+
+### Bug Fixes
+
+* **android:** don't set the brightness of the activity. instead rely on device/app settings ([8af916b](https://github.com/5-stones/react-native-readium/commit/8af916b86a3c42a9abc02a63aa239fa6e8c4e8a5))
+* **ReadiumView:** fix react warning regarding forwardRefs ([45792e6](https://github.com/5-stones/react-native-readium/commit/45792e6f92e9526282c1fc2e6d5f8f57e199ecd7))
+
+
+
 # [2.0.0-rc.0](https://github.com/5-stones/react-native-readium/compare/v1.2.1...v2.0.0-rc.0) (2024-07-26)
 
 
