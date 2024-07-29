@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect, forwardRef } from 'react';
+import React, { useCallback, useState, useEffect, forwardRef, ForwardedRef, useRef, createRef } from 'react';
 import { View, Platform, findNodeHandle, StyleSheet } from 'react-native';
 
 import type { BaseReadiumViewProps, Dimensions } from '../interfaces';
@@ -13,11 +13,13 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(({
   onTableOfContents: wrappedOnTableOfContents,
   settings: unmappedSettings,
   ...props
-}, ref) => {
+}, forwardedRef) => {
+  const defaultRef = useRef<any>(null);
   const [{ height, width }, setDimensions] = useState<Dimensions>({
     width: 0,
     height: 0,
   });
+
   // set the view dimensions on layout
   const onLayout = useCallback(({ nativeEvent: { layout: { width, height } }}: any) => {
     setDimensions({
@@ -25,6 +27,7 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(({
       height: dimension(height),
     });
   }, []);
+
   // wrap the native onLocationChange and extract the raw event value
   const onLocationChange = useCallback((event: any) => {
     if (wrappedOnLocationChange) {
@@ -39,13 +42,22 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(({
     }
   }, [wrappedOnTableOfContents]);
 
+  // create the view fragment on android
   useEffect(() => {
-    if (Platform.OS === 'android') {
-      // @ts-ignore 
-      const viewId = findNodeHandle(ref.current);
+    if (Platform.OS === 'android' && defaultRef.current) {
+      const viewId = findNodeHandle(defaultRef.current);
       createFragment(viewId);
     }
-  }, [])
+  }, []);
+
+  // assign the forwarded ref
+  useEffect(() => {
+    if (forwardedRef && 'current' in forwardedRef) {
+      forwardedRef.current = defaultRef.current;
+    } else if (forwardedRef) {
+      forwardedRef(defaultRef);
+    }
+  }, [defaultRef.current !== null])
 
   return (
     <View
@@ -59,7 +71,7 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(({
         onLocationChange={onLocationChange}
         onTableOfContents={onTableOfContents}
         settings={unmappedSettings ? Settings.map(unmappedSettings) : undefined}
-        ref={ref}
+        ref={defaultRef}
       />
     </View>
   );
