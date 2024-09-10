@@ -1,3 +1,12 @@
+# [2.0.0](https://github.com/5-stones/react-native-readium/compare/v2.0.0-rc.2...v2.0.0) (2024-09-10)
+
+
+### Bug Fixes
+
+* **web:** update reader when file url changes ([21eda29](https://github.com/5-stones/react-native-readium/commit/21eda2950ba01469220549387bbfc9f74b2e9047))
+
+
+
 # [2.0.0-rc.2](https://github.com/5-stones/react-native-readium/compare/v2.0.0-rc.1...v2.0.0-rc.2) (2024-07-29)
 
 
