@@ -32,7 +32,7 @@ export const useReaderRef = ({
       readerRef.current = ref;
     }
     run();
-  }, []);
+  }, [file.url]);
 
   return readerRef
 };
