@@ -13,7 +13,9 @@ export const useLocationObserver = (
       reader.goTo(location as R2Locator);
     }
   }, [
-    location,
+    location?.href,
+    //@ts-ignore
+    location?.locations,
     !!reader,
   ]);
 };
