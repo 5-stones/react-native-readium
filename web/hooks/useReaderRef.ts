@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { ReadiumProps } from '../../src/components/ReadiumView';
 import type { Locator } from '../../src/interfaces';
@@ -9,6 +9,34 @@ export const useReaderRef = ({
   onTableOfContents,
 }: Pick<ReadiumProps, 'file' | 'onLocationChange' | 'onTableOfContents' >) => {
   const readerRef = useRef<D2Reader | null>(null);
+  const readingOrder = useRef<Locator[]>([]);
+
+  const onLocationChangeWithTotalProgression = useCallback(
+    (newLocation: Locator) => {
+      if (
+        !onLocationChange ||
+        !readingOrder.current ||
+        !newLocation.locations
+      ) {
+        return;
+      }
+      if (!newLocation.locations.totalProgression) {
+        const newLocationIndex = readingOrder.current.findIndex(
+          (entry) => entry.href === newLocation.href
+        );
+        const readingOrderCount = readingOrder.current.length;
+        const chapterTotalProgression =
+          readingOrder.current[newLocationIndex].locations?.totalProgression ||
+          0;
+        const intraChapterTotalProgression =
+          newLocation.locations.progression / readingOrderCount;
+        newLocation.locations.totalProgression =
+          chapterTotalProgression + intraChapterTotalProgression;
+      }
+      onLocationChange(newLocation);
+    },
+    [onLocationChange]
+  );
 
   useEffect(() => {
     async function run() {
@@ -19,7 +47,7 @@ export const useReaderRef = ({
         userSettings: { verticalScroll: false },
         api: {
           updateCurrentLocation: async (location: Locator) => {
-            if (onLocationChange) onLocationChange(location);
+            onLocationChangeWithTotalProgression(location);
             return location;
           },
         },
@@ -29,6 +57,25 @@ export const useReaderRef = ({
       if (onTableOfContents) {
         onTableOfContents(ref.tableOfContents);
       }
+
+      // This way of estimating the totalProgression treats all reading order
+      // entries as equal in length.
+      // It is based on the implementation in the Readium Go toolkit
+      // https://github.com/readium/go-toolkit/blob/31c6a65b588f825ffb6b4f2445337ffdc53af685/pkg/pub/service_positions.go#L66
+      const oldReadingOrder: Locator[] = ref.readingOrder;
+      const readingOrderCount = oldReadingOrder.length;
+      readingOrder.current = oldReadingOrder.map((item, index) => {
+        const totalProgression = index / readingOrderCount;
+        return {
+          ...item,
+          locations: {
+            ...item.locations,
+            progression: 0,
+            totalProgression: totalProgression,
+          },
+        };
+      });
+
       readerRef.current = ref;
     }
     run();
