@@ -1,3 +1,12 @@
+## [2.0.1](https://github.com/5-stones/react-native-readium/compare/v2.0.0...v2.0.1) (2024-10-03)
+
+
+### Bug Fixes
+
+* **web:** estimate the totalProgression if it is not provided ([3d849dc](https://github.com/5-stones/react-native-readium/commit/3d849dc01cb23298acdfbfecead84c084bd4b1b2))
+
+
+
 # [2.0.0](https://github.com/5-stones/react-native-readium/compare/v2.0.0-rc.2...v2.0.0) (2024-09-10)
 
 
