@@ -1,3 +1,12 @@
+## [2.0.2](https://github.com/5-stones/react-native-readium/compare/v2.0.1...v2.0.2) (2024-10-08)
+
+
+### Bug Fixes
+
+* **web:** Handle location not defined in reading order ([080b4a9](https://github.com/5-stones/react-native-readium/commit/080b4a911bea77ae174face2cf24b90ae0d58b32))
+
+
+
 ## [2.0.1](https://github.com/5-stones/react-native-readium/compare/v2.0.0...v2.0.1) (2024-10-03)
 
 
