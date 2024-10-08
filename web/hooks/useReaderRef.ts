@@ -24,6 +24,9 @@ export const useReaderRef = ({
         const newLocationIndex = readingOrder.current.findIndex(
           (entry) => entry.href === newLocation.href
         );
+        if (newLocationIndex < 0 || !readingOrder.current[newLocationIndex]) {
+          return;
+        }
         const readingOrderCount = readingOrder.current.length;
         const chapterTotalProgression =
           readingOrder.current[newLocationIndex].locations?.totalProgression ||
