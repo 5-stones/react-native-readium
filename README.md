@@ -13,9 +13,7 @@ We :heart: open source. We work on the things that are important to us when
 we're able to work on them. Have an issue you care about?
 
 - [Dive Into The Code!](CONTRIBUTING.md)
-- [Sponsor Your Issue](https://issuehunt.io/r/5-stones/react-native-readium).
-
-[![Issue Hunt](https://issuehunt.io/static/embed/issuehunt-button-v1.svg)](https://issuehunt.io/r/5-stones/react-native-readium)
+- [Sponsor Your Issue](#sponsor-the-library)
 
 ----
 
@@ -200,6 +198,10 @@ e.g.
 yarn version --new-version 1.2.17
 yarn version --patch // 1.2.17 -> 1.2.18
 ```
+
+## Sponsor The Library
+
+If you'd like to sponsor a specific feature, fix, or the library in general, please reach out on an issue and we'll have a conversation!
 
 ## License
 
