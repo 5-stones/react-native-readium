@@ -113,6 +113,12 @@ class ReaderViewModel(
         class Failure(val error: UserException) : Event()
         class LocatorUpdate(val locator: Locator) : Event()
         class TableOfContentsLoaded(val toc: List<Link>) : Event()
+        class PositionsLoaded(val positions: Positions) : Event() {
+          data class Positions(
+            val total: Int,
+            val positionsByReadingOrder: List<List<Locator>>
+          )
+        }
     }
 
     sealed class FeedbackEvent {

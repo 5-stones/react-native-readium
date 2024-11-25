@@ -78,6 +78,20 @@ class ReadiumView(
             payload
           )
         }
+        is ReaderViewModel.Event.PositionsLoaded -> {
+          val positionsByReadingOrder = event.positions.positionsByReadingOrder.map { locators ->
+            locators.map { it.toJSON().toMap() }
+          }
+          val payload = Arguments.makeNativeMap(mapOf(
+            "total" to event.positions.total,
+            "positionsByReadingOrder" to positionsByReadingOrder
+          ))
+          module.receiveEvent(
+            this.id.toInt(),
+            ReadiumViewManager.ON_POSITIONS,
+            payload
+          )
+        }
         else -> {
           // do nothing
         }
