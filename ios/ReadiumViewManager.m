@@ -7,5 +7,6 @@ RCT_EXPORT_VIEW_PROPERTY(location, NSDictionary *)
 RCT_EXPORT_VIEW_PROPERTY(settings, NSDictionary *)
 RCT_EXPORT_VIEW_PROPERTY(onLocationChange, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onTableOfContents, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onPositions, RCTDirectEventBlock)
 
 @end

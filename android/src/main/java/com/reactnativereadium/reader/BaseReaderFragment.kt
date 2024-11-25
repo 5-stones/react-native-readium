@@ -11,6 +11,9 @@ import org.readium.r2.navigator.*
 import org.readium.r2.shared.publication.Locator
 import com.reactnativereadium.utils.EventChannel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
+import org.readium.r2.shared.publication.services.positions
+import org.readium.r2.shared.publication.services.positionsByReadingOrder
 
 /*
  * Base reader fragment class
@@ -38,6 +41,14 @@ abstract class BaseReaderFragment : Fragment() {
     val viewScope = viewLifecycleOwner.lifecycleScope
 
     channel.send(ReaderViewModel.Event.TableOfContentsLoaded(model.publication.tableOfContents))
+    viewScope.launch {
+      channel.send(ReaderViewModel.Event.PositionsLoaded(
+        ReaderViewModel.Event.PositionsLoaded.Positions(
+          total = model.publication.positions().count(),
+          positionsByReadingOrder = model.publication.positionsByReadingOrder()
+        )
+      ))
+    }
     navigator.currentLocator
       .onEach { channel.send(ReaderViewModel.Event.LocatorUpdate(it)) }
       .launchIn(viewScope)

@@ -35,6 +35,7 @@ class ReadiumView : UIView, Loggable {
   }
   @objc var onLocationChange: RCTDirectEventBlock?
   @objc var onTableOfContents: RCTDirectEventBlock?
+  @objc var onPositions: RCTDirectEventBlock?
 
   func loadBook(
     url: String,
@@ -162,6 +163,14 @@ class ReadiumView : UIView, Loggable {
       "toc": vc.publication.tableOfContents.map({ link in
         return link.json
       })
+    ])
+    self.onPositions?([
+      "total": vc.publication.positions.count,
+      "positionsByReadingOrder": vc.publication.positionsByReadingOrder.map({ position in
+        return position.map({ locator in
+          return locator.json
+        })
+      }),
     ])
   }
 }
