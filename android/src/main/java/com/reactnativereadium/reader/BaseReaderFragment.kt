@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.readium.r2.navigator.*
 import org.readium.r2.shared.publication.Locator
+import org.readium.r2.shared.publication.Metadata
 import com.reactnativereadium.utils.EventChannel
 import kotlinx.coroutines.channels.Channel
 
@@ -38,6 +39,7 @@ abstract class BaseReaderFragment : Fragment() {
     val viewScope = viewLifecycleOwner.lifecycleScope
 
     channel.send(ReaderViewModel.Event.TableOfContentsLoaded(model.publication.tableOfContents))
+    channel.send(ReaderViewModel.Event.MetadataLoaded(model.publication.metadata))
     navigator.currentLocator
       .onEach { channel.send(ReaderViewModel.Event.LocatorUpdate(it)) }
       .launchIn(viewScope)

@@ -78,6 +78,15 @@ class ReadiumView(
             payload
           )
         }
+        is ReaderViewModel.Event.MetadataLoaded -> {
+          val json = event.metadata.toJSON()
+          val payload = Arguments.makeNativeMap(json.toMap())
+          module.receiveEvent(
+            this.id.toInt(),
+            ReadiumViewManager.ON_METADATA,
+            payload
+          )
+        }
         else -> {
           // do nothing
         }
