@@ -35,6 +35,7 @@ class ReadiumView : UIView, Loggable {
   }
   @objc var onLocationChange: RCTDirectEventBlock?
   @objc var onTableOfContents: RCTDirectEventBlock?
+  @objc var onMetadata: RCTDirectEventBlock?
 
   func loadBook(
     url: String,
@@ -163,5 +164,9 @@ class ReadiumView : UIView, Loggable {
         return link.json
       })
     ])
+    self.onMetadata?([
+      "metadata": vc.publication.metadata.json
+    ])
+
   }
 }

@@ -22,6 +22,7 @@ import org.readium.r2.shared.Search
 import org.readium.r2.shared.UserException
 import org.readium.r2.shared.publication.Link
 import org.readium.r2.shared.util.Try
+import org.readium.r2.shared.publication.Metadata
 
 @OptIn(Search::class, ExperimentalDecorator::class)
 class ReaderViewModel(
@@ -113,6 +114,7 @@ class ReaderViewModel(
         class Failure(val error: UserException) : Event()
         class LocatorUpdate(val locator: Locator) : Event()
         class TableOfContentsLoaded(val toc: List<Link>) : Event()
+        class MetadataLoaded(val metadata: Metadata) : Event()
     }
 
     sealed class FeedbackEvent {

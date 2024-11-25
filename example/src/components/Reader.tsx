@@ -1,10 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet, View, Text, Platform, DimensionValue } from 'react-native';
-import {
-  ReadiumView,
-  Settings,
-} from 'react-native-readium';
-import type { Link, Locator, File } from 'react-native-readium';
+import { ReadiumView, Settings } from 'react-native-readium';
+import type { Link, Locator, File, Metadata } from 'react-native-readium';
 
 import RNFS from '../utils/RNFS';
 import {
@@ -22,11 +19,13 @@ export const Reader: React.FC = () => {
   const [file, setFile] = useState<File>();
   const [location, setLocation] = useState<Locator | Link>();
   const [settings, setSettings] = useState<Partial<Settings>>(DEFAULT_SETTINGS);
+  const [metadata, setMetadata] = useState<Metadata | null>(null);
   const ref = useRef<any>();
+
+  console.log('Metadata:', JSON.stringify(metadata, null, 2));
 
   useEffect(() => {
     async function run() {
-
       if (Platform.OS === 'web') {
         setFile({
           url: EPUB_URL,
@@ -56,7 +55,7 @@ export const Reader: React.FC = () => {
       }
     }
 
-    run()
+    run();
   }, []);
 
   if (file) {
@@ -66,11 +65,13 @@ export const Reader: React.FC = () => {
           <View style={styles.button}>
             <TableOfContents
               items={toc}
-              onPress={(loc) => setLocation({
-                href: loc.href,
-                type: 'application/xhtml+xml',
-                title: loc.title || '',
-              })}
+              onPress={(loc) =>
+                setLocation({
+                  href: loc.href,
+                  type: 'application/xhtml+xml',
+                  title: loc.title || '',
+                })
+              }
             />
           </View>
           <View style={styles.button}>
@@ -97,7 +98,10 @@ export const Reader: React.FC = () => {
               settings={settings}
               onLocationChange={(locator: Locator) => setLocation(locator)}
               onTableOfContents={(toc: Link[] | null) => {
-                if (toc) setToc(toc)
+                if (toc) setToc(toc);
+              }}
+              onMetadata={(metadata: Metadata) => {
+                if (metadata) setMetadata(metadata);
               }}
             />
           </View>
@@ -118,7 +122,7 @@ export const Reader: React.FC = () => {
       <Text>downloading file</Text>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
