@@ -1,3 +1,17 @@
+# [3.0.0](https://github.com/5-stones/react-native-readium/compare/v2.0.2...v3.0.0) (2025-02-11)
+
+
+### Bug Fixes
+
+* **android:** remove tap toggles ui visibility ([81ca01a](https://github.com/5-stones/react-native-readium/commit/81ca01a4f38e2fb451023ce4aae31985f3613eb1))
+
+
+### BREAKING CHANGES
+
+* **android:** Tapping will no longer toggle the system ui visibility.
+
+
+
 ## [2.0.2](https://github.com/5-stones/react-native-readium/compare/v2.0.1...v2.0.2) (2024-10-08)
 
 
