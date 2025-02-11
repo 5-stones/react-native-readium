@@ -176,7 +176,6 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
     }
 
     override fun onTap(point: PointF): Boolean {
-        requireActivity().toggleSystemUi()
         return true
     }
 
