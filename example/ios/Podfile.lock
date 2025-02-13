@@ -964,7 +964,7 @@ PODS:
   - React-Mapbuffer (0.74.3):
     - glog
     - React-debug
-  - react-native-readium (1.2.1):
+  - react-native-readium (2.0.2):
     - R2Navigator
     - R2Shared
     - R2Streamer
@@ -1503,7 +1503,7 @@ SPEC CHECKSUMS:
   React-jsitracing: 6b3c8c98313642140530f93c46f5a6ca4530b446
   React-logger: fa92ba4d3a5d39ac450f59be2a3cec7b099f0304
   React-Mapbuffer: 9f68550e7c6839d01411ac8896aea5c868eff63a
-  react-native-readium: 7f71dab8b9c3eff510a2b7527e7a249691637215
+  react-native-readium: 3de612400580e915706306b4f8879d7ebd029ed7
   react-native-safe-area-context: b7daa1a8df36095a032dff095a1ea8963cb48371
   react-native-slider: ce295d2bf830a7990af05b0bd70ab28c133e230c
   React-nativeconfig: fa5de9d8f4dbd5917358f8ad3ad1e08762f01dcb
@@ -1535,7 +1535,7 @@ SPEC CHECKSUMS:
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   SwiftSoup: 33e8d374021a6c332788f78fa29a93227d8a7699
-  Yoga: 88480008ccacea6301ff7bf58726e27a72931c8d
+  Yoga: 04f1db30bb810187397fa4c37dd1868a27af229c
 
 PODFILE CHECKSUM: 686539c4adb72be4e293af103a245974f4ffa466
 
