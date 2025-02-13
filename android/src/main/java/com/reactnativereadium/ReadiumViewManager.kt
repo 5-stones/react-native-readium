@@ -82,7 +82,7 @@ class ReadiumViewManager(
   }
 
   fun locationToLinkOrLocator(location: ReadableMap): LinkOrLocator? {
-    val json = JSONObject(location.toHashMap())
+    val json = JSONObject(location.toHashMap() as HashMap<*, *>)
     val hasLocations = json.has("locations")
     val hasChildren = json.has("children")
     val hasHashHref = (json.get("href") as String).contains("#")
