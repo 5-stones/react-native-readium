@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Text, ScrollView } from 'react-native';
-import { ListItem, Overlay, Icon } from '@rneui/themed';
+import { Text, ScrollView, Modal, View, Dimensions } from 'react-native';
+import { ListItem, Icon, Button } from '@rneui/themed';
 import type { Link } from 'react-native-readium';
 
 export interface TableOfContentsProps {
@@ -24,37 +24,45 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
         size={30}
         onPress={onToggleOpen}
       />
-      <Overlay
-        isVisible={isOpen}
-        onBackdropPress={onToggleOpen}
-        overlayStyle={{
-          width: '90%',
-          marginVertical: 100,
-        }}
+      <Modal
+        visible={isOpen}
+        onRequestClose={onToggleOpen}
+        presentationStyle='overFullScreen'
+        backdropColor='transparent'
       >
-        <ScrollView>
-          <Text>Table of Contents</Text>
-          {items.map((item, idx) => (
-            <ListItem
-              key={idx}
-              onPress={() => {
-                if (onPress) {
-                  onPress(item);
-                  setIsOpen(false);
-                }
-              }}
-              bottomDivider={items.length - 1 != idx}
-            >
-              <ListItem.Content>
-                <ListItem.Title>
-                  {item.title ? item.title : `Chapter ${idx + 1}`}
-                </ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron/>
-            </ListItem>
-          ))}
-        </ScrollView>
-      </Overlay>
+        <View style={{
+          height: Dimensions.get('window').height * 0.8,
+          width: '95%',
+          alignSelf: 'center',
+          marginTop: '10%',
+        }}>
+          <Button onPress={() => setIsOpen(false)}>X</Button>
+          <ScrollView style={{ maxHeight: '100%', width: '100%' }}>
+            <Text>Table of Contents</Text>
+            {items.map((item, idx) => (
+              <React.Fragment key={idx}>
+                <ListItem
+                  key={idx}
+                  onPress={() => {
+                    if (onPress) {
+                      onPress(item);
+                      setIsOpen(false);
+                    }
+                  }}
+                  bottomDivider={items.length - 1 != idx}
+                >
+                  <ListItem.Content>
+                    <ListItem.Title>
+                      {item.title ? item.title : `Chapter ${idx + 1}`}
+                    </ListItem.Title>
+                  </ListItem.Content>
+                  <ListItem.Chevron/>
+                </ListItem>
+              </React.Fragment>
+            ))}
+          </ScrollView>
+        </View>
+      </Modal>
     </>
   );
 };
