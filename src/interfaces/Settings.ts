@@ -1,15 +1,6 @@
-import {
-  Appearance,
-  FontFamily,
-  TextAlignment,
-  ColumnCount,
-} from '../enums';
+import { Appearance, FontFamily, TextAlignment, ColumnCount } from '../enums';
 
-import {
-  RANGES,
-  indexOfObjectValue,
-  clamp,
-} from '../utils';
+import { RANGES, indexOfObjectValue, clamp } from '../utils';
 
 /**
  * A reader settings object with sensible defaults.
@@ -63,12 +54,11 @@ export class Settings {
     const defaultValues = new Settings();
     const mapped: Record<string, any> = {};
 
-    Object.keys(defaultValues)
-      .forEach((key: string) => {
-        // @ts-ignore
-        mapped[key] = settings[key] !== undefined ? settings[key] : defaultValues[key];
-      })
-    ;
+    Object.keys(defaultValues).forEach((key: string) => {
+      // @ts-ignore
+      mapped[key] =
+        settings[key] !== undefined ? settings[key] : defaultValues[key];
+    });
 
     mapped.appearance = indexOfObjectValue(Appearance, mapped.appearance);
     mapped.fontFamily = indexOfObjectValue(FontFamily, mapped.fontFamily);

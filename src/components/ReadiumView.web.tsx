@@ -9,62 +9,66 @@ import {
   useLocationObserver,
 } from '../../web/hooks';
 
-export const ReadiumView = React.forwardRef<{
-  nextPage: () => void;
-  prevPage: () => void;
-}, ReadiumProps>(({
-  file,
-  settings,
-  location,
-  onLocationChange,
-  onTableOfContents,
-  style = {},
-  height,
-  width,
-}, ref) => {
-  const readerRef = useReaderRef({
-    file,
-    onLocationChange,
-    onTableOfContents,
-  });
-  const reader = readerRef.current;
-
-  useImperativeHandle(ref, () => ({
-    nextPage: () => {
-      readerRef.current?.nextPage();
+export const ReadiumView = React.forwardRef<
+  {
+    nextPage: () => void;
+    prevPage: () => void;
+  },
+  ReadiumProps
+>(
+  (
+    {
+      file,
+      settings,
+      location,
+      onLocationChange,
+      onTableOfContents,
+      style = {},
+      height,
+      width,
     },
-    prevPage: () => {
-      readerRef.current?.previousPage();
-    },
-  }));
+    ref
+  ) => {
+    const readerRef = useReaderRef({
+      file,
+      onLocationChange,
+      onTableOfContents,
+    });
+    const reader = readerRef.current;
 
-  useSettingsObserver(reader, settings);
-  useLocationObserver(reader, location);
+    useImperativeHandle(ref, () => ({
+      nextPage: () => {
+        readerRef.current?.nextPage();
+      },
+      prevPage: () => {
+        readerRef.current?.previousPage();
+      },
+    }));
 
-  const mainStyle = {
-    ...styles.maximize,
-    ...(style as CSSProperties),
-  };
+    useSettingsObserver(reader, settings);
+    useLocationObserver(reader, location);
 
-  if (height) mainStyle.height = height;
-  if (width) mainStyle.width = width;
+    const mainStyle = {
+      ...styles.maximize,
+      ...(style as CSSProperties),
+    };
 
-  return (
-    <View style={styles.container}>
-      {!reader && <div style={loaderStyle}>Loading reader...</div>}
-      <div id="D2Reader-Container" style={styles.d2Container}>
-        <main
-          style={mainStyle}
-          tabIndex={-1}
-          id="iframe-wrapper"
-        >
-          <div id="reader-loading" className="loading" style={loaderStyle}></div>
-          <div id="reader-error" className="error"></div>
-        </main>
-      </div>
-    </View>
-  );
-});
+    if (height) mainStyle.height = height;
+    if (width) mainStyle.width = width;
+
+    return (
+      <View style={styles.container}>
+        {!reader && <div style={loaderStyle}>Loading reader...</div>}
+        <div id="D2Reader-Container" style={styles.d2Container}>
+          <main style={mainStyle} tabIndex={-1} id="iframe-wrapper">
+            <div id="reader-loading" className="loading" style={loaderStyle} />
+            <div id="reader-error" className="error" />
+          </main>
+        </div>
+      </View>
+    );
+  }
+);
 
 const loaderStyle: React.CSSProperties = {
   width: '100%',

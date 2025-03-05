@@ -9,7 +9,7 @@ export const createFragment = (viewId: number | null) => {
       // we are calling the 'create' command
       // @ts-ignore
       UIManager.getViewManagerConfig(COMPONENT_NAME).Commands.create.toString(),
-      [viewId],
+      [viewId]
     );
   }
-}
+};
