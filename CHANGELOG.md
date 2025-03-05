@@ -1,3 +1,12 @@
+## [3.0.1](https://github.com/5-stones/react-native-readium/compare/v3.0.0...v3.0.1) (2025-03-05)
+
+
+### Bug Fixes
+
+* **android:** fix android build errors in newer versions of react-native ([487febb](https://github.com/5-stones/react-native-readium/commit/487febbb7ef7e16fc39db3594bbef10a61f28b07))
+
+
+
 # [3.0.0](https://github.com/5-stones/react-native-readium/compare/v2.0.2...v3.0.0) (2025-02-11)
 
 
