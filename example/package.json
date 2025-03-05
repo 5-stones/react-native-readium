@@ -10,7 +10,7 @@
     "ios:ide": "open ios/ReadiumExample.xcworkspace/",
     "web:start": "craco start",
     "web:build": "craco build",
-    "start": "react-native start",
+    "start": "react-native start --client-logs",
     "clean": "react-native-clean-project"
   },
   "dependencies": {
