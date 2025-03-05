@@ -55,8 +55,8 @@ export class Settings {
     const mapped: Record<string, any> = {};
 
     Object.keys(defaultValues).forEach((key: string) => {
-      // @ts-ignore
       mapped[key] =
+        // @ts-ignore
         settings[key] !== undefined ? settings[key] : defaultValues[key];
     });
 
