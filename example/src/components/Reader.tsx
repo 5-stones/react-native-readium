@@ -46,7 +46,7 @@ export const Reader: React.FC = () => {
           // wait for the download to complete
           await promise;
         } else {
-          console.log(`File already exists. Skipping download.`);
+          console.log('File already exists. Skipping download.');
         }
 
         setFile({
@@ -56,7 +56,7 @@ export const Reader: React.FC = () => {
       }
     }
 
-    run()
+    run();
   }, []);
 
   if (file) {
@@ -97,7 +97,7 @@ export const Reader: React.FC = () => {
               settings={settings}
               onLocationChange={(locator: Locator) => setLocation(locator)}
               onTableOfContents={(toc: Link[] | null) => {
-                if (toc) setToc(toc)
+                if (toc) {setToc(toc);}
               }}
             />
           </View>
@@ -118,7 +118,7 @@ export const Reader: React.FC = () => {
       <Text>downloading file</Text>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

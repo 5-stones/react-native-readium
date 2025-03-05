@@ -1,1 +1,1 @@
-export const BaseReadiumView = () => null
+export const BaseReadiumView = () => null;

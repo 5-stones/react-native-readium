@@ -8,7 +8,7 @@ import { Appearance, RANGES } from 'react-native-readium';
 const getNameFromAppearance = (appearance?: Appearance): string => {
   switch (appearance) {
     case Appearance.DEFAULT:
-      return 'Light'
+      return 'Light';
     case Appearance.NIGHT:
       return 'Dark';
     case Appearance.SEPIA:
@@ -16,7 +16,7 @@ const getNameFromAppearance = (appearance?: Appearance): string => {
     default:
       return Appearance.DEFAULT;
   }
-}
+};
 
 export interface SettingsProps {
   settings: Partial<ISettings>;
@@ -37,7 +37,7 @@ export const Settings: React.FC<SettingsProps> = ({
   } else {
     return Appearance.DEFAULT;
   }
-}, [])
+}, []);
 
   return (
     <>
@@ -68,7 +68,7 @@ export const Settings: React.FC<SettingsProps> = ({
               onPress={() => {
                 onSettingsChanged({
                   ...settings,
-                  appearance: nextAppearance(settings.appearance)
+                  appearance: nextAppearance(settings.appearance),
                 });
               }}
             />
@@ -89,7 +89,7 @@ export const Settings: React.FC<SettingsProps> = ({
                   onSettingsChanged({
                     ...settings,
                     fontSize,
-                  })
+                  });
                 }}
                 minimumTrackTintColor="#cccccc"
                 maximumTrackTintColor="#aaaaaa"
@@ -112,7 +112,7 @@ export const Settings: React.FC<SettingsProps> = ({
                   onSettingsChanged({
                     ...settings,
                     pageMargins,
-                  })
+                  });
                 }}
                 minimumTrackTintColor="#cccccc"
                 maximumTrackTintColor="#aaaaaa"
@@ -123,4 +123,4 @@ export const Settings: React.FC<SettingsProps> = ({
       </Overlay>
     </>
   );
-}
+};

@@ -2,8 +2,8 @@ const path = require('path');
 const babelInclude = require('@dealmore/craco-plugin-babel-include');
 const webpack = require('webpack');
 
-const LIB_PATH = `../src`;
-const WEB_PATH = `../web`;
+const LIB_PATH = '../src';
+const WEB_PATH = '../web';
 
 module.exports = {
   // eslint has a dumb error, don't really care if the example is linted so disable it
@@ -21,7 +21,7 @@ module.exports = {
           new webpack.DefinePlugin({
             process: { env: {} },
             __DEV__: true,
-          })
+          }),
         ],
       },
   },
