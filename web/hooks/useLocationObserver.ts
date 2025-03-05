@@ -4,7 +4,7 @@ import type { Link, Locator } from '../../src/interfaces';
 
 export const useLocationObserver = (
   reader?: D2Reader | null,
-  location?: Link | Locator | null,
+  location?: Link | Locator | null
 ) => {
   useDeepCompareEffect(() => {
     if (reader && location) {

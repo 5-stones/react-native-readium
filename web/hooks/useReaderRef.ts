@@ -7,7 +7,7 @@ export const useReaderRef = ({
   file,
   onLocationChange,
   onTableOfContents,
-}: Pick<ReadiumProps, 'file' | 'onLocationChange' | 'onTableOfContents' >) => {
+}: Pick<ReadiumProps, 'file' | 'onLocationChange' | 'onTableOfContents'>) => {
   const readerRef = useRef<D2Reader | null>(null);
   const readingOrder = useRef<Locator[]>([]);
 
@@ -84,7 +84,7 @@ export const useReaderRef = ({
     run();
   }, [file.url]);
 
-  return readerRef
+  return readerRef;
 };
 
 // NOTE: right now we're serving these through statically.io, which is just
@@ -92,19 +92,18 @@ export const useReaderRef = ({
 // consider bundling them with the library.
 const injectables: any[] = [
   {
-    type: "style",
-    url: "https://cdn.statically.io/gh/d-i-t-a/R2D2BC/production/viewer/readium-css/ReadiumCSS-before.css",
+    type: 'style',
+    url: 'https://cdn.statically.io/gh/d-i-t-a/R2D2BC/production/viewer/readium-css/ReadiumCSS-before.css',
     r2before: true,
   },
   {
-    type: "style",
-    url: "https://cdn.statically.io/gh/d-i-t-a/R2D2BC/production/viewer/readium-css/ReadiumCSS-default.css",
+    type: 'style',
+    url: 'https://cdn.statically.io/gh/d-i-t-a/R2D2BC/production/viewer/readium-css/ReadiumCSS-default.css',
     r2default: true,
   },
   {
-    type: "style",
-    url: "https://cdn.statically.io/gh/d-i-t-a/R2D2BC/production/viewer/readium-css/ReadiumCSS-after.css",
+    type: 'style',
+    url: 'https://cdn.statically.io/gh/d-i-t-a/R2D2BC/production/viewer/readium-css/ReadiumCSS-after.css',
     r2after: true,
   },
 ];
-

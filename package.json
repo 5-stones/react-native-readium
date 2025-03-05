@@ -24,7 +24,8 @@
   "scripts": {
     "test": "jest",
     "typescript": "tsc --noEmit",
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "lint": "eslint \"./src/**/*.{js,ts,tsx}\"",
+    "lint:fix": "eslint ./src  --fix",
     "prepare": "rimraf lib && tsc",
     "release": "release-it",
     "example": "yarn --cwd example",

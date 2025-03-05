@@ -4,7 +4,7 @@ import type { Settings } from '../../src/interfaces';
 
 export const useSettingsObserver = (
   reader?: D2Reader | null,
-  settings?: Partial<Settings> | null,
+  settings?: Partial<Settings> | null
 ) => {
   useDeepCompareEffect(() => {
     if (reader && settings) {
@@ -12,8 +12,5 @@ export const useSettingsObserver = (
       // are equivalent or not
       reader?.applyUserSettings(settings as Partial<D2UserSettings>);
     }
-  }, [
-    settings,
-    !!reader,
-  ]);
+  }, [settings, !!reader]);
 };

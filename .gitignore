@@ -49,6 +49,10 @@ local.properties
 #
 example/ios/Pods
 
+# Kotlin
+#
+example/android/.kotlin
+
 # node.js
 #
 node_modules/

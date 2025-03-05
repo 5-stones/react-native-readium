@@ -29,4 +29,4 @@ export default () => {
 
   // Inject stylesheet
   document.head.appendChild(style);
-}
+};

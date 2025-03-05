@@ -114,7 +114,9 @@ class ReadiumViewManager(
 
   @ReactProp(name = "settings")
   fun setSettings(view: ReadiumView, settings: ReadableMap) {
-    view.updateSettingsFromMap(settings.toHashMap())
+    val map = mutableMapOf<String, Any>()
+    settings.toHashMap().forEach { (key, value) -> if (value != null) map[key] = value }
+    view.updateSettingsFromMap(map)
   }
 
   @ReactPropGroup(names = ["width", "height"], customType = "Style")

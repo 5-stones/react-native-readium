@@ -22,7 +22,7 @@ export const ReaderButton: React.FC<ReaderButtonProps> = ({
       buttonStyle={styles.height}
     />
   );
-}
+};
 
 const styles = StyleSheet.create({
   height: {

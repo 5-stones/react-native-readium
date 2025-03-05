@@ -53,6 +53,8 @@ allows you to do things like:
 1. **iOS**: Requires an iOS target >= `13.0` (see the iOS section for more details).
 2. **Android**: Requires `compileSdkVersion` >= `31` (see the Android section for more details).
 
+:warning: This library does not current support `newArch`. Please disable `newArch` if you intend to use it. PR's welcome.
+
 #### Install Module
 
 **NPM**

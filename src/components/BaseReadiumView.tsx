@@ -1,7 +1,4 @@
-import {
-  requireNativeComponent,
-  UIManager,
-} from 'react-native';
+import { requireNativeComponent, UIManager } from 'react-native';
 
 import type { BaseReadiumViewProps } from '../interfaces';
 import { COMPONENT_NAME, LINKING_ERROR } from '../utils';
