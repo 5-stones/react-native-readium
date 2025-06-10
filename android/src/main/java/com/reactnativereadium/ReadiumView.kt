@@ -9,9 +9,12 @@ import com.facebook.react.uimanager.events.RCTEventEmitter
 import com.reactnativereadium.reader.BaseReaderFragment
 import com.reactnativereadium.reader.EpubReaderFragment
 import com.reactnativereadium.reader.ReaderViewModel
+import com.reactnativereadium.reader.VisualReaderFragment
 import com.reactnativereadium.utils.Dimensions
 import com.reactnativereadium.utils.File
 import com.reactnativereadium.utils.LinkOrLocator
+import org.readium.r2.navigator.epub.EpubNavigatorFragment
+import org.readium.r2.navigator.epub.EpubPreferences
 import org.readium.r2.shared.extensions.toMap
 
 class ReadiumView(
@@ -22,6 +25,7 @@ class ReadiumView(
   var fragment: BaseReaderFragment? = null
   var isViewInitialized: Boolean = false
   var lateInitSettings: Map<String, Any>? = null
+  var lateInitSerialisedUserPreferences: String? = null
 
   fun updateLocation(location: LinkOrLocator) : Boolean {
     if (fragment == null) {
@@ -31,25 +35,9 @@ class ReadiumView(
     }
   }
 
-  fun updateSettingsFromMap(map: Map<String, Any>?) {
-    if (map == null) {
-      return
-    } else if (fragment == null) {
-      lateInitSettings = map
-      return
-    }
-
-    if (fragment is EpubReaderFragment) {
-      (fragment as EpubReaderFragment).updateSettingsFromMap(map)
-    }
-
-    lateInitSettings = null
-  }
-
   fun addFragment(frag: BaseReaderFragment) {
     fragment = frag
     setupLayout()
-    updateSettingsFromMap(lateInitSettings)
     val activity: FragmentActivity? = reactContext.currentActivity as FragmentActivity?
     activity!!.supportFragmentManager
       .beginTransaction()

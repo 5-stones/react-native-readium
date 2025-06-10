@@ -24,7 +24,8 @@ import kotlinx.coroutines.delay
 import org.readium.r2.navigator.epub.EpubNavigatorFragment
 import org.readium.r2.navigator.ExperimentalDecorator
 import org.readium.r2.navigator.Navigator
-import org.readium.r2.shared.APPEARANCE_REF
+import org.readium.r2.navigator.epub.EpubPreferences
+import org.readium.r2.navigator.epub.EpubPreferencesSerializer
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
 import org.readium.r2.shared.ReadiumCSSName
@@ -44,7 +45,7 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
     private lateinit var menuSearch: MenuItem
     lateinit var menuSearchView: SearchView
 
-    private lateinit var userSettings: UserSettings
+    private var userPreferences = EpubPreferences()
     private var isScreenReaderVisible = false
     private var isSearchViewIconified = true
 
@@ -61,12 +62,11 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
       )
     }
 
-    fun updateSettingsFromMap(map: Map<String, Any>) {
-      if (this::userSettings.isInitialized) {
-        userSettings.updateSettingsFromMap(map)
-        initialSettingsMap = null
-      } else {
-        initialSettingsMap = map
+    fun updatePreferencesFromMap(serialisedPreferences: String) {
+      val serializer = EpubPreferencesSerializer()
+      this.userPreferences = serializer.deserialize(serialisedPreferences)
+      if(navigator is EpubNavigatorFragment) {
+        (navigator as EpubNavigatorFragment).submitPreferences(this.userPreferences)
       }
     }
 
@@ -124,49 +124,31 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val activity = requireActivity()
-        userSettings = UserSettings(
-          navigatorFragment.preferences,
-          activity,
-          publication.userSettingsUIPreset
-        )
-
-       // This is a hack to draw the right background color on top and bottom blank spaces
-        navigatorFragment.lifecycleScope.launchWhenStarted {
-            val appearancePref = navigatorFragment.preferences.getInt(APPEARANCE_REF, 0)
-            val backgroundsColors = mutableListOf("#ffffff", "#faf4e8", "#000000")
-            navigatorFragment.resourcePager.setBackgroundColor(Color.parseColor(backgroundsColors[appearancePref]))
-        }
     }
 
     override fun onResume() {
         super.onResume()
         val activity = requireActivity()
-
-        userSettings.resourcePager = navigatorFragment.resourcePager
-        initialSettingsMap?.let { updateSettingsFromMap(it) }
-
         // If TalkBack or any touch exploration service is activated we force scroll mode (and
         // override user preferences)
         val am = activity.getSystemService(AppCompatActivity.ACCESSIBILITY_SERVICE) as AccessibilityManager
         isExploreByTouchEnabled = am.isTouchExplorationEnabled
 
         if (isExploreByTouchEnabled) {
-            // Preset & preferences adapted
-            publication.userSettingsUIPreset[ReadiumCSSName.ref(SCROLL_REF)] = true
-            navigatorFragment.preferences.edit().putBoolean(SCROLL_REF, true).apply() //overriding user preferences
-            userSettings.saveChanges()
-
-            lifecycleScope.launchWhenResumed {
-                delay(500)
-                userSettings.updateViewCSS(SCROLL_REF)
-            }
+          this.userPreferences = this.userPreferences.plus(
+            EpubPreferences(scroll = true)
+          )
         } else {
             if (publication.cssStyle != "cjk-vertical") {
-                publication.userSettingsUIPreset.remove(ReadiumCSSName.ref(SCROLL_REF))
+              this.userPreferences = this.userPreferences.plus(
+                EpubPreferences(scroll = false)
+              )
             }
         }
+
+      if(navigator is EpubNavigatorFragment) {
+        (navigator as EpubNavigatorFragment).submitPreferences(this.userPreferences)
+      }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
