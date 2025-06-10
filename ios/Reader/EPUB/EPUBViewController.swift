@@ -1,19 +1,19 @@
 import UIKit
 import R2Shared
 import R2Navigator
+import ReadiumAdapterGCDWebServer
 
 class EPUBViewController: ReaderViewController {
 
     init(
       publication: Publication,
       locator: Locator?,
-      bookId: String,
-      resourcesServer: ResourcesServer
-    ) {
-      let navigator = EPUBNavigatorViewController(
+      bookId: String
+    ) throws {
+      let navigator = try EPUBNavigatorViewController(
         publication: publication,
         initialLocation: locator,
-        resourcesServer: resourcesServer
+        httpServer: GCDHTTPServer.shared
       )
 
       super.init(
