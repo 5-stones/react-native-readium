@@ -4,22 +4,28 @@ import React, {
   useEffect,
   forwardRef,
   useRef,
+  useMemo,
 } from 'react';
 import { View, Platform, findNodeHandle, StyleSheet } from 'react-native';
 
-import type { BaseReadiumViewProps, Dimensions } from '../interfaces';
-import { Settings } from '../interfaces';
+import type {
+  BaseReadiumViewProps,
+  Dimensions,
+  Preferences,
+} from '../interfaces';
 import { createFragment, getWidthOrHeightValue as dimension } from '../utils';
 import { BaseReadiumView } from './BaseReadiumView';
 
-export type ReadiumProps = BaseReadiumViewProps;
+export type ReadiumProps = Omit<BaseReadiumViewProps, 'preferences'> & {
+  preferences: Preferences;
+};
 
 export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
   (
     {
       onLocationChange: wrappedOnLocationChange,
       onTableOfContents: wrappedOnTableOfContents,
-      settings: unmappedSettings,
+      preferences,
       ...props
     },
     forwardedRef
@@ -82,17 +88,20 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
       }
     }, [defaultRef.current !== null]);
 
+    const stringifiedPreferences = useMemo(
+      () => JSON.stringify(preferences),
+      [preferences]
+    );
+
     return (
       <View style={styles.container} onLayout={onLayout}>
         <BaseReadiumView
           height={height}
           width={width}
           {...props}
+          preferences={stringifiedPreferences}
           onLocationChange={onLocationChange}
           onTableOfContents={onTableOfContents}
-          settings={
-            unmappedSettings ? Settings.map(unmappedSettings) : undefined
-          }
           ref={defaultRef}
         />
       </View>

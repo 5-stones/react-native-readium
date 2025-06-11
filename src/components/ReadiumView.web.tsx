@@ -19,7 +19,7 @@ export const ReadiumView = React.forwardRef<
   (
     {
       file,
-      settings,
+      preferences,
       location,
       onLocationChange,
       onTableOfContents,
@@ -45,7 +45,7 @@ export const ReadiumView = React.forwardRef<
       },
     }));
 
-    useSettingsObserver(reader, settings);
+    useSettingsObserver(reader, preferences);
     useLocationObserver(reader, location);
 
     const mainStyle = {

@@ -1,10 +1,10 @@
 import { useDeepCompareEffect } from 'use-deep-compare';
 
-import type { Settings } from '../../src/interfaces';
+import type { Preferences } from '../../src/interfaces';
 
 export const useSettingsObserver = (
   reader?: D2Reader | null,
-  settings?: Partial<Settings> | null
+  settings?: Partial<Preferences> | null
 ) => {
   useDeepCompareEffect(() => {
     if (reader && settings) {

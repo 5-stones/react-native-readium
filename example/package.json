@@ -23,6 +23,7 @@
     "react-dom": "^19.0.0",
     "react-native": "0.78.0",
     "react-native-fs": "^2.20.0",
+    "react-native-readium": "link:../src",
     "react-native-safe-area-context": "^5.3.0",
     "react-native-screens": "^4.9.1",
     "react-native-vector-icons": "^9.1.0",

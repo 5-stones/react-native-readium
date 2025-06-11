@@ -22,4 +22,6 @@ Pod::Spec.new do |s|
   s.dependency "R2Shared"
   s.dependency "R2Streamer"
   s.dependency "R2Navigator"
+  s.dependency "GCDWebServer"
+  s.dependency "ReadiumAdapterGCDWebServer"
 end

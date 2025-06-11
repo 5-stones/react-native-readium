@@ -20,17 +20,14 @@ protocol ReaderModuleDelegate: ModuleDelegate {}
 
 final class ReaderModule: ReaderModuleAPI {
   weak var delegate: ReaderModuleDelegate?
-  private let resourcesServer: ResourcesServer
 
   /// Sub-modules to handle different publication formats (eg. EPUB, CBZ)
   var formatModules: [ReaderFormatModule] = []
 
   init(
-    delegate: ReaderModuleDelegate?,
-    resourcesServer: ResourcesServer
+    delegate: ReaderModuleDelegate?
   ) {
     self.delegate = delegate
-    self.resourcesServer = resourcesServer
 
     formatModules = [
       // CBZModule(delegate: self),
@@ -49,7 +46,7 @@ final class ReaderModule: ReaderModuleAPI {
     locator: Locator?
   ) -> ReaderViewController? {
     guard let module = self.formatModules.first(
-      where:{ $0.publicationFormats.contains(publication.format) }
+      where:{ $0.supports(publication) }
     ) else {
       print("Unable to display the publication due to an unsupported format.")
       return nil
@@ -59,8 +56,7 @@ final class ReaderModule: ReaderModuleAPI {
       return try module.makeReaderViewController(
         for: publication,
         locator: locator,
-        bookId: bookId,
-        resourcesServer: resourcesServer
+        bookId: bookId
       )
     } catch {
       print("An unexpected error occurred when attempting to build the reader view.")

@@ -28,9 +28,9 @@ class ReadiumView : UIView, Loggable {
       self.updateLocation()
     }
   }
-  @objc var settings: NSDictionary? = nil {
+  @objc var preferences: NSString? = nil {
     didSet {
-      self.updateUserSettings(settings)
+      self.updatePreferences(preferences)
     }
   }
   @objc var onLocationChange: RCTDirectEventBlock?
@@ -77,40 +77,29 @@ class ReadiumView : UIView, Loggable {
     )
   }
 
-  func updateUserSettings(_ settings: NSDictionary?) {
+  func updatePreferences(_ preferences: NSString?) {
 
     if (readerViewController == nil) {
       // defer setting update as view isn't initialized yet
       return;
     }
 
-    if let navigator = readerViewController!.navigator as? EPUBNavigatorViewController {
-      let userProperties = navigator.userSettings.userProperties
+    guard let navigator = readerViewController!.navigator as? EPUBNavigatorViewController else {
+      return;
+    }
 
-      for property in userProperties.properties {
-        let value = settings?[property.reference]
+    guard let preferencesJson = preferences as? String else {
+      print("TODO: handle error. Bad string conversion for preferences")
+      return;
+    }
 
-        if (value == nil) {
-          continue
-        }
-
-        if let e = property as? Enumerable {
-          e.index = value as! Int
-
-          // synchronize background color
-          if property.reference == ReadiumCSSReference.appearance.rawValue {
-            if let vc = readerViewController as? EPUBViewController {
-              vc.setUIColor(for: property)
-            }
-          }
-        } else if let i = property as? Incrementable {
-          i.value = value as! Float
-        } else if let s = property as? Switchable {
-          s.on = value as! Bool
-        }
-      }
-
-      navigator.updateUserSettingStyle()
+    do {
+      let preferences = try JSONDecoder().decode(EPUBPreferences.self, from: Data(preferencesJson.utf8))
+      navigator.submitPreferences(preferences)
+    } catch {
+      print(error)
+      print("TODO: handle error. Skipping preferences due to thrown exception")
+      return;
     }
   }
 
@@ -139,9 +128,9 @@ class ReadiumView : UIView, Loggable {
 
     readerViewController = vc
 
-    // if the controller was just instantiated then apply any existing settings
-    if (settings != nil) {
-      self.updateUserSettings(settings)
+    // if the controller was just instantiated then apply any existing preferences
+    if (preferences != nil) {
+      self.updatePreferences(preferences)
     }
 
     readerViewController!.view.frame = self.superview!.frame
