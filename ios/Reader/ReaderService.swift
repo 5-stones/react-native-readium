@@ -29,11 +29,13 @@ final class ReaderService: Loggable {
     }
 
     let hasLocations = location?["locations"] != nil
+    let hasType = !((location?["type"] as! String).isEmpty)
     let hasChildren = location?["children"] != nil
     let hasHashHref = (location!["href"] as! String).contains("#")
+    let hasTemplated = location?["templated"] != nil
 
     // check that we're not dealing with a Link
-    if ((hasChildren || hasHashHref) && !hasLocations) {
+    if ((!hasType || hasChildren || hasHashHref || hasTemplated) && !hasLocations) {
       guard let publication = publication else {
         return nil
       }
