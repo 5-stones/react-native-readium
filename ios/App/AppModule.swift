@@ -27,7 +27,7 @@ final class AppModule {
       fatalError("Can't start publication server")
     }
 
-    reader = ReaderModule(delegate: self, resourcesServer: server)
+    reader = ReaderModule(delegate: self)
 
     // Set Readium 2's logging minimum level.
     R2EnableLog(withMinimumSeverityLevel: .debug)
