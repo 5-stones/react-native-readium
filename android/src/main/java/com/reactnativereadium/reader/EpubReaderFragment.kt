@@ -16,7 +16,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.commitNow
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.ViewModelProvider
-import com.reactnativereadium.epub.UserSettings
 import com.reactnativereadium.R
 import com.reactnativereadium.utils.toggleSystemUi
 import java.net.URL
