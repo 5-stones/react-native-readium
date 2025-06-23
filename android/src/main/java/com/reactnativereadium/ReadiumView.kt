@@ -24,7 +24,6 @@ class ReadiumView(
   var file: File? = null
   var fragment: BaseReaderFragment? = null
   var isViewInitialized: Boolean = false
-  var lateInitSettings: Map<String, Any>? = null
   var lateInitSerialisedUserPreferences: String? = null
 
   fun updateLocation(location: LinkOrLocator) : Boolean {
