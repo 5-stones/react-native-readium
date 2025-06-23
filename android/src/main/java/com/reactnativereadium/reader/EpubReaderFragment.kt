@@ -85,12 +85,10 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
             publication = it.publication
           }
 
-        val baseUrl = checkNotNull(requireArguments().getString(BASE_URL_ARG))
 
         childFragmentManager.fragmentFactory =
             EpubNavigatorFragment.createFactory(
                 publication = publication,
-                baseUrl = baseUrl,
                 initialLocator = model.initialLocation,
                 listener = this,
                 config = EpubNavigatorFragment.Configuration().apply {
@@ -162,20 +160,14 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
 
     companion object {
 
-        private const val BASE_URL_ARG = "baseUrl"
-
         private const val SEARCH_FRAGMENT_TAG = "search"
 
         private const val IS_SCREEN_READER_VISIBLE_KEY = "isScreenReaderVisible"
 
         private const val IS_SEARCH_VIEW_ICONIFIED = "isSearchViewIconified"
 
-        fun newInstance(baseUrl: URL): EpubReaderFragment {
-            return EpubReaderFragment().apply {
-                arguments = Bundle().apply {
-                    putString(BASE_URL_ARG, baseUrl.toString())
-                }
-            }
+        fun newInstance(): EpubReaderFragment {
+            return EpubReaderFragment()
         }
     }
 }

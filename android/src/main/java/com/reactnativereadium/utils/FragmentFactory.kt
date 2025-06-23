@@ -25,7 +25,7 @@ inline fun <reified T : Fragment> createFragmentFactory(crossinline factory: () 
  *
  * ```
  * supportFragmentManager.fragmentFactory = CompositeFragmentFactory(
- *     EpubNavigatorFragment.createFactory(publication, baseUrl, initialLocator, this),
+ *     EpubNavigatorFragment.createFactory(publication, initialLocator, this),
  *     PdfNavigatorFragment.createFactory(publication, initialLocator, this)
  * )
  * ```

@@ -80,13 +80,11 @@ class ReaderService(
       sender = reactContext
     )
       .onSuccess {
-        val url = prepareToServe(it)
-        if (url != null) {
           val locator = locatorFromLinkOrLocator(initialLocation, it)
-          val readerFragment = EpubReaderFragment.newInstance(url)
+          val readerFragment = EpubReaderFragment.newInstance()
           readerFragment.initFactory(it, locator)
           callback.invoke(readerFragment)
-        }
+
       }
       .onFailure {
         tryOrNull { asset.file.delete() }
