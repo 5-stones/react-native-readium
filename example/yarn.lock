@@ -15276,6 +15276,7 @@ __metadata:
     react-native: 0.78.0
     react-native-clean-project: ^4.0.1
     react-native-fs: ^2.20.0
+    react-native-readium: "link:../src"
     react-native-safe-area-context: ^5.3.0
     react-native-screens: ^4.9.1
     react-native-vector-icons: ^9.1.0
@@ -15284,6 +15285,12 @@ __metadata:
     react-test-renderer: 19.0.0
     typescript: 5.0.4
   languageName: unknown
+  linkType: soft
+
+"react-native-readium@link:../src::locator=react-native-readium-example%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "react-native-readium@link:../src::locator=react-native-readium-example%40workspace%3A."
+  languageName: node
   linkType: soft
 
 "react-native-safe-area-context@npm:^5.3.0":
