@@ -1,3 +1,3 @@
 export * from './useNavigator';
-export * from './useSettingsObserver';
+export * from './usePreferencesObserver';
 export * from './useLocationObserver';

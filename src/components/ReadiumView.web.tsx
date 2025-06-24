@@ -5,7 +5,7 @@ import { View, StyleSheet } from 'react-native';
 import type { BaseReadiumViewProps, Preferences } from '../interfaces';
 import {
   useNavigator,
-  useSettingsObserver,
+  usePreferencesObserver,
   useLocationObserver,
 } from '../../web/hooks';
 
@@ -50,7 +50,7 @@ export const ReadiumView = React.forwardRef<
       },
     }), [navigator]);
 
-    useSettingsObserver(navigator, preferences);
+    usePreferencesObserver(navigator, preferences);
     useLocationObserver(navigator, location);
 
     const mainStyle = {
