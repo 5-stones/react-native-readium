@@ -24,7 +24,7 @@ class ReadiumView(
   var file: File? = null
   var fragment: BaseReaderFragment? = null
   var isViewInitialized: Boolean = false
-  var lateInitSerialisedUserPreferences: String? = null
+  var lateInitSerializedUserPreferences: String? = null
 
   fun updateLocation(location: LinkOrLocator) : Boolean {
     if (fragment == null) {
@@ -38,7 +38,7 @@ class ReadiumView(
     if (preferences == null) {
       return
     } else if (fragment == null) {
-      lateInitSerialisedUserPreferences = preferences
+      lateInitSerializedUserPreferences = preferences
       return
     }
 
@@ -46,13 +46,13 @@ class ReadiumView(
       (fragment as EpubReaderFragment).updatePreferencesFromJsonString(preferences)
     }
 
-    lateInitSerialisedUserPreferences = null
+    lateInitSerializedUserPreferences = null
   }
 
   fun addFragment(frag: BaseReaderFragment) {
     fragment = frag
     setupLayout()
-    updatePreferencesFromJsonString(lateInitSerialisedUserPreferences)
+    updatePreferencesFromJsonString(lateInitSerializedUserPreferences)
     val activity: FragmentActivity? = reactContext.currentActivity as FragmentActivity?
     activity!!.supportFragmentManager
       .beginTransaction()
