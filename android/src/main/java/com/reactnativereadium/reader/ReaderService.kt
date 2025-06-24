@@ -8,10 +8,8 @@ import com.reactnativereadium.utils.LinkOrLocator
 import java.io.File
 import java.io.IOException
 import java.net.ServerSocket
-import java.net.URL
 import org.readium.r2.shared.extensions.mediaType
 import org.readium.r2.shared.extensions.tryOrNull
-import org.readium.r2.shared.Injectable
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.asset.FileAsset
 import org.readium.r2.shared.publication.Publication
@@ -91,15 +89,6 @@ class ReaderService(
         RNLog.w(reactContext, "Error executing ReaderService.openPublication")
         // TODO: implement failure event
       }
-  }
-
-  private fun prepareToServe(publication: Publication): URL? {
-    val userProperties =
-      reactContext.filesDir.path + "/" + Injectable.Style.rawValue + "/UserProperties.json"
-    return server.addPublication(
-      publication,
-      userPropertiesFile = File(userProperties)
-    )
   }
 
   private fun startServer() {
