@@ -6,7 +6,6 @@ import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.uimanager.annotations.ReactPropGroup
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewGroupManager
-import com.reactnativereadium.reader.EpubReaderFragment
 import com.reactnativereadium.reader.ReaderService
 import com.reactnativereadium.utils.File
 import com.reactnativereadium.utils.LinkOrLocator
