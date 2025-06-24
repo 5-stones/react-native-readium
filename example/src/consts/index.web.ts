@@ -1,6 +1,5 @@
 import type { Locator } from 'react-native-readium';
 
-export * from './DEFAULT_SETTINGS';
 export const EPUB_URL = 'https://alice.dita.digital/manifest.json';
 export const EPUB_PATH = '';
 export const INITIAL_LOCATION: Locator = {

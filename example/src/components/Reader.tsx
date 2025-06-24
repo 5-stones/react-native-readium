@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, Platform, DimensionValue } from 'react-native';
 import {
   ReadiumView,
 } from 'react-native-readium';
-import type { Link, Locator, File } from 'react-native-readium';
+import type { Link, Locator, File, ReadiumProps } from 'react-native-readium';
 
 import RNFS from '../utils/RNFS';
 import {
