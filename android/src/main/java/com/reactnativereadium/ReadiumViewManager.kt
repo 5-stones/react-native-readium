@@ -115,11 +115,7 @@ class ReadiumViewManager(
 
   @ReactProp(name = "preferences")
   fun setPreferences(view: ReadiumView, serialisedPreferences: String) {
-    view.lateInitSerialisedUserPreferences = serialisedPreferences
-    if (view.fragment is EpubReaderFragment) {
-      (view.fragment as EpubReaderFragment)
-        .updatePreferencesFromMap(serialisedPreferences)
-    }
+    view.updatePreferencesFromJsonString(serialisedPreferences)
   }
 
   @ReactPropGroup(names = ["width", "height"], customType = "Style")

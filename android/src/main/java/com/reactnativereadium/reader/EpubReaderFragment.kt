@@ -14,7 +14,6 @@ import android.view.accessibility.AccessibilityManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.commitNow
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.ViewModelProvider
 import com.reactnativereadium.R
 import com.reactnativereadium.utils.toggleSystemUi
@@ -28,7 +27,6 @@ import org.readium.r2.navigator.epub.EpubPreferencesSerializer
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
 import org.readium.r2.shared.ReadiumCSSName
-import org.readium.r2.shared.SCROLL_REF
 
 @OptIn(ExperimentalDecorator::class)
 class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listener {
@@ -38,13 +36,13 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
     private lateinit var publication: Publication
     lateinit var navigatorFragment: EpubNavigatorFragment
     private lateinit var factory: ReaderViewModel.Factory
-    private var initialSettingsMap: Map<String, Any>? = null
+    private var initialPreferencesJsonString: String? = null
 
     private lateinit var menuScreenReader: MenuItem
     private lateinit var menuSearch: MenuItem
     lateinit var menuSearchView: SearchView
 
-    private var userPreferences = EpubPreferences()
+    private lateinit var userPreferences: EpubPreferences
     private var isScreenReaderVisible = false
     private var isSearchViewIconified = true
 
@@ -61,11 +59,16 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
       )
     }
 
-    fun updatePreferencesFromMap(serialisedPreferences: String) {
-      val serializer = EpubPreferencesSerializer()
-      this.userPreferences = serializer.deserialize(serialisedPreferences)
-      if(navigator is EpubNavigatorFragment) {
-        (navigator as EpubNavigatorFragment).submitPreferences(this.userPreferences)
+    fun updatePreferencesFromJsonString(serialisedPreferences: String) {
+      if (this::userPreferences.isInitialized) {
+        val serializer = EpubPreferencesSerializer()
+        this.userPreferences = serializer.deserialize(serialisedPreferences)
+        if (navigator is EpubNavigatorFragment) {
+          (navigator as EpubNavigatorFragment).submitPreferences(this.userPreferences)
+        }
+        initialPreferencesJsonString = null
+      } else {
+        initialPreferencesJsonString = serialisedPreferences
       }
     }
 
@@ -126,6 +129,12 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
     override fun onResume() {
         super.onResume()
         val activity = requireActivity()
+
+        if (!this::userPreferences.isInitialized) {
+          userPreferences = EpubPreferences()
+        }
+        initialPreferencesJsonString?.let { updatePreferencesFromJsonString(it)}
+
         // If TalkBack or any touch exploration service is activated we force scroll mode (and
         // override user preferences)
         val am = activity.getSystemService(AppCompatActivity.ACCESSIBILITY_SERVICE) as AccessibilityManager
@@ -138,14 +147,10 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
         } else {
             if (publication.cssStyle != "cjk-vertical") {
               this.userPreferences = this.userPreferences.plus(
-                EpubPreferences(scroll = false)
+                EpubPreferences(scroll = null)
               )
             }
         }
-
-      if(navigator is EpubNavigatorFragment) {
-        (navigator as EpubNavigatorFragment).submitPreferences(this.userPreferences)
-      }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
