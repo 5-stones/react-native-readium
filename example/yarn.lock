@@ -4084,10 +4084,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-community/slider@npm:^4.5.6":
-  version: 4.5.6
-  resolution: "@react-native-community/slider@npm:4.5.6"
-  checksum: 8287f3f69b63e0b313639d7dc9a45718a85c4c4494f78485695d7e80bcf3fa9d3891d05a557affc66306df5f2a0a9853d319a35ffcc875ae71149a38a2258bb8
+"@react-native-community/slider@npm:^4.5.7":
+  version: 4.5.7
+  resolution: "@react-native-community/slider@npm:4.5.7"
+  checksum: f8b722c1821332398324d4d45a31c70b90007c1f859840ddc58388a0783d3a4706e7d0808898ecc76091de60041ae20a0758ef4d706d2ae06a4b4d46ff934028
   languageName: node
   linkType: hard
 
@@ -9265,13 +9265,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-loops@npm:^1.1.3":
-  version: 1.1.4
-  resolution: "fast-loops@npm:1.1.4"
-  checksum: 8031a20f465ef35ac4ad98258470250636112d34f7e4efcb4ef21f3ced99df95a1ef1f0d6943df729a1e3e12a9df9319f3019df8cc1a0e0ed5a118bd72e505f9
-  languageName: node
-  linkType: hard
-
 "fast-uri@npm:^3.0.1":
   version: 3.0.1
   resolution: "fast-uri@npm:3.0.1"
@@ -10427,13 +10420,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inline-style-prefixer@npm:^6.0.1":
-  version: 6.0.4
-  resolution: "inline-style-prefixer@npm:6.0.4"
+"inline-style-prefixer@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "inline-style-prefixer@npm:7.0.1"
   dependencies:
     css-in-js-utils: ^3.1.0
-    fast-loops: ^1.1.3
-  checksum: caf7a75d18acbedc7e3b8bfac17563082becd2df6b65accad964a6afdf490329b42315c37fe65ba0177cc10fd32809eb40d62aba23a0118c74d87d4fc58defa2
+  checksum: 07a72573dfdac5e08fa18f5ce71d922861716955e230175ac415db227d9ed49443c764356cb407a92f4c85b30ebf39604165260b4dfbf3196b7736d7332c5c06
   languageName: node
   linkType: hard
 
@@ -15253,7 +15245,7 @@ __metadata:
     "@react-native-community/cli": 15.0.1
     "@react-native-community/cli-platform-android": 15.0.1
     "@react-native-community/cli-platform-ios": 15.0.1
-    "@react-native-community/slider": ^4.5.6
+    "@react-native-community/slider": ^4.5.7
     "@react-native/babel-preset": 0.78.0
     "@react-native/eslint-config": 0.78.0
     "@react-native/metro-config": 0.78.0
@@ -15280,7 +15272,7 @@ __metadata:
     react-native-safe-area-context: ^5.3.0
     react-native-screens: ^4.9.1
     react-native-vector-icons: ^9.1.0
-    react-native-web: ^0.19.12
+    react-native-web: ^0.20.0
     react-scripts: 5.0.1
     react-test-renderer: 19.0.0
     typescript: 5.0.4
@@ -15338,22 +15330,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-web@npm:^0.19.12":
-  version: 0.19.12
-  resolution: "react-native-web@npm:0.19.12"
+"react-native-web@npm:^0.20.0":
+  version: 0.20.0
+  resolution: "react-native-web@npm:0.20.0"
   dependencies:
     "@babel/runtime": ^7.18.6
     "@react-native/normalize-colors": ^0.74.1
     fbjs: ^3.0.4
-    inline-style-prefixer: ^6.0.1
+    inline-style-prefixer: ^7.0.1
     memoize-one: ^6.0.0
     nullthrows: ^1.1.1
     postcss-value-parser: ^4.2.0
     styleq: ^0.1.3
   peerDependencies:
-    react: ^18.0.0
-    react-dom: ^18.0.0
-  checksum: 676b1ba510c92e01dc69cb3102080f83976d2d209647323fb0a3a14113a455a6a506cf78d3e392c3fa33015135b61e2d6a3eed837a6876665064a6eb87516781
+    react: ^18.0.0 || ^19.0.0
+    react-dom: ^18.0.0 || ^19.0.0
+  checksum: 8a75802b8f281466ff07547de34df434c918c7102b7de4cbca19bd532e38c692e70fc318bc0f8f5507b6d00c64c46540c65e926f757dd74ae7f6d279d98a6ed8
   languageName: node
   linkType: hard
 

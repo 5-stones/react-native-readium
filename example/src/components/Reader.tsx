@@ -22,7 +22,7 @@ export const Reader: React.FC = () => {
   const [preferences, setPreferences] = useState<ReadiumProps['preferences']>({
     theme: 'dark',
   });
-  const ref = useRef<any>();
+  const ref = useRef<any>(undefined);
 
   useEffect(() => {
     async function run() {
