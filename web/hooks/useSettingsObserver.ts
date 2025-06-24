@@ -9,9 +9,6 @@ export const useSettingsObserver = (
   useDeepCompareEffect(() => {
     if (reader && preferences) {
       const settings = preferencesToUserSettings(preferences);
-
-      // @ts-ignore - FIXME need to do some deeper investigation if these
-      // are equivalent or not
       reader?.applyUserSettings(settings);
     }
   }, [preferences, !!reader]);
