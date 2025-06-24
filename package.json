@@ -147,7 +147,10 @@
     "useTabs": false
   },
   "dependencies": {
-    "@d-i-t-a/reader": "^2.1.4",
+    "@readium/css": "^2.0.0-beta.14",
+    "@readium/navigator": "^2.0.0-beta.6",
+    "@readium/navigator-html-injectables": "^2.0.0-beta.3",
+    "@readium/shared": "^1.2.1",
     "use-deep-compare": "^1.1.0"
   },
   "engines": {
