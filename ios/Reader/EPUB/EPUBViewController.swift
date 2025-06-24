@@ -1,19 +1,19 @@
 import UIKit
 import R2Shared
 import R2Navigator
+import ReadiumAdapterGCDWebServer
 
 class EPUBViewController: ReaderViewController {
 
     init(
       publication: Publication,
       locator: Locator?,
-      bookId: String,
-      resourcesServer: ResourcesServer
-    ) {
-      let navigator = EPUBNavigatorViewController(
+      bookId: String
+    ) throws {
+      let navigator = try EPUBNavigatorViewController(
         publication: publication,
         initialLocation: locator,
-        resourcesServer: resourcesServer
+        httpServer: GCDHTTPServer.shared
       )
 
       super.init(
@@ -33,13 +33,11 @@ class EPUBViewController: ReaderViewController {
       super.viewDidLoad()
 
       /// Set initial UI appearance.
-      if let appearance = publication.userProperties.getProperty(reference: ReadiumCSSReference.appearance.rawValue) {
-        setUIColor(for: appearance)
-      }
+      setUIColor(for: epubNavigator.settings.theme)
     }
 
-    internal func setUIColor(for appearance: UserProperty) {
-      let colors = AssociatedColors.getColors(for: appearance)
+    internal func setUIColor(for theme: Theme) {
+      let colors = AssociatedColors.getColors(for: theme)
 
       navigator.view.backgroundColor = colors.mainColor
       view.backgroundColor = colors.mainColor

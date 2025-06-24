@@ -1267,11 +1267,13 @@ PODS:
     - React-jsiexecutor
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
-  - react-native-readium (3.0.0):
+  - react-native-readium (3.0.2):
+    - GCDWebServer
     - R2Navigator
     - R2Shared
     - R2Streamer
     - React-Core
+    - ReadiumAdapterGCDWebServer
   - react-native-safe-area-context (5.3.0):
     - DoubleConversion
     - glog
@@ -1338,7 +1340,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-slider (4.5.2):
+  - react-native-slider (4.5.6):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1351,7 +1353,7 @@ PODS:
     - React-featureflags
     - React-graphics
     - React-ImageManager
-    - react-native-slider/common (= 4.5.2)
+    - react-native-slider/common (= 4.5.6)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-rendererdebug
@@ -1360,7 +1362,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-slider/common (4.5.2):
+  - react-native-slider/common (4.5.6):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1668,6 +1670,10 @@ PODS:
     - React-logger (= 0.78.0)
     - React-perflogger (= 0.78.0)
     - React-utils (= 0.78.0)
+  - ReadiumAdapterGCDWebServer (2.6.0):
+    - GCDWebServer (~> 3.0)
+    - R2Shared
+    - ReadiumInternal
   - ReadiumInternal (2.6.0)
   - RNFS (2.20.0):
     - React-Core
@@ -1798,6 +1804,7 @@ DEPENDENCIES:
   - ReactAppDependencyProvider (from `build/generated/ios`)
   - ReactCodegen (from `build/generated/ios`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - ReadiumAdapterGCDWebServer (from `https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumAdapterGCDWebServer.podspec`)
   - ReadiumInternal (from `https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumInternal.podspec`)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -1959,6 +1966,8 @@ EXTERNAL SOURCES:
     :path: build/generated/ios
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  ReadiumAdapterGCDWebServer:
+    :podspec: https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumAdapterGCDWebServer.podspec
   ReadiumInternal:
     :podspec: https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumInternal.podspec
   RNFS:
@@ -2016,9 +2025,9 @@ SPEC CHECKSUMS:
   React-logger: 795cd5055782db394f187f9db0477d4b25b44291
   React-Mapbuffer: 0502faf46cab8fb89cfc7bf3e6c6109b6ef9b5de
   React-microtasksnativemodule: 663bc64e3a96c5fc91081923ae7481adc1359a78
-  react-native-readium: 40f61c3082702f1b7565100f513672bbb32cfe2a
+  react-native-readium: aa668317aba990b7e449abfc939cd73b40ef0839
   react-native-safe-area-context: 286b3e7b5589795bb85ffc38faf4c0706c48a092
-  react-native-slider: 66ea94dfd9c462d23f747df59947d077b85c5c22
+  react-native-slider: e7f302c8d3296ddb49c642473f77f8f98809d53b
   React-NativeModulesApple: 16fbd5b040ff6c492dacc361d49e63cba7a6a7a1
   React-perflogger: ab51b7592532a0ea45bf6eed7e6cae14a368b678
   React-performancetimeline: bc2e48198ec814d578ac8401f65d78a574358203
@@ -2047,14 +2056,15 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: f2e81d80afd71a8058589e19d8a134243fa53f17
   ReactCodegen: a63a0ab6ae824aef2e8c744981edd718b16eb9f2
   ReactCommon: 3d39389f8e2a2157d5c999f8fba57bd1c8f226f0
+  ReadiumAdapterGCDWebServer: 6b4c0923a423495551db04dcfd47a46cac73c170
   ReadiumInternal: a74f61e9c0fbe2407f4e5c53aa032aa92193f3d5
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNScreens: 991214b4e69016c1ae32830d9cea31c9c9422367
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SwiftSoup: 33e8d374021a6c332788f78fa29a93227d8a7699
-  Yoga: 9b7fb56e7b08cde60e2153344fa6afbd88e5d99f
+  Yoga: afd04ff05ebe0121a00c468a8a3c8080221cb14c
 
-PODFILE CHECKSUM: 686539c4adb72be4e293af103a245974f4ffa466
+PODFILE CHECKSUM: 5a59c60685bf37ef521deb29e588276b55b852c6
 
 COCOAPODS: 1.15.2

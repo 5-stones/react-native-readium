@@ -85,6 +85,7 @@ target 'ExampleApp' do
   config = use_native_modules!
   ...
   pod 'GCDWebServer', podspec: 'https://raw.githubusercontent.com/readium/GCDWebServer/3.7.5/GCDWebServer.podspec', modular_headers: true
+  pod 'ReadiumAdapterGCDWebServer', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumAdapterGCDWebServer.podspec', modular_headers: true
   pod 'R2Navigator', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumNavigator.podspec'
   pod 'R2Shared', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumShared.podspec'
   pod 'R2Streamer', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumStreamer.podspec'
@@ -160,7 +161,7 @@ DRM is not supported at this time. However, there is a clear path to [support it
 |------|------|----------|-------------|
 | `file`     | [`File`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/File.ts)               | :x:                | A file object containing the path to the eBook file on disk. |
 | `location` | [`Locator`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/Locator.ts) \| [`Link`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/Link.ts)           | :white_check_mark: | A locator prop that allows you to externally control the location of the reader (e.g. Chapters or Bookmarks). <br/><br/>:warning: If you want to set the `location` of an ebook on initial load, you should use the `File.initialLocation` property (look at the `file` prop). See more [here](https://github.com/5-stones/react-native-readium/issues/16#issuecomment-1344128937) |
-| `settings` | [`Partial<Settings>`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/Settings.ts)  | :white_check_mark: | An object that allows you to control various aspects of the reader's UI (epub only) |
+| `preferences` | [`Partial<Preferences>`](https://github.com/readium/swift-toolkit/blob/main/docs/Guides/Navigator%20Preferences.md#appendix-preference-constraints)  | :white_check_mark: | An object that allows you to control various aspects of the reader's UI (epub only) |
 | `style`    | `ViewStyle`          | :white_check_mark: | A traditional style object. |
 | `onLocationChange` | `(locator: Locator) => void` | :white_check_mark: | A callback that fires whenever the location is changed (e.g. the user transitions to a new page)|
 | `onTableOfContents` | `(toc: Link[] \| null) => void` | :white_check_mark: | A callback that fires once the file is parsed and emits the table of contents embedded in the file. Returns `null` or an empty `[]` if no TOC exists. See the [`Link`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/Link.ts) interface for more info. |

@@ -1,6 +1,4 @@
 import type { ViewStyle } from 'react-native';
-
-import type { Settings } from './Settings';
 import type { Link } from './Link';
 import type { Locator } from './Locator';
 import type { File } from './File';
@@ -8,7 +6,7 @@ import type { File } from './File';
 export type BaseReadiumViewProps = {
   file: File;
   location?: Locator | Link;
-  settings?: Partial<Settings>;
+  preferences?: string; // JSON between native and JS, which we deserialise later
   style?: ViewStyle;
   onLocationChange?: (locator: Locator) => void;
   onTableOfContents?: (toc: Link[] | null) => void;

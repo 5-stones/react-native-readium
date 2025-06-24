@@ -2,26 +2,26 @@ import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet, View, Text, Platform, DimensionValue } from 'react-native';
 import {
   ReadiumView,
-  Settings,
 } from 'react-native-readium';
-import type { Link, Locator, File } from 'react-native-readium';
+import type { Link, Locator, File, ReadiumProps } from 'react-native-readium';
 
 import RNFS from '../utils/RNFS';
 import {
   EPUB_URL,
   EPUB_PATH,
   INITIAL_LOCATION,
-  DEFAULT_SETTINGS,
 } from '../consts';
 import { ReaderButton } from './ReaderButton';
 import { TableOfContents } from './TableOfContents';
-import { Settings as ReaderSettings } from './Settings';
+import { PreferencesEditor } from './PreferencesEditor';
 
 export const Reader: React.FC = () => {
   const [toc, setToc] = useState<Link[] | null>([]);
   const [file, setFile] = useState<File>();
   const [location, setLocation] = useState<Locator | Link>();
-  const [settings, setSettings] = useState<Partial<Settings>>(DEFAULT_SETTINGS);
+  const [preferences, setPreferences] = useState<ReadiumProps['preferences']>({
+    theme: 'dark',
+  });
   const ref = useRef<any>();
 
   useEffect(() => {
@@ -74,9 +74,9 @@ export const Reader: React.FC = () => {
             />
           </View>
           <View style={styles.button}>
-            <ReaderSettings
-              settings={settings}
-              onSettingsChanged={(s) => setSettings(s)}
+            <PreferencesEditor
+              preferences={preferences}
+              onChange={setPreferences}
             />
           </View>
         </View>
@@ -94,7 +94,7 @@ export const Reader: React.FC = () => {
               ref={ref}
               file={file}
               location={location}
-              settings={settings}
+              preferences={preferences}
               onLocationChange={(locator: Locator) => setLocation(locator)}
               onTableOfContents={(toc: Link[] | null) => {
                 if (toc) {setToc(toc);}

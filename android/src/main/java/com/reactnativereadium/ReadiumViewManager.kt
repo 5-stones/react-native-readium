@@ -115,11 +115,9 @@ class ReadiumViewManager(
     }
   }
 
-  @ReactProp(name = "settings")
-  fun setSettings(view: ReadiumView, settings: ReadableMap) {
-    val map = mutableMapOf<String, Any>()
-    settings.toHashMap().forEach { (key, value) -> if (value != null) map[key] = value }
-    view.updateSettingsFromMap(map)
+  @ReactProp(name = "preferences")
+  fun setPreferences(view: ReadiumView, serialisedPreferences: String) {
+    view.updatePreferencesFromJsonString(serialisedPreferences)
   }
 
   @ReactPropGroup(names = ["width", "height"], customType = "Style")

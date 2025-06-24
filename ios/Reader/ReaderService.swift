@@ -7,13 +7,11 @@ import UIKit
 final class ReaderService: Loggable {
   var app: AppModule?
   var streamer = Streamer()
-  var publicationServer: PublicationServer?
   private var subscriptions = Set<AnyCancellable>()
 
   init() {
     do {
       self.app = try AppModule()
-      self.publicationServer = PublicationServer()
     } catch {
       print("TODO: An error occurred instantiating the ReaderService")
       print(error)
@@ -67,7 +65,6 @@ final class ReaderService: Loggable {
           print(">>>>>>>>>>> TODO: handle me", error)
         },
         receiveValue: { pub in
-          self.preparePresentation(of: pub)
           let locator: Locator? = ReaderService.locatorFromLocation(location, pub)
           let vc = reader.getViewController(
             for: pub,
@@ -140,19 +137,5 @@ final class ReaderService: Loggable {
       }
     }
     return .just(publication)
-  }
-
-  private func preparePresentation(of publication: Publication) {
-    if (self.publicationServer == nil) {
-      log(.error, "Whoops")
-      return
-    }
-
-    publicationServer?.removeAll()
-    do {
-      try publicationServer?.add(publication)
-    } catch {
-      log(.error, error)
-    }
   }
 }
