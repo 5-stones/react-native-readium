@@ -1,3 +1,12 @@
+## [3.0.3](https://github.com/5-stones/react-native-readium/compare/v3.0.2...v3.0.3) (2025-08-11)
+
+
+### Bug Fixes
+
+* **web:** fix an issue causing web readers to crash due to CDN outage ([9bad0f8](https://github.com/5-stones/react-native-readium/commit/9bad0f822e2eaefcd567eed27cf6a4ed766fb757))
+
+
+
 ## [3.0.2](https://github.com/5-stones/react-native-readium/compare/v3.0.1...v3.0.2) (2025-05-20)
 
 
