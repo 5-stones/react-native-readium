@@ -1,3 +1,23 @@
+# [4.0.0](https://github.com/5-stones/react-native-readium/compare/v3.0.2...v4.0.0) (2025-09-08)
+
+
+### Bug Fixes
+
+* **android, ios:** Improve detection of Links when changing navigator location ([#82](https://github.com/5-stones/react-native-readium/issues/82)) ([9bc2e4a](https://github.com/5-stones/react-native-readium/commit/9bc2e4acc59af0c915fbddaad3375daa3f0b017d))
+* **ios:** add guards to superview and viewControllers to avoid crash ([#90](https://github.com/5-stones/react-native-readium/issues/90)) ([a85a065](https://github.com/5-stones/react-native-readium/commit/a85a065dc8956c5a03f59f2be379e6ee7f1e02ae))
+
+
+### Features
+
+* **ios, android, web:** Move from deprecated UserSettings API to the new Preferences API ([#80](https://github.com/5-stones/react-native-readium/issues/80)) ([784f7fe](https://github.com/5-stones/react-native-readium/commit/784f7fe072f12bfdc8ff8e8c2ea1109e007619a0)), closes [#79](https://github.com/5-stones/react-native-readium/issues/79)
+
+
+### BREAKING CHANGES
+
+* **ios, android, web:** This update moves the library to the newer Preferences API for managing the reader font size, theme, etc.
+
+
+
 ## [3.0.2](https://github.com/5-stones/react-native-readium/compare/v3.0.1...v3.0.2) (2025-05-20)
 
 
