@@ -133,7 +133,16 @@ class ReadiumView : UIView, Loggable {
       self.updatePreferences(preferences)
     }
 
-    readerViewController!.view.frame = self.superview!.frame
+    guard
+      readerViewController != nil,
+      superview?.frame != nil,
+      self.viewController != nil,
+      self.readerViewController != nil
+    else {
+      return
+    }
+
+    readerViewController!.view.frame = superview!.frame
     self.viewController!.addChild(readerViewController!)
     let rootView = self.readerViewController!.view!
     self.addSubview(rootView)
