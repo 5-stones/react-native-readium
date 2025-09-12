@@ -35,24 +35,20 @@ class ReadiumView(
   }
 
   fun updatePreferencesFromJsonString(preferences: String?) {
-    if (preferences == null) {
-      return
-    } else if (fragment == null) {
-      lateInitSerializedUserPreferences = preferences
+    lateInitSerializedUserPreferences = preferences
+    if (preferences == null || fragment == null) {
       return
     }
 
     if (fragment is EpubReaderFragment) {
       (fragment as EpubReaderFragment).updatePreferencesFromJsonString(preferences)
     }
-
-    lateInitSerializedUserPreferences = null
   }
 
   fun addFragment(frag: BaseReaderFragment) {
     fragment = frag
     setupLayout()
-    updatePreferencesFromJsonString(lateInitSerializedUserPreferences)
+    lateInitSerializedUserPreferences?.let { updatePreferencesFromJsonString(it)}
     val activity: FragmentActivity? = reactContext.currentActivity as FragmentActivity?
     activity!!.supportFragmentManager
       .beginTransaction()
