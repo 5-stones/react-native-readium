@@ -1,3 +1,12 @@
+## [4.0.1](https://github.com/5-stones/react-native-readium/compare/v4.0.0...v4.0.1) (2025-09-12)
+
+
+### Bug Fixes
+
+* **android:** ensure we don't reset preferences on updates ([#91](https://github.com/5-stones/react-native-readium/issues/91)) ([ce96f13](https://github.com/5-stones/react-native-readium/commit/ce96f1388987ceda90e7ef9251705d6787b51b3b))
+
+
+
 # [4.0.0](https://github.com/5-stones/react-native-readium/compare/v3.0.2...v4.0.0) (2025-09-08)
 
 
