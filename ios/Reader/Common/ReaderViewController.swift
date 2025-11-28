@@ -1,8 +1,8 @@
 import Combine
 import SafariServices
 import UIKit
-import R2Navigator
-import R2Shared
+import ReadiumNavigator
+import ReadiumShared
 import SwiftSoup
 import WebKit
 
@@ -21,6 +21,10 @@ class ReaderViewController: UIViewController, Loggable {
   private var subscriptions = Set<AnyCancellable>()
   private var subject = PassthroughSubject<Locator, Never>()
   lazy var publisher = subject.eraseToAnyPublisher()
+  private var positionsCount: Int?
+  private var positionsLoadingTask: Task<Void, Never>?
+  private var lastKnownLocator: Locator?
+  private var navigatorInputObserverTokens = Set<InputObservableToken>()
 
   /// This regex matches any string with at least 2 consecutive letters (not limited to ASCII).
   /// It's used when evaluating whether to display the body of a noteref referrer as the note's title.
@@ -55,6 +59,8 @@ class ReaderViewController: UIViewController, Loggable {
 
   deinit {
     NotificationCenter.default.removeObserver(self)
+    positionsLoadingTask?.cancel()
+    removeNavigatorInputObservers()
   }
 
   override func viewDidLoad() {
@@ -93,6 +99,8 @@ class ReaderViewController: UIViewController, Loggable {
       positionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
       positionLabel.bottomAnchor.constraint(equalTo: navigator.view.bottomAnchor, constant: -20)
     ])
+
+    configureNavigatorInteractions()
   }
 
   override func willMove(toParent parent: UIViewController?) {
@@ -205,12 +213,66 @@ class ReaderViewController: UIViewController, Loggable {
     updateNavigationBar()
   }
 
+  private func configureNavigatorInteractions() {
+    guard let visualNavigator = navigator as? VisualNavigator else {
+      return
+    }
+
+    guard navigatorInputObserverTokens.isEmpty else {
+      return
+    }
+
+    DirectionalNavigationAdapter(
+      pointerPolicy: .init(edges: .all),
+      animatedTransition: true
+    ).bind(to: visualNavigator)
+
+    let toggleToken = visualNavigator.addObserver(.tap { [weak self] event in
+      guard
+        let self,
+        event.phase != .cancel
+      else {
+        return false
+      }
+
+      self.toggleNavigationBar()
+      return true
+    })
+    toggleToken.store(in: &navigatorInputObserverTokens)
+  }
+
+  private func removeNavigatorInputObservers() {
+    guard
+      let visualNavigator = navigator as? VisualNavigator
+    else {
+      navigatorInputObserverTokens.removeAll()
+      return
+    }
+
+    navigatorInputObserverTokens.forEach { visualNavigator.removeObserver($0) }
+    navigatorInputObserverTokens.removeAll()
+  }
+
   @objc private func goBackward() {
-    navigator.goBackward()
+    Task { [weak self] in
+      await self?.navigateBackwardAnimated()
+    }
   }
 
   @objc private func goForward() {
-    navigator.goForward()
+    Task { [weak self] in
+      await self?.navigateForwardAnimated()
+    }
+  }
+
+  @MainActor
+  private func navigateBackwardAnimated() async {
+    _ = await navigator.goBackward(options: .animated)
+  }
+
+  @MainActor
+  private func navigateForwardAnimated() async {
+    _ = await navigator.goForward(options: .animated)
   }
 
 }
@@ -218,15 +280,7 @@ class ReaderViewController: UIViewController, Loggable {
 extension ReaderViewController: NavigatorDelegate {
   func navigator(_ navigator: Navigator, locationDidChange locator: Locator) {
     subject.send(locator)
-    positionLabel.text = {
-      if let position = locator.locations.position {
-        return "\(position) / \(publication.positions.count)"
-      } else if let progression = locator.locations.totalProgression {
-        return "\(progression)%"
-      } else {
-        return nil
-      }
-    }()
+    updatePositionLabel(with: locator)
   }
 
   func navigator(_ navigator: Navigator, presentExternalURL url: URL) {
@@ -288,16 +342,59 @@ extension ReaderViewController: NavigatorDelegate {
 
 }
 
-extension ReaderViewController: VisualNavigatorDelegate {
+extension ReaderViewController {
+  private func updatePositionLabel(with locator: Locator) {
+    lastKnownLocator = locator
+    positionLabel.text = positionLabelText(for: locator)
+  }
 
-    func navigator(_ navigator: VisualNavigator, didTapAt point: CGPoint) {
-        let moved = DirectionalNavigationAdapter(navigator: navigator).didTap(at: point)
-        if !moved {
-            toggleNavigationBar()
+  private func positionLabelText(for locator: Locator) -> String? {
+    if let position = locator.locations.position {
+      if let total = positionsCount {
+        return "\(position) / \(total)"
+      } else {
+        loadPositionsCountIfNeeded()
+        return "\(position)"
+      }
+    } else if let progression = locator.locations.totalProgression {
+      return "\(progression)%"
+    } else {
+      return nil
+    }
+  }
+
+  private func loadPositionsCountIfNeeded() {
+    guard positionsCount == nil else {
+      return
+    }
+    guard positionsLoadingTask == nil else {
+      return
+    }
+
+    positionsLoadingTask = Task { [weak self] in
+      guard let self else { return }
+      defer { self.positionsLoadingTask = nil }
+
+      let result = await self.publication.positions()
+      guard !Task.isCancelled else { return }
+
+      switch result {
+      case let .success(positions):
+        await MainActor.run {
+          self.positionsCount = positions.count
+          self.refreshPositionLabel()
         }
+      case let .failure(error):
+        self.log(.error, "Failed to load publication positions: \(error)")
+      }
     }
-    
-    func navigator(_ navigator: VisualNavigator, didPressKey event: KeyEvent) {
-        DirectionalNavigationAdapter(navigator: navigator).didPressKey(event: event)
+  }
+
+  @MainActor
+  private func refreshPositionLabel() {
+    guard let locator = lastKnownLocator else {
+      return
     }
+    positionLabel.text = positionLabelText(for: locator)
+  }
 }
