@@ -1,9 +1,9 @@
 import Combine
 import Foundation
-import R2Shared
-import R2Streamer
+import ReadiumShared
+import ReadiumStreamer
 import UIKit
-import R2Navigator
+import ReadiumNavigator
 
 
 class ReadiumView : UIView, Loggable {

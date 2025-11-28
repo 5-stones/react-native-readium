@@ -1,8 +1,8 @@
 import Combine
 import SafariServices
 import UIKit
-import R2Navigator
-import R2Shared
+import ReadiumNavigator
+import ReadiumShared
 import SwiftSoup
 import WebKit
 

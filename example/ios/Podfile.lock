@@ -1,6 +1,6 @@
 PODS:
   - boost (1.84.0)
-  - CryptoSwift (1.5.1)
+  - CryptoSwift (1.8.4)
   - DifferenceKit (1.3.0):
     - DifferenceKit/Core (= 1.3.0)
     - DifferenceKit/UIKitExtension (= 1.3.0)
@@ -11,32 +11,11 @@ PODS:
   - fast_float (6.1.4)
   - FBLazyVector (0.78.0)
   - fmt (11.0.2)
-  - Fuzi (3.1.3)
-  - GCDWebServer (3.7.5):
-    - GCDWebServer/Core (= 3.7.5)
-  - GCDWebServer/Core (3.7.5)
   - glog (0.3.5)
   - hermes-engine (0.78.0):
     - hermes-engine/Pre-built (= 0.78.0)
   - hermes-engine/Pre-built (0.78.0)
   - Minizip (1.0.0)
-  - R2Navigator (2.6.0):
-    - DifferenceKit (~> 1.0)
-    - R2Shared
-    - ReadiumInternal
-    - SwiftSoup (<= 2.5.3)
-  - R2Shared (2.6.0):
-    - Fuzi (~> 3.0)
-    - Minizip (~> 1.0)
-    - ReadiumInternal
-    - SwiftSoup (<= 2.5.3)
-  - R2Streamer (2.6.0):
-    - CryptoSwift (<= 1.5.1)
-    - Fuzi (~> 3.0)
-    - GCDWebServer (~> 3.0)
-    - Minizip (~> 1.0)
-    - R2Shared
-    - ReadiumInternal
   - RCT-Folly (2024.11.18.00):
     - boost
     - DoubleConversion
@@ -1267,13 +1246,13 @@ PODS:
     - React-jsiexecutor
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
-  - react-native-readium (3.0.2):
-    - GCDWebServer
-    - R2Navigator
-    - R2Shared
-    - R2Streamer
+  - react-native-readium (4.0.1):
     - React-Core
-    - ReadiumAdapterGCDWebServer
+    - ReadiumAdapterGCDWebServer (~> 3.5.0)
+    - ReadiumInternal
+    - ReadiumNavigator (~> 3.5.0)
+    - ReadiumShared (~> 3.5.0)
+    - ReadiumStreamer (~> 3.5.0)
   - react-native-safe-area-context (5.3.0):
     - DoubleConversion
     - glog
@@ -1340,7 +1319,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-slider (4.5.6):
+  - react-native-slider (4.5.7):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1353,7 +1332,7 @@ PODS:
     - React-featureflags
     - React-graphics
     - React-ImageManager
-    - react-native-slider/common (= 4.5.6)
+    - react-native-slider/common (= 4.5.7)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-rendererdebug
@@ -1362,7 +1341,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-slider/common (4.5.6):
+  - react-native-slider/common (4.5.7):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1670,11 +1649,32 @@ PODS:
     - React-logger (= 0.78.0)
     - React-perflogger (= 0.78.0)
     - React-utils (= 0.78.0)
-  - ReadiumAdapterGCDWebServer (2.6.0):
-    - GCDWebServer (~> 3.0)
-    - R2Shared
-    - ReadiumInternal
-  - ReadiumInternal (2.6.0)
+  - ReadiumAdapterGCDWebServer (3.5.0):
+    - ReadiumGCDWebServer (~> 4.0.0)
+    - ReadiumInternal (~> 3.5.0)
+    - ReadiumShared (~> 3.5.0)
+  - ReadiumFuzi (4.0.0)
+  - ReadiumGCDWebServer (4.0.1):
+    - ReadiumGCDWebServer/Core (= 4.0.1)
+  - ReadiumGCDWebServer/Core (4.0.1)
+  - ReadiumInternal (3.5.0)
+  - ReadiumNavigator (3.5.0):
+    - DifferenceKit (~> 1.0)
+    - ReadiumInternal (~> 3.5.0)
+    - ReadiumShared (~> 3.5.0)
+    - SwiftSoup (~> 2.7.0)
+  - ReadiumShared (3.5.0):
+    - Minizip (~> 1.0.0)
+    - ReadiumFuzi (~> 4.0.0)
+    - ReadiumInternal (~> 3.5.0)
+    - ReadiumZIPFoundation (~> 3.0.1)
+    - SwiftSoup (~> 2.7.0)
+  - ReadiumStreamer (3.5.0):
+    - CryptoSwift (~> 1.8.0)
+    - ReadiumFuzi (~> 4.0.0)
+    - ReadiumInternal (~> 3.5.0)
+    - ReadiumShared (~> 3.5.0)
+  - ReadiumZIPFoundation (3.0.1)
   - RNFS (2.20.0):
     - React-Core
   - RNScreens (4.9.1):
@@ -1725,7 +1725,7 @@ PODS:
   - RNVectorIcons (9.2.0):
     - React-Core
   - SocketRocket (0.7.1)
-  - SwiftSoup (2.5.3)
+  - SwiftSoup (2.7.6)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -1734,13 +1734,9 @@ DEPENDENCIES:
   - fast_float (from `../node_modules/react-native/third-party-podspecs/fast_float.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - fmt (from `../node_modules/react-native/third-party-podspecs/fmt.podspec`)
-  - GCDWebServer (from `https://raw.githubusercontent.com/readium/GCDWebServer/3.7.5/GCDWebServer.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - Minizip
-  - R2Navigator (from `https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumNavigator.podspec`)
-  - R2Shared (from `https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumShared.podspec`)
-  - R2Streamer (from `https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumStreamer.podspec`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
@@ -1804,19 +1800,32 @@ DEPENDENCIES:
   - ReactAppDependencyProvider (from `build/generated/ios`)
   - ReactCodegen (from `build/generated/ios`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
-  - ReadiumAdapterGCDWebServer (from `https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumAdapterGCDWebServer.podspec`)
-  - ReadiumInternal (from `https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumInternal.podspec`)
+  - ReadiumAdapterGCDWebServer (~> 3.5.0)
+  - ReadiumGCDWebServer
+  - ReadiumInternal (~> 3.5.0)
+  - ReadiumNavigator (~> 3.5.0)
+  - ReadiumShared (~> 3.5.0)
+  - ReadiumStreamer (~> 3.5.0)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
+  https://github.com/readium/podspecs:
+    - ReadiumAdapterGCDWebServer
+    - ReadiumFuzi
+    - ReadiumGCDWebServer
+    - ReadiumInternal
+    - ReadiumNavigator
+    - ReadiumShared
+    - ReadiumStreamer
+    - ReadiumZIPFoundation
   trunk:
     - CryptoSwift
     - DifferenceKit
-    - Fuzi
     - Minizip
+    - ReadiumGCDWebServer
     - SocketRocket
     - SwiftSoup
 
@@ -1831,19 +1840,11 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
   fmt:
     :podspec: "../node_modules/react-native/third-party-podspecs/fmt.podspec"
-  GCDWebServer:
-    :podspec: https://raw.githubusercontent.com/readium/GCDWebServer/3.7.5/GCDWebServer.podspec
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
     :tag: hermes-2025-01-13-RNv0.78.0-a942ef374897d85da38e9c8904574f8376555388
-  R2Navigator:
-    :podspec: https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumNavigator.podspec
-  R2Shared:
-    :podspec: https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumShared.podspec
-  R2Streamer:
-    :podspec: https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumStreamer.podspec
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTDeprecation:
@@ -1966,10 +1967,6 @@ EXTERNAL SOURCES:
     :path: build/generated/ios
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
-  ReadiumAdapterGCDWebServer:
-    :podspec: https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumAdapterGCDWebServer.podspec
-  ReadiumInternal:
-    :podspec: https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumInternal.podspec
   RNFS:
     :path: "../node_modules/react-native-fs"
   RNScreens:
@@ -1981,20 +1978,15 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
-  CryptoSwift: c4f2debceb38bf44c80659afe009f71e23e4a082
+  CryptoSwift: e64e11850ede528a02a0f3e768cec8e9d92ecb90
   DifferenceKit: ab185c4d7f9cef8af3fcf593e5b387fb81e999ca
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   fast_float: 06eeec4fe712a76acc9376682e4808b05ce978b6
   FBLazyVector: 6fe148afcef2e3213e484758e3459609d40d57f5
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
-  Fuzi: 4c10d6449c0b49a85cd75b13844c559c0fc71220
-  GCDWebServer: 5e989dbe6795b9975f378cc0eeeee49ef2c51b6f
   glog: eb93e2f488219332457c3c4eafd2738ddc7e80b8
   hermes-engine: b417d2b2aee3b89b58e63e23a51e02be91dc876d
   Minizip: 188cb3e39a1195c283ae03bf673d182596fefd0b
-  R2Navigator: 4b53a3d10dd7282c9d9cd6d2188e68f0041840fc
-  R2Shared: fa34e56aa6e67e34608bf6ef72acf2631cbc4b5e
-  R2Streamer: d2501f0395c868cb65329ec46e3ab604b8b98687
   RCT-Folly: 36fe2295e44b10d831836cc0d1daec5f8abcf809
   RCTDeprecation: b2eecf2d60216df56bc5e6be5f063826d3c1ee35
   RCTRequired: 78522de7dc73b81f3ed7890d145fa341f5bb32ea
@@ -2025,9 +2017,9 @@ SPEC CHECKSUMS:
   React-logger: 795cd5055782db394f187f9db0477d4b25b44291
   React-Mapbuffer: 0502faf46cab8fb89cfc7bf3e6c6109b6ef9b5de
   React-microtasksnativemodule: 663bc64e3a96c5fc91081923ae7481adc1359a78
-  react-native-readium: aa668317aba990b7e449abfc939cd73b40ef0839
+  react-native-readium: 2c1c2325e3176913b02d4650273ab4ebc4de639f
   react-native-safe-area-context: 286b3e7b5589795bb85ffc38faf4c0706c48a092
-  react-native-slider: e7f302c8d3296ddb49c642473f77f8f98809d53b
+  react-native-slider: 27263d134d55db948a4706f1e47d0ec88fb354dd
   React-NativeModulesApple: 16fbd5b040ff6c492dacc361d49e63cba7a6a7a1
   React-perflogger: ab51b7592532a0ea45bf6eed7e6cae14a368b678
   React-performancetimeline: bc2e48198ec814d578ac8401f65d78a574358203
@@ -2056,15 +2048,21 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: f2e81d80afd71a8058589e19d8a134243fa53f17
   ReactCodegen: a63a0ab6ae824aef2e8c744981edd718b16eb9f2
   ReactCommon: 3d39389f8e2a2157d5c999f8fba57bd1c8f226f0
-  ReadiumAdapterGCDWebServer: 6b4c0923a423495551db04dcfd47a46cac73c170
-  ReadiumInternal: a74f61e9c0fbe2407f4e5c53aa032aa92193f3d5
+  ReadiumAdapterGCDWebServer: 8aba3fb716824e6594a2ae021aefaf129d44d5bd
+  ReadiumFuzi: fb19b82ff8f089b27c735c216c877666cd84d70f
+  ReadiumGCDWebServer: 9bf72ab96592d0fdd0f2c941c269e9fd12d79299
+  ReadiumInternal: e6e71023739a046aef8695219bb39dd349e9b40a
+  ReadiumNavigator: ad265f7e812995ade33865e2097bb8d24b4de081
+  ReadiumShared: f1dbe5d49e345cc885b865e9cb754f2df4728683
+  ReadiumStreamer: faad7d159973b801dc9d26b1bf9d21d9f88d66a3
+  ReadiumZIPFoundation: 4009f635ebc718cc113a388ecb33c773f00639ca
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNScreens: 991214b4e69016c1ae32830d9cea31c9c9422367
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  SwiftSoup: 33e8d374021a6c332788f78fa29a93227d8a7699
-  Yoga: afd04ff05ebe0121a00c468a8a3c8080221cb14c
+  SwiftSoup: 9ec2526c76ebc3fe5d3157c82b40b45a27eeb82d
+  Yoga: 9b7fb56e7b08cde60e2153344fa6afbd88e5d99f
 
-PODFILE CHECKSUM: 5a59c60685bf37ef521deb29e588276b55b852c6
+PODFILE CHECKSUM: d4c4937f54b0949871ab04de3f3fff5f5611e28c
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

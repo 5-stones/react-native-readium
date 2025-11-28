@@ -1,7 +1,7 @@
 import Combine
 import Foundation
-import R2Shared
-import R2Streamer
+import ReadiumShared
+import ReadiumStreamer
 import UIKit
 
 final class ReaderService: Loggable {

@@ -1,6 +1,6 @@
 import UIKit
-import R2Shared
-import R2Navigator
+import ReadiumShared
+import ReadiumNavigator
 import ReadiumAdapterGCDWebServer
 
 class EPUBViewController: ReaderViewController {
