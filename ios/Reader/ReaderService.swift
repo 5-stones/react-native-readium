@@ -6,7 +6,8 @@ import UIKit
 
 final class ReaderService: Loggable {
   var app: AppModule?
-  var streamer = Streamer()
+  private let assetRetriever: AssetRetriever
+  private let publicationOpener: PublicationOpener
   private var subscriptions = Set<AnyCancellable>()
 
   init() {
@@ -16,12 +17,23 @@ final class ReaderService: Loggable {
       print("TODO: An error occurred instantiating the ReaderService")
       print(error)
     }
+
+    let httpClient = DefaultHTTPClient()
+    let assetRetriever = AssetRetriever(httpClient: httpClient)
+    let parser = DefaultPublicationParser(
+      httpClient: httpClient,
+      assetRetriever: assetRetriever,
+      pdfFactory: DefaultPDFDocumentFactory()
+    )
+
+    self.assetRetriever = assetRetriever
+    self.publicationOpener = PublicationOpener(parser: parser)
   }
   
   static func locatorFromLocation(
     _ location: NSDictionary?,
     _ publication: Publication?
-  ) -> Locator? {
+  ) async -> Locator? {
     guard location != nil else {
       return nil
     }
@@ -41,12 +53,10 @@ final class ReaderService: Loggable {
         return nil
       }
 
-      return publication.locate(link)
+      return await publication.locate(link)
     } else {
       return try? Locator(json: location)
     }
-    
-    return nil
   }
 
   func buildViewController(
@@ -65,15 +75,17 @@ final class ReaderService: Loggable {
           print(">>>>>>>>>>> TODO: handle me", error)
         },
         receiveValue: { pub in
-          let locator: Locator? = ReaderService.locatorFromLocation(location, pub)
-          let vc = reader.getViewController(
-            for: pub,
-            bookId: bookId,
-            locator: locator
-          )
+          Task { @MainActor in
+            let locator = await ReaderService.locatorFromLocation(location, pub)
+            guard let viewController = reader.getViewController(
+              for: pub,
+              bookId: bookId,
+              locator: locator
+            ) else {
+              return
+            }
 
-          if (vc != nil) {
-            completion(vc!)
+            completion(viewController)
           }
         }
       )
@@ -99,33 +111,56 @@ final class ReaderService: Loggable {
     allowUserInteraction: Bool,
     sender: UIViewController?
   ) -> AnyPublisher<(Publication, MediaType), ReaderError> {
-    let openFuture = Future<(Publication, MediaType), ReaderError>(
-      on: .global(),
-      { promise in
-        let asset = FileAsset(url: url)
-        guard let mediaType = asset.mediaType() else {
-          promise(.failure(.openFailed(Publication.OpeningError.unsupportedFormat)))
-          return
-        }
+    Deferred {
+      Future<(Publication, MediaType), ReaderError> { promise in
+        Task {
+          let absoluteURLCandidate = AnyURL(url: url)
+          guard let absoluteURL = absoluteURLCandidate.absoluteURL else {
+            promise(.failure(.fileNotFound(URLError(.badURL))))
+            return
+          }
 
-        self.streamer.open(
-          asset: asset,
-          allowUserInteraction: allowUserInteraction,
-          sender: sender
-        ) { result in
-          switch result {
+          let assetResult = await self.assetRetriever.retrieve(url: absoluteURL)
+
+          let asset: Asset
+          switch assetResult {
+          case .success(let retrievedAsset):
+            asset = retrievedAsset
+          case .failure(let error):
+            switch error {
+            case .schemeNotSupported:
+              promise(.failure(.openFailed(error)))
+            case .formatNotSupported:
+              promise(.failure(.formatNotSupported))
+            case .reading(let readError):
+              promise(.failure(.openFailed(readError)))
+            }
+            return
+          }
+
+          let mediaType = asset.format.mediaType ?? .binary
+
+          let openResult = await self.publicationOpener.open(
+            asset: asset,
+            allowUserInteraction: allowUserInteraction,
+            sender: sender
+          )
+
+          switch openResult {
           case .success(let publication):
             promise(.success((publication, mediaType)))
           case .failure(let error):
-            promise(.failure(.openFailed(error)))
-          case .cancelled:
-            promise(.failure(.cancelled))
+            switch error {
+            case .formatNotSupported:
+              promise(.failure(.formatNotSupported))
+            case .reading(let readError):
+              promise(.failure(.openFailed(readError)))
+            }
           }
         }
       }
-    )
-
-    return openFuture.eraseToAnyPublisher()
+    }
+    .eraseToAnyPublisher()
   }
 
   private func checkIsReadable(publication: Publication) -> AnyPublisher<Publication, ReaderError> {

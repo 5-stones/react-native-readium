@@ -2,7 +2,6 @@ import Combine
 import Foundation
 import UIKit
 import ReadiumShared
-import ReadiumStreamer
 
 
 /// Base module delegate, that sub-modules' delegate can extend.
@@ -22,15 +21,10 @@ final class AppModule {
   var reader: ReaderModuleAPI! = nil
 
   init() throws {
-    guard let server = PublicationServer() else {
-      /// FIXME: we should recover properly if the publication server can't start, maybe this should only forbid opening a publication?
-      fatalError("Can't start publication server")
-    }
-
     reader = ReaderModule(delegate: self)
 
-    // Set Readium 2's logging minimum level.
-    R2EnableLog(withMinimumSeverityLevel: .debug)
+    // Set Readium logging minimum level for debugging during development.
+    ReadiumEnableLog(withMinimumSeverityLevel: .debug)
   }
 }
 

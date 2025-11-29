@@ -10,10 +10,14 @@ class EPUBViewController: ReaderViewController {
       locator: Locator?,
       bookId: String
     ) throws {
+      let httpClient = DefaultHTTPClient()
+      let assetRetriever = AssetRetriever(httpClient: httpClient)
+      let httpServer = GCDHTTPServer(assetRetriever: assetRetriever)
+
       let navigator = try EPUBNavigatorViewController(
         publication: publication,
         initialLocation: locator,
-        httpServer: GCDHTTPServer.shared
+        httpServer: httpServer
       )
 
       super.init(

@@ -54,27 +54,30 @@ class ReadiumView : UIView, Loggable {
     )
   }
 
-  func getLocator() -> Locator? {
-    return ReaderService.locatorFromLocation(location, readerViewController?.publication)
+  func getLocator() async -> Locator? {
+    return await ReaderService.locatorFromLocation(location, readerViewController?.publication)
   }
 
   func updateLocation() {
-    guard let navigator = readerViewController?.navigator else {
-      return;
-    }
-    guard let locator = self.getLocator() else {
-      return;
-    }
+    Task { @MainActor [weak self] in
+      guard let self = self else { return }
+      guard let navigator = self.readerViewController?.navigator else {
+        return
+      }
+      guard let locator = await self.getLocator() else {
+        return
+      }
 
-    let cur = navigator.currentLocation
-    if (cur != nil && locator.hashValue == cur?.hashValue) {
-      return;
-    }
+      let currentLocation = navigator.currentLocation
+      if let currentLocation, locator.hashValue == currentLocation.hashValue {
+        return
+      }
 
-    navigator.go(
-      to: locator,
-      animated: true
-    )
+      _ = await navigator.go(
+        to: locator,
+        options: .animated
+      )
+    }
   }
 
   func updatePreferences(_ preferences: NSString?) {
@@ -156,10 +159,18 @@ class ReadiumView : UIView, Loggable {
     rootView.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
     rootView.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
 
-    self.onTableOfContents?([
-      "toc": vc.publication.tableOfContents.map({ link in
-        return link.json
-      })
-    ])
+    Task { @MainActor [weak self] in
+      guard let self = self else { return }
+
+      let tocResult = await vc.publication.tableOfContents()
+      switch tocResult {
+      case .success(let links):
+        self.onTableOfContents?([
+          "toc": links.map { $0.json }
+        ])
+      case .failure(let error):
+        self.log(.error, "Failed to fetch table of contents: \(error)")
+      }
+    }
   }
 }

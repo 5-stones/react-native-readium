@@ -21,6 +21,13 @@ class ReaderViewController: UIViewController, Loggable {
   private var subscriptions = Set<AnyCancellable>()
   private var subject = PassthroughSubject<Locator, Never>()
   lazy var publisher = subject.eraseToAnyPublisher()
+  private var positionsCount: Int?
+  private var positionsLoadingTask: Task<Void, Never>?
+  private var lastKnownLocator: Locator?
+  private var directionalNavigationAdapter: DirectionalNavigationAdapter?
+  private var navigatorInputObserverTokens = Set<InputObservableToken>()
+  private weak var observedVisualNavigator: (any VisualNavigator)?
+  private var usesInputObserverForTapToggles = false
 
   /// This regex matches any string with at least 2 consecutive letters (not limited to ASCII).
   /// It's used when evaluating whether to display the body of a noteref referrer as the note's title.
@@ -55,6 +62,8 @@ class ReaderViewController: UIViewController, Loggable {
 
   deinit {
     NotificationCenter.default.removeObserver(self)
+    positionsLoadingTask?.cancel()
+    removeNavigatorInputObservers()
   }
 
   override func viewDidLoad() {
@@ -93,6 +102,8 @@ class ReaderViewController: UIViewController, Loggable {
       positionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
       positionLabel.bottomAnchor.constraint(equalTo: navigator.view.bottomAnchor, constant: -20)
     ])
+
+    configureNavigatorInteractions()
   }
 
   override func willMove(toParent parent: UIViewController?) {
@@ -205,12 +216,61 @@ class ReaderViewController: UIViewController, Loggable {
     updateNavigationBar()
   }
 
+  private func configureNavigatorInteractions() {
+    guard let visualNavigator = navigator as? VisualNavigator else {
+      return
+    }
+
+    if directionalNavigationAdapter == nil {
+      let adapter = DirectionalNavigationAdapter()
+      adapter.bind(to: visualNavigator)
+      directionalNavigationAdapter = adapter
+    }
+
+    observedVisualNavigator = visualNavigator
+
+    if !usesInputObserverForTapToggles {
+      let toggleToken = visualNavigator.addObserver(.activate { [weak self] _ in
+        self?.toggleNavigationBar()
+        return false
+      })
+      toggleToken.store(in: &navigatorInputObserverTokens)
+      usesInputObserverForTapToggles = true
+    }
+  }
+
+  private func removeNavigatorInputObservers() {
+    guard let visualNavigator = observedVisualNavigator else {
+      navigatorInputObserverTokens.removeAll()
+      usesInputObserverForTapToggles = false
+      return
+    }
+
+    navigatorInputObserverTokens.forEach { visualNavigator.removeObserver($0) }
+    navigatorInputObserverTokens.removeAll()
+    usesInputObserverForTapToggles = false
+  }
+
   @objc private func goBackward() {
-    navigator.goBackward()
+    Task { [weak self] in
+      await self?.navigateBackwardAnimated()
+    }
   }
 
   @objc private func goForward() {
-    navigator.goForward()
+    Task { [weak self] in
+      await self?.navigateForwardAnimated()
+    }
+  }
+
+  @MainActor
+  private func navigateBackwardAnimated() async {
+    _ = await navigator.goBackward(options: .animated)
+  }
+
+  @MainActor
+  private func navigateForwardAnimated() async {
+    _ = await navigator.goForward(options: .animated)
   }
 
 }
@@ -218,15 +278,7 @@ class ReaderViewController: UIViewController, Loggable {
 extension ReaderViewController: NavigatorDelegate {
   func navigator(_ navigator: Navigator, locationDidChange locator: Locator) {
     subject.send(locator)
-    positionLabel.text = {
-      if let position = locator.locations.position {
-        return "\(position) / \(publication.positions.count)"
-      } else if let progression = locator.locations.totalProgression {
-        return "\(progression)%"
-      } else {
-        return nil
-      }
-    }()
+    updatePositionLabel(with: locator)
   }
 
   func navigator(_ navigator: Navigator, presentExternalURL url: URL) {
@@ -288,16 +340,73 @@ extension ReaderViewController: NavigatorDelegate {
 
 }
 
+extension ReaderViewController {
+  private func updatePositionLabel(with locator: Locator) {
+    lastKnownLocator = locator
+    positionLabel.text = positionLabelText(for: locator)
+  }
+
+  private func positionLabelText(for locator: Locator) -> String? {
+    if let position = locator.locations.position {
+      if let total = positionsCount {
+        return "\(position) / \(total)"
+      } else {
+        loadPositionsCountIfNeeded()
+        return "\(position)"
+      }
+    } else if let progression = locator.locations.totalProgression {
+      return "\(progression)%"
+    } else {
+      return nil
+    }
+  }
+
+  private func loadPositionsCountIfNeeded() {
+    guard positionsCount == nil else {
+      return
+    }
+    guard positionsLoadingTask == nil else {
+      return
+    }
+
+    positionsLoadingTask = Task { [weak self] in
+      guard let self else { return }
+      defer { self.positionsLoadingTask = nil }
+
+      let result = await self.publication.positions()
+      guard !Task.isCancelled else { return }
+
+      switch result {
+      case let .success(positions):
+        await MainActor.run {
+          self.positionsCount = positions.count
+          self.refreshPositionLabel()
+        }
+      case let .failure(error):
+        self.log(.error, "Failed to load publication positions: \(error)")
+      }
+    }
+  }
+
+  @MainActor
+  private func refreshPositionLabel() {
+    guard let locator = lastKnownLocator else {
+      return
+    }
+    positionLabel.text = positionLabelText(for: locator)
+  }
+}
+
 extension ReaderViewController: VisualNavigatorDelegate {
 
     func navigator(_ navigator: VisualNavigator, didTapAt point: CGPoint) {
-        let moved = DirectionalNavigationAdapter(navigator: navigator).didTap(at: point)
-        if !moved {
-            toggleNavigationBar()
-        }
+    guard !usesInputObserverForTapToggles else {
+      return
+    }
+    toggleNavigationBar()
     }
     
     func navigator(_ navigator: VisualNavigator, didPressKey event: KeyEvent) {
-        DirectionalNavigationAdapter(navigator: navigator).didPressKey(event: event)
+    // Key handling is performed by the bound DirectionalNavigationAdapter observers.
     }
 }

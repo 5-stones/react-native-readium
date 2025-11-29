@@ -2,64 +2,37 @@ import Combine
 import Foundation
 import ReadiumShared
 
-struct HTTPDownload {
-  let file: URL
-  let response: HTTPResponse
+private final class HTTPTaskContainer {
+  var task: Task<Void, Never>? = nil
 }
 
 extension HTTPClient {
 
   func fetch(_ request: HTTPRequestConvertible) -> AnyPublisher<HTTPResponse, HTTPError> {
-    var cancellable: R2Shared.Cancellable? = nil
-    return Future { promise in
-      cancellable = self.fetch(request, completion: promise)
+    let container = HTTPTaskContainer()
+    return Deferred {
+      Future { promise in
+        container.task = Task {
+          let result = await self.fetch(request)
+          promise(result)
+        }
+      }
     }
-    .handleEvents(receiveCancel: { cancellable?.cancel() })
+    .handleEvents(receiveCancel: { container.task?.cancel() })
     .eraseToAnyPublisher()
   }
 
   func download(_ request: HTTPRequestConvertible, progress: @escaping (Double) -> Void) -> AnyPublisher<HTTPDownload, HTTPError> {
-    openTemporaryFileForWriting()
-      .flatMap { (destination, handle) -> AnyPublisher<HTTPDownload, HTTPError> in
-        var cancellable: R2Shared.Cancellable? = nil
-
-        return Future { promise in
-          cancellable = self.stream(request,
-            consume: { data, progression in
-              if let progression = progression {
-                progress(progression)
-              }
-              handle.write(data)
-            },
-            completion: { result in
-              do {
-                try handle.close()
-                promise(.success(HTTPDownload(file: destination, response: try result.get())))
-              } catch {
-                try? FileManager.default.removeItem(at: destination)
-                promise(.failure(HTTPError(error: error)))
-              }
-            })
+    let container = HTTPTaskContainer()
+    return Deferred {
+      Future { promise in
+        container.task = Task {
+          let result = await self.download(request, onProgress: progress)
+          promise(result)
         }
-        .handleEvents(receiveCancel: {
-          cancellable?.cancel()
-          try? handle.close()
-          try? FileManager.default.removeItem(at: destination)
-        })
-        .eraseToAnyPublisher()
       }
-      .eraseToAnyPublisher()
-  }
-
-  private func openTemporaryFileForWriting() -> AnyPublisher<(URL, FileHandle), HTTPError> {
-    Paths.makeTemporaryURL()
-      .tryMap { destination in
-        // Makes sure the file exists.
-        try "".write(to: destination, atomically: true, encoding: .utf8)
-        let handle = try FileHandle(forWritingTo: destination)
-        return (destination, handle)
-      }
-      .mapError { HTTPError(kind: .other, cause: $0) }
-      .eraseToAnyPublisher()
+    }
+    .handleEvents(receiveCancel: { container.task?.cancel() })
+    .eraseToAnyPublisher()
   }
 }
