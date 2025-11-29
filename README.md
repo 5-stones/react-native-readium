@@ -74,6 +74,10 @@ yarn add react-native-readium
 Due to the current state of the `Readium` swift libraries you need to manually
 update your `Podfile` ([see more on that here](https://github.com/readium/swift-toolkit/issues/38)).
 
+##### Breaking change when upgrading from v4 to v5!
+
+If you are using the version 4 of this package you had added manually `R2Navigator`, `R2Shared`, `R2Streamer`, etc. pods to Podfile, but those were the v2.6 pods. Starting from version 5 of this package, iOS nativ code was updated to latest (v3.5) Readium pods and you need to adjust Podfile. Remove the old v2.6 pods and add the new ones, mentioned below.
+
 ```rb
 # ./ios/Podfile
 ...
@@ -84,16 +88,17 @@ platform :ios, '13.0'
 target 'ExampleApp' do
   config = use_native_modules!
   ...
-  pod 'GCDWebServer', podspec: 'https://raw.githubusercontent.com/readium/GCDWebServer/3.7.5/GCDWebServer.podspec', modular_headers: true
-  pod 'ReadiumAdapterGCDWebServer', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumAdapterGCDWebServer.podspec', modular_headers: true
-  pod 'R2Navigator', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumNavigator.podspec'
-  pod 'R2Shared', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumShared.podspec'
-  pod 'R2Streamer', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumStreamer.podspec'
-  pod 'ReadiumInternal', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumInternal.podspec'
+  pod 'ReadiumGCDWebServer', :modular_headers => true
+  pod 'ReadiumAdapterGCDWebServer', '~> 3.5.0'
+  pod 'ReadiumInternal',  '~> 3.5.0'
+  pod 'ReadiumShared',    '~> 3.5.0'
+  pod 'ReadiumStreamer',  '~> 3.5.0'
+  pod 'ReadiumNavigator', '~> 3.5.0'
   pod 'Minizip', modular_headers: true
   ...
 end
 ```
+
 
 Finally, install the pods:
 

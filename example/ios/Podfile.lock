@@ -1815,7 +1815,6 @@ SPEC REPOS:
   https://github.com/readium/podspecs:
     - ReadiumAdapterGCDWebServer
     - ReadiumFuzi
-    - ReadiumGCDWebServer
     - ReadiumInternal
     - ReadiumNavigator
     - ReadiumShared
@@ -2050,7 +2049,7 @@ SPEC CHECKSUMS:
   ReactCommon: 3d39389f8e2a2157d5c999f8fba57bd1c8f226f0
   ReadiumAdapterGCDWebServer: 8aba3fb716824e6594a2ae021aefaf129d44d5bd
   ReadiumFuzi: fb19b82ff8f089b27c735c216c877666cd84d70f
-  ReadiumGCDWebServer: 9bf72ab96592d0fdd0f2c941c269e9fd12d79299
+  ReadiumGCDWebServer: 6c905689d61c416a73e0b16e9218c10bb405817c
   ReadiumInternal: e6e71023739a046aef8695219bb39dd349e9b40a
   ReadiumNavigator: ad265f7e812995ade33865e2097bb8d24b4de081
   ReadiumShared: f1dbe5d49e345cc885b865e9cb754f2df4728683

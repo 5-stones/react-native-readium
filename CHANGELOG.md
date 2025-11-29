@@ -1,3 +1,12 @@
+## [5.0.0](https://github.com/5-stones/react-native-readium/compare/v4.0.1...v5.0.0) (2025-11-29)
+
+* **ios:** Upgrade iOS native swift code to use the v3.5 swift-toolkit
+
+### BREAKING CHANGES
+
+* **ios:** Old v2.6 pods are not compatible anymore with this version. You should update Podfile and use v3.5 pods
+
+
 ## [4.0.1](https://github.com/5-stones/react-native-readium/compare/v4.0.0...v4.0.1) (2025-09-12)
 
 
