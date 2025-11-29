@@ -71,6 +71,11 @@ yarn add react-native-readium
 
 #### iOS
 
+Requirements:
+- Minimum iOS deployment target: iOS 13.4
+- Swift compiler: Swift 6.0
+- Xcode: Xcode 16.2 (or newer)
+
 Due to the current state of the `Readium` swift libraries you need to manually
 update your `Podfile` ([see more on that here](https://github.com/readium/swift-toolkit/issues/38)).
 
@@ -81,7 +86,7 @@ If you are using the version 4 of this package you had added manually `R2Navigat
 ```rb
 # ./ios/Podfile
 ...
-platform :ios, '13.0'
+platform :ios, '13.4'
 
 ...
 

@@ -1,6 +1,6 @@
 ## [5.0.0](https://github.com/5-stones/react-native-readium/compare/v4.0.1...v5.0.0) (2025-11-29)
 
-* **ios:** Upgrade iOS native swift code to use the v3.5 swift-toolkit
+* **ios:** Upgrade iOS native swift code to use the v3.5 swift-toolkit ([#73](https://github.com/5-stones/react-native-readium/issues/73))
 
 ### BREAKING CHANGES
 

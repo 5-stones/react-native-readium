@@ -9,7 +9,7 @@ require Pod::Executable.execute_command('node', ['-p',
   )', __dir__]).strip
 
 # set the highest version between react-native framework and what we require
-min_ios_version = '13.0'
+min_ios_version = '13.4'
 if Gem::Version.new(min_ios_version_supported) > Gem::Version.new(min_ios_version)
   min_ios_version = min_ios_version_supported
 end

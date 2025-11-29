@@ -23,7 +23,7 @@ final class AppModule {
   init() throws {
     reader = ReaderModule(delegate: self)
 
-    // Set Readium logging minimum level for debugging during development.
+    // Set Readium logging minimum level for debugging
     ReadiumEnableLog(withMinimumSeverityLevel: .debug)
   }
 }

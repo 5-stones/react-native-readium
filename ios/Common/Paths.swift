@@ -20,9 +20,9 @@ final class Paths {
     FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.fileURL!
 
   static let covers: FileURL = {
-    let url = library.appendingPath("Covers", isDirectory: true)
-    try! FileManager.default.createDirectory(at: url.url, withIntermediateDirectories: true)
-    return url
+    let directory = library.appendingPath("Covers", isDirectory: true)
+    try! FileManager.default.createDirectory(at: directory.url, withIntermediateDirectories: true)
+    return directory
   }()
 
   static func makeDocumentURL(for source: FileURL? = nil, title: String?, format: Format) -> FileURL {
