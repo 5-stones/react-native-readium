@@ -1,6 +1,6 @@
 import Combine
 import Foundation
-import R2Shared
+import ReadiumShared
 
 struct Bookmark {
   let id: String?

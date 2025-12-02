@@ -1,3 +1,6 @@
+source 'https://github.com/readium/podspecs'
+source 'https://cdn.cocoapods.org/'
+
 # Resolve react_native_pods.rb with node to allow for hoisting
 require Pod::Executable.execute_command('node', ['-p',
   'require.resolve(
@@ -6,7 +9,7 @@ require Pod::Executable.execute_command('node', ['-p',
   )', __dir__]).strip
 
 # set the highest version between react-native framework and what we require
-min_ios_version = '13.0'
+min_ios_version = '13.4'
 if Gem::Version.new(min_ios_version_supported) > Gem::Version.new(min_ios_version)
   min_ios_version = min_ios_version_supported
 end
@@ -30,12 +33,12 @@ target 'ReadiumExample' do
   )
   pod 'react-native-readium', :path => '../..'
 
-  pod 'GCDWebServer', podspec: 'https://raw.githubusercontent.com/readium/GCDWebServer/3.7.5/GCDWebServer.podspec', modular_headers: true
-  pod 'ReadiumAdapterGCDWebServer', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumAdapterGCDWebServer.podspec', modular_headers: true
-  pod 'ReadiumInternal', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumInternal.podspec'
-  pod 'R2Shared', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumShared.podspec'
-  pod 'R2Streamer', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumStreamer.podspec'
-  pod 'R2Navigator', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumNavigator.podspec'
+  pod 'ReadiumGCDWebServer', :modular_headers => true
+  pod 'ReadiumAdapterGCDWebServer', '~> 3.5.0'
+  pod 'ReadiumInternal',  '~> 3.5.0'
+  pod 'ReadiumShared',    '~> 3.5.0'
+  pod 'ReadiumStreamer',  '~> 3.5.0'
+  pod 'ReadiumNavigator', '~> 3.5.0'
   pod 'Minizip', modular_headers: true
 
   post_install do |installer|
