@@ -81,11 +81,15 @@ update your `Podfile` ([see more on that here](https://github.com/readium/swift-
 
 ##### Breaking change when upgrading from v4 to v5!
 
-If you are using the version 4 of this package you had added manually `R2Navigator`, `R2Shared`, `R2Streamer`, etc. pods to Podfile, but those were the v2.6 pods. Starting from version 5 of this package, iOS nativ code was updated to latest (v3.5) Readium pods and you need to adjust Podfile. Remove the old v2.6 pods and add the new ones, mentioned below.
+If you are migrating from v4 to v5, please note that you must update your iOS Podfile to use the new Readium Pods (see iOS documentation below). Please make a note of both the new Pod names and the addition of the `source`'s in the Podfile.
 
 ```rb
 # ./ios/Podfile
+source 'https://github.com/readium/podspecs'
+source 'https://cdn.cocoapods.org/'
+
 ...
+
 platform :ios, '13.4'
 
 ...

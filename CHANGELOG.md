@@ -2,9 +2,28 @@
 
 * **ios:** Upgrade iOS native swift code to use the v3.5 swift-toolkit ([#73](https://github.com/5-stones/react-native-readium/issues/73))
 
-### BREAKING CHANGES
+### BREAKING CHANGES (iOS)
 
-* **ios:** Old v2.6 pods are not compatible anymore with this version. You should update Podfile and use v3.5 pods
+1. Old v2.6 pods are not compatible anymore with this version. You should update Podfile and use v3.5 pods
+
+2. Migration of HREFs and Locators (bookmarks, annotations, etc.) (source: https://github.com/readium/swift-toolkit/blob/develop/docs/Migration%20Guide.md#migration-of-hrefs-and-locators-bookmarks-annotations-etc)
+
+ > [!CAUTION]
+ > This requires a database migration in your application, if you were persisting `Locator` objects.
+
+ In Readium v2.x, a `Link` or `Locator`'s `href` could be either:
+
+ * a valid absolute URL for a streamed publication, e.g. `https://domain.com/isbn/dir/my%20chapter.html`,
+ * a percent-decoded path for a local archive such as an EPUB, e.g. `/dir/my chapter.html`.
+     * Note that it was relative to the root of the archive (`/`).
+
+ To improve the interoperability with other Readium toolkits (in particular the Readium Web Toolkits, which only work in a streaming context) **Readium v3 now generates and expects valid URLs** for `Locator` and `Link`'s `href`.
+
+ * `https://domain.com/isbn/dir/my%20chapter.html` is left unchanged, as it was already a valid URL.
+ * `/dir/my chapter.html` becomes the relative URL path `dir/my%20chapter.html`
+     * We dropped the `/` prefix to avoid issues when resolving to a base URL.
+     * Special characters are percent-encoded.
+
 
 
 ## [4.0.1](https://github.com/5-stones/react-native-readium/compare/v4.0.0...v4.0.1) (2025-09-12)

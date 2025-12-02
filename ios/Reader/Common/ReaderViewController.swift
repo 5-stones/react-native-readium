@@ -24,10 +24,7 @@ class ReaderViewController: UIViewController, Loggable {
   private var positionsCount: Int?
   private var positionsLoadingTask: Task<Void, Never>?
   private var lastKnownLocator: Locator?
-  private var directionalNavigationAdapter: DirectionalNavigationAdapter?
   private var navigatorInputObserverTokens = Set<InputObservableToken>()
-  private weak var observedVisualNavigator: (any VisualNavigator)?
-  private var usesInputObserverForTapToggles = false
 
   /// This regex matches any string with at least 2 consecutive letters (not limited to ASCII).
   /// It's used when evaluating whether to display the body of a noteref referrer as the note's title.
@@ -221,34 +218,39 @@ class ReaderViewController: UIViewController, Loggable {
       return
     }
 
-    if directionalNavigationAdapter == nil {
-      let adapter = DirectionalNavigationAdapter()
-      adapter.bind(to: visualNavigator)
-      directionalNavigationAdapter = adapter
+    guard navigatorInputObserverTokens.isEmpty else {
+      return
     }
 
-    observedVisualNavigator = visualNavigator
+    DirectionalNavigationAdapter(
+      pointerPolicy: .init(edges: .all),
+      animatedTransition: true
+    ).bind(to: visualNavigator)
 
-    if !usesInputObserverForTapToggles {
-      let toggleToken = visualNavigator.addObserver(.activate { [weak self] _ in
-        self?.toggleNavigationBar()
+    let toggleToken = visualNavigator.addObserver(.tap { [weak self] event in
+      guard
+        let self,
+        event.phase != .cancel
+      else {
         return false
-      })
-      toggleToken.store(in: &navigatorInputObserverTokens)
-      usesInputObserverForTapToggles = true
-    }
+      }
+
+      self.toggleNavigationBar()
+      return true
+    })
+    toggleToken.store(in: &navigatorInputObserverTokens)
   }
 
   private func removeNavigatorInputObservers() {
-    guard let visualNavigator = observedVisualNavigator else {
+    guard
+      let visualNavigator = navigator as? VisualNavigator
+    else {
       navigatorInputObserverTokens.removeAll()
-      usesInputObserverForTapToggles = false
       return
     }
 
     navigatorInputObserverTokens.forEach { visualNavigator.removeObserver($0) }
     navigatorInputObserverTokens.removeAll()
-    usesInputObserverForTapToggles = false
   }
 
   @objc private func goBackward() {
@@ -395,18 +397,4 @@ extension ReaderViewController {
     }
     positionLabel.text = positionLabelText(for: locator)
   }
-}
-
-extension ReaderViewController: VisualNavigatorDelegate {
-
-    func navigator(_ navigator: VisualNavigator, didTapAt point: CGPoint) {
-    guard !usesInputObserverForTapToggles else {
-      return
-    }
-    toggleNavigationBar()
-    }
-    
-    func navigator(_ navigator: VisualNavigator, didPressKey event: KeyEvent) {
-    // Key handling is performed by the bound DirectionalNavigationAdapter observers.
-    }
 }
