@@ -1,6 +1,6 @@
 import Foundation
 import UIKit
-import R2Shared
+import ReadiumShared
 
 
 final class EPUBModule: ReaderFormatModule {

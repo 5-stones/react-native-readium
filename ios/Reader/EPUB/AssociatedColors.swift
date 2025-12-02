@@ -1,5 +1,5 @@
 import UIKit
-import R2Navigator
+import ReadiumNavigator
 
 class AssociatedColors {
 
