@@ -13,9 +13,10 @@ import com.reactnativereadium.reader.VisualReaderFragment
 import com.reactnativereadium.utils.Dimensions
 import com.reactnativereadium.utils.File
 import com.reactnativereadium.utils.LinkOrLocator
+import com.reactnativereadium.utils.toWritableArray
+import com.reactnativereadium.utils.toWritableMap
 import org.readium.r2.navigator.epub.EpubNavigatorFragment
 import org.readium.r2.navigator.epub.EpubPreferences
-import org.readium.r2.shared.extensions.toMap
 
 class ReadiumView(
   val reactContext: ThemedReactContext
@@ -60,8 +61,7 @@ class ReadiumView(
     frag.channel.receive(frag) { event ->
       when (event) {
         is ReaderViewModel.Event.LocatorUpdate -> {
-          val json = event.locator.toJSON()
-          val payload = Arguments.makeNativeMap(json.toMap())
+          val payload = event.locator.toWritableMap()
           module.receiveEvent(
             this.id.toInt(),
             ReadiumViewManager.ON_LOCATION_CHANGE,
@@ -69,8 +69,9 @@ class ReadiumView(
           )
         }
         is ReaderViewModel.Event.TableOfContentsLoaded -> {
-          val map = event.toc.map { it.toJSON().toMap() }
-          val payload = Arguments.makeNativeMap(mapOf("toc" to map))
+          val payload = Arguments.createMap().apply {
+            putArray("toc", event.toc.toWritableArray())
+          }
           module.receiveEvent(
             this.id.toInt(),
             ReadiumViewManager.ON_TABLE_OF_CONTENTS,
@@ -107,3 +108,4 @@ class ReadiumView(
     this.layout(0, 0, width, height)
   }
 }
+
