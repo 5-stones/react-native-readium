@@ -13,8 +13,6 @@ import android.view.ViewGroup
 import android.view.WindowInsets
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
-import org.readium.r2.navigator.DecorableNavigator
-import org.readium.r2.navigator.ExperimentalDecorator
 import com.reactnativereadium.R
 import com.reactnativereadium.databinding.FragmentReaderBinding
 import com.reactnativereadium.utils.clearPadding

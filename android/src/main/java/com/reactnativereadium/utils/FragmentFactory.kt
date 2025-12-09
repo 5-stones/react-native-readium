@@ -2,7 +2,6 @@ package com.reactnativereadium.utils
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
-import org.readium.r2.shared.extensions.tryOrNull
 
 /**
  * Creates a [FragmentFactory] for a single type of [Fragment] using the result of the given
@@ -36,8 +35,8 @@ class CompositeFragmentFactory(private val factories: List<FragmentFactory>) : F
 
     override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
         for (factory in factories) {
-            tryOrNull { factory.instantiate(classLoader, className) }
-                ?.let { return it }
+            runCatching { factory.instantiate(classLoader, className) }
+                .getOrNull()?.let { return it }
         }
 
         return super.instantiate(classLoader, className)

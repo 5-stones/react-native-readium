@@ -6,48 +6,52 @@
 
 package com.reactnativereadium.reader
 
-import android.graphics.Color
-import android.graphics.PointF
 import android.os.Bundle
 import android.view.*
 import android.view.accessibility.AccessibilityManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.commitNow
 import androidx.lifecycle.ViewModelProvider
 import com.reactnativereadium.R
-import com.reactnativereadium.utils.toggleSystemUi
-import java.net.URL
-import kotlinx.coroutines.delay
 import org.readium.r2.navigator.epub.EpubNavigatorFragment
-import org.readium.r2.navigator.ExperimentalDecorator
 import org.readium.r2.navigator.Navigator
 import org.readium.r2.navigator.epub.EpubPreferences
 import org.readium.r2.navigator.epub.EpubPreferencesSerializer
+import org.readium.r2.navigator.epub.EpubNavigatorFactory
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
-import org.readium.r2.shared.ReadiumCSSName
 
-@OptIn(ExperimentalDecorator::class)
-class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listener {
+class EpubReaderFragment : VisualReaderFragment() {
 
     override lateinit var model: ReaderViewModel
     override lateinit var navigator: Navigator
     private lateinit var publication: Publication
     lateinit var navigatorFragment: EpubNavigatorFragment
     private lateinit var factory: ReaderViewModel.Factory
+    private lateinit var navigatorFactory: EpubNavigatorFactory
+    private val preferencesSerializer = EpubPreferencesSerializer()
     private var initialPreferencesJsonString: String? = null
 
-    private lateinit var menuScreenReader: MenuItem
-    private lateinit var menuSearch: MenuItem
-    lateinit var menuSearchView: SearchView
-
     private lateinit var userPreferences: EpubPreferences
-    private var isScreenReaderVisible = false
-    private var isSearchViewIconified = true
 
     // Accessibility
     private var isExploreByTouchEnabled = false
+
+    private fun ensureUserPreferencesInitialized() {
+      if (this::userPreferences.isInitialized) return
+      val pending = initialPreferencesJsonString
+      userPreferences = if (pending != null) {
+        preferencesSerializer.deserialize(pending)
+      } else {
+        EpubPreferences()
+      }
+    }
+
+    private fun applyPendingPreferencesIfNeeded() {
+      val pending = initialPreferencesJsonString ?: return
+      if (!this::navigator.isInitialized) return
+      updatePreferencesFromJsonString(pending)
+    }
 
     fun initFactory(
       publication: Publication,
@@ -57,15 +61,15 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
         publication,
         initialLocation
       )
+      navigatorFactory = EpubNavigatorFactory(publication)
     }
 
     fun updatePreferencesFromJsonString(serialisedPreferences: String) {
-      if (this::userPreferences.isInitialized) {
-        val serializer = EpubPreferencesSerializer()
-        this.userPreferences = serializer.deserialize(serialisedPreferences)
-        if (navigator is EpubNavigatorFragment) {
-          (navigator as EpubNavigatorFragment).submitPreferences(this.userPreferences)
-        }
+      val preferences = preferencesSerializer.deserialize(serialisedPreferences)
+      userPreferences = preferences
+
+      if (this::navigator.isInitialized && navigator is EpubNavigatorFragment) {
+        (navigator as EpubNavigatorFragment).submitPreferences(preferences)
         initialPreferencesJsonString = null
       } else {
         initialPreferencesJsonString = serialisedPreferences
@@ -73,13 +77,7 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // FIXME: this should be checked
-        // check(R2App.isServerStarted)
-
-        if (savedInstanceState != null) {
-            isScreenReaderVisible = savedInstanceState.getBoolean(IS_SCREEN_READER_VISIBLE_KEY)
-            isSearchViewIconified = savedInstanceState.getBoolean(IS_SEARCH_VIEW_ICONIFIED)
-        }
+      check(::navigatorFactory.isInitialized) { "EpubReaderFragment factory was not initialized" }
 
         ViewModelProvider(this, factory)
           .get(ReaderViewModel::class.java)
@@ -88,18 +86,12 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
             publication = it.publication
           }
 
+          ensureUserPreferencesInitialized()
 
-        childFragmentManager.fragmentFactory =
-            EpubNavigatorFragment.createFactory(
-                publication = publication,
-                initialLocator = model.initialLocation,
-                listener = this,
-                config = EpubNavigatorFragment.Configuration().apply {
-                    // Register the HTML template for our custom [DecorationStyleAnnotationMark].
-                    // TODO: remove?
-                    /* decorationTemplates[DecorationStyleAnnotationMark::class] = annotationMarkTemplate(activity) */
-                    /* selectionActionModeCallback = customSelectionActionModeCallback */
-                }
+          childFragmentManager.fragmentFactory =
+            navigatorFactory.createFragmentFactory(
+              initialLocator = model.initialLocation,
+              initialPreferences = userPreferences,
             )
 
         setHasOptionsMenu(true)
@@ -119,6 +111,8 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
         navigator = childFragmentManager.findFragmentByTag(navigatorFragmentTag) as Navigator
         navigatorFragment = navigator as EpubNavigatorFragment
 
+        applyPendingPreferencesIfNeeded()
+
         return view
     }
 
@@ -130,46 +124,23 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
         super.onResume()
         val activity = requireActivity()
 
-        if (!this::userPreferences.isInitialized) {
-          userPreferences = EpubPreferences()
-        }
-        initialPreferencesJsonString?.let { updatePreferencesFromJsonString(it)}
+        ensureUserPreferencesInitialized()
+        applyPendingPreferencesIfNeeded()
 
         // If TalkBack or any touch exploration service is activated we force scroll mode (and
         // override user preferences)
         val am = activity.getSystemService(AppCompatActivity.ACCESSIBILITY_SERVICE) as AccessibilityManager
         isExploreByTouchEnabled = am.isTouchExplorationEnabled
 
-        if (isExploreByTouchEnabled) {
-          this.userPreferences = this.userPreferences.plus(
-            EpubPreferences(scroll = true)
-          )
+        userPreferences = if (isExploreByTouchEnabled) {
+            userPreferences.plus(EpubPreferences(scroll = true))
         } else {
-            if (publication.cssStyle != "cjk-vertical") {
-              this.userPreferences = this.userPreferences.plus(
-                EpubPreferences(scroll = null)
-              )
-            }
+            userPreferences.plus(EpubPreferences(scroll = null))
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putBoolean(IS_SCREEN_READER_VISIBLE_KEY, isScreenReaderVisible)
-        outState.putBoolean(IS_SEARCH_VIEW_ICONIFIED, isSearchViewIconified)
-    }
-
-    override fun onTap(point: PointF): Boolean {
-        return true
+        (navigator as? EpubNavigatorFragment)?.submitPreferences(userPreferences)
     }
 
     companion object {
-
-        private const val SEARCH_FRAGMENT_TAG = "search"
-
-        private const val IS_SCREEN_READER_VISIBLE_KEY = "isScreenReaderVisible"
-
-        private const val IS_SEARCH_VIEW_ICONIFIED = "isSearchViewIconified"
 
         fun newInstance(): EpubReaderFragment {
             return EpubReaderFragment()

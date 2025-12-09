@@ -16,9 +16,10 @@ import com.reactnativereadium.reader.VisualReaderFragment
 import com.reactnativereadium.utils.Dimensions
 import com.reactnativereadium.utils.File
 import com.reactnativereadium.utils.LinkOrLocator
+import com.reactnativereadium.utils.toWritableArray
+import com.reactnativereadium.utils.toWritableMap
 import org.readium.r2.navigator.epub.EpubNavigatorFragment
 import org.readium.r2.navigator.epub.EpubPreferences
-import org.readium.r2.shared.extensions.toMap
 
 class ReadiumView(
   val reactContext: ThemedReactContext
@@ -141,3 +142,4 @@ class ReadiumView(
     }
   }
 }
+
