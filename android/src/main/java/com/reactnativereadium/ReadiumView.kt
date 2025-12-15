@@ -34,6 +34,7 @@ class ReadiumView(
   var isViewInitialized: Boolean = false
   var isFragmentAdded: Boolean = false
   var lateInitSerializedUserPreferences: String? = null
+  private var frameCallback: Choreographer.FrameCallback? = null
 
   fun updateLocation(location: LinkOrLocator) : Boolean {
     if (fragment == null) {
@@ -117,14 +118,14 @@ class ReadiumView(
   }
 
   private fun setupLayout() {
-    Choreographer.getInstance().postFrameCallback(object : Choreographer.FrameCallback {
+    frameCallback = object : Choreographer.FrameCallback {
       override fun doFrame(frameTimeNanos: Long) {
         manuallyLayoutChildren()
         this@ReadiumView.viewTreeObserver.dispatchOnGlobalLayout()
         Choreographer.getInstance().postFrameCallback(this)
       }
     }
-    frameCallback!!.let { Choreographer.getInstance().postFrameCallback(it) }
+    frameCallback?.let { Choreographer.getInstance().postFrameCallback(it) }
   }
 
   override fun onDetachedFromWindow() {

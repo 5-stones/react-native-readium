@@ -59,7 +59,7 @@ class ReaderService(
   ) {
     val publicationFile = File(fileName).absoluteFile
     if (!publicationFile.exists()) {
-      Log.e(TAG, "Failed to open publication: File does not exist: $fileName")
+      RNLog.e(reactContext, "Failed to open publication: File does not exist: $fileName")
       return
     }
     val publicationUrl = runCatching {
