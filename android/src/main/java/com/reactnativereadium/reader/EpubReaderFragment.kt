@@ -39,18 +39,14 @@ class EpubReaderFragment : VisualReaderFragment() {
 
     private fun ensureUserPreferencesInitialized() {
       if (this::userPreferences.isInitialized) return
-      val pending = initialPreferencesJsonString
-      userPreferences = if (pending != null) {
-        preferencesSerializer.deserialize(pending)
-      } else {
-        EpubPreferences()
-      }
+      userPreferences = initialPreferencesJsonString?.let {
+        preferencesSerializer.deserialize(it)
+      } ?: EpubPreferences()
     }
 
     private fun applyPendingPreferencesIfNeeded() {
-      val pending = initialPreferencesJsonString ?: return
       if (!this::navigator.isInitialized) return
-      updatePreferencesFromJsonString(pending)
+      initialPreferencesJsonString?.let { updatePreferencesFromJsonString(it) }
     }
 
     fun initFactory(
@@ -65,11 +61,10 @@ class EpubReaderFragment : VisualReaderFragment() {
     }
 
     fun updatePreferencesFromJsonString(serialisedPreferences: String) {
-      val preferences = preferencesSerializer.deserialize(serialisedPreferences)
-      userPreferences = preferences
+      userPreferences = preferencesSerializer.deserialize(serialisedPreferences)
 
       if (this::navigator.isInitialized && navigator is EpubNavigatorFragment) {
-        (navigator as EpubNavigatorFragment).submitPreferences(preferences)
+        (navigator as EpubNavigatorFragment).submitPreferences(userPreferences)
         initialPreferencesJsonString = null
       } else {
         initialPreferencesJsonString = serialisedPreferences

@@ -91,14 +91,6 @@ android {
         versionCode 1
         versionName "1.0"
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-        coreLibraryDesugaringEnabled true
-    }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
     signingConfigs {
         debug {
             storeFile file('debug.keystore')
@@ -119,6 +111,9 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+    }
 }
 
 dependencies {
@@ -131,5 +126,5 @@ dependencies {
         implementation jscFlavor
     }
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.2")
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.1.2"
 }
