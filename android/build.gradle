@@ -167,8 +167,7 @@ dependencies {
   implementation "com.squareup.picasso:picasso:2.71828"
   implementation "joda-time:joda-time:2.10.13"
   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0"
-  // AM NOTE: needs to stay this version for now (June 24,2020)
-  //noinspection GradleDependency
+
   implementation "org.jsoup:jsoup:1.18.3"
 
   // Room database
