@@ -93,17 +93,17 @@ export const useReaderRef = ({
 const injectables: any[] = [
   {
     type: 'style',
-    url: 'https://cdn.statically.io/gh/d-i-t-a/R2D2BC/production/viewer/readium-css/ReadiumCSS-before.css',
+    url: 'https://cdn.statically.io/gh/d-i-t-a/R2D2BC@production/viewer/readium-css/ReadiumCSS-before.css',
     r2before: true,
   },
   {
     type: 'style',
-    url: 'https://cdn.statically.io/gh/d-i-t-a/R2D2BC/production/viewer/readium-css/ReadiumCSS-default.css',
+    url: 'https://cdn.statically.io/gh/d-i-t-a/R2D2BC@production/viewer/readium-css/ReadiumCSS-default.css',
     r2default: true,
   },
   {
     type: 'style',
-    url: 'https://cdn.statically.io/gh/d-i-t-a/R2D2BC/production/viewer/readium-css/ReadiumCSS-after.css',
+    url: 'https://cdn.statically.io/gh/d-i-t-a/R2D2BC@production/viewer/readium-css/ReadiumCSS-after.css',
     r2after: true,
   },
 ];
