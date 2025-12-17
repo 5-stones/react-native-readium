@@ -1,3 +1,12 @@
+## [4.0.2](https://github.com/5-stones/react-native-readium/compare/v4.0.1...v4.0.2) (2025-12-17)
+
+
+### Bug Fixes
+
+* **web:** update stylesheet urls to avoid redirect issue ([#98](https://github.com/5-stones/react-native-readium/issues/98)) ([23da1de](https://github.com/5-stones/react-native-readium/commit/23da1de30a6eb45a68efa0e530be6a71545c748d))
+
+
+
 ## [4.0.1](https://github.com/5-stones/react-native-readium/compare/v4.0.0...v4.0.1) (2025-09-12)
 
 
