@@ -1,6 +1,7 @@
 package com.reactnativereadium.reader
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.ViewModelStore
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.util.RNLog
@@ -27,6 +28,8 @@ class ReaderService(
   private var store = ViewModelStore()
 
   companion object {
+    private const val TAG = "ReaderService"
+
     @SuppressLint("StaticFieldLeak")
     lateinit var server: Server
       private set
@@ -70,6 +73,12 @@ class ReaderService(
     callback: suspend (fragment: BaseReaderFragment) -> Unit
   ) {
     val file = File(fileName)
+
+    if (!file.exists()) {
+      Log.e(TAG, "Failed to open publication: File does not exist: $fileName")
+      return
+    }
+
     val asset = FileAsset(file, file.mediaType())
 
     streamer.open(
@@ -82,11 +91,11 @@ class ReaderService(
           val readerFragment = EpubReaderFragment.newInstance()
           readerFragment.initFactory(it, locator)
           callback.invoke(readerFragment)
-
       }
       .onFailure {
+        Log.e(TAG, "Failed to open publication: ${it.message}", it)
         tryOrNull { asset.file.delete() }
-        RNLog.w(reactContext, "Error executing ReaderService.openPublication")
+        RNLog.w(reactContext, "Error executing ReaderService.openPublication: ${it.message}")
         // TODO: implement failure event
       }
   }

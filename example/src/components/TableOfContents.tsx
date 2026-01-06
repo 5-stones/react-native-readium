@@ -40,25 +40,23 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
           <ScrollView style={{ maxHeight: '100%', width: '100%' }}>
             <Text>Table of Contents</Text>
             {items.map((item, idx) => (
-              <React.Fragment key={idx}>
-                <ListItem
-                  key={idx}
-                  onPress={() => {
-                    if (onPress) {
-                      onPress(item);
-                      setIsOpen(false);
-                    }
-                  }}
-                  bottomDivider={items.length - 1 != idx}
-                >
-                  <ListItem.Content>
-                    <ListItem.Title>
-                      {item.title ? item.title : `Chapter ${idx + 1}`}
-                    </ListItem.Title>
-                  </ListItem.Content>
-                  <ListItem.Chevron/>
-                </ListItem>
-              </React.Fragment>
+              <ListItem
+                key={idx}
+                onPress={() => {
+                  if (onPress) {
+                    onPress(item);
+                    setIsOpen(false);
+                  }
+                }}
+                bottomDivider={items.length - 1 != idx}
+              >
+                <ListItem.Content>
+                  <ListItem.Title>
+                    {item.title ? item.title : `Chapter ${idx + 1}`}
+                  </ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron/>
+              </ListItem>
             ))}
           </ScrollView>
         </View>

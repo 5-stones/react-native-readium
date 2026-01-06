@@ -6,15 +6,16 @@ import React, {
   useRef,
   useMemo,
 } from 'react';
-import { View, Platform, findNodeHandle, StyleSheet } from 'react-native';
+import { View, Platform, StyleSheet } from 'react-native';
 
 import type {
   BaseReadiumViewProps,
   Dimensions,
   Preferences,
 } from '../interfaces';
-import { createFragment, getWidthOrHeightValue as dimension } from '../utils';
+import { getWidthOrHeightValue as dimension } from '../utils';
 import { BaseReadiumView } from './BaseReadiumView';
+import { Commands } from '../ReadiumViewNativeComponent';
 
 export type ReadiumProps = Omit<BaseReadiumViewProps, 'preferences'> & {
   preferences: Preferences;
@@ -74,8 +75,7 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
     // create the view fragment on android
     useEffect(() => {
       if (Platform.OS === 'android' && defaultRef.current) {
-        const viewId = findNodeHandle(defaultRef.current);
-        createFragment(viewId);
+        Commands.create(defaultRef.current);
       }
     }, []);
 
