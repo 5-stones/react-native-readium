@@ -1,8 +1,9 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json",
+  "extends": "@react-native/typescript-config",
   "compilerOptions": {
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
+    "types": ["jest"],
     "declaration": true,
     "esModuleInterop": true,
     "isolatedModules": true,
@@ -20,5 +21,5 @@
     "skipLibCheck": true
   },
   "include": ["src"],
-  "exclude": ["node_modules", "**/__tests__/*"]
+  "exclude": ["node_modules", "**/__tests__/*", "**/node_modules", "**/Pods"]
 }

@@ -1,11 +1,14 @@
 package com.reactnativereadium
 
+import android.util.Log
 import android.view.Choreographer
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentActivity
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.ThemedReactContext
-import com.facebook.react.uimanager.events.RCTEventEmitter
+import com.facebook.react.uimanager.UIManagerHelper
+import com.facebook.react.uimanager.events.Event
 import com.reactnativereadium.reader.BaseReaderFragment
 import com.reactnativereadium.reader.EpubReaderFragment
 import com.reactnativereadium.reader.ReaderViewModel
@@ -24,6 +27,7 @@ class ReadiumView(
   var file: File? = null
   var fragment: BaseReaderFragment? = null
   var isViewInitialized: Boolean = false
+  var isFragmentAdded: Boolean = false
   var lateInitSerializedUserPreferences: String? = null
 
   fun updateLocation(location: LinkOrLocator) : Boolean {
@@ -46,35 +50,44 @@ class ReadiumView(
   }
 
   fun addFragment(frag: BaseReaderFragment) {
+    if (isFragmentAdded) {
+      return
+    }
+
     fragment = frag
+    isFragmentAdded = true
     setupLayout()
     lateInitSerializedUserPreferences?.let { updatePreferencesFromJsonString(it)}
     val activity: FragmentActivity? = reactContext.currentActivity as FragmentActivity?
+
     activity!!.supportFragmentManager
       .beginTransaction()
       .replace(this.id, frag, this.id.toString())
-      .commit()
+      .commitNow()
 
-    val module = reactContext.getJSModule(RCTEventEmitter::class.java)
+    // Ensure the fragment's view fills the container
+    frag.view?.layoutParams = FrameLayout.LayoutParams(
+      FrameLayout.LayoutParams.MATCH_PARENT,
+      FrameLayout.LayoutParams.MATCH_PARENT
+    )
+
+    val eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag(reactContext, this.id)
+
     // subscribe to reader events
     frag.channel.receive(frag) { event ->
       when (event) {
         is ReaderViewModel.Event.LocatorUpdate -> {
           val json = event.locator.toJSON()
           val payload = Arguments.makeNativeMap(json.toMap())
-          module.receiveEvent(
-            this.id.toInt(),
-            ReadiumViewManager.ON_LOCATION_CHANGE,
-            payload
+          eventDispatcher?.dispatchEvent(
+            ReadiumEvent(this.id, ReadiumViewManager.ON_LOCATION_CHANGE, payload)
           )
         }
         is ReaderViewModel.Event.TableOfContentsLoaded -> {
           val map = event.toc.map { it.toJSON().toMap() }
           val payload = Arguments.makeNativeMap(mapOf("toc" to map))
-          module.receiveEvent(
-            this.id.toInt(),
-            ReadiumViewManager.ON_TABLE_OF_CONTENTS,
-            payload
+          eventDispatcher?.dispatchEvent(
+            ReadiumEvent(this.id, ReadiumViewManager.ON_TABLE_OF_CONTENTS, payload)
           )
         }
         else -> {
@@ -82,6 +95,20 @@ class ReadiumView(
         }
       }
     }
+  }
+
+  // Custom event class for new architecture
+  private class ReadiumEvent(
+    viewTag: Int,
+    private val _eventName: String,
+    private val _eventData: WritableMap?
+  ) : Event<ReadiumEvent>(viewTag) {
+    override fun getEventName(): String = _eventName
+    override fun getEventData(): WritableMap? = _eventData
+  }
+
+  companion object {
+    private const val TAG = "ReadiumView"
   }
 
   private fun setupLayout() {
@@ -101,9 +128,16 @@ class ReadiumView(
     // propWidth and propHeight coming from react-native props
     val width = dimensions.width
     val height = dimensions.height
-    this.measure(
-      MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
-      MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY))
-    this.layout(0, 0, width, height)
+
+    // Measure and layout each child within this container
+    for (i in 0 until childCount) {
+      val child = getChildAt(i)
+      child.measure(
+        MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
+        MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
+      )
+      // Position child at (0, 0) within this container, filling the container
+      child.layout(0, 0, width, height)
+    }
   }
 }

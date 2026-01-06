@@ -1,5 +1,6 @@
 package com.reactnativereadium
 
+import android.util.Log
 import com.facebook.react.bridge.*
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.annotations.ReactProp
@@ -44,24 +45,18 @@ class ReadiumViewManager(
       .build()
   }
 
-  override fun getCommandsMap(): MutableMap<String, Int> {
-    return MapBuilder.of("create", COMMAND_CREATE)
-  }
-
   override fun receiveCommand(view: ReadiumView, commandId: String?, args: ReadableArray?) {
     super.receiveCommand(view, commandId, args)
-    val reactNativeViewId = args!!.getInt(0)
-    val commandIdInt = commandId!!.toInt()
 
-    when (commandIdInt) {
-      COMMAND_CREATE -> {
+    when (commandId) {
+      "create" -> {
         view.isViewInitialized = true
-
         if (view.file != null) {
           buildForViewIfReady(view)
         }
       }
       else -> {
+        Log.w(TAG, "Unknown command received: $commandId")
       }
     }
   }
@@ -122,17 +117,23 @@ class ReadiumViewManager(
 
   @ReactPropGroup(names = ["width", "height"], customType = "Style")
   fun setStyle(view: ReadiumView?, index: Int, value: Int) {
-    if (index == 0) {
-      view?.dimensions?.width = value
-    }
-    if (index == 1) {
-      view?.dimensions?.height = value
+    if (view != null) {
+      if (index == 0) {
+        view.dimensions.width = value
+      }
+      if (index == 1) {
+        view.dimensions.height = value
+      }
+      buildForViewIfReady(view)
     }
   }
 
   private fun buildForViewIfReady(view: ReadiumView) {
     var file = view.file
-    if (file != null && view.isViewInitialized) {
+    val width = view.dimensions.width
+    val height = view.dimensions.height
+
+    if (file != null && view.isViewInitialized && width > 0 && height > 0) {
       runBlocking {
         svc.openPublication(file.path, file.initialLocation) { fragment ->
           view.addFragment(fragment)
@@ -142,8 +143,8 @@ class ReadiumViewManager(
   }
 
   companion object {
+    private const val TAG = "ReadiumViewManager"
     var ON_LOCATION_CHANGE = "onLocationChange"
     var ON_TABLE_OF_CONTENTS = "onTableOfContents"
-    var COMMAND_CREATE = 1
   }
 }
