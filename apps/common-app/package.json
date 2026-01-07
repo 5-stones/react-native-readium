@@ -1,0 +1,21 @@
+{
+  "name": "common-app",
+  "version": "0.0.1",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "peerDependencies": {
+    "@react-native-community/slider": "*",
+    "@react-navigation/native": "*",
+    "@react-navigation/native-stack": "*",
+    "@rneui/base": "*",
+    "@rneui/themed": "*",
+    "react": "*",
+    "react-native": "*",
+    "react-native-fs": "*",
+    "react-native-readium": "*",
+    "react-native-safe-area-context": "*",
+    "react-native-screens": "*",
+    "react-native-vector-icons": "*"
+  }
+}

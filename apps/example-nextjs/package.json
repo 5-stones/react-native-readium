@@ -1,0 +1,49 @@
+{
+  "name": "example-nextjs",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next",
+    "build": "",
+    "build:next": "next build",
+    "build:analyze": "ANALYZE_BUNDLE=1 next build",
+    "build:disable-minification": "DISABLE_MINIFICATION=1 next build",
+    "start": "next start",
+    "lint": "eslint --fix components pages",
+    "lint:check": "eslint --max-warnings=0 components pages",
+    "format": "prettier --write components pages",
+    "format:check": "prettier --check components pages"
+  },
+  "dependencies": {
+    "@react-native-community/slider": "^5.1.1",
+    "@react-navigation/native": "^7.0.15",
+    "@react-navigation/native-stack": "^7.2.1",
+    "@rneui/base": "^4.0.0-rc.8",
+    "@rneui/themed": "^4.0.0-rc.8",
+    "common-app": "workspace:*",
+    "expo": "54.0.13",
+    "next": "15.5.4",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-native": "0.83.1",
+    "react-native-fs": "^2.20.0",
+    "react-native-readium": "workspace:*",
+    "react-native-safe-area-context": "^5.6.2",
+    "react-native-screens": "^4.19.0",
+    "react-native-vector-icons": "^9.1.0",
+    "react-native-web": "0.21.1",
+    "webpack": "5.102.1"
+  },
+  "devDependencies": {
+    "@babel/core": "7.28.4",
+    "@expo/next-adapter": "6.0.0",
+    "@next/bundle-analyzer": "15.5.4",
+    "eslint": "9.37.0",
+    "next-compose-plugins": "2.2.1",
+    "prettier": "3.6.2",
+    "typescript": "5.8.3"
+  },
+  "installConfig": {
+    "selfReferences": false
+  }
+}
