@@ -1,3 +1,19 @@
+# [5.0.0](https://github.com/5-stones/react-native-readium/compare/v4.0.1...v5.0.0) (2026-01-06)
+
+
+### Features
+
+* **android:** upgrade Readium Kotlin Toolkit to `3.1.x`
+
+
+### BREAKING CHANGES
+
+* **android:** Android build requirements changed due to the Readium Kotlin Toolkit upgrade.
+	* Requires **JDK 17** (library is built with Java/Kotlin target 17).
+	* Host apps may need to enable **core library desugaring** in `android/app/build.gradle` (common symptom: missing `java.time.*` / Java 8+ APIs).
+	* If your project uses Expo managed workflow, apply the Gradle changes via an **Expo config plugin** / `expo-build-properties` since native directories are generated.
+
+
 ## [4.0.1](https://github.com/5-stones/react-native-readium/compare/v4.0.0...v4.0.1) (2025-09-12)
 
 
