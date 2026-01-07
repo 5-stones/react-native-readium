@@ -115,6 +115,15 @@ Finally, install the pods:
 
 #### Android
 
+##### Breaking change when upgrading from v4 to v5!
+
+This release upgrades the Android native implementation to a newer Readium Kotlin Toolkit.
+Most apps won’t need code changes, but your **Android build configuration** might.
+
+Requirements:
+- **JDK 17** is required to build the Android app (the library targets Java/Kotlin 17).
+- **compileSdkVersion** must be >= `31`.
+
 If you're not using `compileSdkVersion` >= 31 you'll need to update that:
 
 ```groovy
@@ -127,6 +136,30 @@ buildscript {
         compileSdkVersion = 31
 ...
 ```
+
+##### Core library desugaring (may be required)
+
+If you see build errors related to missing Java 8+ APIs (commonly `java.time.*`), enable
+core library desugaring in your app:
+
+```groovy
+// android/app/build.gradle
+android {
+  compileOptions {
+    coreLibraryDesugaringEnabled true
+  }
+}
+
+dependencies {
+  coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.0.4"
+}
+```
+
+##### Expo managed workflow
+
+If your app uses Expo managed workflow (native `android/` is generated via `prebuild` / EAS),
+apply the desugaring settings through an Expo config plugin (or `expo-build-properties`) so
+they persist across builds.
 
 ## Usage
 
