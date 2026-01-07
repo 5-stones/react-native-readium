@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import type { ReadiumProps } from '../../src/components/ReadiumView';
 import type { Locator } from '../../src/interfaces';

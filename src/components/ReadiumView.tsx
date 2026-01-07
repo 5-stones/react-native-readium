@@ -41,12 +41,12 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
     const onLayout = useCallback(
       ({
         nativeEvent: {
-          layout: { width, height },
+          layout: { width: layoutWidth, height: layoutHeight },
         },
       }: any) => {
         setDimensions({
-          width: dimension(width),
-          height: dimension(height),
+          width: dimension(layoutWidth),
+          height: dimension(layoutHeight),
         });
       },
       []
@@ -80,13 +80,14 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
     }, []);
 
     // assign the forwarded ref
+    const hasDefaultRef = defaultRef.current !== null;
     useEffect(() => {
       if (forwardedRef && 'current' in forwardedRef) {
         forwardedRef.current = defaultRef.current;
       } else if (forwardedRef) {
         forwardedRef(defaultRef);
       }
-    }, [defaultRef.current !== null]);
+    }, [forwardedRef, hasDefaultRef, defaultRef]);
 
     const stringifiedPreferences = useMemo(
       () => JSON.stringify(preferences),

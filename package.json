@@ -21,6 +21,9 @@
     "!**/__fixtures__",
     "!**/__mocks__"
   ],
+  "workspaces": [
+    "apps/*"
+  ],
   "scripts": {
     "test": "jest",
     "typescript": "tsc --noEmit",
@@ -28,8 +31,9 @@
     "lint:fix": "eslint ./src  --fix",
     "prepare": "rimraf lib && tsc",
     "release": "release-it",
-    "example": "yarn --cwd example",
-    "pods": "cd example && pod-install --quiet",
+    "example": "yarn workspace example-native",
+    "example:nextjs": "yarn workspace example-nextjs",
+    "pods": "cd apps/example-native && pod-install --quiet",
     "bootstrap": "yarn example && yarn && yarn pods",
     "version": "yarn changelog && git add CHANGELOG.md",
     "postversion": "npm run publish:git && npm run publish:npm",
@@ -122,6 +126,9 @@
       "@react-native",
       "prettier"
     ],
+    "plugins": [
+      "prettier"
+    ],
     "rules": {
       "prettier/prettier": [
         "error",
@@ -147,20 +154,12 @@
     "useTabs": false
   },
   "dependencies": {
-    "@d-i-t-a/reader": "^2.1.4",
+    "@d-i-t-a/reader": "^2.4.10",
     "use-deep-compare": "^1.1.0"
   },
   "engines": {
     "node": ">=20"
   },
   "packageManager": "yarn@3.6.4",
-  "stableVersion": "1.2.1",
-  "codegenConfig": {
-    "name": "ReadiumViewSpec",
-    "type": "all",
-    "jsSrcsDir": "src",
-    "android": {
-      "javaPackageName": "com.reactnativereadium"
-    }
-  }
+  "stableVersion": "1.2.1"
 }

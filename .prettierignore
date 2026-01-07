@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+.yarn/
+**/node_modules/
+
+# Build outputs
+lib/
+dist/
+build/
+.next/
+out/
+**/.next/
+**/build/
+
+# Native build artifacts
+**/ios/Pods/
+**/ios/build/
+**/android/app/build/
+**/android/.gradle/
+**/android/build/
+
+# Generated files
+*.generated.*
+.expo/
+.expo-shared/
+
+# Cache
+.cache/
