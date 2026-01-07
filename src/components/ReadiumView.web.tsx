@@ -1,11 +1,11 @@
-import React, { useImperativeHandle } from 'react';
+import React, { useImperativeHandle, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import type { BaseReadiumViewProps, Preferences } from '../interfaces';
 import {
-  useReaderRef,
-  useSettingsObserver,
+  useNavigator,
+  usePreferencesObserver,
   useLocationObserver,
 } from '../../web/hooks';
 
@@ -33,24 +33,29 @@ export const ReadiumView = React.forwardRef<
     },
     ref
   ) => {
-    const readerRef = useReaderRef({
+    const [container, setContainer] = useState<HTMLElement | null>(null);
+    const navigator = useNavigator({
       file,
       onLocationChange,
       onTableOfContents,
+      container,
     });
-    const reader = readerRef.current;
 
-    useImperativeHandle(ref, () => ({
-      nextPage: () => {
-        readerRef.current?.nextPage();
-      },
-      prevPage: () => {
-        readerRef.current?.previousPage();
-      },
-    }));
+    useImperativeHandle(
+      ref,
+      () => ({
+        nextPage: () => {
+          navigator?.goForward(true, () => {});
+        },
+        prevPage: () => {
+          navigator?.goBackward(true, () => {});
+        },
+      }),
+      [navigator]
+    );
 
-    useSettingsObserver(reader, preferences);
-    useLocationObserver(reader, location);
+    usePreferencesObserver(navigator, preferences);
+    useLocationObserver(navigator, location);
 
     const mainStyle = {
       ...styles.maximize,
@@ -61,14 +66,23 @@ export const ReadiumView = React.forwardRef<
     if (width) mainStyle.width = width;
 
     return (
-      <View style={styles.container}>
-        {!reader && <div style={loaderStyle}>Loading reader...</div>}
-        <div id="D2Reader-Container" style={styles.d2Container}>
-          <main style={mainStyle} tabIndex={-1} id="iframe-wrapper">
-            <div id="reader-loading" className="loading" style={loaderStyle} />
-            <div id="reader-error" className="error" />
-          </main>
-        </div>
+      <View style={styles.container} id="wrapper">
+        <style type="text/css">
+          {`
+          .readium-navigator-iframe {
+            width: 100%;
+            height: 100%;
+            border-width: 0;
+          }
+        `}
+        </style>
+        {!navigator && <div style={loaderStyle}>Loading reader...</div>}
+        <main
+          ref={(el) => setContainer(el)}
+          style={styles.readiumContainer}
+          id="readium-container"
+          aria-label="Publication"
+        />
       </View>
     );
   }
@@ -87,10 +101,11 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  d2Container: {
+  readiumContainer: {
+    // @ts-ignore
+    contain: 'content',
     width: '100%',
     height: '100%',
-    display: 'flex',
   },
   maximize: {
     width: '100%',

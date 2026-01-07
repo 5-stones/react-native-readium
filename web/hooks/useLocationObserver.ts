@@ -1,21 +1,34 @@
+import { useRef } from 'react';
 import { useDeepCompareEffect } from 'use-deep-compare';
+import { EpubNavigator } from '@readium/navigator';
 
 import type { Link, Locator } from '../../src/interfaces';
 
 export const useLocationObserver = (
-  reader?: D2Reader | null,
+  navigator?: EpubNavigator | null,
   location?: Link | Locator | null
 ) => {
+  const lastHrefRef = useRef<string | null>(null);
+
   useDeepCompareEffect(() => {
-    if (reader && location) {
-      // NOTE: technically this is a Link | Locator. However, under the hood the
-      // R2D2BC is converting Links to locators, so just force the type here.
-      reader.goTo(location as R2Locator);
+    // Only navigate if we have a navigator, a location, and the href has changed.
+    // Skip navigation if location.locations exists with progression and totalProgression
+    // (it's from the navigator's positionChanged callback)
+    // @ts-ignore
+    const hasFullLocationData =
+      location?.locations?.progression !== undefined &&
+      location?.locations?.totalProgression !== undefined;
+
+    if (
+      navigator &&
+      location &&
+      location.href !== lastHrefRef.current &&
+      !hasFullLocationData
+    ) {
+      lastHrefRef.current = location.href;
+      // For Link objects (from TOC), we can pass them directly
+      // @ts-ignore
+      navigator.go(location, true, () => {});
     }
-  }, [
-    location?.href,
-    //@ts-ignore
-    location?.locations,
-    !!reader,
-  ]);
+  }, [location?.href, !!navigator]);
 };

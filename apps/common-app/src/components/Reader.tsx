@@ -77,8 +77,11 @@ export const Reader: React.FC<ReaderProps> = ({
               onPress={(loc) =>
                 setLocation({
                   href: loc.href,
-                  type: 'application/xhtml+xml',
+                  type: loc.type || 'application/xhtml+xml',
                   title: loc.title || '',
+                  locations: {
+                    progression: 0,
+                  },
                 })
               }
             />
