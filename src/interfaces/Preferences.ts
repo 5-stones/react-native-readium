@@ -1,5 +1,5 @@
 export interface Preferences {
-  backgroundColor?: number;
+  backgroundColor?: string | null;
   columnCount?: 'auto' | '1' | '2';
   fontFamily?:
     | 'serif'
@@ -26,10 +26,11 @@ export interface Preferences {
   scroll?: boolean;
   spread?: 'auto' | 'never' | 'always';
   textAlign?: 'center' | 'justify' | 'start' | 'end' | 'left' | 'right';
-  textColor?: number;
+  textColor?: string | null;
   textNormalization?: boolean;
   theme?: 'light' | 'dark' | 'sepia';
   typeScale?: number;
   verticalText?: boolean;
   wordSpacing?: number;
+  merging?: boolean;
 }
