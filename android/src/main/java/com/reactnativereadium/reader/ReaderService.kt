@@ -58,6 +58,10 @@ class ReaderService(
     callback: suspend (fragment: BaseReaderFragment) -> Unit
   ) {
     val publicationFile = File(fileName).absoluteFile
+    if (!publicationFile.exists()) {
+      Log.e(TAG, "Failed to open publication: File does not exist: $fileName")
+      return
+    }
     val publicationUrl = runCatching {
       publicationFile.toUrl()
     }
