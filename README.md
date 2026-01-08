@@ -145,13 +145,14 @@ core library desugaring in your app:
 ```groovy
 // android/app/build.gradle
 android {
+  ...
   compileOptions {
     coreLibraryDesugaringEnabled true
   }
 }
 
 dependencies {
-  coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.0.4"
+  coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.1.2"
 }
 ```
 

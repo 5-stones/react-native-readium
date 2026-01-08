@@ -2,7 +2,6 @@ package com.reactnativereadium
 
 import android.util.Log
 import android.view.Choreographer
-import android.view.View.MeasureSpec
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentActivity
 import com.facebook.react.bridge.Arguments
@@ -25,6 +24,10 @@ import org.readium.r2.navigator.epub.EpubPreferences
 class ReadiumView(
   val reactContext: ThemedReactContext
 ) : FrameLayout(reactContext) {
+  companion object {
+    private const val TAG = "ReadiumView"
+  }
+
   var dimensions: Dimensions = Dimensions(0,0)
   var file: File? = null
   var fragment: BaseReaderFragment? = null
@@ -80,30 +83,26 @@ class ReadiumView(
 
     val eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag(reactContext, this.id)
 
+    val dispatch: (String, WritableMap?) -> Unit = { eventName, payload ->
+      if (eventDispatcher != null) {
+        eventDispatcher.dispatchEvent(ReadiumEvent(this.id, eventName, payload))
+      } else {
+        Log.w(TAG, "EventDispatcher is null for view id ${this.id}")
+      }
+    }
+
     // subscribe to reader events
     frag.channel.receive(frag) { event ->
       when (event) {
         is ReaderViewModel.Event.LocatorUpdate -> {
           val payload = event.locator.toWritableMap()
-          if (eventDispatcher != null) {
-            eventDispatcher.dispatchEvent(
-              ReadiumEvent(this.id, ReadiumViewManager.ON_LOCATION_CHANGE, payload)
-            )
-          } else {
-            Log.w(TAG, "EventDispatcher is null for view id ${this.id}")
-          }
+          dispatch(ReadiumViewManager.ON_LOCATION_CHANGE, payload)
         }
         is ReaderViewModel.Event.TableOfContentsLoaded -> {
           val payload = Arguments.createMap().apply {
             putArray("toc", event.toc.toWritableArray())
           }
-          if (eventDispatcher != null) {
-            eventDispatcher.dispatchEvent(
-              ReadiumEvent(this.id, ReadiumViewManager.ON_TABLE_OF_CONTENTS, payload)
-            )
-          } else {
-            Log.w(TAG, "EventDispatcher is null for view id ${this.id}")
-          }
+          dispatch(ReadiumViewManager.ON_TABLE_OF_CONTENTS, payload)
         }
         else -> {
           // do nothing
@@ -122,10 +121,6 @@ class ReadiumView(
     override fun getEventData(): WritableMap? = _eventData
   }
 
-  companion object {
-    private const val TAG = "ReadiumView"
-  }
-
   private fun setupLayout() {
     // keep a reference so we can remove the callback when the view is detached
     frameCallback = object : Choreographer.FrameCallback {
@@ -135,7 +130,7 @@ class ReadiumView(
         Choreographer.getInstance().postFrameCallback(this)
       }
     }
-    frameCallback?.let { Choreographer.getInstance().postFrameCallback(it) }
+    frameCallback!!.let { Choreographer.getInstance().postFrameCallback(it) }
   }
 
   override fun onDetachedFromWindow() {
