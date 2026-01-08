@@ -6,15 +6,16 @@ import React, {
   useRef,
   useMemo,
 } from 'react';
-import { View, Platform, findNodeHandle, StyleSheet } from 'react-native';
+import { View, Platform, StyleSheet } from 'react-native';
 
 import type {
   BaseReadiumViewProps,
   Dimensions,
   Preferences,
 } from '../interfaces';
-import { createFragment, getWidthOrHeightValue as dimension } from '../utils';
+import { getWidthOrHeightValue as dimension } from '../utils';
 import { BaseReadiumView } from './BaseReadiumView';
+import { Commands } from '../ReadiumViewNativeComponent';
 
 export type ReadiumProps = Omit<BaseReadiumViewProps, 'preferences'> & {
   preferences: Preferences;
@@ -40,12 +41,12 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
     const onLayout = useCallback(
       ({
         nativeEvent: {
-          layout: { width, height },
+          layout: { width: layoutWidth, height: layoutHeight },
         },
       }: any) => {
         setDimensions({
-          width: dimension(width),
-          height: dimension(height),
+          width: dimension(layoutWidth),
+          height: dimension(layoutHeight),
         });
       },
       []
@@ -74,19 +75,19 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
     // create the view fragment on android
     useEffect(() => {
       if (Platform.OS === 'android' && defaultRef.current) {
-        const viewId = findNodeHandle(defaultRef.current);
-        createFragment(viewId);
+        Commands.create(defaultRef.current);
       }
     }, []);
 
     // assign the forwarded ref
+    const hasDefaultRef = defaultRef.current !== null;
     useEffect(() => {
       if (forwardedRef && 'current' in forwardedRef) {
         forwardedRef.current = defaultRef.current;
       } else if (forwardedRef) {
         forwardedRef(defaultRef);
       }
-    }, [defaultRef.current !== null]);
+    }, [forwardedRef, hasDefaultRef, defaultRef]);
 
     const stringifiedPreferences = useMemo(
       () => JSON.stringify(preferences),
