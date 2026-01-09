@@ -18,6 +18,7 @@ type OnTableOfContentsEvent = Readonly<{
 export interface NativeProps extends ViewProps {
   file: File;
   preferences?: string;
+  showPageNumbers?: boolean;
   onLocationChange?: DirectEventHandler<OnLocationChangeEvent>;
   onTableOfContents?: DirectEventHandler<OnTableOfContentsEvent>;
 }

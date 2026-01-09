@@ -27,6 +27,7 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
       onLocationChange: wrappedOnLocationChange,
       onTableOfContents: wrappedOnTableOfContents,
       preferences,
+      showPageNumbers,
       ...props
     },
     forwardedRef
@@ -100,6 +101,7 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
           height={height}
           width={width}
           {...props}
+          showPageNumbers={showPageNumbers}
           preferences={stringifiedPreferences}
           onLocationChange={onLocationChange}
           onTableOfContents={onTableOfContents}

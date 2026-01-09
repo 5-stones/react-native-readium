@@ -35,6 +35,14 @@ class ReadiumView : UIView, Loggable {
   }
   @objc var onLocationChange: RCTDirectEventBlock?
   @objc var onTableOfContents: RCTDirectEventBlock?
+  @objc var showPageNumbers: Bool = true {
+    didSet {
+      // apply immediately if reader is already attached
+      if let vc = readerViewController {
+        vc.setPositionLabelHidden(!showPageNumbers)
+      }
+    }
+  }
 
   func loadBook(
     url: String,
@@ -135,6 +143,9 @@ class ReadiumView : UIView, Loggable {
     if (preferences != nil) {
       self.updatePreferences(preferences)
     }
+
+    // apply showPageNumbers preference (default true)
+    readerViewController?.setPositionLabelHidden(!showPageNumbers)
 
     guard
       readerViewController != nil,

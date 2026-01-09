@@ -15,12 +15,15 @@ export interface ReaderProps {
   epubPath?: string;
   /** Initial location to open the book at */
   initialLocation?: Locator;
+  /** Show native position label */
+  showPageNumbers?: boolean;
 }
 
 export const Reader: React.FC<ReaderProps> = ({
   epubUrl,
   epubPath,
   initialLocation,
+  showPageNumbers = true,
 }) => {
   const [toc, setToc] = useState<Link[] | null>([]);
   const [file, setFile] = useState<File>();
@@ -107,6 +110,7 @@ export const Reader: React.FC<ReaderProps> = ({
               ref={ref}
               file={file}
               location={location}
+              showPageNumbers={showPageNumbers}
               preferences={preferences}
               onLocationChange={(locator: Locator) => setLocation(locator)}
               onTableOfContents={(toc: Link[] | null) => {

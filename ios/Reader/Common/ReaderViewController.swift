@@ -398,3 +398,10 @@ extension ReaderViewController {
     positionLabel.text = positionLabelText(for: locator)
   }
 }
+
+extension ReaderViewController {
+  @MainActor
+  func setPositionLabelHidden(_ hidden: Bool) {
+    positionLabel.isHidden = hidden
+  }
+}

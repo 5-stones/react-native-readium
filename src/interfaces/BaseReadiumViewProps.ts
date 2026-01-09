@@ -7,6 +7,7 @@ export type BaseReadiumViewProps = {
   file: File;
   location?: Locator | Link;
   preferences?: string; // JSON between native and JS, which we deserialise later
+  showPageNumbers?: boolean;
   style?: ViewStyle;
   onLocationChange?: (locator: Locator) => void;
   onTableOfContents?: (toc: Link[] | null) => void;
