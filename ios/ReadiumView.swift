@@ -112,6 +112,22 @@ class ReadiumView : UIView, Loggable {
       print("TODO: handle error. Skipping preferences due to thrown exception")
       return;
     }
+
+    // Also try to extract a simple `theme` key to style the native position label to match
+    // the ebook's theme. Expected values: "light", "dark", "sephia".
+    if let data = preferencesJson.data(using: .utf8) {
+      if let obj = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+         let theme = obj["theme"] as? String {
+        switch theme {
+        case "dark":
+          readerViewController?.setPositionLabelColors(background: UIColor.black, textColor: UIColor.white)
+        case "sephia":
+          readerViewController?.setPositionLabelColors(background: UIColor(red: 244/255, green: 236/255, blue: 216/255, alpha: 1.0), textColor: UIColor.black)
+        default:
+          readerViewController?.setPositionLabelColors(background: UIColor.white, textColor: UIColor.black)
+        }
+      }
+    }
   }
 
   override func removeFromSuperview() {

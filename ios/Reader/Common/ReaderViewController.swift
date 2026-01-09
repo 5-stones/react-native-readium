@@ -94,6 +94,7 @@ class ReaderViewController: UIViewController, Loggable {
     positionLabel.translatesAutoresizingMaskIntoConstraints = false
     positionLabel.font = .systemFont(ofSize: 12)
     positionLabel.textColor = .darkGray
+    positionLabel.backgroundColor = .clear
     view.addSubview(positionLabel)
     NSLayoutConstraint.activate([
       positionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -101,6 +102,13 @@ class ReaderViewController: UIViewController, Loggable {
     ])
 
     configureNavigatorInteractions()
+  }
+
+  // MARK: - Position label styling
+  public func setPositionLabelColors(background: UIColor, textColor: UIColor) {
+    // Force transparent background for page numbers per design requirement.
+    positionLabel.backgroundColor = .clear
+    positionLabel.textColor = textColor
   }
 
   override func willMove(toParent parent: UIViewController?) {
