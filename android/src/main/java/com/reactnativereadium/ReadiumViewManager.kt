@@ -7,7 +7,6 @@ import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.uimanager.annotations.ReactPropGroup
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewGroupManager
-import android.view.View
 import com.reactnativereadium.reader.ReaderService
 import com.reactnativereadium.utils.File
 import com.reactnativereadium.utils.LinkOrLocator
@@ -126,16 +125,6 @@ class ReadiumViewManager(
         view.dimensions.height = value
       }
       buildForViewIfReady(view)
-    }
-  }
-
-  @ReactProp(name = "showPageNumbers")
-  fun setShowPageNumbers(view: ReadiumView, show: Boolean) {
-    view.showPageNumbers = show
-    // Overlay lives in fragment_reader.xml; it might not exist yet when the prop arrives.
-    val label = view.fragment?.view?.findViewById<android.view.View>(com.reactnativereadium.R.id.reader_position_label)
-    if (label != null) {
-      label.visibility = if (view.showPageNumbers) android.view.View.VISIBLE else android.view.View.GONE
     }
   }
 

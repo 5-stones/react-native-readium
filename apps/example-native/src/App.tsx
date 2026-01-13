@@ -11,7 +11,6 @@ function ReaderScreen() {
     <Reader
       epubUrl="https://test.opds.io/assets/moby/file.epub"
       epubPath={`${RNFS.DocumentDirectoryPath}/moby-dick.epub`}
-      showPageNumbers={true}
       initialLocation={{
         href: '/OPS/main3.xml',
         title: 'Chapter 2 - The Carpet-Bag',

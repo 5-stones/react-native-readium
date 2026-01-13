@@ -4,7 +4,6 @@ import android.util.Log
 import android.view.Choreographer
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.lifecycleScope
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.ThemedReactContext
@@ -13,14 +12,14 @@ import com.facebook.react.uimanager.events.Event
 import com.reactnativereadium.reader.BaseReaderFragment
 import com.reactnativereadium.reader.EpubReaderFragment
 import com.reactnativereadium.reader.ReaderViewModel
+import com.reactnativereadium.reader.VisualReaderFragment
 import com.reactnativereadium.utils.Dimensions
 import com.reactnativereadium.utils.File
 import com.reactnativereadium.utils.LinkOrLocator
 import com.reactnativereadium.utils.toWritableArray
 import com.reactnativereadium.utils.toWritableMap
-import kotlinx.coroutines.launch
-import org.readium.r2.shared.publication.Locator
-import org.readium.r2.shared.publication.services.positions
+import org.readium.r2.navigator.epub.EpubNavigatorFragment
+import org.readium.r2.navigator.epub.EpubPreferences
 
 class ReadiumView(
   val reactContext: ThemedReactContext
@@ -29,23 +28,20 @@ class ReadiumView(
     private const val TAG = "ReadiumView"
   }
 
-  var dimensions: Dimensions = Dimensions(0, 0)
+  var dimensions: Dimensions = Dimensions(0,0)
   var file: File? = null
   var fragment: BaseReaderFragment? = null
   var isViewInitialized: Boolean = false
   var isFragmentAdded: Boolean = false
   var lateInitSerializedUserPreferences: String? = null
-
-  var showPageNumbers: Boolean = true
-  var totalPositions: Int? = null
-  var isComputingTotalPositions: Boolean = false
-  var lastKnownPosition: Int? = null
-
   private var frameCallback: Choreographer.FrameCallback? = null
 
-  fun updateLocation(location: LinkOrLocator): Boolean {
-    val frag = fragment ?: return false
-    return frag.go(location, true)
+  fun updateLocation(location: LinkOrLocator) : Boolean {
+    if (fragment == null) {
+      return false
+    } else {
+      return this.fragment!!.go(location, true)
+    }
   }
 
   fun updatePreferencesFromJsonString(preferences: String?) {
@@ -54,24 +50,20 @@ class ReadiumView(
       return
     }
 
-    // Positions can change when preferences (font size, scroll mode, etc.) change.
-    totalPositions = null
-    isComputingTotalPositions = false
-
     if (fragment is EpubReaderFragment) {
       (fragment as EpubReaderFragment).updatePreferencesFromJsonString(preferences)
     }
   }
 
   fun addFragment(frag: BaseReaderFragment) {
-    if (isFragmentAdded) return
+    if (isFragmentAdded) {
+      return
+    }
 
     fragment = frag
     isFragmentAdded = true
-
     setupLayout()
-    lateInitSerializedUserPreferences?.let { updatePreferencesFromJsonString(it) }
-
+    lateInitSerializedUserPreferences?.let { updatePreferencesFromJsonString(it)}
     val activity = reactContext.currentActivity as? FragmentActivity
     if (activity == null) {
       Log.w(TAG, "addFragment: currentActivity is null, cannot add fragment")
@@ -83,6 +75,7 @@ class ReadiumView(
       .replace(this.id, frag, this.id.toString())
       .commitNow()
 
+    // Ensure the fragment's view fills the container
     frag.view?.layoutParams = FrameLayout.LayoutParams(
       FrameLayout.LayoutParams.MATCH_PARENT,
       FrameLayout.LayoutParams.MATCH_PARENT
@@ -98,11 +91,12 @@ class ReadiumView(
       }
     }
 
+    // subscribe to reader events
     frag.channel.receive(frag) { event ->
       when (event) {
         is ReaderViewModel.Event.LocatorUpdate -> {
-          dispatch(ReadiumViewManager.ON_LOCATION_CHANGE, event.locator.toWritableMap())
-          updatePositionTextIfNeeded(event.locator)
+          val payload = event.locator.toWritableMap()
+          dispatch(ReadiumViewManager.ON_LOCATION_CHANGE, payload)
         }
         is ReaderViewModel.Event.TableOfContentsLoaded -> {
           val payload = Arguments.createMap().apply {
@@ -115,11 +109,9 @@ class ReadiumView(
         }
       }
     }
-
-    applyShowPageNumbersToFragmentView()
-    ensureTotalPositionsAsync()
   }
 
+  // Custom event class for new architecture
   private class ReadiumEvent(
     viewTag: Int,
     private val _eventName: String,
@@ -129,61 +121,8 @@ class ReadiumView(
     override fun getEventData(): WritableMap? = _eventData
   }
 
-  private fun applyShowPageNumbersToFragmentView() {
-    val label = fragment?.view?.findViewById<android.view.View>(R.id.reader_position_label)
-    if (label != null) {
-      label.visibility = if (showPageNumbers) android.view.View.VISIBLE else android.view.View.GONE
-    }
-  }
-
-  private fun ensureTotalPositionsAsync() {
-    val frag = fragment ?: return
-    if (totalPositions != null || isComputingTotalPositions) return
-    isComputingTotalPositions = true
-
-    frag.lifecycleScope.launch {
-      try {
-        totalPositions = frag.publication().positions().size
-      } catch (e: Exception) {
-        Log.w(TAG, "Failed to compute total positions: ${e.message}")
-      } finally {
-        isComputingTotalPositions = false
-        lastKnownPosition?.let { updatePositionLabelText(it) }
-      }
-    }
-  }
-
-  private fun updatePositionLabelText(position: Int) {
-    val label = fragment?.view?.findViewById<android.widget.TextView>(R.id.reader_position_label)
-      ?: return
-
-    val total = totalPositions
-    label.text = if (total != null && total > 0) {
-      "$position / $total"
-    } else {
-      position.toString()
-    }
-  }
-
-  private fun updatePositionTextIfNeeded(locator: Locator) {
-    try {
-      applyShowPageNumbersToFragmentView()
-      if (!showPageNumbers) return
-
-      val position = locator.locations.position ?: return
-      lastKnownPosition = position
-
-      if (totalPositions == null) {
-        ensureTotalPositionsAsync()
-      }
-
-      updatePositionLabelText(position)
-    } catch (e: Exception) {
-      Log.w(TAG, "Failed to update position text: ${e.message}")
-    }
-  }
-
   private fun setupLayout() {
+    // keep a reference so we can remove the callback when the view is detached
     frameCallback = object : Choreographer.FrameCallback {
       override fun doFrame(frameTimeNanos: Long) {
         manuallyLayoutChildren()
@@ -191,11 +130,12 @@ class ReadiumView(
         Choreographer.getInstance().postFrameCallback(this)
       }
     }
-    frameCallback?.let { Choreographer.getInstance().postFrameCallback(it) }
+    frameCallback!!.let { Choreographer.getInstance().postFrameCallback(it) }
   }
 
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
+    // remove frame callback to avoid leaks/continuous callbacks after view is destroyed
     frameCallback?.let {
       try {
         Choreographer.getInstance().removeFrameCallback(it)
@@ -206,19 +146,24 @@ class ReadiumView(
     frameCallback = null
   }
 
+  /**
+   * Layout all children properly
+   */
   private fun manuallyLayoutChildren() {
+    // propWidth and propHeight coming from react-native props
     val width = dimensions.width
     val height = dimensions.height
 
+    // Measure and layout each child within this container
     for (i in 0 until childCount) {
       val child = getChildAt(i)
       child.measure(
         MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
         MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
       )
+      // Position child at (0, 0) within this container, filling the container
       child.layout(0, 0, width, height)
     }
   }
 }
-
 

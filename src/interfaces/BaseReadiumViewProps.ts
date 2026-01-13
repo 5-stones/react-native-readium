@@ -7,7 +7,7 @@ export type BaseReadiumViewProps = {
   file: File;
   location?: Locator | Link;
   preferences?: string; // JSON between native and JS, which we deserialise later
-  showPageNumbers?: boolean;
+  hidePageNumbers?: boolean; // Show or hide native position label (iOS only for now)
   style?: ViewStyle;
   onLocationChange?: (locator: Locator) => void;
   onTableOfContents?: (toc: Link[] | null) => void;

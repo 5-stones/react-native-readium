@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.readium.r2.navigator.Navigator
 import org.readium.r2.shared.publication.Locator
-import org.readium.r2.shared.publication.Publication
 
 /*
  * Base reader fragment class
@@ -26,8 +25,6 @@ abstract class BaseReaderFragment : Fragment() {
 
   protected abstract val model: ReaderViewModel
   protected abstract val navigator: Navigator
-
-  fun publication(): Publication = model.publication
 
   override fun onCreate(savedInstanceState: Bundle?) {
     setHasOptionsMenu(true)

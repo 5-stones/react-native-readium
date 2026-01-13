@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Text, ScrollView } from 'react-native';
+import { Text, ScrollView, Switch } from 'react-native';
 import { ListItem, Overlay, Icon, Button } from '@rneui/themed';
 import Slider from '@react-native-community/slider';
 import type { ReadiumProps } from 'react-native-readium';
@@ -8,11 +8,13 @@ import { RANGES } from 'react-native-readium';
 interface Props {
   preferences: ReadiumProps['preferences'];
   onChange: (preferences: ReadiumProps['preferences']) => void;
+  hidePageNumbers?: boolean;
+  onHidePageNumbersChange?: (show: boolean) => void;
 }
 
 type Theme = NonNullable<ReadiumProps['preferences']['theme']>;
 
-export const PreferencesEditor = ({ preferences, onChange }: Props) => {
+export const PreferencesEditor = ({ preferences, onChange, hidePageNumbers, onHidePageNumbersChange }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const onToggleOpen = () => setIsOpen(!isOpen);
   const nextAppearance = useCallback((theme?: Theme) => {
@@ -94,6 +96,18 @@ export const PreferencesEditor = ({ preferences, onChange }: Props) => {
                 maximumTrackTintColor="#aaaaaa"
               />
             </ListItem.Content>
+          </ListItem>
+
+          <ListItem>
+            <ListItem.Content>
+              <ListItem.Title>Hide Page Numbers (iOS)</ListItem.Title>
+            </ListItem.Content>
+            <Switch
+              value={!!hidePageNumbers}
+              onValueChange={(v) => {
+                if (onHidePageNumbersChange) onHidePageNumbersChange(v);
+              }}
+            />
           </ListItem>
         </ScrollView>
       </Overlay>
