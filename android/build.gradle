@@ -1,7 +1,7 @@
 buildscript {
   // Buildscript is evaluated before everything else so we can't use getExtOrDefault
   def kotlin_version = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : project.properties['Readium_kotlinVersion']
-  ext.readium_version = '2.4.1'
+  ext.readium_version = '3.1.0'
 
   repositories {
     google()
@@ -9,7 +9,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:4.2.2'
+    classpath 'com.android.tools.build:gradle:8.5.0'
     // noinspection DifferentKotlinGradleVersion
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
@@ -28,6 +28,7 @@ def getExtOrIntegerDefault(name) {
 
 android {
   compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
+  namespace "com.reactnativereadium"
   defaultConfig {
     minSdkVersion 21
     targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
@@ -40,12 +41,15 @@ android {
       minifyEnabled false
     }
   }
-  lintOptions {
+  lint {
     disable 'GradleCompatible'
   }
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+  kotlinOptions {
+    jvmTarget = "17"
   }
 
   buildFeatures {
@@ -140,46 +144,45 @@ dependencies {
   }
 
   // other deps
-  implementation "androidx.core:core-ktx:1.7.0"
-  implementation "androidx.activity:activity-ktx:1.4.0"
-  implementation "androidx.appcompat:appcompat:1.4.1"
-  implementation "androidx.browser:browser:1.4.0"
+  implementation "androidx.core:core-ktx:1.13.1"
+  implementation "androidx.activity:activity-ktx:1.9.0"
+  implementation "androidx.appcompat:appcompat:1.6.1"
+  implementation "androidx.browser:browser:1.7.0"
   implementation "androidx.cardview:cardview:1.0.0"
-  implementation "androidx.constraintlayout:constraintlayout:2.1.3"
-  implementation "androidx.fragment:fragment-ktx:1.4.0"
-  implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
-  implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
-  implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
-  implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
-  implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
-  implementation "androidx.paging:paging-runtime-ktx:3.1.0"
-  implementation "androidx.recyclerview:recyclerview:1.2.1"
-  implementation "androidx.viewpager2:viewpager2:1.0.0"
-  implementation "androidx.webkit:webkit:1.4.0"
-  implementation "com.google.android.material:material:1.5.0"
+  implementation "androidx.constraintlayout:constraintlayout:2.1.4"
+  implementation "androidx.fragment:fragment-ktx:1.7.1"
+  implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.8.4"
+  implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.8.4"
+  implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.4"
+  implementation 'androidx.navigation:navigation-fragment-ktx:2.7.7'
+  implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
+  implementation "androidx.paging:paging-runtime-ktx:3.2.1"
+  implementation "androidx.recyclerview:recyclerview:1.3.2"
+  implementation "androidx.viewpager2:viewpager2:1.1.0"
+  implementation "androidx.webkit:webkit:1.8.0"
+  implementation "com.google.android.material:material:1.11.0"
   implementation "com.jakewharton.timber:timber:5.0.1"
   // AM NOTE: needs to stay this version for now (June 24,2020)
   //noinspection GradleDependency
   implementation "com.squareup.picasso:picasso:2.71828"
   implementation "joda-time:joda-time:2.10.13"
-  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
-  // AM NOTE: needs to stay this version for now (June 24,2020)
-  //noinspection GradleDependency
-  implementation "org.jsoup:jsoup:1.14.3"
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0"
+
+  implementation "org.jsoup:jsoup:1.18.3"
 
   // Room database
-  final roomVersion = "2.4.1"
+  final roomVersion = "2.6.1"
   implementation "androidx.room:room-runtime:$roomVersion"
   implementation "androidx.room:room-ktx:$roomVersion"
   annotationProcessor "androidx.room:room-compiler:$roomVersion"
 
   implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
   //noinspection LifecycleAnnotationProcessorWithJava8
-  annotationProcessor "androidx.lifecycle:lifecycle-compiler:2.4.0"
+  annotationProcessor "androidx.lifecycle:lifecycle-compiler:2.8.4"
 
   testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
   testImplementation "junit:junit:4.13.2"
 
-  androidTestImplementation "androidx.test.espresso:espresso-core:3.4.0"
-  androidTestImplementation "androidx.test:runner:1.4.0"
+  androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"
+  androidTestImplementation "androidx.test:runner:1.5.2"
 }

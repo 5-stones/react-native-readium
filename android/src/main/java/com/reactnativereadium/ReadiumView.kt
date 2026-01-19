@@ -16,19 +16,25 @@ import com.reactnativereadium.reader.VisualReaderFragment
 import com.reactnativereadium.utils.Dimensions
 import com.reactnativereadium.utils.File
 import com.reactnativereadium.utils.LinkOrLocator
+import com.reactnativereadium.utils.toWritableArray
+import com.reactnativereadium.utils.toWritableMap
 import org.readium.r2.navigator.epub.EpubNavigatorFragment
 import org.readium.r2.navigator.epub.EpubPreferences
-import org.readium.r2.shared.extensions.toMap
 
 class ReadiumView(
   val reactContext: ThemedReactContext
 ) : FrameLayout(reactContext) {
+  companion object {
+    private const val TAG = "ReadiumView"
+  }
+
   var dimensions: Dimensions = Dimensions(0,0)
   var file: File? = null
   var fragment: BaseReaderFragment? = null
   var isViewInitialized: Boolean = false
   var isFragmentAdded: Boolean = false
   var lateInitSerializedUserPreferences: String? = null
+  private var frameCallback: Choreographer.FrameCallback? = null
 
   fun updateLocation(location: LinkOrLocator) : Boolean {
     if (fragment == null) {
@@ -73,22 +79,26 @@ class ReadiumView(
 
     val eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag(reactContext, this.id)
 
+    val dispatch: (String, WritableMap?) -> Unit = { eventName, payload ->
+      if (eventDispatcher != null) {
+        eventDispatcher.dispatchEvent(ReadiumEvent(this.id, eventName, payload))
+      } else {
+        Log.w(TAG, "EventDispatcher is null for view id ${this.id}")
+      }
+    }
+
     // subscribe to reader events
     frag.channel.receive(frag) { event ->
       when (event) {
         is ReaderViewModel.Event.LocatorUpdate -> {
-          val json = event.locator.toJSON()
-          val payload = Arguments.makeNativeMap(json.toMap())
-          eventDispatcher?.dispatchEvent(
-            ReadiumEvent(this.id, ReadiumViewManager.ON_LOCATION_CHANGE, payload)
-          )
+          val payload = event.locator.toWritableMap()
+          dispatch(ReadiumViewManager.ON_LOCATION_CHANGE, payload)
         }
         is ReaderViewModel.Event.TableOfContentsLoaded -> {
-          val map = event.toc.map { it.toJSON().toMap() }
-          val payload = Arguments.makeNativeMap(mapOf("toc" to map))
-          eventDispatcher?.dispatchEvent(
-            ReadiumEvent(this.id, ReadiumViewManager.ON_TABLE_OF_CONTENTS, payload)
-          )
+          val payload = Arguments.createMap().apply {
+            putArray("toc", event.toc.toWritableArray())
+          }
+          dispatch(ReadiumViewManager.ON_TABLE_OF_CONTENTS, payload)
         }
         else -> {
           // do nothing
@@ -107,18 +117,28 @@ class ReadiumView(
     override fun getEventData(): WritableMap? = _eventData
   }
 
-  companion object {
-    private const val TAG = "ReadiumView"
-  }
-
   private fun setupLayout() {
-    Choreographer.getInstance().postFrameCallback(object : Choreographer.FrameCallback {
+    frameCallback = object : Choreographer.FrameCallback {
       override fun doFrame(frameTimeNanos: Long) {
         manuallyLayoutChildren()
         this@ReadiumView.viewTreeObserver.dispatchOnGlobalLayout()
         Choreographer.getInstance().postFrameCallback(this)
       }
-    })
+    }
+    frameCallback?.let { Choreographer.getInstance().postFrameCallback(it) }
+  }
+
+  override fun onDetachedFromWindow() {
+    super.onDetachedFromWindow()
+    // remove frame callback to avoid leaks/continuous callbacks after view is destroyed
+    frameCallback?.let {
+      try {
+        Choreographer.getInstance().removeFrameCallback(it)
+      } catch (e: Exception) {
+        Log.w(TAG, "Failed to remove frame callback: ${e.message}")
+      }
+    }
+    frameCallback = null
   }
 
   /**
@@ -141,3 +161,4 @@ class ReadiumView(
     }
   }
 }
+
