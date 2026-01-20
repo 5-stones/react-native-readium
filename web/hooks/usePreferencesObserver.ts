@@ -20,6 +20,10 @@ const THEME_COLORS = {
   },
 };
 
+// Base value for scaling pageMargins multiplier to pixels
+// Matches Readium's default pageGutter of 20px
+const PAGE_GUTTER_BASE = 20;
+
 /**
  * Maps our app's preferences to the navigator's expected format
  */
@@ -27,8 +31,10 @@ function mapPreferencesToNavigator(preferences: any): EpubPreferences {
   const mapped: any = { ...preferences };
 
   // Map pageMargins to pageGutter (the navigator uses pageGutter, not pageMargins)
+  // Our app uses a multiplier (0.5-4.0), but Readium expects pixel values
+  // Scale the multiplier to pixels: multiplier * base (e.g., 1.0 * 20 = 20px)
   if (preferences.pageMargins !== undefined) {
-    mapped.pageGutter = preferences.pageMargins;
+    mapped.pageGutter = preferences.pageMargins * PAGE_GUTTER_BASE;
     delete mapped.pageMargins;
   }
 
