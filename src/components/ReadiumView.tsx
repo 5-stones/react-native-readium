@@ -25,7 +25,7 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
   (
     {
       onLocationChange: wrappedOnLocationChange,
-      onTableOfContents: wrappedOnTableOfContents,
+      onPublicationReady: wrappedOnPublicationReady,
       preferences,
       ...props
     },
@@ -62,14 +62,13 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
       [wrappedOnLocationChange]
     );
 
-    const onTableOfContents = useCallback(
+    const onPublicationReady = useCallback(
       (event: any) => {
-        if (wrappedOnTableOfContents) {
-          const toc = event.nativeEvent.toc || null;
-          wrappedOnTableOfContents(toc);
+        if (wrappedOnPublicationReady) {
+          wrappedOnPublicationReady(event.nativeEvent);
         }
       },
-      [wrappedOnTableOfContents]
+      [wrappedOnPublicationReady]
     );
 
     // create the view fragment on android
@@ -102,7 +101,7 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
           {...props}
           preferences={stringifiedPreferences}
           onLocationChange={onLocationChange}
-          onTableOfContents={onTableOfContents}
+          onPublicationReady={onPublicationReady}
           ref={defaultRef}
         />
       </View>

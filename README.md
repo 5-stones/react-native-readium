@@ -24,7 +24,7 @@ allows you to do things like:
 
 - Render an ebook view.
 - Register for location changes (as the user pages through the book).
-- Register for the Table of Contents (so that you can display things like chapters in your app)
+- Access publication metadata including table of contents, positions, and more via the `onPublicationReady` callback
 - Control settings of the Reader. Things like:
   - Dark Mode, Light Mode, Sepia Mode
   - Font Size
@@ -164,6 +164,8 @@ they persist across builds.
 
 ## Usage
 
+### Basic Example
+
 ```tsx
 import React, { useState } from 'react';
 import { ReadiumView } from 'react-native-readium';
@@ -177,6 +179,40 @@ const MyComponent: React.FC = () => {
   return (
     <ReadiumView
       file={file}
+    />
+  );
+}
+```
+
+### Using Publication Metadata
+
+Access the table of contents, positions, and metadata when the publication is ready:
+
+```tsx
+import React, { useState } from 'react';
+import { ReadiumView } from 'react-native-readium';
+import type { File, PublicationReadyEvent } from 'react-native-readium';
+
+const MyComponent: React.FC = () => {
+  const [file] = useState<File>({
+    url: SOME_LOCAL_FILE_URL,
+  });
+
+  const [toc, setToc] = useState([]);
+
+  const handlePublicationReady = (event: PublicationReadyEvent) => {
+    console.log('Title:', event.metadata.title);
+    console.log('Author:', event.metadata.author);
+    console.log('Table of Contents:', event.tableOfContents);
+    console.log('Positions:', event.positions);
+
+    setToc(event.tableOfContents);
+  };
+
+  return (
+    <ReadiumView
+      file={file}
+      onPublicationReady={handlePublicationReady}
     />
   );
 }
@@ -212,7 +248,7 @@ DRM is not supported at this time. However, there is a clear path to [support it
 | `preferences` | [`Partial<Preferences>`](https://github.com/readium/swift-toolkit/blob/main/docs/Guides/Navigator%20Preferences.md#appendix-preference-constraints)  | :white_check_mark: | An object that allows you to control various aspects of the reader's UI (epub only) |
 | `style`    | `ViewStyle`          | :white_check_mark: | A traditional style object. |
 | `onLocationChange` | `(locator: Locator) => void` | :white_check_mark: | A callback that fires whenever the location is changed (e.g. the user transitions to a new page)|
-| `onTableOfContents` | `(toc: Link[] \| null) => void` | :white_check_mark: | A callback that fires once the file is parsed and emits the table of contents embedded in the file. Returns `null` or an empty `[]` if no TOC exists. See the [`Link`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/Link.ts) interface for more info. |
+| `onPublicationReady` | `(event: PublicationReadyEvent) => void` | :white_check_mark: | A callback that fires once the publication is loaded and provides access to the table of contents, positions, and metadata. See the [`PublicationReadyEvent`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/PublicationReady.ts) interface for details. |
 
 #### :warning: Web vs Native File URLs
 

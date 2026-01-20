@@ -36,10 +36,10 @@ class ReadiumViewManager(
         )
       )
       .put(
-        ON_TABLE_OF_CONTENTS,
+        ON_PUBLICATION_READY,
         MapBuilder.of(
           "phasedRegistrationNames",
-          MapBuilder.of("bubbled", ON_TABLE_OF_CONTENTS)
+          MapBuilder.of("bubbled", ON_PUBLICATION_READY)
         )
       )
       .build()
@@ -145,6 +145,6 @@ class ReadiumViewManager(
   companion object {
     private const val TAG = "ReadiumViewManager"
     var ON_LOCATION_CHANGE = "onLocationChange"
-    var ON_TABLE_OF_CONTENTS = "onTableOfContents"
+    var ON_PUBLICATION_READY = "onPublicationReady"
   }
 }

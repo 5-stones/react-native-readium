@@ -17,11 +17,12 @@ import { Link } from '@readium/shared';
 
 import type { ReadiumProps } from '../../src/components/ReadiumView';
 import { normalizeManifest } from '../utils/manifestNormalizer';
+import { normalizeMetadata } from '../utils/metadataNormalizer';
 
 interface RefProps
   extends Pick<
     ReadiumProps,
-    'file' | 'onLocationChange' | 'onTableOfContents'
+    'file' | 'onLocationChange' | 'onPublicationReady'
   > {
   container: HTMLElement | null;
 }
@@ -29,7 +30,7 @@ interface RefProps
 export const useNavigator = ({
   file,
   onLocationChange,
-  onTableOfContents,
+  onPublicationReady,
   container,
 }: RefProps) => {
   const [navigator, setNavigator] = useState<EpubNavigator | null>(null);
@@ -215,14 +216,27 @@ export const useNavigator = ({
         configuration as any
       );
       await nav.load();
-      if (onTableOfContents && manifest.toc) {
-        // Extract the items array from the toc Links object
-        const tocItems = Array.isArray(manifest.toc)
-          ? manifest.toc
-          : // @ts-ignore
-            manifest.toc.items || [];
-        // @ts-ignore - Type compatibility
-        onTableOfContents(tocItems);
+
+      // Extract TOC items
+      const tocItems = Array.isArray(manifest.toc)
+        ? manifest.toc
+        : // @ts-ignore
+          manifest.toc.items || [];
+
+      // Emit onPublicationReady event
+      if (onPublicationReady) {
+        // Normalize metadata using spec-based approach
+        // This handles LocalizedStrings and Contributors per RWPM spec
+        const metadata = normalizeMetadata(manifest.metadata);
+
+        // @ts-ignore - Type compatibility between Readium types and our interfaces
+        onPublicationReady({
+          // @ts-ignore
+          tableOfContents: tocItems,
+          // @ts-ignore
+          positions: positions,
+          metadata: metadata,
+        });
       }
 
       setNavigator(nav);
