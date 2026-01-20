@@ -1,8 +1,5 @@
 package com.reactnativereadium.reader
 
-import android.annotation.SuppressLint
-import android.util.Log
-import androidx.lifecycle.ViewModelStore
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.util.RNLog
 import com.reactnativereadium.utils.LinkOrLocator
@@ -22,10 +19,6 @@ import org.readium.r2.streamer.parser.DefaultPublicationParser
 class ReaderService(
   private val reactContext: ReactApplicationContext
 ) {
-  companion object {
-    private const val TAG = "ReaderService"
-  }
-  
   private val httpClient = DefaultHttpClient()
   private val assetRetriever = AssetRetriever(
     reactContext.contentResolver,
@@ -66,7 +59,7 @@ class ReaderService(
   ) {
     val publicationFile = File(fileName).absoluteFile
     if (!publicationFile.exists()) {
-      Log.e(TAG, "Failed to open publication: File does not exist: $fileName")
+      RNLog.e(reactContext, "Failed to open publication: File does not exist: $fileName")
       return
     }
     val publicationUrl = runCatching {
@@ -107,7 +100,6 @@ class ReaderService(
         callback.invoke(readerFragment)
       }
       .onFailure {
-        Log.e(TAG, "Failed to open publication: ${it.message}")
         RNLog.w(
           reactContext,
           "Error executing ReaderService.openPublication: ${it.message}"

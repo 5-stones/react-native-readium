@@ -64,13 +64,9 @@ class ReadiumView(
     isFragmentAdded = true
     setupLayout()
     lateInitSerializedUserPreferences?.let { updatePreferencesFromJsonString(it)}
-    val activity = reactContext.currentActivity as? FragmentActivity
-    if (activity == null) {
-      Log.w(TAG, "addFragment: currentActivity is null, cannot add fragment")
-      return
-    }
+    val activity: FragmentActivity? = reactContext.currentActivity as FragmentActivity?
 
-    activity.supportFragmentManager
+    activity!!.supportFragmentManager
       .beginTransaction()
       .replace(this.id, frag, this.id.toString())
       .commitNow()
@@ -122,7 +118,6 @@ class ReadiumView(
   }
 
   private fun setupLayout() {
-    // keep a reference so we can remove the callback when the view is detached
     frameCallback = object : Choreographer.FrameCallback {
       override fun doFrame(frameTimeNanos: Long) {
         manuallyLayoutChildren()
@@ -130,7 +125,7 @@ class ReadiumView(
         Choreographer.getInstance().postFrameCallback(this)
       }
     }
-    frameCallback!!.let { Choreographer.getInstance().postFrameCallback(it) }
+    frameCallback?.let { Choreographer.getInstance().postFrameCallback(it) }
   }
 
   override fun onDetachedFromWindow() {
