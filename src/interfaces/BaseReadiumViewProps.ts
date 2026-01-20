@@ -2,6 +2,7 @@ import type { ViewStyle } from 'react-native';
 import type { Link } from './Link';
 import type { Locator } from './Locator';
 import type { File } from './File';
+import type { PublicationReadyEvent } from './PublicationReady';
 
 export type BaseReadiumViewProps = {
   file: File;
@@ -9,7 +10,7 @@ export type BaseReadiumViewProps = {
   preferences?: string; // JSON between native and JS, which we deserialise later
   style?: ViewStyle;
   onLocationChange?: (locator: Locator) => void;
-  onTableOfContents?: (toc: Link[] | null) => void;
+  onPublicationReady?: (event: PublicationReadyEvent) => void;
   ref?: any;
   height?: number;
   width?: number;

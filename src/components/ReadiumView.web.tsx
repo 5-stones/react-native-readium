@@ -26,7 +26,7 @@ export const ReadiumView = React.forwardRef<
       preferences,
       location,
       onLocationChange,
-      onTableOfContents,
+      onPublicationReady,
       style = {},
       height,
       width,
@@ -37,7 +37,7 @@ export const ReadiumView = React.forwardRef<
     const navigator = useNavigator({
       file,
       onLocationChange,
-      onTableOfContents,
+      onPublicationReady,
       container,
     });
 

@@ -1,7 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet, View, Text, Platform, DimensionValue } from 'react-native';
 import { ReadiumView } from 'react-native-readium';
-import type { Link, Locator, File, ReadiumProps } from 'react-native-readium';
+import type {
+  Link,
+  Locator,
+  File,
+  ReadiumProps,
+  PublicationReadyEvent,
+} from 'react-native-readium';
 
 import RNFS from '../utils/RNFS';
 import { ReaderButton } from './ReaderButton';
@@ -109,10 +115,10 @@ export const Reader: React.FC<ReaderProps> = ({
               location={location}
               preferences={preferences}
               onLocationChange={(locator: Locator) => setLocation(locator)}
-              onTableOfContents={(toc: Link[] | null) => {
-                if (toc) {
-                  setToc(toc);
-                }
+              onPublicationReady={(event: PublicationReadyEvent) => {
+                console.log('onPublicationReady', event);
+                // Set the TOC from the new event
+                setToc(event.tableOfContents);
               }}
             />
           </View>

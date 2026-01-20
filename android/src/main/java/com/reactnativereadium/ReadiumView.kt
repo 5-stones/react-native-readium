@@ -16,6 +16,7 @@ import com.reactnativereadium.reader.VisualReaderFragment
 import com.reactnativereadium.utils.Dimensions
 import com.reactnativereadium.utils.File
 import com.reactnativereadium.utils.LinkOrLocator
+import com.reactnativereadium.utils.MetadataNormalizer
 import com.reactnativereadium.utils.toWritableArray
 import com.reactnativereadium.utils.toWritableMap
 import org.readium.r2.navigator.epub.EpubNavigatorFragment
@@ -94,14 +95,18 @@ class ReadiumView(
           val payload = event.locator.toWritableMap()
           dispatch(ReadiumViewManager.ON_LOCATION_CHANGE, payload)
         }
-        is ReaderViewModel.Event.TableOfContentsLoaded -> {
+        is ReaderViewModel.Event.PublicationReady -> {
           val payload = Arguments.createMap().apply {
-            putArray("toc", event.toc.toWritableArray())
+            putArray("tableOfContents", event.tableOfContents.toWritableArray())
+            putArray("positions", event.positions.map { it.toWritableMap() }.let { list ->
+              Arguments.createArray().apply {
+                list.forEach { pushMap(it) }
+              }
+            })
+            // Use spec-based normalizer to ensure consistent structure
+            putMap("metadata", MetadataNormalizer.normalize(event.metadata))
           }
-          dispatch(ReadiumViewManager.ON_TABLE_OF_CONTENTS, payload)
-        }
-        else -> {
-          // do nothing
+          dispatch(ReadiumViewManager.ON_PUBLICATION_READY, payload)
         }
       }
     }
