@@ -17,13 +17,10 @@ class ReaderViewController: UIViewController, Loggable {
   let bookId: String
 
   private(set) var stackView: UIStackView!
-  private lazy var positionLabel = UILabel()
+  private var positionLabelManager: PositionLabelManager?
   private var subscriptions = Set<AnyCancellable>()
   private var subject = PassthroughSubject<Locator, Never>()
   lazy var publisher = subject.eraseToAnyPublisher()
-  private var positionsCount: Int?
-  private var positionsLoadingTask: Task<Void, Never>?
-  private var lastKnownLocator: Locator?
   private var navigatorInputObserverTokens = Set<InputObservableToken>()
 
   /// This regex matches any string with at least 2 consecutive letters (not limited to ASCII).
@@ -59,7 +56,7 @@ class ReaderViewController: UIViewController, Loggable {
 
   deinit {
     NotificationCenter.default.removeObserver(self)
-    positionsLoadingTask?.cancel()
+    positionLabelManager?.cancelLoading()
     removeNavigatorInputObservers()
   }
 
@@ -91,16 +88,26 @@ class ReaderViewController: UIViewController, Loggable {
 
     stackView.addArrangedSubview(accessibilityToolbar)
 
-    positionLabel.translatesAutoresizingMaskIntoConstraints = false
-    positionLabel.font = .systemFont(ofSize: 12)
-    positionLabel.textColor = .darkGray
-    view.addSubview(positionLabel)
-    NSLayoutConstraint.activate([
-      positionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-      positionLabel.bottomAnchor.constraint(equalTo: navigator.view.bottomAnchor, constant: -20)
-    ])
+    let manager = PositionLabelManager(
+      containerView: view,
+      navigatorView: navigator.view,
+      totalCountProvider: { [publication] in
+        let result = await publication.positions()
+        switch result {
+        case let .success(positions):
+          return positions.count
+        case .failure:
+          return nil
+        }
+      }
+    )
+    positionLabelManager = manager
 
     configureNavigatorInteractions()
+  }
+
+  public func setPositionLabelColors(textColor: UIColor) {
+    positionLabelManager?.setColors(textColor: textColor)
   }
 
   override func willMove(toParent parent: UIViewController?) {
@@ -280,7 +287,12 @@ class ReaderViewController: UIViewController, Loggable {
 extension ReaderViewController: NavigatorDelegate {
   func navigator(_ navigator: Navigator, locationDidChange locator: Locator) {
     subject.send(locator)
-    updatePositionLabel(with: locator)
+    Task { @MainActor [weak self] in
+      self?.positionLabelManager?.update(
+        position: locator.locations.position,
+        totalProgression: locator.locations.totalProgression
+      )
+    }
   }
 
   func navigator(_ navigator: Navigator, presentExternalURL url: URL) {
@@ -341,60 +353,9 @@ extension ReaderViewController: NavigatorDelegate {
   }
 
 }
-
 extension ReaderViewController {
-  private func updatePositionLabel(with locator: Locator) {
-    lastKnownLocator = locator
-    positionLabel.text = positionLabelText(for: locator)
-  }
-
-  private func positionLabelText(for locator: Locator) -> String? {
-    if let position = locator.locations.position {
-      if let total = positionsCount {
-        return "\(position) / \(total)"
-      } else {
-        loadPositionsCountIfNeeded()
-        return "\(position)"
-      }
-    } else if let progression = locator.locations.totalProgression {
-      return "\(progression)%"
-    } else {
-      return nil
-    }
-  }
-
-  private func loadPositionsCountIfNeeded() {
-    guard positionsCount == nil else {
-      return
-    }
-    guard positionsLoadingTask == nil else {
-      return
-    }
-
-    positionsLoadingTask = Task { [weak self] in
-      guard let self else { return }
-      defer { self.positionsLoadingTask = nil }
-
-      let result = await self.publication.positions()
-      guard !Task.isCancelled else { return }
-
-      switch result {
-      case let .success(positions):
-        await MainActor.run {
-          self.positionsCount = positions.count
-          self.refreshPositionLabel()
-        }
-      case let .failure(error):
-        self.log(.error, "Failed to load publication positions: \(error)")
-      }
-    }
-  }
-
   @MainActor
-  private func refreshPositionLabel() {
-    guard let locator = lastKnownLocator else {
-      return
-    }
-    positionLabel.text = positionLabelText(for: locator)
+  func setPositionLabelHidden(_ hidden: Bool) {
+    positionLabelManager?.setHidden(hidden)
   }
 }

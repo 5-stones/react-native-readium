@@ -27,6 +27,7 @@ export const ReadiumView = React.forwardRef<
       location,
       onLocationChange,
       onPublicationReady,
+      hidePageNumbers = false,
       style = {},
       height,
       width,
@@ -59,11 +60,13 @@ export const ReadiumView = React.forwardRef<
     usePreferencesObserver(navigator, preferences);
     useLocationObserver(navigator, location);
 
+    const shouldShowPositionLabel =
+      !hidePageNumbers && !!currentPosition && positions.length > 0;
+
     // Generate position label text
-    const positionLabel =
-      currentPosition && positions.length > 0
-        ? `${currentPosition} / ${positions.length}`
-        : null;
+    const positionLabel = shouldShowPositionLabel
+      ? `${currentPosition} / ${positions.length}`
+      : null;
 
     // Manage position label as a child of the readium-container
     useEffect(() => {
@@ -92,7 +95,7 @@ export const ReadiumView = React.forwardRef<
           label.remove();
         }
       };
-    }, [container, positionLabel, currentPosition, positions.length]);
+    }, [container, positionLabel]);
 
     const mainStyle = {
       ...styles.maximize,
@@ -125,7 +128,7 @@ export const ReadiumView = React.forwardRef<
           {`
           .readium-navigator-iframe {
             width: 100%;
-            height: calc(100% - 50px);
+            height: ${positionLabel ? 'calc(100% - 50px)' : '100%'};
             border-width: 0;
           }
 

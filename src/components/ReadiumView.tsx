@@ -27,6 +27,7 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
       onLocationChange: wrappedOnLocationChange,
       onPublicationReady: wrappedOnPublicationReady,
       preferences,
+      hidePageNumbers,
       ...props
     },
     forwardedRef
@@ -99,6 +100,7 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
           height={height}
           width={width}
           {...props}
+          hidePageNumbers={hidePageNumbers}
           preferences={stringifiedPreferences}
           onLocationChange={onLocationChange}
           onPublicationReady={onPublicationReady}

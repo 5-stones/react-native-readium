@@ -122,6 +122,17 @@ class PositionLabelManager(
     }
 
     /**
+     * Show or hide the position label.
+     */
+    fun setHidden(hidden: Boolean) {
+        label.visibility = if (hidden) {
+            android.view.View.GONE
+        } else {
+            android.view.View.VISIBLE
+        }
+    }
+
+    /**
      * Cancel any ongoing loading operations and remove the label from the view hierarchy.
      */
     fun cleanup() {

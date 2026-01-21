@@ -81,12 +81,12 @@ abstract class VisualReaderFragment : BaseReaderFragment() {
         super.onDestroyView()
     }
 
-    /**
-     * Update the text color of the position label.
-     * @param color Android color integer
-     */
     fun setPositionLabelColor(color: Int) {
         positionLabelManager?.setTextColor(color)
+    }
+
+    fun setPositionLabelHidden(hidden: Boolean) {
+        positionLabelManager?.setHidden(hidden)
     }
 
     fun updateSystemUiVisibility() {

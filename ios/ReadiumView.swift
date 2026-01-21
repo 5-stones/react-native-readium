@@ -33,6 +33,11 @@ class ReadiumView : UIView, Loggable {
       self.updatePreferences(preferences)
     }
   }
+  @objc var hidePageNumbers: Bool = false {
+    didSet {
+      self.updatePageNumberVisibility(hidePageNumbers)
+    }
+  }
   @objc var onLocationChange: RCTDirectEventBlock?
   @objc var onPublicationReady: RCTDirectEventBlock?
 
@@ -81,7 +86,6 @@ class ReadiumView : UIView, Loggable {
   }
 
   func updatePreferences(_ preferences: NSString?) {
-
     if (readerViewController == nil) {
       // defer setting update as view isn't initialized yet
       return;
@@ -99,11 +103,25 @@ class ReadiumView : UIView, Loggable {
     do {
       let preferences = try JSONDecoder().decode(EPUBPreferences.self, from: Data(preferencesJson.utf8))
       navigator.submitPreferences(preferences)
+
+      if let color = preferences.textColor {
+        readerViewController?.setPositionLabelColors(textColor: color.uiColor)
+      } else if let theme = preferences.theme {
+        readerViewController?.setPositionLabelColors(textColor: theme.contentColor.uiColor)
+      } else {
+        readerViewController?.setPositionLabelColors(textColor: .darkGray)
+      }
     } catch {
       print(error)
       print("TODO: handle error. Skipping preferences due to thrown exception")
       return;
     }
+  }
+
+  func updatePageNumberVisibility(_ hide: Bool) {
+    guard let vc = readerViewController else { return }
+
+    vc.setPositionLabelHidden(hide)
   }
 
   override func removeFromSuperview() {
@@ -131,10 +149,14 @@ class ReadiumView : UIView, Loggable {
 
     readerViewController = vc
 
+    readerViewController?.loadViewIfNeeded()
+    
     // if the controller was just instantiated then apply any existing preferences
     if (preferences != nil) {
       self.updatePreferences(preferences)
     }
+
+    self.updatePageNumberVisibility(hidePageNumbers)
 
     guard
       readerViewController != nil,

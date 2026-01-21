@@ -36,6 +36,7 @@ class ReadiumView(
   var isFragmentAdded: Boolean = false
   var lateInitSerializedUserPreferences: String? = null
   private var frameCallback: Choreographer.FrameCallback? = null
+  var hidePageNumbers: Boolean = false
 
   fun updateLocation(location: LinkOrLocator) : Boolean {
     if (fragment == null) {
@@ -56,6 +57,13 @@ class ReadiumView(
     }
   }
 
+  fun updatePageNumberVisibility(hide: Boolean) {
+    val currentFragment = fragment
+    if (currentFragment is VisualReaderFragment) {
+      currentFragment.setPositionLabelHidden(hide)
+    }
+  }
+
   fun addFragment(frag: BaseReaderFragment) {
     if (isFragmentAdded) {
       return
@@ -65,6 +73,7 @@ class ReadiumView(
     isFragmentAdded = true
     setupLayout()
     lateInitSerializedUserPreferences?.let { updatePreferencesFromJsonString(it)}
+    updatePageNumberVisibility(hidePageNumbers)
     val activity: FragmentActivity? = reactContext.currentActivity as FragmentActivity?
 
     activity!!.supportFragmentManager
@@ -96,17 +105,20 @@ class ReadiumView(
           dispatch(ReadiumViewManager.ON_LOCATION_CHANGE, payload)
         }
         is ReaderViewModel.Event.PublicationReady -> {
+          val positionsArray = Arguments.createArray().apply {
+            event.positions.forEach { pushMap(it.toWritableMap()) }
+          }
+
           val payload = Arguments.createMap().apply {
             putArray("tableOfContents", event.tableOfContents.toWritableArray())
-            putArray("positions", event.positions.map { it.toWritableMap() }.let { list ->
-              Arguments.createArray().apply {
-                list.forEach { pushMap(it) }
-              }
-            })
-            // Use spec-based normalizer to ensure consistent structure
+            putArray("positions", positionsArray)
             putMap("metadata", MetadataNormalizer.normalize(event.metadata))
           }
+
           dispatch(ReadiumViewManager.ON_PUBLICATION_READY, payload)
+        }
+        else -> {
+          // do nothing
         }
       }
     }

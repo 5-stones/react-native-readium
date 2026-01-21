@@ -115,6 +115,12 @@ class ReadiumViewManager(
     view.updatePreferencesFromJsonString(serialisedPreferences)
   }
 
+  @ReactProp(name = "hidePageNumbers")
+  fun setHidePageNumbers(view: ReadiumView, hide: Boolean) {
+    view.hidePageNumbers = hide
+    view.updatePageNumberVisibility(hide)
+  }
+
   @ReactPropGroup(names = ["width", "height"], customType = "Style")
   fun setStyle(view: ReadiumView?, index: Int, value: Int) {
     if (view != null) {
