@@ -5,14 +5,12 @@ import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNati
 // eslint-disable-next-line @react-native/no-deep-imports
 import codegenNativeCommands from 'react-native/Libraries/Utilities/codegenNativeCommands';
 import type { File } from './interfaces/File';
-import type { Link } from './interfaces/Link';
 import type { Locator } from './interfaces/Locator';
+import type { PublicationReadyEvent } from './interfaces/PublicationReady';
 
 // Event types for native events
 type OnLocationChangeEvent = Readonly<Locator>;
-type OnTableOfContentsEvent = Readonly<{
-  toc: ReadonlyArray<Link> | null;
-}>;
+type OnPublicationReadyEvent = Readonly<PublicationReadyEvent>;
 
 // Native component props interface
 export interface NativeProps extends ViewProps {
@@ -20,7 +18,7 @@ export interface NativeProps extends ViewProps {
   preferences?: string;
   hidePageNumbers?: boolean;
   onLocationChange?: DirectEventHandler<OnLocationChangeEvent>;
-  onTableOfContents?: DirectEventHandler<OnTableOfContentsEvent>;
+  onPublicationReady?: DirectEventHandler<OnPublicationReadyEvent>;
 }
 
 // Native commands interface

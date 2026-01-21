@@ -2,6 +2,7 @@ import type { ViewStyle } from 'react-native';
 import type { Link } from './Link';
 import type { Locator } from './Locator';
 import type { File } from './File';
+import type { PublicationReadyEvent } from './PublicationReady';
 
 export type BaseReadiumViewProps = {
   file: File;
@@ -10,7 +11,7 @@ export type BaseReadiumViewProps = {
   hidePageNumbers?: boolean; // Show or hide native position label (iOS only for now)
   style?: ViewStyle;
   onLocationChange?: (locator: Locator) => void;
-  onTableOfContents?: (toc: Link[] | null) => void;
+  onPublicationReady?: (event: PublicationReadyEvent) => void;
   ref?: any;
   height?: number;
   width?: number;

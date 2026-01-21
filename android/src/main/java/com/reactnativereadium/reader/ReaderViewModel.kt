@@ -8,6 +8,7 @@ import kotlinx.coroutines.channels.Channel
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
 import org.readium.r2.shared.publication.Link
+import org.readium.r2.shared.publication.Metadata
 
 class ReaderViewModel(
   val publication: Publication,
@@ -33,6 +34,10 @@ class ReaderViewModel(
 
     sealed class Event {
         class LocatorUpdate(val locator: Locator) : Event()
-        class TableOfContentsLoaded(val toc: List<Link>) : Event()
+        class PublicationReady(
+            val tableOfContents: List<Link>,
+            val positions: List<Locator>,
+            val metadata: Metadata
+        ) : Event()
     }
 }

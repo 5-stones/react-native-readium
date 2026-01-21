@@ -1,3 +1,35 @@
+# [5.0.0-rc.0](https://github.com/5-stones/react-native-readium/compare/v4.0.1...v5.0.0-rc.0) (2026-01-20)
+
+
+### Bug Fixes
+
+* **web:** fix typescript errors in web ([f8c1137](https://github.com/5-stones/react-native-readium/commit/f8c1137af8a0cc7a76e94aca21ca2b8adbce49e6))
+* **web:** update stylesheet urls to avoid redirect issue ([#98](https://github.com/5-stones/react-native-readium/issues/98)) ([005274d](https://github.com/5-stones/react-native-readium/commit/005274d59fd6260f4ac7579cfa1220cff72fb105))
+
+
+### Features
+
+* **android, example, src:** upgrade library to be compatible with react-native 0.83.x ([13df342](https://github.com/5-stones/react-native-readium/commit/13df342d29e6a461743d052c43286950790c8b3a))
+* **android, ios, web:** emit all book metadata via onPublicationReady callback ([d99a813](https://github.com/5-stones/react-native-readium/commit/d99a8134d03979c637e935be506ecb0e808589e8)), closes [#67](https://github.com/5-stones/react-native-readium/issues/67)
+* **android, web:** add page numbers on android and web for parity with ios ([3931e6e](https://github.com/5-stones/react-native-readium/commit/3931e6ebf36b087ce2738384fb99a2b06934ef57)), closes [#25](https://github.com/5-stones/react-native-readium/issues/25)
+* **android:** upgrade kotlin-toolkit to v3.1 ([#103](https://github.com/5-stones/react-native-readium/issues/103)) ([4dba322](https://github.com/5-stones/react-native-readium/commit/4dba32209bf23740242205baaf7f3f0841522cc1))
+* **apps:** split the web and native examples into separate apps for clarity ([cd80ec1](https://github.com/5-stones/react-native-readium/commit/cd80ec1cbfcc7f35c2fdfc865a4d1567c1a44b1f))
+* **ios:** upgrade ios implementation to use v3 of readiums swift-toolkit ([#96](https://github.com/5-stones/react-native-readium/issues/96)) ([db56fba](https://github.com/5-stones/react-native-readium/commit/db56fba6d801d42f288b69a5b4d3e507a08c463d))
+* **web:** migrate from @d-i-t-a/reader to readium's ts-toolkit ([cac915d](https://github.com/5-stones/react-native-readium/commit/cac915deb74d243d25f4f6298f4eb52d9029ca57))
+
+
+### BREAKING CHANGES
+
+* **android, ios, web:** onTableOfContents has been removed and replaced with onPublicationReady
+* **web:** while the migration from @d-i-t-a/reader to ts-toolkit should be mostly
+transparent, you should verify that everything in your app is working properly.
+* **ios:** Old v2.6 pods are not compatible anymore with this version. You should update Podfile and use v3.5 pods
+* **ios:** [Migration of HREFs and Locators (bookmarks, annotations, etc.)](https://github.com/readium/swift-toolkit/blob/develop/docs/Migration%20Guide.md#migration-of-hrefs-and-locators-bookmarks-annotations-etc)
+
+Co-authored-by: tyukesz <nagy.szabolcs@sonrisa.hu>
+
+
+
 ## [4.0.1](https://github.com/5-stones/react-native-readium/compare/v4.0.0...v4.0.1) (2025-09-12)
 
 
@@ -280,3 +312,6 @@
 ### Features
 
 * **src, ios:** Basic functional implementation of epub reader for iOS ([47d18e2](https://github.com/5-stones/react-native-readium/commit/47d18e28b8ee9a7e6cb83eb93837fbe6169d9180))
+
+
+

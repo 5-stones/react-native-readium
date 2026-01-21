@@ -1,38 +1,36 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import {
-  BasicTextSelection,
-  FrameClickEvent,
-} from '@readium/navigator-html-injectables';
-import { EpubNavigator, EpubNavigatorListeners } from '@readium/navigator';
-import {
-  Locator,
-  LocatorLocations,
-  Manifest,
-  Publication,
-} from '@readium/shared';
-import { Fetcher } from '@readium/shared';
-import { HttpFetcher } from '@readium/shared';
-import { Link } from '@readium/shared';
+import { EpubNavigator } from '@readium/navigator';
+import { Locator, Publication } from '@readium/shared';
 
 import type { ReadiumProps } from '../../src/components/ReadiumView';
-import { normalizeManifest } from '../utils/manifestNormalizer';
+import { normalizeMetadata } from '../utils/metadataNormalizer';
+import { fetchManifest } from '../utils/manifestFetcher';
+import { createNavigatorListeners } from '../utils/navigatorListeners';
+import {
+  normalizePublicationURL,
+  createPositions,
+  extractTableOfContents,
+} from '../utils/publicationUtils';
 
 interface RefProps
   extends Pick<
     ReadiumProps,
-    'file' | 'onLocationChange' | 'onTableOfContents'
+    'file' | 'onLocationChange' | 'onPublicationReady'
   > {
   container: HTMLElement | null;
+  onPositionChange?: (position: number | null) => void;
 }
 
 export const useNavigator = ({
   file,
   onLocationChange,
-  onTableOfContents,
+  onPublicationReady,
   container,
+  onPositionChange,
 }: RefProps) => {
   const [navigator, setNavigator] = useState<EpubNavigator | null>(null);
+  const [positions, setPositions] = useState<Locator[]>([]);
   const readingOrder = useRef<Locator[]>([]);
 
   const onLocationChangeWithTotalProgression = useCallback(
@@ -83,126 +81,32 @@ export const useNavigator = ({
   );
 
   useEffect(() => {
-    async function run() {
+    async function initializeNavigator() {
       if (!container) return;
-      let publicationURL = file.url;
 
-      // Normalize the URL like the vanilla testapp does
-      // If it ends with manifest.json, extract the base directory
-      // Otherwise ensure it ends with /
-      if (publicationURL.endsWith('manifest.json')) {
-        // Extract the directory part: https://alice.dita.digital/manifest.json -> https://alice.dita.digital/
-        publicationURL = publicationURL.substring(
-          0,
-          publicationURL.lastIndexOf('/') + 1
-        );
-      } else if (!publicationURL.endsWith('/')) {
-        publicationURL += '/';
-      }
+      // 1. Normalize the publication URL
+      const publicationURL = normalizePublicationURL(file.url);
 
-      const manifestLink = new Link({ href: 'manifest.json' });
-      const fetcher: Fetcher = new HttpFetcher(undefined, publicationURL);
-      const fetched = fetcher.get(manifestLink);
-      const selfLink = (await fetched.link()).toURL(publicationURL)!;
+      // 2. Fetch and deserialize the manifest
+      const { manifest, fetcher } = await fetchManifest(publicationURL);
 
-      const response = await fetched.readAsJSON();
+      // 3. Create the publication
+      const publication = new Publication({ manifest, fetcher });
 
-      // Normalize the manifest to ensure compatibility with the navigator
-      const responseObj = normalizeManifest(response as any);
+      // 4. Create positions array for navigation
+      const positionsArray = createPositions(publication);
+      readingOrder.current = positionsArray;
+      setPositions(positionsArray);
 
-      let manifest;
-      try {
-        manifest = Manifest.deserialize(responseObj as string);
-      } catch (error) {
-        console.error('Error during manifest deserialization:', error);
-        console.error('Manifest that failed:', responseObj);
-        throw error;
-      }
-      if (!manifest) {
-        console.error(
-          'Failed to deserialize manifest (returned null/undefined):',
-          responseObj
-        );
-        throw new Error('Manifest deserialization returned null/undefined');
-      }
-      manifest.setSelfLink(selfLink);
-
-      const publication = new Publication({
-        manifest: manifest,
-        fetcher: fetcher,
-      });
-
-      const listeners: EpubNavigatorListeners = {
-        frameLoaded: function (_wnd: Window): void {
-          // noop
-        },
-        positionChanged: function (_locator: Locator): void {
-          onLocationChangeWithTotalProgression(_locator);
-          window.focus();
-        },
-        tap: function (_e: FrameClickEvent): boolean {
-          return false;
-        },
-        click: function (_e: FrameClickEvent): boolean {
-          return false;
-        },
-        zoom: function (_scale: number): void {
-          // noop
-        },
-        miscPointer: function (_amount: number): void {
-          // noop
-        },
-        scroll: function (_amount: number): void {
-          // noop
-        },
-        customEvent: function (_key: string, _data: unknown): void {},
-        handleLocator: function (locator: Locator): boolean {
-          const href = locator.href;
-          if (
-            href.startsWith('http://') ||
-            href.startsWith('https://') ||
-            href.startsWith('mailto:') ||
-            href.startsWith('tel:')
-          ) {
-            if (confirm(`Open "${href}" ?`)) window.open(href, '_blank');
-          } else {
-            console.warn('Unhandled locator', locator);
-          }
-          return false;
-        },
-        textSelected: function (_selection: BasicTextSelection): void {
-          // noop
-        },
-      };
-
-      // Create positions array from the publication's reading order
-      // NOTE: The published npm packages (v2.2.5) seem to require positions to be passed explicitly,
-      // whereas the latest source code in the ts-toolkit repo might generate them automatically.
-      // This is a workaround for the published package version.
-      const positions: Locator[] = publication.readingOrder.items.map(
-        (link: any, idx: number) => {
-          const position = idx + 1;
-          return new Locator({
-            href: link.href,
-            type: link.type,
-            title: link.title,
-            locations: new LocatorLocations({
-              position: position,
-              progression: 0,
-              totalProgression: idx / publication.readingOrder.items.length,
-            }),
-          });
-        }
+      // 5. Create navigator listeners
+      const listeners = createNavigatorListeners(
+        onLocationChangeWithTotalProgression,
+        onPositionChange
       );
 
-      // Store reading order for totalProgression calculation
-      readingOrder.current = positions;
-
-      // Try passing a configuration with default preferences
+      // 6. Initialize and load the navigator
       const configuration = {
-        preferences: {
-          scroll: false,
-        },
+        preferences: { scroll: false },
         defaults: {},
       };
 
@@ -210,26 +114,33 @@ export const useNavigator = ({
         container,
         publication,
         listeners,
-        positions, // Pass the positions array we created
+        positionsArray,
         undefined, // initialPosition
         configuration as any
       );
       await nav.load();
-      if (onTableOfContents && manifest.toc) {
-        // Extract the items array from the toc Links object
-        const tocItems = Array.isArray(manifest.toc)
-          ? manifest.toc
-          : // @ts-ignore
-            manifest.toc.items || [];
-        // @ts-ignore - Type compatibility
-        onTableOfContents(tocItems);
+
+      // 7. Emit onPublicationReady event
+      if (onPublicationReady) {
+        const tocItems = extractTableOfContents(manifest);
+        const metadata = normalizeMetadata(manifest.metadata);
+
+        // @ts-ignore - Type compatibility between Readium types and our interfaces
+        onPublicationReady({
+          // @ts-ignore
+          tableOfContents: tocItems,
+          // @ts-ignore
+          positions: positionsArray,
+          metadata: metadata,
+        });
       }
 
       setNavigator(nav);
     }
-    run();
+
+    initializeNavigator();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file.url, container]);
 
-  return navigator;
+  return { navigator, positions };
 };

@@ -39,7 +39,7 @@ class ReadiumView : UIView, Loggable {
     }
   }
   @objc var onLocationChange: RCTDirectEventBlock?
-  @objc var onTableOfContents: RCTDirectEventBlock?
+  @objc var onPublicationReady: RCTDirectEventBlock?
 
   func loadBook(
     url: String,
@@ -184,15 +184,41 @@ class ReadiumView : UIView, Loggable {
     Task { @MainActor [weak self] in
       guard let self = self else { return }
 
+      // Always fetch table of contents and positions, regardless of callback existence
+      // This matches Android behavior and ensures data is loaded consistently
       let tocResult = await vc.publication.tableOfContents()
+      let positionsResult = await vc.publication.positions()
+
+      var payload: [String: Any] = [:]
+
+      // Add table of contents
       switch tocResult {
       case .success(let links):
-        self.onTableOfContents?([
-          "toc": links.map { $0.json }
-        ])
+        payload["tableOfContents"] = links.map { $0.json }
       case .failure(let error):
         self.log(.error, "Failed to fetch table of contents: \(error)")
+        payload["tableOfContents"] = []
       }
+
+      // Add positions
+      switch positionsResult {
+      case .success(let positions):
+        payload["positions"] = positions.map { $0.json }
+      case .failure(let error):
+        self.log(.error, "Failed to fetch positions: \(error)")
+        payload["positions"] = []
+      }
+
+      // Add metadata
+      // Note: Swift Readium library's .json property already normalizes LocalizedStrings
+      // to plain strings, so no additional normalization is needed here.
+      // This matches the RWPM spec's shorthand format and is consistent with our
+      // normalization on Android and Web platforms.
+      payload["metadata"] = vc.publication.metadata.json
+
+      // Always emit onPublicationReady event
+      // React Native bridge handles null callbacks gracefully
+      self.onPublicationReady?(payload)
     }
   }
 }
