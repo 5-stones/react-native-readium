@@ -48,19 +48,19 @@ abstract class VisualReaderFragment : BaseReaderFragment() {
         super.onViewCreated(view, savedInstanceState)
         navigatorFragment = navigator as Fragment
 
-        // Initialize position label manager - simple overlay, matching iOS approach
-        positionLabelManager = PositionLabelManager(
-            containerView = binding.fragmentReaderContainer,
-            publication = model.publication,
-            lifecycleScope = viewLifecycleOwner.lifecycleScope
-        )
+        if (positionLabelManager == null) {
+            positionLabelManager = PositionLabelManager(
+                binding.fragmentReaderContainer,
+                model.publication,
+                viewLifecycleOwner.lifecycleScope
+            )
+        }
 
-        // Update position label when navigator location changes
         navigator.currentLocator
             .onEach { locator ->
                 positionLabelManager?.update(
-                    position = locator.locations.position,
-                    totalProgression = locator.locations.totalProgression
+                    locator.locations.position,
+                    locator.locations.totalProgression
                 )
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
@@ -81,12 +81,12 @@ abstract class VisualReaderFragment : BaseReaderFragment() {
         super.onDestroyView()
     }
 
-    /**
-     * Update the text color of the position label.
-     * @param color Android color integer
-     */
     fun setPositionLabelColor(color: Int) {
         positionLabelManager?.setTextColor(color)
+    }
+
+    fun setPositionLabelHidden(hidden: Boolean) {
+        positionLabelManager?.setHidden(hidden)
     }
 
     fun updateSystemUiVisibility() {
