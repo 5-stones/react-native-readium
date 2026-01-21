@@ -48,19 +48,19 @@ abstract class VisualReaderFragment : BaseReaderFragment() {
         super.onViewCreated(view, savedInstanceState)
         navigatorFragment = navigator as Fragment
 
-        if (positionLabelManager == null) {
-            positionLabelManager = PositionLabelManager(
-                binding.fragmentReaderContainer,
-                model.publication,
-                viewLifecycleOwner.lifecycleScope
-            )
-        }
+        // Initialize position label manager - simple overlay, matching iOS approach
+        positionLabelManager = PositionLabelManager(
+            containerView = binding.fragmentReaderContainer,
+            publication = model.publication,
+            lifecycleScope = viewLifecycleOwner.lifecycleScope
+        )
 
+        // Update position label when navigator location changes
         navigator.currentLocator
             .onEach { locator ->
                 positionLabelManager?.update(
-                    locator.locations.position,
-                    locator.locations.totalProgression
+                    position = locator.locations.position,
+                    totalProgression = locator.locations.totalProgression
                 )
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)

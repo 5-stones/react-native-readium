@@ -100,7 +100,7 @@ export const PreferencesEditor = ({ preferences, onChange, hidePageNumbers, onHi
 
           <ListItem>
             <ListItem.Content>
-              <ListItem.Title>Hide Page Numbers (iOS)</ListItem.Title>
+              <ListItem.Title>Hide Page Numbers</ListItem.Title>
             </ListItem.Content>
             <Switch
               value={!!hidePageNumbers}
