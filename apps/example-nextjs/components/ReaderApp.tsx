@@ -49,12 +49,14 @@ export default function ReaderApp() {
       <Reader
         epubUrl={'https://alice.dita.digital/manifest.json'}
         initialLocation={{
-          href: 'text/chapter-6.xhtml',
-          locations: {
-            progression: 0.4289308176100629,
-          },
+          href: 'text/chapter-2.xhtml',
           type: 'text/html',
-          title: 'Chapter 6',
+          title: 'Chapter 2',
+          locations: {
+            progression: 0,
+            totalProgression: 0.2777777777777778,
+            position: 6,
+          },
         }}
       />
     </SafeAreaProvider>

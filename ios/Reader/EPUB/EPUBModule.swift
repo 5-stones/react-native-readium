@@ -19,7 +19,8 @@ final class EPUBModule: ReaderFormatModule {
     func makeReaderViewController(
       for publication: Publication,
       locator: Locator?,
-      bookId: String
+      bookId: String,
+      selectionActions: String?
     ) throws -> ReaderViewController {
         guard publication.metadata.identifier != nil else {
             throw ReaderError.epubNotValid
@@ -28,7 +29,8 @@ final class EPUBModule: ReaderFormatModule {
         let epubViewController = try EPUBViewController(
             publication: publication,
             locator: locator,
-            bookId: bookId
+            bookId: bookId,
+            selectionActions: selectionActions
         )
         epubViewController.moduleDelegate = delegate
         return epubViewController

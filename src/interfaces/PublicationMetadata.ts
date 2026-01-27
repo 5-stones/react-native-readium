@@ -50,92 +50,92 @@ export interface Accessibility {
  */
 export interface PublicationMetadata {
   /** Title of the publication (required) */
-  title: string;
+  'title': string;
 
   /** Type of publication (e.g., "http://schema.org/Book") */
   '@type'?: string;
 
   /** Profile(s) this publication conforms to */
-  conformsTo?: string | string[];
+  'conformsTo'?: string | string[];
 
   /** Sorting key for the title */
-  sortAs?: string;
+  'sortAs'?: string;
 
   /** Subtitle */
-  subtitle?: string;
+  'subtitle'?: string;
 
   /** Unique identifier (URI format) */
-  identifier?: string;
+  'identifier'?: string;
 
   /** Accessibility metadata */
-  accessibility?: Accessibility;
+  'accessibility'?: Accessibility;
 
   /** Last modification date */
-  modified?: string;
+  'modified'?: string;
 
   /** Publication date */
-  published?: string;
+  'published'?: string;
 
   /** Language(s) of the publication (BCP 47 tags) */
-  language?: string | string[];
+  'language'?: string | string[];
 
   /** Authors */
-  author?: Contributor[];
+  'author'?: Contributor[];
 
   /** Translators */
-  translator?: Contributor[];
+  'translator'?: Contributor[];
 
   /** Editors */
-  editor?: Contributor[];
+  'editor'?: Contributor[];
 
   /** Artists */
-  artist?: Contributor[];
+  'artist'?: Contributor[];
 
   /** Illustrators */
-  illustrator?: Contributor[];
+  'illustrator'?: Contributor[];
 
   /** Letterers */
-  letterer?: Contributor[];
+  'letterer'?: Contributor[];
 
   /** Pencilers */
-  penciler?: Contributor[];
+  'penciler'?: Contributor[];
 
   /** Colorists */
-  colorist?: Contributor[];
+  'colorist'?: Contributor[];
 
   /** Inkers */
-  inker?: Contributor[];
+  'inker'?: Contributor[];
 
   /** Narrators */
-  narrator?: Contributor[];
+  'narrator'?: Contributor[];
 
   /** Other contributors */
-  contributor?: Contributor[];
+  'contributor'?: Contributor[];
 
   /** Publishers */
-  publisher?: Contributor[];
+  'publisher'?: Contributor[];
 
   /** Imprints */
-  imprint?: Contributor[];
+  'imprint'?: Contributor[];
 
   /** Subjects/tags */
-  subject?: Subject[];
+  'subject'?: Subject[];
 
   /** Layout type */
-  layout?: 'fixed' | 'reflowable' | 'scrolled';
+  'layout'?: 'fixed' | 'reflowable' | 'scrolled';
 
   /** Reading direction */
-  readingProgression?: 'rtl' | 'ltr';
+  'readingProgression'?: 'rtl' | 'ltr';
 
   /** Description */
-  description?: string;
+  'description'?: string;
 
   /** Duration in seconds (for audiobooks) */
-  duration?: number;
+  'duration'?: number;
 
   /** Number of pages */
-  numberOfPages?: number;
+  'numberOfPages'?: number;
 
   /** Collection membership */
-  belongsTo?: BelongsTo;
+  'belongsTo'?: BelongsTo;
 }

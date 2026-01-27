@@ -19,8 +19,5 @@
     "skipLibCheck": true
   },
   "include": ["src", "dita.d.ts"],
-  "exclude": [
-    "**/__tests__/*",
-    "example"
-  ]
+  "exclude": ["**/__tests__/*", "example"]
 }
