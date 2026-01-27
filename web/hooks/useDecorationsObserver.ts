@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import type { EpubNavigator } from '@readium/navigator-web';
+import type { EpubNavigator } from '@readium/navigator';
 import type {
   DecorationGroups,
   DecorationActivatedEvent,
