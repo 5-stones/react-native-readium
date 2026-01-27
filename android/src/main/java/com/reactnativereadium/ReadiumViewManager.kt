@@ -10,6 +10,7 @@ import com.facebook.react.uimanager.ViewGroupManager
 import com.reactnativereadium.reader.ReaderService
 import com.reactnativereadium.utils.File
 import com.reactnativereadium.utils.LinkOrLocator
+import com.reactnativereadium.utils.normalizedLocation
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import org.readium.r2.shared.publication.Link
@@ -42,6 +43,20 @@ class ReadiumViewManager(
           MapBuilder.of("bubbled", ON_PUBLICATION_READY)
         )
       )
+      .put(
+        ON_DECORATION_ACTIVATED,
+        MapBuilder.of(
+          "phasedRegistrationNames",
+          MapBuilder.of("bubbled", ON_DECORATION_ACTIVATED)
+        )
+      )
+      .build()
+  }
+
+  override fun getExportedCustomDirectEventTypeConstants(): Map<String, Any> {
+    return MapBuilder.builder<String, Any>()
+      .put(ON_SELECTION_CHANGE, MapBuilder.of("registrationName", ON_SELECTION_CHANGE))
+      .put(ON_SELECTION_ACTION, MapBuilder.of("registrationName", ON_SELECTION_ACTION))
       .build()
   }
 
@@ -77,7 +92,11 @@ class ReadiumViewManager(
   }
 
   fun locationToLinkOrLocator(location: ReadableMap): LinkOrLocator? {
-    val json = JSONObject(location.toHashMap() as HashMap<*, *>)
+    val originalJson = JSONObject(location.toHashMap() as HashMap<*, *>)
+
+    // Normalize the href by removing leading slashes for consistency across platforms
+    val json = originalJson.normalizedLocation()
+
     val hasLocations = json.has("locations")
     val hasType = json.has("type") && !json.getString("type").isEmpty()
     val hasChildren = json.has("children")
@@ -115,6 +134,16 @@ class ReadiumViewManager(
     view.updatePreferencesFromJsonString(serialisedPreferences)
   }
 
+  @ReactProp(name = "decorations")
+  fun setDecorations(view: ReadiumView, serialisedDecorations: String?) {
+    view.setDecorations(serialisedDecorations)
+  }
+
+  @ReactProp(name = "selectionActions")
+  fun setSelectionActions(view: ReadiumView, serializedActions: String?) {
+    view.setSelectionActions(serializedActions)
+  }
+
   @ReactPropGroup(names = ["width", "height"], customType = "Style")
   fun setStyle(view: ReadiumView?, index: Int, value: Int) {
     if (view != null) {
@@ -146,5 +175,8 @@ class ReadiumViewManager(
     private const val TAG = "ReadiumViewManager"
     var ON_LOCATION_CHANGE = "onLocationChange"
     var ON_PUBLICATION_READY = "onPublicationReady"
+    var ON_DECORATION_ACTIVATED = "onDecorationActivated"
+    var ON_SELECTION_CHANGE = "onSelectionChange"
+    var ON_SELECTION_ACTION = "onSelectionAction"
   }
 }

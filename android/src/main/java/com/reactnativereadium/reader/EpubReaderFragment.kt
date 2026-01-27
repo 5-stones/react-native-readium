@@ -12,7 +12,11 @@ import android.view.accessibility.AccessibilityManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commitNow
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.reactnativereadium.R
+import kotlinx.coroutines.launch
+import org.readium.r2.navigator.DecorableNavigator
+import org.readium.r2.navigator.SelectableNavigator
 import org.readium.r2.navigator.epub.EpubNavigatorFragment
 import org.readium.r2.navigator.Navigator
 import org.readium.r2.navigator.epub.EpubPreferences
@@ -21,6 +25,13 @@ import org.readium.r2.navigator.epub.EpubNavigatorFactory
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
 import org.readium.r2.navigator.preferences.Theme
+import org.json.JSONArray
+import org.json.JSONObject
+
+data class SelectionAction(
+    val id: String,
+    val label: String
+)
 
 class EpubReaderFragment : VisualReaderFragment() {
 
@@ -37,6 +48,14 @@ class EpubReaderFragment : VisualReaderFragment() {
 
     // Accessibility
     private var isExploreByTouchEnabled = false
+
+    // Selection actions configuration
+    private var selectionActions: List<SelectionAction> = emptyList()
+
+    // Custom selection action mode callback for adding custom action buttons
+    val customSelectionActionModeCallback: ActionMode.Callback by lazy {
+        SelectionActionModeCallback()
+    }
 
     private fun ensureUserPreferencesInitialized() {
       if (this::userPreferences.isInitialized) return
@@ -86,6 +105,28 @@ class EpubReaderFragment : VisualReaderFragment() {
       setPositionLabelColor(color)
     }
 
+    fun updateSelectionActionsFromJsonString(serializedActions: String?) {
+      if (serializedActions == null) {
+        selectionActions = emptyList()
+        return
+      }
+
+      try {
+        val jsonArray = JSONArray(serializedActions)
+        val actions = mutableListOf<SelectionAction>()
+        for (i in 0 until jsonArray.length()) {
+          val jsonObject = jsonArray.getJSONObject(i)
+          val id = jsonObject.getString("id")
+          val label = jsonObject.getString("label")
+          actions.add(SelectionAction(id, label))
+        }
+        selectionActions = actions
+      } catch (e: Exception) {
+        android.util.Log.e("EpubReaderFragment", "Failed to parse selection actions", e)
+        selectionActions = emptyList()
+      }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
       check(::navigatorFactory.isInitialized) { "EpubReaderFragment factory was not initialized" }
 
@@ -102,6 +143,9 @@ class EpubReaderFragment : VisualReaderFragment() {
             navigatorFactory.createFragmentFactory(
               initialLocator = model.initialLocation,
               initialPreferences = userPreferences,
+              configuration = EpubNavigatorFragment.Configuration {
+                selectionActionModeCallback = customSelectionActionModeCallback
+              }
             )
 
         setHasOptionsMenu(true)
@@ -151,6 +195,75 @@ class EpubReaderFragment : VisualReaderFragment() {
             userPreferences.plus(EpubPreferences(scroll = null))
         }
         (navigator as? EpubNavigatorFragment)?.submitPreferences(userPreferences)
+    }
+
+    private inner class SelectionActionModeCallback : ActionMode.Callback {
+        // Store action IDs mapped to their menu item IDs for lookup
+        private val actionIdMap = mutableMapOf<Int, String>()
+
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+            // Clear previous action mappings
+            actionIdMap.clear()
+
+            // Only add menu items if navigator supports decorations
+            if (navigator !is DecorableNavigator) {
+                return true
+            }
+
+            // Dynamically add menu items for each configured action
+            selectionActions.forEachIndexed { index, action ->
+                // Generate a unique menu item ID using the action's hash
+                val menuItemId = action.id.hashCode()
+                actionIdMap[menuItemId] = action.id
+
+                // Add menu item with the action's label
+                menu.add(Menu.NONE, menuItemId, index, action.label).apply {
+                    // Show as action button if there's space
+                    setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+                    // Use star icon for highlight action, otherwise use default
+                    if (action.id == "highlight") {
+                        setIcon(android.R.drawable.btn_star_big_on)
+                    }
+                }
+            }
+
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+            return false
+        }
+
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+            val actionId = actionIdMap[item.itemId]
+            if (actionId != null) {
+                // Get the current selection from the navigator
+                lifecycleScope.launch {
+                    val selectableNavigator = navigator as? SelectableNavigator
+                    val selection = selectableNavigator?.currentSelection()
+
+                    if (selection != null) {
+                        // Emit generic SelectionAction event to React Native
+                        channel.send(
+                            ReaderViewModel.Event.SelectionAction(
+                                actionId = actionId,
+                                locator = selection.locator,
+                                selectedText = selection.locator.text.highlight ?: ""
+                            )
+                        )
+                    }
+                }
+
+                mode.finish()
+                return true
+            }
+            return false
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode) {
+            // Clean up action mappings
+            actionIdMap.clear()
+        }
     }
 
     companion object {

@@ -4142,29 +4142,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rneui/base@npm:^4.0.0-rc.8":
-  version: 4.0.0-rc.8
-  resolution: "@rneui/base@npm:4.0.0-rc.8"
+"@rneui/base@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "@rneui/base@npm:5.0.0"
   dependencies:
-    "@types/react-native-vector-icons": ^6.4.10
     color: ^3.2.1
     deepmerge: ^4.2.2
     hoist-non-react-statics: ^3.3.2
-    react-native-ratings: ^8.1.0
     react-native-size-matters: ^0.4.0
   peerDependencies:
+    "@testing-library/jest-native": ^5.4.3
+    "@testing-library/react-native": ^13.2.0
     react-native-safe-area-context: ">= 3.0.0"
-    react-native-vector-icons: ">7.0.0"
-  checksum: 0a7d53a179482d6586a5442ef3dfc13132c575bed9c7bf97d9c708210db6e80c5cf4fb2f8649260c2410c357102cfab8a25a4379de5237429b954465546f28e5
+  checksum: 8c53a567b393e7d838aab4b81523c2b07402e543cf5ac86aceec94c4ea65bad04913f2715087cc1a97337772e21a2378c6e6c19fe3d415df59023a54e29bb5a3
   languageName: node
   linkType: hard
 
-"@rneui/themed@npm:^4.0.0-rc.8":
-  version: 4.0.0-rc.8
-  resolution: "@rneui/themed@npm:4.0.0-rc.8"
+"@rneui/themed@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "@rneui/themed@npm:5.0.0"
   peerDependencies:
-    "@rneui/base": 4.0.0-rc.7
-  checksum: 57e05e393d0d5e1188e650c1dbefd951b36a0b5f8615477659e24faaeabdd10be5b67e6a358aa9eb67e1cb2edd8f8f772fc05b21a58f82b59840e5a1f12b2b55
+    "@rneui/base": 5.0.0
+  checksum: e34b9cae6e970c4ca1ab4b392332cb0a6065066d693b9a04ea033cd41fe72da03a9a9c34a75b0870e5440fea188f8a060843c84bde12e479e177f140220166b0
   languageName: node
   linkType: hard
 
@@ -4436,25 +4435,6 @@ __metadata:
   version: 4.0.2
   resolution: "@types/parse-json@npm:4.0.2"
   checksum: 5bf62eec37c332ad10059252fc0dab7e7da730764869c980b0714777ad3d065e490627be9f40fc52f238ffa3ac4199b19de4127196910576c2fe34dd47c7a470
-  languageName: node
-  linkType: hard
-
-"@types/react-native-vector-icons@npm:^6.4.10":
-  version: 6.4.18
-  resolution: "@types/react-native-vector-icons@npm:6.4.18"
-  dependencies:
-    "@types/react": "*"
-    "@types/react-native": ^0.70
-  checksum: 1ef458cb5e7a37f41eb400e3153940b1b152e4df76a7c06c7a47c712dbfe46e14b9999f04dde1bd074f338f850e161c6c925174ddea33386b74f8112c940065b
-  languageName: node
-  linkType: hard
-
-"@types/react-native@npm:^0.70":
-  version: 0.70.19
-  resolution: "@types/react-native@npm:0.70.19"
-  dependencies:
-    "@types/react": "*"
-  checksum: 79b504fa56340631079e7c20ea0d9412ec14147b76d0ce189f4403936f529ef1e6fd031383afab117846c5ae039123bcf3afc948bae4432269c6780282726f71
   languageName: node
   linkType: hard
 
@@ -7832,6 +7812,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-unused-imports@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "eslint-plugin-unused-imports@npm:4.3.0"
+  peerDependencies:
+    "@typescript-eslint/eslint-plugin": ^8.0.0-0 || ^7.0.0 || ^6.0.0 || ^5.0.0
+    eslint: ^9.0.0 || ^8.0.0
+  peerDependenciesMeta:
+    "@typescript-eslint/eslint-plugin":
+      optional: true
+  checksum: e03d2399f429a865c156a2f76de40060f8b290f4e2626a6102a1bac22ccea5ac42eb63280b3b1abe5c32eccc8e90dd2ce27f8066f62bb4ffb0fe6754612eceb1
+  languageName: node
+  linkType: hard
+
 "eslint-scope@npm:5.1.1":
   version: 5.1.1
   resolution: "eslint-scope@npm:5.1.1"
@@ -8090,8 +8083,8 @@ __metadata:
     "@react-native/typescript-config": 0.83.0
     "@react-navigation/native": ^7.0.15
     "@react-navigation/native-stack": ^7.2.1
-    "@rneui/base": ^4.0.0-rc.8
-    "@rneui/themed": ^4.0.0-rc.8
+    "@rneui/base": ^5.0.0
+    "@rneui/themed": ^5.0.0
     "@tsconfig/react-native": ^2.0.2
     "@types/jest": ^29.5.13
     "@types/react": ^19.2.0
@@ -8124,8 +8117,8 @@ __metadata:
     "@react-native-community/slider": ^5.1.1
     "@react-navigation/native": ^7.0.15
     "@react-navigation/native-stack": ^7.2.1
-    "@rneui/base": ^4.0.0-rc.8
-    "@rneui/themed": ^4.0.0-rc.8
+    "@rneui/base": ^5.0.0
+    "@rneui/themed": ^5.0.0
     common-app: "workspace:*"
     eslint: 9.37.0
     expo: 54.0.13
@@ -13891,18 +13884,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-ratings@npm:^8.1.0":
-  version: 8.1.0
-  resolution: "react-native-ratings@npm:8.1.0"
-  dependencies:
-    lodash: ^4.17.15
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: 34aa4e7ff09e537d5c8fb5b5bc98470c0723d7c0fff8954e39de371cdfa5ae3aa4af636ea44d508751f5dcaca6f80ee363fffd9c34a1bd8d8f7a9d8a23d82d15
-  languageName: node
-  linkType: hard
-
 "react-native-readium@workspace:*, react-native-readium@workspace:.":
   version: 0.0.0-use.local
   resolution: "react-native-readium@workspace:."
@@ -13923,6 +13904,7 @@ __metadata:
     eslint: ^8.19.0
     eslint-config-prettier: ^9.0.0
     eslint-plugin-prettier: ^5.0.1
+    eslint-plugin-unused-imports: ^4.3.0
     husky: ^6.0.0
     jest: ^29.6.3
     pod-install: ^0.1.0

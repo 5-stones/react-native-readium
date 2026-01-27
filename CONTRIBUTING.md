@@ -17,7 +17,7 @@ in order of priority.
 
 1. Fixing **_widespread, common, and critical Bugs_**.
 2. Fixing **_uncommon but necessary Bugs_**.
-3. Introducing new  **_Features that have broad value_**.
+3. Introducing new **_Features that have broad value_**.
 
 Now keep in mind available resources. Long story short, the thing you care about
 needs to be cared about by either a lot of other people, or by us.

@@ -12,13 +12,20 @@ import type {
   BaseReadiumViewProps,
   Dimensions,
   Preferences,
+  DecorationGroups,
+  SelectionAction,
 } from '../interfaces';
 import { getWidthOrHeightValue as dimension } from '../utils';
 import { BaseReadiumView } from './BaseReadiumView';
 import { Commands } from '../ReadiumViewNativeComponent';
 
-export type ReadiumProps = Omit<BaseReadiumViewProps, 'preferences'> & {
+export type ReadiumProps = Omit<
+  BaseReadiumViewProps,
+  'preferences' | 'decorations' | 'selectionActions'
+> & {
   preferences: Preferences;
+  decorations?: DecorationGroups;
+  selectionActions?: SelectionAction[];
 };
 
 export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
@@ -26,7 +33,12 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
     {
       onLocationChange: wrappedOnLocationChange,
       onPublicationReady: wrappedOnPublicationReady,
+      onDecorationActivated: wrappedOnDecorationActivated,
+      onSelectionChange: wrappedOnSelectionChange,
+      onSelectionAction: wrappedOnSelectionAction,
       preferences,
+      decorations,
+      selectionActions,
       ...props
     },
     forwardedRef
@@ -71,6 +83,33 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
       [wrappedOnPublicationReady]
     );
 
+    const onDecorationActivated = useCallback(
+      (event: any) => {
+        if (wrappedOnDecorationActivated) {
+          wrappedOnDecorationActivated(event.nativeEvent);
+        }
+      },
+      [wrappedOnDecorationActivated]
+    );
+
+    const onSelectionChange = useCallback(
+      (event: any) => {
+        if (wrappedOnSelectionChange) {
+          wrappedOnSelectionChange(event.nativeEvent);
+        }
+      },
+      [wrappedOnSelectionChange]
+    );
+
+    const onSelectionAction = useCallback(
+      (event: any) => {
+        if (wrappedOnSelectionAction) {
+          wrappedOnSelectionAction(event.nativeEvent);
+        }
+      },
+      [wrappedOnSelectionAction]
+    );
+
     // create the view fragment on android
     useEffect(() => {
       if (Platform.OS === 'android' && defaultRef.current) {
@@ -93,6 +132,16 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
       [preferences]
     );
 
+    const stringifiedDecorations = useMemo(
+      () => (decorations ? JSON.stringify(decorations) : undefined),
+      [decorations]
+    );
+
+    const stringifiedSelectionActions = useMemo(
+      () => (selectionActions ? JSON.stringify(selectionActions) : undefined),
+      [selectionActions]
+    );
+
     return (
       <View style={styles.container} onLayout={onLayout}>
         <BaseReadiumView
@@ -100,8 +149,13 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
           width={width}
           {...props}
           preferences={stringifiedPreferences}
+          decorations={stringifiedDecorations}
+          selectionActions={stringifiedSelectionActions}
           onLocationChange={onLocationChange}
           onPublicationReady={onPublicationReady}
+          onDecorationActivated={onDecorationActivated}
+          onSelectionChange={onSelectionChange}
+          onSelectionAction={onSelectionAction}
           ref={defaultRef}
         />
       </View>

@@ -15,7 +15,8 @@ protocol ReaderFormatModule {
   func makeReaderViewController(
     for publication: Publication,
     locator: Locator?,
-    bookId: String
+    bookId: String,
+    selectionActions: String?
   ) throws -> ReaderViewController
 
 }

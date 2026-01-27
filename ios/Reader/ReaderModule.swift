@@ -11,7 +11,8 @@ protocol ReaderModuleAPI {
   func getViewController(
     for publication: Publication,
     bookId: String,
-    locator: Locator?
+    locator: Locator?,
+    selectionActions: String?
   ) -> ReaderViewController?
 }
 
@@ -43,7 +44,8 @@ final class ReaderModule: ReaderModuleAPI {
   func getViewController(
     for publication: Publication,
     bookId: String,
-    locator: Locator?
+    locator: Locator?,
+    selectionActions: String?
   ) -> ReaderViewController? {
     guard let module = self.formatModules.first(
       where:{ $0.supports(publication) }
@@ -56,7 +58,8 @@ final class ReaderModule: ReaderModuleAPI {
       return try module.makeReaderViewController(
         for: publication,
         locator: locator,
-        bookId: bookId
+        bookId: bookId,
+        selectionActions: selectionActions
       )
     } catch {
       print("An unexpected error occurred when attempting to build the reader view.")

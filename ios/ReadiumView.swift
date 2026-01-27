@@ -6,7 +6,7 @@ import UIKit
 import ReadiumNavigator
 
 
-class ReadiumView : UIView, Loggable {
+class ReadiumView : UIView, Loggable, SelectionActionDelegate {
   var readerService: ReaderService = ReaderService()
   var readerViewController: ReaderViewController?
   var viewController: UIViewController? {
@@ -14,12 +14,20 @@ class ReadiumView : UIView, Loggable {
     return viewController as? UIViewController
   }
   private var subscriptions = Set<AnyCancellable>()
+  private var pendingFileUrl: String?
+  private var pendingInitialLocation: NSDictionary?
+  private var hasLoadedBook = false
+  private var selectionActionsReceived = false
+  private var activeDecorationGroups = Set<String>()
 
   @objc var file: NSDictionary? = nil {
     didSet {
       let initialLocation = file?["initialLocation"] as? NSDictionary
       if let url = file?["url"] as? String {
-        self.loadBook(url: url, location: initialLocation)
+        // Store the file info but defer loading until selectionActions is set
+        pendingFileUrl = url
+        pendingInitialLocation = initialLocation
+        self.tryLoadBook()
       }
     }
   }
@@ -33,8 +41,42 @@ class ReadiumView : UIView, Loggable {
       self.updatePreferences(preferences)
     }
   }
+  @objc var decorations: NSString? = nil {
+    didSet {
+      self.updateDecorations(decorations)
+    }
+  }
+  @objc var selectionActions: NSString? = nil {
+    didSet {
+      selectionActionsReceived = true
+      // Try to load the book now that selectionActions is set
+      self.tryLoadBook()
+    }
+  }
   @objc var onLocationChange: RCTDirectEventBlock?
   @objc var onPublicationReady: RCTDirectEventBlock?
+  @objc var onDecorationActivated: RCTDirectEventBlock?
+  @objc var onSelectionAction: RCTDirectEventBlock?
+
+  func tryLoadBook() {
+    // Only load if:
+    // 1. We have a file URL
+    // 2. selectionActions has been received (or is intentionally nil)
+    // 3. We haven't already loaded the book
+    guard let url = pendingFileUrl,
+          selectionActionsReceived,
+          !hasLoadedBook else {
+      return
+    }
+
+    // Mark as loaded and clear pending state
+    hasLoadedBook = true
+    let location = pendingInitialLocation
+    pendingFileUrl = nil
+    pendingInitialLocation = nil
+
+    loadBook(url: url, location: location)
+  }
 
   func loadBook(
     url: String,
@@ -46,12 +88,22 @@ class ReadiumView : UIView, Loggable {
       url: url,
       bookId: url,
       location: location,
+      selectionActions: selectionActions as? String,
       sender: rootViewController,
       completion: { vc in
+        // Set the selection action delegate if this is an EPUBViewController
+        if let epubVC = vc as? EPUBViewController {
+          epubVC.selectionActionDelegate = self
+        }
+
         self.addViewControllerAsSubview(vc)
-        self.location = location
       }
     )
+  }
+
+  // SelectionActionDelegate implementation
+  func onSelectionAction(_ payload: [String: Any]) {
+    self.onSelectionAction?(payload)
   }
 
   func getLocator() async -> Locator? {
@@ -106,6 +158,79 @@ class ReadiumView : UIView, Loggable {
     }
   }
 
+  func updateDecorations(_ decorations: NSString?) {
+    if (readerViewController == nil) {
+      // defer setting update as view isn't initialized yet
+      return;
+    }
+
+    guard let navigator = readerViewController!.navigator as? DecorableNavigator else {
+      print("Navigator does not support decorations")
+      return;
+    }
+
+    guard let decorationsJson = decorations as? String else {
+      return;
+    }
+
+    do {
+      let data = Data(decorationsJson.utf8)
+      let decorationGroups: [String: [DecorationJSON]] = try JSONDecoder().decode([String: [DecorationJSON]].self, from: data)
+
+      for (group, decorationDataList) in decorationGroups {
+        let decorations = decorationDataList.compactMap { decorationData -> Decoration? in
+          return decorationData.toDecoration()
+        }
+
+        navigator.apply(decorations: decorations, in: group)
+
+        // Set up listener for this group if not already active
+        if !activeDecorationGroups.contains(group) {
+          activeDecorationGroups.insert(group)
+
+          navigator.observeDecorationInteractions(inGroup: group) { [weak self] event in
+            guard let self = self else { return }
+
+            var payload: [String: Any] = [
+              "decoration": event.decoration.json,
+              "group": event.group
+            ]
+
+            if let rect = event.rect {
+              payload["rect"] = [
+                "x": rect.origin.x,
+                "y": rect.origin.y,
+                "width": rect.size.width,
+                "height": rect.size.height
+              ]
+            }
+
+            if let point = event.point {
+              payload["point"] = [
+                "x": point.x,
+                "y": point.y
+              ]
+            }
+
+            self.onDecorationActivated?(payload)
+          }
+        }
+      }
+    } catch {
+      print("Failed to decode decorations: \(error)")
+      return;
+    }
+  }
+
+  func updateSelectionActions(_ selectionActions: NSString?) {
+    // Selection actions must be set when creating the navigator
+    // This is currently a no-op as the actions need to be passed during initialization
+    // We store them so they can be used when the reader is recreated
+    if let epubVC = readerViewController as? EPUBViewController {
+      epubVC.updateSelectionActions(selectionActions as? String)
+    }
+  }
+
   override func removeFromSuperview() {
     readerViewController?.willMove(toParent: nil)
     readerViewController?.view.removeFromSuperview()
@@ -116,6 +241,9 @@ class ReadiumView : UIView, Loggable {
       subscription.cancel()
     }
     subscriptions = Set<AnyCancellable>()
+
+    // clear active decoration groups
+    activeDecorationGroups.removeAll()
 
     readerViewController = nil
     super.removeFromSuperview()
@@ -134,6 +262,16 @@ class ReadiumView : UIView, Loggable {
     // if the controller was just instantiated then apply any existing preferences
     if (preferences != nil) {
       self.updatePreferences(preferences)
+    }
+
+    // if the controller was just instantiated then apply any existing decorations
+    if (decorations != nil) {
+      self.updateDecorations(decorations)
+    }
+
+    // if the controller was just instantiated then apply any existing selection actions
+    if (selectionActions != nil) {
+      self.updateSelectionActions(selectionActions)
     }
 
     guard

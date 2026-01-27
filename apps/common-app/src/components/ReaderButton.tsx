@@ -12,11 +12,13 @@ export interface ReaderButtonProps {
   name: string;
   onPress: () => void;
   style?: ViewStyle;
+  size?: number;
 }
 
 export const ReaderButton: React.FC<ReaderButtonProps> = ({
   name,
   onPress,
+  size = 60,
   style = {},
 }) => {
   return (
@@ -30,7 +32,7 @@ export const ReaderButton: React.FC<ReaderButtonProps> = ({
       >
         <MaterialIcons
           name={name}
-          size={60}
+          size={size}
           color={Platform.OS === 'web' ? '#666' : undefined}
         />
       </TouchableOpacity>

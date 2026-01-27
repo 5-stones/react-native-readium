@@ -1,165 +1,163 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, View, Text, Platform, DimensionValue } from 'react-native';
+import React, { useRef } from 'react';
+import { View, Text, Platform } from 'react-native';
 import { ReadiumView } from 'react-native-readium';
-import type {
-  Link,
-  Locator,
-  File,
-  ReadiumProps,
-  PublicationReadyEvent,
-} from 'react-native-readium';
+import type { SelectionAction } from 'react-native-readium';
 
-import RNFS from '../utils/RNFS';
 import { ReaderButton } from './ReaderButton';
 import { TableOfContents } from './TableOfContents';
 import { PreferencesEditor } from './PreferencesEditor';
+import {
+  HighlightManager,
+  HighlightColorPicker,
+  HighlightEditDialog,
+} from './highlights';
 
-export interface ReaderProps {
-  /** URL to the EPUB file (used for web or downloading on native) */
-  epubUrl: string;
-  /** Local file path for the EPUB (used on native platforms after download) */
-  epubPath?: string;
-  /** Initial location to open the book at */
-  initialLocation?: Locator;
-}
+import { useEpubFile } from '../hooks/useEpubFile';
+import { useReaderState } from '../hooks/useReaderState';
+import { useHighlights } from '../hooks/useHighlights';
+
+import { styles } from '../styles/reader';
+import type { ReaderProps } from '../types/reader.types';
+
+// Configure selection actions
+const selectionActions: SelectionAction[] = [
+  { id: 'highlight', label: '📑 Highlight' },
+];
 
 export const Reader: React.FC<ReaderProps> = ({
   epubUrl,
   epubPath,
   initialLocation,
 }) => {
-  const [toc, setToc] = useState<Link[] | null>([]);
-  const [file, setFile] = useState<File>();
-  const [location, setLocation] = useState<Locator | Link>();
-  const [preferences, setPreferences] = useState<ReadiumProps['preferences']>({
-    theme: 'dark',
-  });
   const ref = useRef<any>(undefined);
 
-  useEffect(() => {
-    async function run() {
-      let url = epubUrl;
-      if (epubPath) {
-        // For native platforms, use epubPath if provided, otherwise generate from epubUrl
-        const localPath =
-          epubPath ||
-          `${RNFS.DocumentDirectoryPath}/${epubUrl.split('/').pop()}`;
+  // File loading
+  const { file, isLoading, error } = useEpubFile({
+    epubUrl,
+    epubPath,
+    initialLocation,
+  });
 
-        const exists = await RNFS.exists(localPath);
-        if (!exists) {
-          console.log(`Downloading file: '${epubUrl}'`);
-          const { promise } = RNFS.downloadFile({
-            fromUrl: epubUrl,
-            toFile: localPath,
-            background: true,
-            discretionary: true,
-          });
+  // Reader state (location, preferences, TOC)
+  const {
+    toc,
+    location,
+    preferences,
+    setLocation,
+    setPreferences,
+    handleLocationChange,
+    handlePublicationReady,
+    navigateToTocItem,
+  } = useReaderState();
 
-          // wait for the download to complete
-          await promise;
-        } else {
-          console.log('File already exists. Skipping download.');
-        }
+  // Highlight management
+  const {
+    decorations,
+    colorPickerVisible,
+    pendingHighlight,
+    editDialogVisible,
+    selectedHighlight,
+    handleSelectionChange,
+    handleSelectionAction,
+    handleCreateHighlight,
+    handleCancelHighlight,
+    handleDeleteHighlight,
+    handleUpdateHighlight,
+    handleDecorationActivated,
+    handleEditHighlight,
+    handleDeleteFromDialog,
+    handleCancelEdit,
+  } = useHighlights();
 
-        url = localPath;
-      }
-
-      setFile({
-        url,
-        initialLocation,
-      });
-    }
-
-    run();
-  }, [epubUrl, epubPath, initialLocation]);
-
-  if (file) {
+  // Loading state
+  if (isLoading || !file) {
     return (
-      <View style={styles.container}>
-        <View style={styles.controls}>
-          <View style={styles.button}>
-            <TableOfContents
-              items={toc}
-              onPress={(loc) =>
-                setLocation({
-                  href: loc.href,
-                  type: loc.type || 'application/xhtml+xml',
-                  title: loc.title || '',
-                  locations: {
-                    progression: 0,
-                  },
-                })
-              }
-            />
-          </View>
-          <View style={styles.button}>
-            <PreferencesEditor
-              preferences={preferences}
-              onChange={setPreferences}
-            />
-          </View>
-        </View>
+      <View style={styles.loadingContainer}>
+        <Text>Loading EPUB...</Text>
+      </View>
+    );
+  }
 
-        <View style={styles.reader}>
-          {Platform.OS === 'web' ? (
-            <ReaderButton
-              name="chevron-left"
-              style={{ width: '10%' }}
-              onPress={() => ref.current?.prevPage()}
-            />
-          ) : null}
-          <View style={styles.readiumContainer}>
-            <ReadiumView
-              ref={ref}
-              file={file}
-              location={location}
-              preferences={preferences}
-              onLocationChange={(locator: Locator) => setLocation(locator)}
-              onPublicationReady={(event: PublicationReadyEvent) => {
-                console.log('onPublicationReady', event);
-                // Set the TOC from the new event
-                setToc(event.tableOfContents);
-              }}
-            />
-          </View>
-          {Platform.OS === 'web' ? (
-            <ReaderButton
-              name="chevron-right"
-              style={{ width: '10%' }}
-              onPress={() => ref.current?.nextPage()}
-            />
-          ) : null}
-        </View>
+  // Error state
+  if (error) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text>Error loading EPUB: {error.message}</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <Text>downloading file</Text>
+      <View style={styles.controls}>
+        <View style={styles.button}>
+          <TableOfContents items={toc} onPress={navigateToTocItem} />
+        </View>
+        <View style={styles.button}>
+          <PreferencesEditor
+            preferences={preferences}
+            onChange={setPreferences}
+          />
+        </View>
+        <View style={styles.button}>
+          <HighlightManager
+            highlights={decorations.highlights || []}
+            onDeleteHighlight={handleDeleteHighlight}
+            onNavigateToHighlight={setLocation}
+            onEditHighlight={handleEditHighlight}
+          />
+        </View>
+      </View>
+
+      <View style={styles.reader}>
+        {Platform.OS === 'web' ? (
+          <ReaderButton
+            name="chevron-left"
+            style={{ width: '10%' }}
+            onPress={() => ref.current?.prevPage()}
+          />
+        ) : null}
+
+        <View style={styles.readiumContainer}>
+          <ReadiumView
+            ref={ref}
+            file={file}
+            location={location}
+            preferences={preferences}
+            decorations={decorations}
+            selectionActions={selectionActions}
+            onLocationChange={handleLocationChange}
+            onPublicationReady={handlePublicationReady}
+            onDecorationActivated={handleDecorationActivated}
+            onSelectionChange={handleSelectionChange}
+            onSelectionAction={handleSelectionAction}
+          />
+        </View>
+
+        {Platform.OS === 'web' ? (
+          <ReaderButton
+            name="chevron-right"
+            style={{ width: '10%' }}
+            onPress={() => ref.current?.nextPage()}
+          />
+        ) : null}
+      </View>
+
+      <HighlightColorPicker
+        visible={colorPickerVisible}
+        locator={pendingHighlight?.locator || null}
+        selectedText={pendingHighlight?.selectedText || ''}
+        onConfirm={handleCreateHighlight}
+        onCancel={handleCancelHighlight}
+      />
+
+      <HighlightEditDialog
+        visible={editDialogVisible}
+        highlight={selectedHighlight}
+        onUpdate={handleUpdateHighlight}
+        onDelete={handleDeleteFromDialog}
+        onCancel={handleCancelEdit}
+      />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    height: (Platform.OS === 'web' ? '100vh' : '100%') as DimensionValue,
-  },
-  reader: {
-    flexDirection: 'row',
-    width: '100%',
-    height: '90%',
-  },
-  readiumContainer: {
-    width: Platform.OS === 'web' ? '80%' : '100%',
-    height: '100%',
-  },
-  controls: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  button: {
-    margin: 10,
-  },
-});

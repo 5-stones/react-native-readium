@@ -12,6 +12,7 @@ import {
   createPositions,
   extractTableOfContents,
 } from '../utils/publicationUtils';
+import { convertToNavigatorLocator } from '../utils/locationNormalizer';
 
 interface RefProps
   extends Pick<
@@ -104,7 +105,12 @@ export const useNavigator = ({
         onPositionChange
       );
 
-      // 6. Initialize and load the navigator
+      // 6. Process initial location
+      const initialPosition = file.initialLocation
+        ? convertToNavigatorLocator(file.initialLocation)
+        : undefined;
+
+      // 7. Initialize and load the navigator
       const configuration = {
         preferences: { scroll: false },
         defaults: {},
@@ -115,12 +121,12 @@ export const useNavigator = ({
         publication,
         listeners,
         positionsArray,
-        undefined, // initialPosition
+        initialPosition, // Pass the initial position
         configuration as any
       );
       await nav.load();
 
-      // 7. Emit onPublicationReady event
+      // 8. Emit onPublicationReady event
       if (onPublicationReady) {
         const tocItems = extractTableOfContents(manifest);
         const metadata = normalizeMetadata(manifest.metadata);
