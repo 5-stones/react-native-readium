@@ -10,7 +10,7 @@ in that app.
 The most important thing to know about how to run this project, is to understand
 that it installs the `react-native-readium` library located in the parent
 directory (`../`) and **NOT from npm**. This means that before you can properly
-run the `example` you need to build the core library. Similarly, if you make a 
+run the `example` you need to build the core library. Similarly, if you make a
 change to the code located in the parent directory, you need to rebuild then
 reinstall it in the `example` directory.
 
@@ -39,6 +39,5 @@ this file you should run them from `../`.
 `yarn example [android | ios]`
 
 Ex. `yarn example ios`.
-
 
 Thats it! :tada:, you should now be running the example project.

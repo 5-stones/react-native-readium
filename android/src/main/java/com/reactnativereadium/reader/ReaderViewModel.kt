@@ -1,10 +1,13 @@
 package com.reactnativereadium.reader
 
+import android.graphics.PointF
+import android.graphics.RectF
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.reactnativereadium.utils.EventChannel
 import kotlinx.coroutines.channels.Channel
+import org.readium.r2.navigator.Decoration
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
 import org.readium.r2.shared.publication.Link
@@ -38,6 +41,21 @@ class ReaderViewModel(
             val tableOfContents: List<Link>,
             val positions: List<Locator>,
             val metadata: Metadata
+        ) : Event()
+        class DecorationActivated(
+            val decoration: Decoration,
+            val group: String,
+            val rect: RectF?,
+            val point: PointF?
+        ) : Event()
+        class SelectionChanged(
+            val locator: Locator?,
+            val selectedText: String?
+        ) : Event()
+        class SelectionAction(
+            val actionId: String,
+            val locator: Locator,
+            val selectedText: String
         ) : Event()
     }
 }

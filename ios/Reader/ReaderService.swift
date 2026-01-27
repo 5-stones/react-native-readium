@@ -30,6 +30,28 @@ final class ReaderService: Loggable {
     self.publicationOpener = PublicationOpener(parser: parser)
   }
   
+  /// Normalizes a location dictionary by removing leading slashes from its href for consistency across platforms.
+  ///
+  /// The Readium toolkit expects hrefs in relative format (e.g., "OPS/main3.xml")
+  /// rather than absolute format (e.g., "/OPS/main3.xml").
+  private static func normalizeLocation(_ location: NSDictionary) -> NSDictionary {
+    guard let href = location["href"] as? String else {
+      return location
+    }
+
+    // Check if href has a leading slash
+    guard href.hasPrefix("/") else {
+      return location
+    }
+
+    // Create a mutable copy and normalize the href
+    let normalized = NSMutableDictionary(dictionary: location)
+    let normalizedHref = String(href.dropFirst())
+    normalized["href"] = normalizedHref
+
+    return normalized
+  }
+
   static func locatorFromLocation(
     _ location: NSDictionary?,
     _ publication: Publication?
@@ -38,24 +60,29 @@ final class ReaderService: Loggable {
       return nil
     }
 
-    let hasLocations = location?["locations"] != nil
-    let hasType = (location?["type"] as? String)?.isEmpty == false
-    let hasChildren = location?["children"] != nil
-    let hasHashHref = (location?["href"] as? String)?.contains("#") == true
-    let hasTemplated = location?["templated"] != nil
+    // Normalize the location by removing leading slashes from href
+    let normalizedDict = normalizeLocation(location!)
+
+    let hasLocations = normalizedDict["locations"] != nil
+    let hasType = (normalizedDict["type"] as? String)?.isEmpty == false
+    let hasChildren = normalizedDict["children"] != nil
+    let hasHashHref = (normalizedDict["href"] as? String)?.contains("#") == true
+    let hasTemplated = normalizedDict["templated"] != nil
 
     // check that we're not dealing with a Link
     if ((!hasType || hasChildren || hasHashHref || hasTemplated) && !hasLocations) {
       guard let publication = publication else {
         return nil
       }
-      guard let link = try? Link(json: location) else {
+      guard let link = try? Link(json: normalizedDict) else {
         return nil
       }
 
-      return await publication.locate(link)
+      let locator = await publication.locate(link)
+      return locator
     } else {
-      return try? Locator(json: location)
+      let locator = try? Locator(json: normalizedDict)
+      return locator
     }
   }
 
@@ -63,6 +90,7 @@ final class ReaderService: Loggable {
     url: String,
     bookId: String,
     location: NSDictionary?,
+    selectionActions: String?,
     sender: UIViewController?,
     completion: @escaping (ReaderViewController) -> Void
   ) {
@@ -80,7 +108,8 @@ final class ReaderService: Loggable {
             guard let viewController = reader.getViewController(
               for: pub,
               bookId: bookId,
-              locator: locator
+              locator: locator,
+              selectionActions: selectionActions
             ) else {
               return
             }
