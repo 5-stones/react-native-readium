@@ -5,7 +5,7 @@
 ![PRs welcome!](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 ![This project is released under the MIT license](https://img.shields.io/badge/license-MIT-blue.svg)
 
-----
+---
 
 ## Have A Bug/Feature You Care About?
 
@@ -15,7 +15,7 @@ we're able to work on them. Have an issue you care about?
 - [Dive Into The Code!](CONTRIBUTING.md)
 - [Sponsor Your Issue](#sponsor-the-library)
 
-----
+---
 
 ## Overview
 
@@ -42,8 +42,8 @@ allows you to do things like:
 - [Release](#release)
 - [License](#license)
 
-| Dark Mode| Light Mode |
-|----------|------------|
+| Dark Mode                                                                                        | Light Mode                                                                                         |
+| ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
 | ![Dark Mode](https://github.com/5-stones/react-native-readium/blob/main/docs/demo-dark-mode.gif) | ![Light Mode](https://github.com/5-stones/react-native-readium/blob/main/docs/demo-light-mode.gif) |
 
 ## Installation
@@ -72,6 +72,7 @@ yarn add react-native-readium
 #### iOS
 
 Requirements:
+
 - Minimum iOS deployment target: iOS 13.4
 - Swift compiler: Swift 6.0
 - Xcode: Xcode 16.2 (or newer)
@@ -108,7 +109,6 @@ target 'ExampleApp' do
 end
 ```
 
-
 Finally, install the pods:
 
 `pod install`
@@ -121,6 +121,7 @@ This release upgrades the Android native implementation to a newer Readium Kotli
 Most apps won’t need code changes, but your **Android build configuration** might.
 
 Requirements:
+
 - **JDK 17** is required to build the Android app (the library targets Java/Kotlin 17).
 - **compileSdkVersion** must be >= `31`.
 
@@ -176,12 +177,8 @@ const MyComponent: React.FC = () => {
     url: SOME_LOCAL_FILE_URL,
   });
 
-  return (
-    <ReadiumView
-      file={file}
-    />
-  );
-}
+  return <ReadiumView file={file} />;
+};
 ```
 
 ### Using Publication Metadata
@@ -210,12 +207,9 @@ const MyComponent: React.FC = () => {
   };
 
   return (
-    <ReadiumView
-      file={file}
-      onPublicationReady={handlePublicationReady}
-    />
+    <ReadiumView file={file} onPublicationReady={handlePublicationReady} />
   );
-}
+};
 ```
 
 [Take a look at the Example App](https://github.com/5-stones/react-native-readium/blob/main/example/src/App.tsx) for a more complex usage example.
@@ -224,12 +218,12 @@ const MyComponent: React.FC = () => {
 
 #### Format Support
 
-| Format | Support | Notes |
-|--------|---------|-------|
-| Epub 2 | :white_check_mark: | |
-| Epub 3 | :white_check_mark: | |
-| PDF | :x: | On the roadmap, feel free to submit a PR or ask for direction. |
-| CBZ | :x: | On the roadmap, feel free to submit a PR or ask for direction. |
+| Format | Support            | Notes                                                          |
+| ------ | ------------------ | -------------------------------------------------------------- |
+| Epub 2 | :white_check_mark: |                                                                |
+| Epub 3 | :white_check_mark: |                                                                |
+| PDF    | :x:                | On the roadmap, feel free to submit a PR or ask for direction. |
+| CBZ    | :x:                | On the roadmap, feel free to submit a PR or ask for direction. |
 
 **Missing a format you need?** Reach out and see if it can be added to the roadmap.
 
@@ -241,14 +235,14 @@ DRM is not supported at this time. However, there is a clear path to [support it
 
 #### View Props
 
-| Name | Type | Optional | Description |
-|------|------|----------|-------------|
-| `file`     | [`File`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/File.ts)               | :x:                | A file object containing the path to the eBook file on disk. |
-| `location` | [`Locator`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/Locator.ts) \| [`Link`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/Link.ts)           | :white_check_mark: | A locator prop that allows you to externally control the location of the reader (e.g. Chapters or Bookmarks). <br/><br/>:warning: If you want to set the `location` of an ebook on initial load, you should use the `File.initialLocation` property (look at the `file` prop). See more [here](https://github.com/5-stones/react-native-readium/issues/16#issuecomment-1344128937) |
-| `preferences` | [`Partial<Preferences>`](https://github.com/readium/swift-toolkit/blob/main/docs/Guides/Navigator%20Preferences.md#appendix-preference-constraints)  | :white_check_mark: | An object that allows you to control various aspects of the reader's UI (epub only) |
-| `style`    | `ViewStyle`          | :white_check_mark: | A traditional style object. |
-| `onLocationChange` | `(locator: Locator) => void` | :white_check_mark: | A callback that fires whenever the location is changed (e.g. the user transitions to a new page)|
-| `onPublicationReady` | `(event: PublicationReadyEvent) => void` | :white_check_mark: | A callback that fires once the publication is loaded and provides access to the table of contents, positions, and metadata. See the [`PublicationReadyEvent`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/PublicationReady.ts) interface for details. |
+| Name                 | Type                                                                                                                                                                                             | Optional           | Description                                                                                                                                                                                                                                                                                                                                                                        |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `file`               | [`File`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/File.ts)                                                                                                      | :x:                | A file object containing the path to the eBook file on disk.                                                                                                                                                                                                                                                                                                                       |
+| `location`           | [`Locator`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/Locator.ts) \| [`Link`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/Link.ts) | :white_check_mark: | A locator prop that allows you to externally control the location of the reader (e.g. Chapters or Bookmarks). <br/><br/>:warning: If you want to set the `location` of an ebook on initial load, you should use the `File.initialLocation` property (look at the `file` prop). See more [here](https://github.com/5-stones/react-native-readium/issues/16#issuecomment-1344128937) |
+| `preferences`        | [`Partial<Preferences>`](https://github.com/readium/swift-toolkit/blob/main/docs/Guides/Navigator%20Preferences.md#appendix-preference-constraints)                                              | :white_check_mark: | An object that allows you to control various aspects of the reader's UI (epub only)                                                                                                                                                                                                                                                                                                |
+| `style`              | `ViewStyle`                                                                                                                                                                                      | :white_check_mark: | A traditional style object.                                                                                                                                                                                                                                                                                                                                                        |
+| `onLocationChange`   | `(locator: Locator) => void`                                                                                                                                                                     | :white_check_mark: | A callback that fires whenever the location is changed (e.g. the user transitions to a new page)                                                                                                                                                                                                                                                                                   |
+| `onPublicationReady` | `(event: PublicationReadyEvent) => void`                                                                                                                                                         | :white_check_mark: | A callback that fires once the publication is loaded and provides access to the table of contents, positions, and metadata. See the [`PublicationReadyEvent`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/PublicationReady.ts) interface for details.                                                                                                |
 
 #### :warning: Web vs Native File URLs
 
@@ -257,7 +251,7 @@ the `manifest.json` of the unpacked epub. In native contexts it needs to be a
 local filepath to the epub file itself on disk. If you're not sure how to
 serve epub books [take a look at this example](https://github.com/d-i-t-a/R2D2BC/blob/production/examples/server.ts)
 which is based on the `dita-streamer-js` project (which is built on all the
-readium [r2-*-js](https://github.com/readium?q=js) libraries)
+readium [r2-\*-js](https://github.com/readium?q=js) libraries)
 
 ## Contributing
 
@@ -277,7 +271,6 @@ This command will:
 1. Generate/update the Changelog
 1. Bump the package version
 1. Tag & pushing the commit
-
 
 e.g.
 

@@ -2,15 +2,24 @@ import React, { useEffect, useImperativeHandle, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import type { BaseReadiumViewProps, Preferences } from '../interfaces';
+import type {
+  BaseReadiumViewProps,
+  Preferences,
+  DecorationGroups,
+} from '../interfaces';
 import {
   useNavigator,
   usePreferencesObserver,
   useLocationObserver,
+  useDecorationsObserver,
 } from '../../web/hooks';
 
-export type ReadiumProps = Omit<BaseReadiumViewProps, 'preferences'> & {
+export type ReadiumProps = Omit<
+  BaseReadiumViewProps,
+  'preferences' | 'decorations'
+> & {
   preferences: Preferences;
+  decorations?: DecorationGroups;
 };
 
 export const ReadiumView = React.forwardRef<
@@ -25,8 +34,10 @@ export const ReadiumView = React.forwardRef<
       file,
       preferences,
       location,
+      decorations,
       onLocationChange,
       onPublicationReady,
+      onDecorationActivated,
       style = {},
       height,
       width,
@@ -58,6 +69,7 @@ export const ReadiumView = React.forwardRef<
 
     usePreferencesObserver(navigator, preferences);
     useLocationObserver(navigator, location);
+    useDecorationsObserver(navigator, decorations, onDecorationActivated);
 
     // Generate position label text
     const positionLabel =

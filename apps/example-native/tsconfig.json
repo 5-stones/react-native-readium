@@ -12,9 +12,7 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "react-native-readium": [
-        "../../src/index.tsx"
-      ]
+      "react-native-readium": ["../../src/index.tsx"]
     },
     "strict": true,
     "target": "esnext",

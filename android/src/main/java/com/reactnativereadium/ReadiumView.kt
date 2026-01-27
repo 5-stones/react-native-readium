@@ -35,6 +35,8 @@ class ReadiumView(
   var isViewInitialized: Boolean = false
   var isFragmentAdded: Boolean = false
   var lateInitSerializedUserPreferences: String? = null
+  var lateInitSerializedDecorations: String? = null
+  var lateInitSerializedSelectionActions: String? = null
   private var frameCallback: Choreographer.FrameCallback? = null
 
   fun updateLocation(location: LinkOrLocator) : Boolean {
@@ -56,6 +58,40 @@ class ReadiumView(
     }
   }
 
+  fun setDecorations(decorations: String?) {
+    lateInitSerializedDecorations = decorations
+    if (decorations == null || fragment == null) {
+      return
+    }
+
+    fragment?.applyDecorationsFromJsonString(decorations)
+  }
+
+  fun setSelectionActions(actions: String?) {
+    lateInitSerializedSelectionActions = actions
+    if (actions == null || fragment == null) {
+      return
+    }
+
+    if (fragment is EpubReaderFragment) {
+      (fragment as EpubReaderFragment).updateSelectionActionsFromJsonString(actions)
+    }
+  }
+
+  suspend fun getCurrentSelection(): String? {
+    if (fragment == null) {
+      return null
+    }
+
+    val locator = fragment?.getCurrentSelection()
+    if (locator == null) {
+      return null
+    }
+
+    // Convert locator to JSON string
+    return locator.toJSON().toString()
+  }
+
   fun addFragment(frag: BaseReaderFragment) {
     if (isFragmentAdded) {
       return
@@ -64,7 +100,6 @@ class ReadiumView(
     fragment = frag
     isFragmentAdded = true
     setupLayout()
-    lateInitSerializedUserPreferences?.let { updatePreferencesFromJsonString(it)}
     val activity: FragmentActivity? = reactContext.currentActivity as FragmentActivity?
 
     activity!!.supportFragmentManager
@@ -77,6 +112,11 @@ class ReadiumView(
       FrameLayout.LayoutParams.MATCH_PARENT,
       FrameLayout.LayoutParams.MATCH_PARENT
     )
+
+    // Apply preferences, decorations, and selection actions after fragment is committed and view is created
+    lateInitSerializedUserPreferences?.let { updatePreferencesFromJsonString(it)}
+    lateInitSerializedDecorations?.let { setDecorations(it)}
+    lateInitSerializedSelectionActions?.let { setSelectionActions(it)}
 
     val eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag(reactContext, this.id)
 
@@ -107,6 +147,50 @@ class ReadiumView(
             putMap("metadata", MetadataNormalizer.normalize(event.metadata))
           }
           dispatch(ReadiumViewManager.ON_PUBLICATION_READY, payload)
+        }
+        is ReaderViewModel.Event.DecorationActivated -> {
+          val payload = Arguments.createMap().apply {
+            putMap("decoration", event.decoration.toWritableMap())
+            putString("group", event.group)
+            event.rect?.let { rect ->
+              putMap("rect", Arguments.createMap().apply {
+                putDouble("x", rect.left.toDouble())
+                putDouble("y", rect.top.toDouble())
+                putDouble("width", rect.width().toDouble())
+                putDouble("height", rect.height().toDouble())
+              })
+            }
+            event.point?.let { point ->
+              putMap("point", Arguments.createMap().apply {
+                putDouble("x", point.x.toDouble())
+                putDouble("y", point.y.toDouble())
+              })
+            }
+          }
+          dispatch(ReadiumViewManager.ON_DECORATION_ACTIVATED, payload)
+        }
+        is ReaderViewModel.Event.SelectionChanged -> {
+          val payload = Arguments.createMap().apply {
+            if (event.locator != null) {
+              putMap("locator", event.locator.toWritableMap())
+            } else {
+              putNull("locator")
+            }
+            if (event.selectedText != null) {
+              putString("selectedText", event.selectedText)
+            } else {
+              putNull("selectedText")
+            }
+          }
+          dispatch(ReadiumViewManager.ON_SELECTION_CHANGE, payload)
+        }
+        is ReaderViewModel.Event.SelectionAction -> {
+          val payload = Arguments.createMap().apply {
+            putString("actionId", event.actionId)
+            putMap("locator", event.locator.toWritableMap())
+            putString("selectedText", event.selectedText)
+          }
+          dispatch(ReadiumViewManager.ON_SELECTION_ACTION, payload)
         }
       }
     }

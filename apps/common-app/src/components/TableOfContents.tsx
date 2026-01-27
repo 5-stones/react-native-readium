@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Text, ScrollView, Modal, View, Dimensions } from 'react-native';
-import { ListItem, Icon, Button } from '@rneui/themed';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import type { Link } from 'react-native-readium';
+import { ReaderButton } from './ReaderButton';
+import { BaseModal } from './BaseModal';
+import { modalStyles } from '../styles/modal';
 
 export interface TableOfContentsProps {
   items?: Link[] | null;
@@ -13,51 +15,69 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
   onPress,
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const onToggleOpen = () => setIsOpen(!isOpen);
   const items = externalItems || [];
+
+  const handleItemPress = (item: Link) => {
+    if (onPress) {
+      onPress(item);
+      setIsOpen(false);
+    }
+  };
 
   return (
     <>
-      <Icon name="list" type="font-awesome" size={30} onPress={onToggleOpen} />
-      <Modal
+      <ReaderButton size={35} name="list" onPress={() => setIsOpen(true)} />
+
+      <BaseModal
         visible={isOpen}
-        onRequestClose={onToggleOpen}
-        presentationStyle="overFullScreen"
-        backdropColor="transparent"
+        title="Table of Contents"
+        onClose={() => setIsOpen(false)}
       >
-        <View
-          style={{
-            height: Dimensions.get('window').height * 0.8,
-            width: '95%',
-            alignSelf: 'center',
-            marginTop: '10%',
-          }}
-        >
-          <Button onPress={() => setIsOpen(false)}>X</Button>
-          <ScrollView style={{ maxHeight: '100%', width: '100%' }}>
-            <Text>Table of Contents</Text>
-            {items.map((item, idx) => (
-              <ListItem
-                key={idx}
-                onPress={() => {
-                  if (onPress) {
-                    onPress(item);
-                    setIsOpen(false);
-                  }
-                }}
-                bottomDivider={items.length - 1 != idx}
-              >
-                <ListItem.Content>
-                  <ListItem.Title>
-                    {item.title ? item.title : `Chapter ${idx + 1}`}
-                  </ListItem.Title>
-                </ListItem.Content>
-                <ListItem.Chevron />
-              </ListItem>
-            ))}
-          </ScrollView>
-        </View>
-      </Modal>
+        {items.length === 0 ? (
+          <Text style={modalStyles.emptyText}>
+            No table of contents available
+          </Text>
+        ) : (
+          items.map((item, idx) => (
+            <TouchableOpacity
+              key={idx}
+              style={[
+                modalStyles.cardItem,
+                idx === items.length - 1 && modalStyles.cardItemLast,
+              ]}
+              onPress={() => handleItemPress(item)}
+              activeOpacity={0.7}
+            >
+              <View style={styles.itemContent}>
+                <Text style={styles.title} numberOfLines={2}>
+                  {item.title ? item.title : `Chapter ${idx + 1}`}
+                </Text>
+                <Text style={styles.chevron}>›</Text>
+              </View>
+            </TouchableOpacity>
+          ))
+        )}
+      </BaseModal>
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  itemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  title: {
+    flex: 1,
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#333333',
+    marginRight: 12,
+  },
+  chevron: {
+    fontSize: 24,
+    color: '#999999',
+    fontWeight: '300',
+  },
+});

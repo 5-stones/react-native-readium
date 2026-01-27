@@ -7,17 +7,28 @@ import codegenNativeCommands from 'react-native/Libraries/Utilities/codegenNativ
 import type { File } from './interfaces/File';
 import type { Locator } from './interfaces/Locator';
 import type { PublicationReadyEvent } from './interfaces/PublicationReady';
+import type { DecorationActivatedEvent } from './interfaces/Decoration';
+import type { SelectionEvent } from './interfaces/Selection';
+import type { SelectionActionEvent } from './interfaces/SelectionAction';
 
 // Event types for native events
 type OnLocationChangeEvent = Readonly<Locator>;
 type OnPublicationReadyEvent = Readonly<PublicationReadyEvent>;
+type OnDecorationActivatedEvent = Readonly<DecorationActivatedEvent>;
+type OnSelectionChangeEvent = Readonly<SelectionEvent>;
+type OnSelectionActionEvent = Readonly<SelectionActionEvent>;
 
 // Native component props interface
 export interface NativeProps extends ViewProps {
   file: File;
   preferences?: string;
+  decorations?: string;
+  selectionActions?: string;
   onLocationChange?: DirectEventHandler<OnLocationChangeEvent>;
   onPublicationReady?: DirectEventHandler<OnPublicationReadyEvent>;
+  onDecorationActivated?: DirectEventHandler<OnDecorationActivatedEvent>;
+  onSelectionChange?: DirectEventHandler<OnSelectionChangeEvent>;
+  onSelectionAction?: DirectEventHandler<OnSelectionActionEvent>;
 }
 
 // Native commands interface
