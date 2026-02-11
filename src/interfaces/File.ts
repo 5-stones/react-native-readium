@@ -1,14 +1,6 @@
-import type { Link } from './Link';
-import type { Locator } from './Locator';
+export type { ReadiumFile } from '../specs/ReadiumView.nitro';
 
-export interface File {
-  /**
-   * A string path to an eBook on disk.
-   */
-  url: string;
-
-  /**
-   * An optional location that the eBook will be opened at.
-   */
-  initialLocation?: Locator | Link;
-}
+/**
+ * @deprecated Use ReadiumFile instead
+ */
+export type { ReadiumFile as File } from '../specs/ReadiumView.nitro';

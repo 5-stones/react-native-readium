@@ -1,0 +1,16 @@
+{
+  "cxxNamespace": ["readium"],
+  "ios": {
+    "iosModuleName": "NitroReadium"
+  },
+  "android": {
+    "androidNamespace": ["reactnativereadium"],
+    "androidCxxLibName": "NitroReadium"
+  },
+  "autolinking": {
+    "ReadiumView": {
+      "swift": "HybridReadiumView",
+      "kotlin": "HybridReadiumView"
+    }
+  }
+}

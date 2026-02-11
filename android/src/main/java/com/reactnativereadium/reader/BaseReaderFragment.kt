@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.reactnativereadium.utils.DecorationSerializer
 import com.reactnativereadium.utils.EventChannel
 import com.reactnativereadium.utils.LinkOrLocator
 import kotlinx.coroutines.channels.Channel
@@ -12,8 +11,10 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
+import org.readium.r2.navigator.Decoration
 import org.readium.r2.navigator.DecorableNavigator
 import org.readium.r2.navigator.Navigator
+import org.readium.r2.navigator.OverflowableNavigator
 import org.readium.r2.navigator.SelectableNavigator
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.services.positions
@@ -36,7 +37,7 @@ abstract class BaseReaderFragment : Fragment() {
   private val activeDecorationGroups = mutableSetOf<String>()
 
   // Store decorations if they're set before navigator is ready
-  private var pendingDecorations: String? = null
+  private var pendingDecorations: Map<String, List<Decoration>>? = null
 
   // Check if navigator is ready to use
   private val isNavigatorReady: Boolean
@@ -69,9 +70,6 @@ abstract class BaseReaderFragment : Fragment() {
         emptyList<Locator>()
       }
 
-      // Normalize metadata to ensure consistent structure across platforms
-      // This uses spec-based normalization to handle LocalizedStrings and other
-      // platform-specific serialization differences
       channel.send(
         ReaderViewModel.Event.PublicationReady(
           tableOfContents = model.publication.tableOfContents,
@@ -86,9 +84,7 @@ abstract class BaseReaderFragment : Fragment() {
       .launchIn(viewScope)
 
     // Apply any pending decorations now that navigator is ready
-    pendingDecorations?.let { decorationsJson ->
-      applyDecorationsFromJsonString(decorationsJson)
-    }
+    pendingDecorations?.let { applyDecorations(it) }
 
     // Start monitoring text selection
     startSelectionMonitoring()
@@ -130,19 +126,30 @@ abstract class BaseReaderFragment : Fragment() {
     return navigator.go(locator, animated)
   }
 
+  fun goForward(): Boolean {
+    if (!isNavigatorReady) return false
+    val overflowNav = navigator as? OverflowableNavigator ?: return false
+    return overflowNav.goForward(animated = true)
+  }
+
+  fun goBackward(): Boolean {
+    if (!isNavigatorReady) return false
+    val overflowNav = navigator as? OverflowableNavigator ?: return false
+    return overflowNav.goBackward(animated = true)
+  }
+
   /**
-   * Apply decorations from JSON string
+   * Apply pre-converted Readium decoration groups directly (no JSON round-trip).
    */
-  fun applyDecorationsFromJsonString(decorationsJson: String?) {
-    if (decorationsJson == null) {
+  fun applyDecorations(groups: Map<String, List<Decoration>>?) {
+    if (groups == null) {
       pendingDecorations = null
       return
     }
 
     // Check if navigator is initialized
     if (!isNavigatorReady) {
-      // Store for later application
-      pendingDecorations = decorationsJson
+      pendingDecorations = groups
       return
     }
 
@@ -152,12 +159,9 @@ abstract class BaseReaderFragment : Fragment() {
       return
     }
 
-    val decorationGroups = DecorationSerializer.deserialize(decorationsJson)
-
     val viewScope = viewLifecycleOwner.lifecycleScope
 
-    decorationGroups.forEach { (group, decorations) ->
-      // Apply decorations to this group (suspend function)
+    groups.forEach { (group, decorations) ->
       viewScope.launch {
         decorableNavigator.applyDecorations(decorations, group)
       }
@@ -221,7 +225,14 @@ abstract class BaseReaderFragment : Fragment() {
   }
 
   /**
-   * Start monitoring text selection and emit selection change events
+   * Start monitoring text selection and emit selection change events.
+   *
+   * Uses 500ms polling because Readium's [SelectableNavigator] does not
+   * provide an observable API (Flow, callback, or listener) for selection
+   * changes. The only available method is the suspending
+   * [SelectableNavigator.currentSelection], which must be called on-demand.
+   * Polling is the least-invasive way to detect changes without forking the
+   * Readium toolkit.
    */
   private fun startSelectionMonitoring() {
     val viewScope = viewLifecycleOwner.lifecycleScope

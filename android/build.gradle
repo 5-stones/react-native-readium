@@ -30,10 +30,24 @@ android {
   compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
   namespace "com.reactnativereadium"
   defaultConfig {
-    minSdkVersion 21
+    minSdkVersion 24
     targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
     versionCode 1
     versionName "1.0"
+
+    externalNativeBuild {
+      cmake {
+        cppFlags "-O2 -frtti -fexceptions -Wall -fstack-protector-all"
+        arguments "-DANDROID_STL=c++_shared"
+        abiFilters "x86", "x86_64", "armeabi-v7a", "arm64-v8a"
+      }
+    }
+  }
+
+  externalNativeBuild {
+    cmake {
+      path "CMakeLists.txt"
+    }
   }
 
   buildTypes {
@@ -54,6 +68,13 @@ android {
 
   buildFeatures {
     viewBinding true
+    prefab true
+  }
+
+  sourceSets {
+    main {
+      java.srcDirs += ["${project.projectDir}/../nitrogen/generated/android/kotlin"]
+    }
   }
 }
 
@@ -132,6 +153,7 @@ def kotlin_version = getExtOrDefault('kotlinVersion')
 dependencies {
   // noinspection GradleDynamicVersion
   api "com.facebook.react:react-native:+"
+  implementation project(':react-native-nitro-modules')
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
   // readium deps

@@ -2,7 +2,6 @@ import Foundation
 import UIKit
 import ReadiumShared
 
-
 /// The ReaderModule handles the presentation of publications to be read by the user.
 /// It contains sub-modules implementing ReaderFormatModule to handle each format of publication (eg. CBZ, EPUB).
 protocol ReaderModuleAPI {
@@ -11,8 +10,8 @@ protocol ReaderModuleAPI {
   func getViewController(
     for publication: Publication,
     bookId: String,
-    locator: Locator?,
-    selectionActions: String?
+    locator: ReadiumShared.Locator?,
+    selectionActions: [SelectionActionData]?
   ) -> ReaderViewController?
 }
 
@@ -44,8 +43,8 @@ final class ReaderModule: ReaderModuleAPI {
   func getViewController(
     for publication: Publication,
     bookId: String,
-    locator: Locator?,
-    selectionActions: String?
+    locator: ReadiumShared.Locator?,
+    selectionActions: [SelectionActionData]?
   ) -> ReaderViewController? {
     guard let module = self.formatModules.first(
       where:{ $0.supports(publication) }

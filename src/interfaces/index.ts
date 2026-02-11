@@ -1,4 +1,3 @@
-export * from './BaseReadiumViewProps';
 export * from './Decoration';
 export * from './Dimensions';
 export * from './File';
@@ -9,3 +8,4 @@ export * from './PublicationMetadata';
 export * from './PublicationReady';
 export * from './Selection';
 export * from './SelectionAction';
+export type { Rect, Point } from '../specs/ReadiumView.nitro';

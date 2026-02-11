@@ -47,5 +47,19 @@ target 'ReadiumExample' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+
+    # Minizip is a C library whose headers use extern "C" blocks.
+    # When react-native-readium enables SWIFT_OBJC_INTEROP_MODE=objcxx,
+    # clang tries to compile Minizip as a C++ module, which breaks.
+    # Rewrite the modulemap with [extern_c] so clang treats it as C.
+    minizip_modulemap = File.join(installer.sandbox.root, 'Headers', 'Public', 'Minizip', 'Minizip.modulemap')
+    if File.exist?(minizip_modulemap)
+      File.write(minizip_modulemap, <<~MODULEMAP)
+        module Minizip [extern_c] [system] {
+          header "Minizip-umbrella.h"
+          export *
+        }
+      MODULEMAP
+    end
   end
 end

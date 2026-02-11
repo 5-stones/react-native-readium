@@ -8,7 +8,8 @@ import type {
 
 export const useReaderState = () => {
   const [toc, setToc] = useState<Link[] | null>([]);
-  const [location, setLocation] = useState<Locator | Link>();
+  const [positions, setPositions] = useState<Locator[]>([]);
+  const [location, setLocation] = useState<Locator | undefined>();
   const [preferences, setPreferences] = useState<ReadiumProps['preferences']>({
     theme: 'dark',
   });
@@ -19,6 +20,7 @@ export const useReaderState = () => {
 
   const handlePublicationReady = useCallback((event: PublicationReadyEvent) => {
     setToc(event.tableOfContents);
+    setPositions(event.positions || []);
   }, []);
 
   const navigateToTocItem = useCallback((loc: Link) => {
@@ -35,6 +37,7 @@ export const useReaderState = () => {
   return {
     // State
     toc,
+    positions,
     location,
     preferences,
 

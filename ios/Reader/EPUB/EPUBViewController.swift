@@ -8,7 +8,7 @@ struct SelectionActionData: Codable {
 }
 
 protocol SelectionActionDelegate: AnyObject {
-    func onSelectionAction(_ payload: [String: Any])
+    func onSelectionAction(actionId: String, locator: ReadiumShared.Locator, selectedText: String)
 }
 
 class EPUBViewController: ReaderViewController, SelectionActionHandlerDelegate {
@@ -17,29 +17,25 @@ class EPUBViewController: ReaderViewController, SelectionActionHandlerDelegate {
 
     init(
       publication: Publication,
-      locator: Locator?,
+      locator: ReadiumShared.Locator?,
       bookId: String,
-      selectionActions: String? = nil
+      selectionActions: [SelectionActionData]? = nil
     ) throws {
-      // Parse selection actions
+      // Convert typed selection actions directly to EditingActions (no JSON)
       var editingActions: [EditingAction] = []
       var actionIds: [String] = []
 
-      if let actionsJson = selectionActions {
-        let data = Data(actionsJson.utf8)
-        if let actions = try? JSONDecoder().decode([SelectionActionData].self, from: data) {
-          for action in actions {
-            actionIds.append(action.id)
+      if let actions = selectionActions {
+        for action in actions {
+          actionIds.append(action.id)
 
-            // Create a selector for each action dynamically
-            let selectorName = "handleSelectionAction_\(action.id):"
-            let selector = NSSelectorFromString(selectorName)
+          let selectorName = "handleSelectionAction_\(action.id):"
+          let selector = NSSelectorFromString(selectorName)
 
-            editingActions.append(EditingAction(
-              title: action.label,
-              action: selector
-            ))
-          }
+          editingActions.append(EditingAction(
+            title: action.label,
+            action: selector
+          ))
         }
       }
 
@@ -78,7 +74,7 @@ class EPUBViewController: ReaderViewController, SelectionActionHandlerDelegate {
       return navigator as! EPUBNavigatorViewController
     }
 
-    func updateSelectionActions(_ selectionActions: String?) {
+    func updateSelectionActions(_ selectionActions: [SelectionActionData]?) {
       // On iOS, selection actions must be set during navigator initialization
       // Dynamic updates would require recreating the navigator, which we don't support yet
       print("Warning: Updating selection actions after initialization is not supported on iOS")
@@ -111,13 +107,11 @@ class EPUBViewController: ReaderViewController, SelectionActionHandlerDelegate {
         return
       }
 
-      let payload: [String: Any] = [
-        "actionId": actionId,
-        "locator": selection.locator.json,
-        "selectedText": selection.locator.text.highlight ?? ""
-      ]
-
-      selectionActionDelegate?.onSelectionAction(payload)
+      selectionActionDelegate?.onSelectionAction(
+        actionId: actionId,
+        locator: selection.locator,
+        selectedText: selection.locator.text.highlight ?? ""
+      )
 
       // Clear the selection
       navigator.clearSelection()
@@ -133,14 +127,6 @@ class EPUBViewController: ReaderViewController, SelectionActionHandlerDelegate {
       navigationController?.navigationBar.tintColor = colors.textColor
 
       navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: colors.textColor]
-    }
-
-    override var currentBookmark: Bookmark? {
-      guard let locator = navigator.currentLocation else {
-        return nil
-      }
-
-      return Bookmark(bookId: bookId, locator: locator)
     }
 
 }

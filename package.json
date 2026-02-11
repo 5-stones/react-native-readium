@@ -13,6 +13,8 @@
     "ios",
     "web",
     "cpp",
+    "nitrogen/generated",
+    "nitro.json",
     "react-native-readium.podspec",
     "!lib/typescript/example",
     "!android/build",
@@ -35,6 +37,7 @@
     "release": "release-it",
     "example": "yarn workspace example-native",
     "example:nextjs": "yarn workspace example-nextjs",
+    "nitrogen": "npx nitrogen",
     "pods": "cd apps/example-native && pod-install --quiet",
     "bootstrap": "yarn example && yarn && yarn pods",
     "version": "yarn changelog && git add CHANGELOG.md",
@@ -85,6 +88,7 @@
     "react": "19.0.0",
     "react-native": "0.83.1",
     "react-native-builder-bob": "^0.23.2",
+    "react-native-nitro-modules": "^0.33.2",
     "release-it": "^15.0.0",
     "rimraf": "^5.0.7",
     "turbo": "^1.10.7",
@@ -92,7 +96,8 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": ">=0.78.0",
+    "react-native-nitro-modules": "*"
   },
   "jest": {
     "preset": "react-native",

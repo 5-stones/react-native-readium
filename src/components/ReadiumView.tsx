@@ -1,41 +1,26 @@
 import React, {
   useCallback,
   useState,
-  useEffect,
   forwardRef,
   useRef,
-  useMemo,
+  useImperativeHandle,
 } from 'react';
-import { View, Platform, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { callback } from 'react-native-nitro-modules';
 
-import type {
-  BaseReadiumViewProps,
-  Dimensions,
-  Preferences,
-  DecorationGroups,
-  SelectionAction,
-} from '../interfaces';
-import { getWidthOrHeightValue as dimension } from '../utils';
-import { BaseReadiumView } from './BaseReadiumView';
-import { Commands } from '../ReadiumViewNativeComponent';
+import type { Dimensions } from '../interfaces';
+import { NitroReadiumView } from './NitroReadiumView';
+export type { ReadiumViewRef, ReadiumProps } from './ReadiumView.types';
+import type { ReadiumViewRef, ReadiumProps } from './ReadiumView.types';
 
-export type ReadiumProps = Omit<
-  BaseReadiumViewProps,
-  'preferences' | 'decorations' | 'selectionActions'
-> & {
-  preferences: Preferences;
-  decorations?: DecorationGroups;
-  selectionActions?: SelectionAction[];
-};
-
-export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
+export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
   (
     {
-      onLocationChange: wrappedOnLocationChange,
-      onPublicationReady: wrappedOnPublicationReady,
-      onDecorationActivated: wrappedOnDecorationActivated,
-      onSelectionChange: wrappedOnSelectionChange,
-      onSelectionAction: wrappedOnSelectionAction,
+      onLocationChange,
+      onPublicationReady,
+      onDecorationActivated,
+      onSelectionChange,
+      onSelectionAction,
       preferences,
       decorations,
       selectionActions,
@@ -43,13 +28,12 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
     },
     forwardedRef
   ) => {
-    const defaultRef = useRef<any>(null);
+    const nativeRef = useRef<any>(null);
     const [{ height, width }, setDimensions] = useState<Dimensions>({
       width: 0,
       height: 0,
     });
 
-    // set the view dimensions on layout
     const onLayout = useCallback(
       ({
         nativeEvent: {
@@ -57,106 +41,38 @@ export const ReadiumView: React.FC<ReadiumProps> = forwardRef(
         },
       }: any) => {
         setDimensions({
-          width: dimension(layoutWidth),
-          height: dimension(layoutHeight),
+          width: layoutWidth,
+          height: layoutHeight,
         });
       },
       []
     );
 
-    // wrap the native onLocationChange and extract the raw event value
-    const onLocationChange = useCallback(
-      (event: any) => {
-        if (wrappedOnLocationChange) {
-          wrappedOnLocationChange(event.nativeEvent);
-        }
-      },
-      [wrappedOnLocationChange]
-    );
+    const noop = () => {};
 
-    const onPublicationReady = useCallback(
-      (event: any) => {
-        if (wrappedOnPublicationReady) {
-          wrappedOnPublicationReady(event.nativeEvent);
-        }
-      },
-      [wrappedOnPublicationReady]
-    );
-
-    const onDecorationActivated = useCallback(
-      (event: any) => {
-        if (wrappedOnDecorationActivated) {
-          wrappedOnDecorationActivated(event.nativeEvent);
-        }
-      },
-      [wrappedOnDecorationActivated]
-    );
-
-    const onSelectionChange = useCallback(
-      (event: any) => {
-        if (wrappedOnSelectionChange) {
-          wrappedOnSelectionChange(event.nativeEvent);
-        }
-      },
-      [wrappedOnSelectionChange]
-    );
-
-    const onSelectionAction = useCallback(
-      (event: any) => {
-        if (wrappedOnSelectionAction) {
-          wrappedOnSelectionAction(event.nativeEvent);
-        }
-      },
-      [wrappedOnSelectionAction]
-    );
-
-    // create the view fragment on android
-    useEffect(() => {
-      if (Platform.OS === 'android' && defaultRef.current) {
-        Commands.create(defaultRef.current);
-      }
-    }, []);
-
-    // assign the forwarded ref
-    const hasDefaultRef = defaultRef.current !== null;
-    useEffect(() => {
-      if (forwardedRef && 'current' in forwardedRef) {
-        forwardedRef.current = defaultRef.current;
-      } else if (forwardedRef) {
-        forwardedRef(defaultRef);
-      }
-    }, [forwardedRef, hasDefaultRef, defaultRef]);
-
-    const stringifiedPreferences = useMemo(
-      () => JSON.stringify(preferences),
-      [preferences]
-    );
-
-    const stringifiedDecorations = useMemo(
-      () => (decorations ? JSON.stringify(decorations) : undefined),
-      [decorations]
-    );
-
-    const stringifiedSelectionActions = useMemo(
-      () => (selectionActions ? JSON.stringify(selectionActions) : undefined),
-      [selectionActions]
+    useImperativeHandle(
+      forwardedRef,
+      () => ({
+        goForward: () => nativeRef.current?.goForward(),
+        goBackward: () => nativeRef.current?.goBackward(),
+      }),
+      []
     );
 
     return (
       <View style={styles.container} onLayout={onLayout}>
-        <BaseReadiumView
-          height={height}
-          width={width}
+        <NitroReadiumView
+          style={{ width, height }}
           {...props}
-          preferences={stringifiedPreferences}
-          decorations={stringifiedDecorations}
-          selectionActions={stringifiedSelectionActions}
-          onLocationChange={onLocationChange}
-          onPublicationReady={onPublicationReady}
-          onDecorationActivated={onDecorationActivated}
-          onSelectionChange={onSelectionChange}
-          onSelectionAction={onSelectionAction}
-          ref={defaultRef}
+          preferences={preferences}
+          decorations={decorations}
+          selectionActions={selectionActions}
+          onLocationChange={callback(onLocationChange ?? noop)}
+          onPublicationReady={callback(onPublicationReady ?? noop)}
+          onDecorationActivated={callback(onDecorationActivated ?? noop)}
+          onSelectionChange={callback(onSelectionChange ?? noop)}
+          onSelectionAction={callback(onSelectionAction ?? noop)}
+          ref={nativeRef}
         />
       </View>
     );

@@ -3616,10 +3616,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-community/slider@npm:^5.1.1":
-  version: 5.1.1
-  resolution: "@react-native-community/slider@npm:5.1.1"
-  checksum: 63ab94d8ac22a0e4d7b86f0800283154604e93008dd04103e01a6aa5c56712d74f9b829665cd012ebc4fe29fa31f5a0d7e110bdeaa11bc9b347090f348428021
+"@react-native-community/slider@npm:^5.1.2":
+  version: 5.1.2
+  resolution: "@react-native-community/slider@npm:5.1.2"
+  checksum: 49ce66bb7c87e26d17a75043814ca29b61b417ab694cb54af0a555470e5e2770efbe37e253c836973d0fa688ba2b1e86f0915f8ce78d3c4b8a882429034dc66d
   languageName: node
   linkType: hard
 
@@ -8076,7 +8076,7 @@ __metadata:
     "@react-native-community/cli": 20.0.0
     "@react-native-community/cli-platform-android": 20.0.0
     "@react-native-community/cli-platform-ios": 20.0.0
-    "@react-native-community/slider": ^5.1.1
+    "@react-native-community/slider": ^5.1.2
     "@react-native/babel-preset": 0.83.0
     "@react-native/eslint-config": 0.83.0
     "@react-native/metro-config": 0.83.0
@@ -8098,6 +8098,7 @@ __metadata:
     react-native: 0.83.1
     react-native-clean-project: ^4.0.1
     react-native-fs: ^2.20.0
+    react-native-nitro-modules: ^0.33.2
     react-native-readium: "workspace:*"
     react-native-safe-area-context: ^5.6.2
     react-native-screens: ^4.19.0
@@ -8114,7 +8115,7 @@ __metadata:
     "@babel/core": 7.28.4
     "@expo/next-adapter": 6.0.0
     "@next/bundle-analyzer": 15.5.4
-    "@react-native-community/slider": ^5.1.1
+    "@react-native-community/slider": ^5.1.2
     "@react-navigation/native": ^7.0.15
     "@react-navigation/native-stack": ^7.2.1
     "@rneui/base": ^5.0.0
@@ -13884,6 +13885,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-nitro-modules@npm:^0.33.2":
+  version: 0.33.2
+  resolution: "react-native-nitro-modules@npm:0.33.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 2c1f4d4d40172a3d756e71d7ecf61d754ed79a4fde102e24b953df980282096fb3a1e04381f9aaefa8c62dfc89b29f098cc22747786c3feddc0087721961b3dd
+  languageName: node
+  linkType: hard
+
 "react-native-readium@workspace:*, react-native-readium@workspace:.":
   version: 0.0.0-use.local
   resolution: "react-native-readium@workspace:."
@@ -13912,6 +13923,7 @@ __metadata:
     react: 19.0.0
     react-native: 0.83.1
     react-native-builder-bob: ^0.23.2
+    react-native-nitro-modules: ^0.33.2
     release-it: ^15.0.0
     rimraf: ^5.0.7
     turbo: ^1.10.7
@@ -13919,7 +13931,8 @@ __metadata:
     use-deep-compare: ^1.1.0
   peerDependencies:
     react: "*"
-    react-native: "*"
+    react-native: ">=0.78.0"
+    react-native-nitro-modules: "*"
   languageName: unknown
   linkType: soft
 

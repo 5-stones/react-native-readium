@@ -20,13 +20,10 @@ import org.readium.r2.navigator.SelectableNavigator
 import org.readium.r2.navigator.epub.EpubNavigatorFragment
 import org.readium.r2.navigator.Navigator
 import org.readium.r2.navigator.epub.EpubPreferences
-import org.readium.r2.navigator.epub.EpubPreferencesSerializer
 import org.readium.r2.navigator.epub.EpubNavigatorFactory
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
 import org.readium.r2.navigator.preferences.Theme
-import org.json.JSONArray
-import org.json.JSONObject
 
 data class SelectionAction(
     val id: String,
@@ -41,8 +38,7 @@ class EpubReaderFragment : VisualReaderFragment() {
     lateinit var navigatorFragment: EpubNavigatorFragment
     private lateinit var factory: ReaderViewModel.Factory
     private lateinit var navigatorFactory: EpubNavigatorFactory
-    private val preferencesSerializer = EpubPreferencesSerializer()
-    private var initialPreferencesJsonString: String? = null
+    private var pendingPreferences: EpubPreferences? = null
 
     private lateinit var userPreferences: EpubPreferences
 
@@ -59,14 +55,12 @@ class EpubReaderFragment : VisualReaderFragment() {
 
     private fun ensureUserPreferencesInitialized() {
       if (this::userPreferences.isInitialized) return
-      userPreferences = initialPreferencesJsonString?.let {
-        preferencesSerializer.deserialize(it)
-      } ?: EpubPreferences()
+      userPreferences = pendingPreferences ?: EpubPreferences()
     }
 
     private fun applyPendingPreferencesIfNeeded() {
       if (!this::navigator.isInitialized) return
-      initialPreferencesJsonString?.let { updatePreferencesFromJsonString(it) }
+      pendingPreferences?.let { updatePreferences(it) }
     }
 
     fun initFactory(
@@ -80,17 +74,17 @@ class EpubReaderFragment : VisualReaderFragment() {
       navigatorFactory = EpubNavigatorFactory(publication)
     }
 
-    fun updatePreferencesFromJsonString(serialisedPreferences: String) {
-      userPreferences = preferencesSerializer.deserialize(serialisedPreferences)
+    fun updatePreferences(epubPreferences: EpubPreferences) {
+      userPreferences = epubPreferences
 
       if (this::navigator.isInitialized && navigator is EpubNavigatorFragment) {
         (navigator as EpubNavigatorFragment).submitPreferences(userPreferences)
-        initialPreferencesJsonString = null
+        pendingPreferences = null
 
         // Update position label color to match theme, similar to iOS implementation
         updatePositionLabelColor()
       } else {
-        initialPreferencesJsonString = serialisedPreferences
+        pendingPreferences = epubPreferences
       }
     }
 
@@ -105,26 +99,8 @@ class EpubReaderFragment : VisualReaderFragment() {
       setPositionLabelColor(color)
     }
 
-    fun updateSelectionActionsFromJsonString(serializedActions: String?) {
-      if (serializedActions == null) {
-        selectionActions = emptyList()
-        return
-      }
-
-      try {
-        val jsonArray = JSONArray(serializedActions)
-        val actions = mutableListOf<SelectionAction>()
-        for (i in 0 until jsonArray.length()) {
-          val jsonObject = jsonArray.getJSONObject(i)
-          val id = jsonObject.getString("id")
-          val label = jsonObject.getString("label")
-          actions.add(SelectionAction(id, label))
-        }
-        selectionActions = actions
-      } catch (e: Exception) {
-        android.util.Log.e("EpubReaderFragment", "Failed to parse selection actions", e)
-        selectionActions = emptyList()
-      }
+    fun updateSelectionActions(actions: List<SelectionAction>) {
+      selectionActions = actions
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

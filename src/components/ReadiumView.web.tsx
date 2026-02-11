@@ -2,33 +2,27 @@ import React, { useEffect, useImperativeHandle, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import type {
-  BaseReadiumViewProps,
-  Preferences,
-  DecorationGroups,
-} from '../interfaces';
 import {
   useNavigator,
   usePreferencesObserver,
   useLocationObserver,
   useDecorationsObserver,
 } from '../../web/hooks';
+import type { ReadiumProps as BaseReadiumProps, ReadiumViewRef as BaseReadiumViewRef } from './ReadiumView.types';
 
-export type ReadiumProps = Omit<
-  BaseReadiumViewProps,
-  'preferences' | 'decorations'
-> & {
-  preferences: Preferences;
-  decorations?: DecorationGroups;
+export type ReadiumProps = BaseReadiumProps & {
+  height?: number;
+  width?: number;
 };
 
-export const ReadiumView = React.forwardRef<
-  {
-    nextPage: () => void;
-    prevPage: () => void;
-  },
-  ReadiumProps
->(
+export type ReadiumViewRef = BaseReadiumViewRef & {
+  /** @deprecated Use goForward() */
+  nextPage: () => void;
+  /** @deprecated Use goBackward() */
+  prevPage: () => void;
+};
+
+export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
   (
     {
       file,
@@ -46,6 +40,12 @@ export const ReadiumView = React.forwardRef<
   ) => {
     const [container, setContainer] = useState<HTMLElement | null>(null);
     const [currentPosition, setCurrentPosition] = useState<number | null>(null);
+
+    // Convert DecorationGroup[] to DecorationGroups record for web hooks
+    const decorationsRecord = decorations
+      ? Object.fromEntries(decorations.map((g) => [g.name, g.decorations]))
+      : undefined;
+
     const { navigator, positions } = useNavigator({
       file,
       onLocationChange,
@@ -57,9 +57,17 @@ export const ReadiumView = React.forwardRef<
     useImperativeHandle(
       ref,
       () => ({
+        goForward: () => {
+          navigator?.goForward(true, () => {});
+        },
+        goBackward: () => {
+          navigator?.goBackward(true, () => {});
+        },
+        /** @deprecated Use goForward() */
         nextPage: () => {
           navigator?.goForward(true, () => {});
         },
+        /** @deprecated Use goBackward() */
         prevPage: () => {
           navigator?.goBackward(true, () => {});
         },
@@ -69,7 +77,7 @@ export const ReadiumView = React.forwardRef<
 
     usePreferencesObserver(navigator, preferences);
     useLocationObserver(navigator, location);
-    useDecorationsObserver(navigator, decorations, onDecorationActivated);
+    useDecorationsObserver(navigator, decorationsRecord, onDecorationActivated);
 
     // Generate position label text
     const positionLabel =
@@ -115,7 +123,6 @@ export const ReadiumView = React.forwardRef<
     if (width) mainStyle.width = width;
 
     // Determine theme colors based on preferences
-    // These match the THEME_COLORS defined in usePreferencesObserver.ts
     const getThemeColors = () => {
       const theme = preferences?.theme;
       switch (theme) {
