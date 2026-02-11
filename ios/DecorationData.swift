@@ -14,7 +14,7 @@ struct DecorationJSON: Codable {
     case id, locator, style, extras
   }
 
-  func toDecoration() -> Decoration? {
+  func toDecoration() -> ReadiumNavigator.Decoration? {
     guard let readiumLocator = locator.toLocator() else {
       return nil
     }
@@ -30,7 +30,7 @@ struct DecorationJSON: Codable {
       }
     }
 
-    return Decoration(
+    return ReadiumNavigator.Decoration(
       id: id,
       locator: readiumLocator,
       style: decorationStyle,
@@ -47,7 +47,7 @@ struct LocatorData: Codable {
   let locations: LocationsData?
   let text: TextData?
 
-  func toLocator() -> Locator? {
+  func toLocator() -> ReadiumShared.Locator? {
     // Convert href string to AnyURL
     guard let anyURL = AnyURL(legacyHREF: href) else {
       return nil
@@ -67,26 +67,26 @@ struct LocatorData: Codable {
     }
 
     // Try to create Locator.Locations from JSON, fall back to empty if it fails
-    let locatorLocations: Locator.Locations
+    let locatorLocations: ReadiumShared.Locator.Locations
     do {
-      locatorLocations = try Locator.Locations(json: locationsDict.isEmpty ? nil : locationsDict)
+      locatorLocations = try ReadiumShared.Locator.Locations(json: locationsDict.isEmpty ? nil : locationsDict)
     } catch {
-      locatorLocations = Locator.Locations()
+      locatorLocations = ReadiumShared.Locator.Locations()
     }
 
     // Convert text data to Locator.Text if present
-    let locatorText: Locator.Text
+    let locatorText: ReadiumShared.Locator.Text
     if let text = text {
-      locatorText = Locator.Text(
+      locatorText = ReadiumShared.Locator.Text(
         after: text.after,
         before: text.before,
         highlight: text.highlight
       )
     } else {
-      locatorText = Locator.Text()
+      locatorText = ReadiumShared.Locator.Text()
     }
 
-    return Locator(
+    return ReadiumShared.Locator(
       href: anyURL,
       mediaType: MediaType(type) ?? .html,
       title: title,
@@ -116,7 +116,7 @@ struct StyleData: Codable {
   let tint: String?
   let isActive: Bool?
 
-  func toDecorationStyle() -> Decoration.Style? {
+  func toDecorationStyle() -> ReadiumNavigator.Decoration.Style? {
     switch type {
     case "highlight":
       let color = tint.flatMap { parseColor($0) }
@@ -256,7 +256,7 @@ struct AnyCodable: Codable {
 }
 
 /// Extension to convert Decoration to JSON for React Native
-extension Decoration {
+extension ReadiumNavigator.Decoration {
   var json: [String: Any] {
     var dict: [String: Any] = [
       "id": id,
@@ -282,7 +282,7 @@ extension Decoration {
     var result: [String: Any] = ["type": style.id.rawValue]
 
     // Extract config if it's a HighlightConfig
-    if let highlightConfig = style.config as? Decoration.Style.HighlightConfig {
+    if let highlightConfig = style.config as? ReadiumNavigator.Decoration.Style.HighlightConfig {
       if let tint = highlightConfig.tint {
         result["tint"] = colorToHex(tint)
       }

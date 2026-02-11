@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import type {
-  Decoration,
-  HighlightStyle,
-  UnderlineStyle,
-} from 'react-native-readium';
+import type { Decoration } from 'react-native-readium';
 import { BaseModal } from '../BaseModal';
 import { ColorPicker } from './ColorPicker';
 import { modalStyles, HIGHLIGHT_COLORS } from '../../styles/modal';
@@ -18,11 +14,9 @@ interface HighlightEditDialogProps {
   onCancel: () => void;
 }
 
-// Type guard to check if style has a tint property
-const hasTint = (
-  style: Decoration['style']
-): style is HighlightStyle | UnderlineStyle => {
-  return style.type === 'highlight' || style.type === 'underline';
+// Check if style has a tint property
+const hasTint = (style: Decoration['style']): boolean => {
+  return style.tint !== undefined;
 };
 
 export const HighlightEditDialog: React.FC<HighlightEditDialogProps> = ({
@@ -34,7 +28,7 @@ export const HighlightEditDialog: React.FC<HighlightEditDialogProps> = ({
 }) => {
   const getTint = () => {
     if (highlight && hasTint(highlight.style)) {
-      return highlight.style.tint;
+      return highlight.style.tint!;
     }
     return HIGHLIGHT_COLORS[0].value;
   };

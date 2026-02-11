@@ -53,6 +53,7 @@ export const Reader: React.FC<ReaderProps> = ({
   // Highlight management
   const {
     decorations,
+    highlights,
     colorPickerVisible,
     pendingHighlight,
     editDialogVisible,
@@ -101,7 +102,7 @@ export const Reader: React.FC<ReaderProps> = ({
         </View>
         <View style={styles.button}>
           <HighlightManager
-            highlights={decorations.highlights || []}
+            highlights={highlights}
             onDeleteHighlight={handleDeleteHighlight}
             onNavigateToHighlight={setLocation}
             onEditHighlight={handleEditHighlight}
@@ -114,7 +115,7 @@ export const Reader: React.FC<ReaderProps> = ({
           <ReaderButton
             name="chevron-left"
             style={{ width: '10%' }}
-            onPress={() => ref.current?.prevPage()}
+            onPress={() => ref.current?.goBackward()}
           />
         ) : null}
 
@@ -138,7 +139,7 @@ export const Reader: React.FC<ReaderProps> = ({
           <ReaderButton
             name="chevron-right"
             style={{ width: '10%' }}
-            onPress={() => ref.current?.nextPage()}
+            onPress={() => ref.current?.goForward()}
           />
         ) : null}
       </View>

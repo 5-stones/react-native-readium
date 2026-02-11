@@ -1,0 +1,19 @@
+{
+  "uiViewClassName": "ReadiumView",
+  "supportsRawText": false,
+  "bubblingEventTypes": {},
+  "directEventTypes": {},
+  "validAttributes": {
+    "file": true,
+    "location": true,
+    "preferences": true,
+    "decorations": true,
+    "selectionActions": true,
+    "onLocationChange": true,
+    "onPublicationReady": true,
+    "onDecorationActivated": true,
+    "onSelectionChange": true,
+    "onSelectionAction": true,
+    "hybridRef": true
+  }
+}

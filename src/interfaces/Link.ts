@@ -1,18 +1,9 @@
+import type { Link as SpecLink } from '../specs/ReadiumView.nitro';
+
 /**
  * An interface representing the Readium Link object.
+ * Extends the Nitro spec Link with an optional properties bag.
  */
-export interface Link {
-  href: string;
-  templated: boolean;
-  type?: string | null;
-  title?: string | null;
-  rels?: Set<string>;
+export interface Link extends SpecLink {
   properties?: any;
-  height?: number | null;
-  width?: number | null;
-  bitrate?: number | null;
-  duration?: number | null;
-  languages?: string[];
-  alternates?: Link[];
-  children?: Link[];
 }

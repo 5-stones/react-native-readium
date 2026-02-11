@@ -1,5 +1,19 @@
-export interface Preferences {
-  backgroundColor?: string | null;
+import type { Preferences as SpecPreferences } from '../specs/ReadiumView.nitro';
+
+/**
+ * Preferences with refined string union types for better IDE autocompletion.
+ */
+export interface Preferences
+  extends Omit<
+    SpecPreferences,
+    | 'columnCount'
+    | 'fontFamily'
+    | 'imageFilter'
+    | 'readingProgression'
+    | 'spread'
+    | 'textAlign'
+    | 'theme'
+  > {
   columnCount?: 'auto' | '1' | '2';
   fontFamily?:
     | 'serif'
@@ -10,27 +24,9 @@ export interface Preferences {
     | 'AccessibleDfA'
     | 'IA Writer Duospace'
     | 'OpenDyslexic';
-  fontSize?: number;
-  fontWeight?: number;
-  hyphens?: boolean;
   imageFilter?: 'darken' | 'invert';
-  language?: string;
-  letterSpacing?: number;
-  ligatures?: boolean;
-  lineHeight?: number;
-  pageMargins?: number;
-  paragraphIndent?: number;
-  paragraphSpacing?: number;
-  publisherStyles?: boolean;
   readingProgression?: 'ltr' | 'rtl';
-  scroll?: boolean;
   spread?: 'auto' | 'never' | 'always';
   textAlign?: 'center' | 'justify' | 'start' | 'end' | 'left' | 'right';
-  textColor?: string | null;
-  textNormalization?: boolean;
   theme?: 'light' | 'dark' | 'sepia';
-  typeScale?: number;
-  verticalText?: boolean;
-  wordSpacing?: number;
-  merging?: boolean;
 }

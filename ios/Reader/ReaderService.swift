@@ -11,13 +11,6 @@ final class ReaderService: Loggable {
   private var subscriptions = Set<AnyCancellable>()
 
   init() {
-    do {
-      self.app = try AppModule()
-    } catch {
-      print("TODO: An error occurred instantiating the ReaderService")
-      print(error)
-    }
-
     let httpClient = DefaultHTTPClient()
     let assetRetriever = AssetRetriever(httpClient: httpClient)
     let parser = DefaultPublicationParser(
@@ -28,69 +21,19 @@ final class ReaderService: Loggable {
 
     self.assetRetriever = assetRetriever
     self.publicationOpener = PublicationOpener(parser: parser)
+
+    do {
+      self.app = try AppModule()
+    } catch {
+      log(.error, "Failed to instantiate AppModule: \(error)")
+    }
   }
   
-  /// Normalizes a location dictionary by removing leading slashes from its href for consistency across platforms.
-  ///
-  /// The Readium toolkit expects hrefs in relative format (e.g., "OPS/main3.xml")
-  /// rather than absolute format (e.g., "/OPS/main3.xml").
-  private static func normalizeLocation(_ location: NSDictionary) -> NSDictionary {
-    guard let href = location["href"] as? String else {
-      return location
-    }
-
-    // Check if href has a leading slash
-    guard href.hasPrefix("/") else {
-      return location
-    }
-
-    // Create a mutable copy and normalize the href
-    let normalized = NSMutableDictionary(dictionary: location)
-    let normalizedHref = String(href.dropFirst())
-    normalized["href"] = normalizedHref
-
-    return normalized
-  }
-
-  static func locatorFromLocation(
-    _ location: NSDictionary?,
-    _ publication: Publication?
-  ) async -> Locator? {
-    guard location != nil else {
-      return nil
-    }
-
-    // Normalize the location by removing leading slashes from href
-    let normalizedDict = normalizeLocation(location!)
-
-    let hasLocations = normalizedDict["locations"] != nil
-    let hasType = (normalizedDict["type"] as? String)?.isEmpty == false
-    let hasChildren = normalizedDict["children"] != nil
-    let hasHashHref = (normalizedDict["href"] as? String)?.contains("#") == true
-    let hasTemplated = normalizedDict["templated"] != nil
-
-    // check that we're not dealing with a Link
-    if ((!hasType || hasChildren || hasHashHref || hasTemplated) && !hasLocations) {
-      guard let publication = publication else {
-        return nil
-      }
-      guard let link = try? Link(json: normalizedDict) else {
-        return nil
-      }
-
-      let locator = await publication.locate(link)
-      return locator
-    } else {
-      let locator = try? Locator(json: normalizedDict)
-      return locator
-    }
-  }
-
   func buildViewController(
     url: String,
     bookId: String,
-    location: NSDictionary?,
-    selectionActions: String?,
+    locator: ReadiumShared.Locator?,
+    selectionActions: [SelectionActionData]?,
     sender: UIViewController?,
     completion: @escaping (ReaderViewController) -> Void
   ) {
@@ -99,12 +42,13 @@ final class ReaderService: Loggable {
       .flatMap { self.openPublication(at: $0, allowUserInteraction: true, sender: sender ) }
       .flatMap { (pub, _) in self.checkIsReadable(publication: pub) }
       .sink(
-        receiveCompletion: { error in
-          print(">>>>>>>>>>> TODO: handle me", error)
+        receiveCompletion: { [weak self] completion in
+          if case .failure(let error) = completion {
+            self?.log(.error, "Failed to open publication: \(error)")
+          }
         },
         receiveValue: { pub in
           Task { @MainActor in
-            let locator = await ReaderService.locatorFromLocation(location, pub)
             guard let viewController = reader.getViewController(
               for: pub,
               bookId: bookId,

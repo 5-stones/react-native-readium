@@ -2,7 +2,6 @@ import Foundation
 import UIKit
 import ReadiumShared
 
-
 final class EPUBModule: ReaderFormatModule {
 
     weak var delegate: ReaderFormatModuleDelegate?
@@ -18,9 +17,9 @@ final class EPUBModule: ReaderFormatModule {
 
     func makeReaderViewController(
       for publication: Publication,
-      locator: Locator?,
+      locator: ReadiumShared.Locator?,
       bookId: String,
-      selectionActions: String?
+      selectionActions: [SelectionActionData]?
     ) throws -> ReaderViewController {
         guard publication.metadata.identifier != nil else {
             throw ReaderError.epubNotValid

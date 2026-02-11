@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import type {
-  DecorationGroups,
+  DecorationGroup,
   Decoration,
   SelectionEvent,
   SelectionActionEvent,
@@ -9,9 +9,9 @@ import type {
 import type { CurrentSelection, PendingHighlight } from '../types/reader.types';
 
 export const useHighlights = () => {
-  const [decorations, setDecorations] = useState<DecorationGroups>({
-    highlights: [],
-  });
+  const [decorations, setDecorations] = useState<DecorationGroup[]>([
+    { name: 'highlights', decorations: [] },
+  ]);
   const [currentSelection, setCurrentSelection] =
     useState<CurrentSelection | null>(null);
   const [colorPickerVisible, setColorPickerVisible] = useState(false);
@@ -21,6 +21,28 @@ export const useHighlights = () => {
   const [selectedHighlight, setSelectedHighlight] = useState<Decoration | null>(
     null
   );
+
+  const getHighlights = (groups: DecorationGroup[]): Decoration[] => {
+    return groups.find((g) => g.name === 'highlights')?.decorations || [];
+  };
+
+  const updateHighlights = (
+    groups: DecorationGroup[],
+    updater: (highlights: Decoration[]) => Decoration[]
+  ): DecorationGroup[] => {
+    const existing = groups.find((g) => g.name === 'highlights');
+    const currentHighlights = existing?.decorations || [];
+    const newHighlights = updater(currentHighlights);
+
+    if (existing) {
+      return groups.map((g) =>
+        g.name === 'highlights'
+          ? { ...g, decorations: newHighlights }
+          : g
+      );
+    }
+    return [...groups, { name: 'highlights', decorations: newHighlights }];
+  };
 
   // Selection change handler
   const handleSelectionChange = useCallback((event: SelectionEvent) => {
@@ -64,10 +86,9 @@ export const useHighlights = () => {
         },
       };
 
-      setDecorations((prev) => ({
-        ...prev,
-        highlights: [...(prev.highlights || []), newHighlight],
-      }));
+      setDecorations((prev) =>
+        updateHighlights(prev, (highlights) => [...highlights, newHighlight])
+      );
 
       setColorPickerVisible(false);
       setPendingHighlight(null);
@@ -83,10 +104,11 @@ export const useHighlights = () => {
 
   // Delete highlight
   const handleDeleteHighlight = useCallback((id: string) => {
-    setDecorations((prev) => ({
-      ...prev,
-      highlights: (prev.highlights || []).filter((h) => h.id !== id),
-    }));
+    setDecorations((prev) =>
+      updateHighlights(prev, (highlights) =>
+        highlights.filter((h) => h.id !== id)
+      )
+    );
   }, []);
 
   // Handle decoration activation (tap on highlight)
@@ -108,18 +130,19 @@ export const useHighlights = () => {
   // Update highlight (update both color and note)
   const handleUpdateHighlight = useCallback(
     (id: string, color: string, note: string) => {
-      setDecorations((prev) => ({
-        ...prev,
-        highlights: (prev.highlights || []).map((h) =>
-          h.id === id
-            ? {
-                ...h,
-                style: { ...h.style, tint: color },
-                extras: { ...h.extras, note },
-              }
-            : h
-        ),
-      }));
+      setDecorations((prev) =>
+        updateHighlights(prev, (highlights) =>
+          highlights.map((h) =>
+            h.id === id
+              ? {
+                  ...h,
+                  style: { ...h.style, tint: color },
+                  extras: { ...h.extras, note },
+                }
+              : h
+          )
+        )
+      );
       setEditDialogVisible(false);
       setSelectedHighlight(null);
     },
@@ -128,10 +151,11 @@ export const useHighlights = () => {
 
   // Delete highlight from edit dialog
   const handleDeleteFromDialog = useCallback((id: string) => {
-    setDecorations((prev) => ({
-      ...prev,
-      highlights: (prev.highlights || []).filter((h) => h.id !== id),
-    }));
+    setDecorations((prev) =>
+      updateHighlights(prev, (highlights) =>
+        highlights.filter((h) => h.id !== id)
+      )
+    );
     setEditDialogVisible(false);
     setSelectedHighlight(null);
   }, []);
@@ -145,6 +169,7 @@ export const useHighlights = () => {
   return {
     // State
     decorations,
+    highlights: getHighlights(decorations),
     currentSelection,
     colorPickerVisible,
     pendingHighlight,

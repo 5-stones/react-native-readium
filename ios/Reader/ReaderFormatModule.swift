@@ -2,7 +2,6 @@ import Foundation
 import UIKit
 import ReadiumShared
 
-
 /// A ReaderFormatModule is a sub-module of ReaderModule that handles publication of a given format (eg. EPUB, CBZ).
 protocol ReaderFormatModule {
 
@@ -14,9 +13,9 @@ protocol ReaderFormatModule {
   /// Creates the view controller to present the publication.
   func makeReaderViewController(
     for publication: Publication,
-    locator: Locator?,
+    locator: ReadiumShared.Locator?,
     bookId: String,
-    selectionActions: String?
+    selectionActions: [SelectionActionData]?
   ) throws -> ReaderViewController
 
 }

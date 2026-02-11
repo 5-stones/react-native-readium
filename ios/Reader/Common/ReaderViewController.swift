@@ -6,7 +6,6 @@ import ReadiumShared
 import SwiftSoup
 import WebKit
 
-
 /// This class is meant to be subclassed by each publication format view controller. It contains the shared behavior, eg. navigation bar toggling.
 class ReaderViewController: UIViewController, Loggable {
 
@@ -19,11 +18,11 @@ class ReaderViewController: UIViewController, Loggable {
   private(set) var stackView: UIStackView!
   private lazy var positionLabel = UILabel()
   private var subscriptions = Set<AnyCancellable>()
-  private var subject = PassthroughSubject<Locator, Never>()
+  private var subject = PassthroughSubject<ReadiumShared.Locator, Never>()
   lazy var publisher = subject.eraseToAnyPublisher()
   private var positionsCount: Int?
   private var positionsLoadingTask: Task<Void, Never>?
-  private var lastKnownLocator: Locator?
+  private var lastKnownLocator: ReadiumShared.Locator?
   private var navigatorInputObserverTokens = Set<InputObservableToken>()
 
   /// This regex matches any string with at least 2 consecutive letters (not limited to ASCII).
@@ -136,34 +135,6 @@ class ReaderViewController: UIViewController, Loggable {
     return navigationBarHidden && !UIAccessibility.isVoiceOverRunning
   }
 
-
-  // MARK: - Locations
-  /// FIXME: This should be implemented in a shared Navigator interface, using Locators.
-
-  var currentBookmark: Bookmark? {
-    fatalError("Not implemented")
-  }
-
-  // MARK: - Bookmarks
-
-  @objc func bookmarkCurrentPosition() {
-    // guard let bookmark = currentBookmark else {
-    //   return
-    // }
-
-    // TODO: this should call a react callback
-    // bookmarks.add(bookmark)
-    //   .sink { completion in
-    //     switch completion {
-    //     case .finished:
-    //       toast(NSLocalizedString("reader_bookmark_success_message", comment: "Success message when adding a bookmark"), on: self.view, duration: 1)
-    //     case .failure(let error):
-    //       print(error)
-    //       toast(NSLocalizedString("reader_bookmark_failure_message", comment: "Error message when adding a new bookmark failed"), on: self.view, duration: 2)
-    //     }
-    //   } receiveValue: { _ in }
-    //   .store(in: &subscriptions)
-  }
 
   // MARK: - Accessibility
 
@@ -278,7 +249,7 @@ class ReaderViewController: UIViewController, Loggable {
 }
 
 extension ReaderViewController: NavigatorDelegate {
-  func navigator(_ navigator: Navigator, locationDidChange locator: Locator) {
+  func navigator(_ navigator: Navigator, locationDidChange locator: ReadiumShared.Locator) {
     subject.send(locator)
     updatePositionLabel(with: locator)
   }
@@ -295,7 +266,7 @@ extension ReaderViewController: NavigatorDelegate {
     moduleDelegate?.presentError(error, from: self)
   }
 
-  func navigator(_ navigator: Navigator, shouldNavigateToNoteAt link: Link, content: String, referrer: String?) -> Bool {
+  func navigator(_ navigator: Navigator, shouldNavigateToNoteAt link: ReadiumShared.Link, content: String, referrer: String?) -> Bool {
 
     var title = referrer
     if let t = title {
@@ -343,12 +314,12 @@ extension ReaderViewController: NavigatorDelegate {
 }
 
 extension ReaderViewController {
-  private func updatePositionLabel(with locator: Locator) {
+  private func updatePositionLabel(with locator: ReadiumShared.Locator) {
     lastKnownLocator = locator
     positionLabel.text = positionLabelText(for: locator)
   }
 
-  private func positionLabelText(for locator: Locator) -> String? {
+  private func positionLabelText(for locator: ReadiumShared.Locator) -> String? {
     if let position = locator.locations.position {
       if let total = positionsCount {
         return "\(position) / \(total)"
