@@ -120,7 +120,9 @@ class EpubReaderFragment : VisualReaderFragment() {
               initialLocator = model.initialLocation,
               initialPreferences = userPreferences,
               configuration = EpubNavigatorFragment.Configuration {
-                selectionActionModeCallback = customSelectionActionModeCallback
+                if (selectionActions.isNotEmpty()) {
+                  selectionActionModeCallback = customSelectionActionModeCallback
+                }
               }
             )
 

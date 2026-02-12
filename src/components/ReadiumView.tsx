@@ -69,7 +69,7 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
             {...props}
             preferences={preferences}
             decorations={decorations}
-            selectionActions={selectionActions}
+            selectionActions={selectionActions ?? []}
             onLocationChange={callback(onLocationChange ?? noop)}
             onPublicationReady={callback(onPublicationReady ?? noop)}
             onDecorationActivated={callback(onDecorationActivated ?? noop)}

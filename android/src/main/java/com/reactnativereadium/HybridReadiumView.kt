@@ -243,7 +243,7 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
   // MARK: - Selection Actions
 
   private fun updateSelectionActions() {
-    val actions = selectionActions ?: return
+    val actions = selectionActions?.takeIf { it.isNotEmpty() } ?: return
     if (fragment == null) return
 
     val fragmentActions = actions.map { FragmentSelectionAction(it.id, it.label) }
@@ -491,6 +491,14 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
 
     hostView.id = View.generateViewId()
 
+    // Apply selection actions BEFORE committing so they're available
+    // during onCreate when the callback is conditionally registered.
+    selectionActions?.takeIf { it.isNotEmpty() }?.let { actions ->
+      if (frag is EpubReaderFragment) {
+        frag.updateSelectionActions(actions.map { FragmentSelectionAction(it.id, it.label) })
+      }
+    }
+
     activity.supportFragmentManager
       .beginTransaction()
       .replace(hostView.id, frag, hostView.id.toString())
@@ -517,7 +525,6 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
     // Apply pending state
     preferences?.let { updatePreferences() }
     decorations?.let { updateDecorations() }
-    selectionActions?.let { updateSelectionActions() }
 
     // Subscribe to fragment events
     frag.channel.receive(frag) { event ->
