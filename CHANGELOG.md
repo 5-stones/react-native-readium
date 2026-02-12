@@ -1,3 +1,17 @@
+# [5.0.0-rc.2](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.1...v5.0.0-rc.2) (2026-02-12)
+
+
+### Features
+
+* **ios, android:** fix some runtime errors, add install helper scripts, update docs ([7e8bbad](https://github.com/5-stones/react-native-readium/commit/7e8bbad39c20c3f46ffb419140df81dbfe18254a))
+
+
+### BREAKING CHANGES
+
+* **ios, android:** update your Podfile and use the `readium_pods` and `readium_post_install` helpers
+
+
+
 # [5.0.0-rc.1](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.0...v5.0.0-rc.1) (2026-02-11)
 
 
