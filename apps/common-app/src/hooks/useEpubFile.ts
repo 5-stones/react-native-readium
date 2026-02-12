@@ -46,7 +46,7 @@ export const useEpubFile = ({
 
             await promise;
           } else {
-            console.log('File already exists. Skipping download.');
+            console.log('File already exists. Skipping download.', epubUrl, localPath);
           }
 
           url = localPath;

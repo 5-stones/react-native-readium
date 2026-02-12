@@ -17,7 +17,6 @@ import com.reactnativereadium.utils.readiumLocatorToNitro
 import com.reactnativereadium.utils.readiumLinkToNitro
 import com.reactnativereadium.utils.readiumDecorationToNitro
 import com.reactnativereadium.utils.readiumMetadataToNitro
-import com.reactnativereadium.utils.normalizeHref
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -27,21 +26,26 @@ import kotlinx.coroutines.launch
 class HybridReadiumView(private val context: android.content.Context) : HybridReadiumViewSpec() {
   companion object {
     private const val TAG = "HybridReadiumView"
+    private var nextInstanceId = 0
+    // Fabric creates the new native view before removing the old one when React
+    // remounts via key change. The old hostView (with its WebView) stays in the
+    // tree covering the new view until Fabric eventually detaches it. This
+    // registry lets a new instance force-clear stale ones immediately.
+    private val liveInstances = mutableMapOf<Int, HybridReadiumView>()
     init {
       NitroReadiumOnLoad.initializeNative()
     }
   }
 
+  private val instanceId = nextInstanceId++
   private val hostView = FrameLayout(context)
-  private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+  private var scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
   private var svc: ReaderService? = null
   private var fragment: BaseReaderFragment? = null
   private var isFragmentAdded = false
   private var isBuilding = false
   private var isAttached = false
   private var frameCallback: Choreographer.FrameCallback? = null
-  private var viewWidth = 0
-  private var viewHeight = 0
 
   override val view: View get() = hostView
 
@@ -53,24 +57,21 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
       }
       override fun onViewDetachedFromWindow(v: View) {
         isAttached = false
-        frameCallback?.let {
-          try {
-            Choreographer.getInstance().removeFrameCallback(it)
-          } catch (e: Exception) {
-            Log.w(TAG, "Failed to remove frame callback: ${e.message}")
-          }
-        }
-        frameCallback = null
-        scope.cancel()
+        teardownFragment()
       }
     })
   }
 
-  // Props
+  // MARK: - Props
+
   override var file: ReadiumFile? = null
     set(value) {
+      val previousUrl = field?.url
       field = value
       if (value != null) {
+        if (isFragmentAdded && value.url != previousUrl) {
+          teardownFragment()
+        }
         buildForViewIfReady()
       }
     }
@@ -169,6 +170,43 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
 
   // MARK: - Fragment management
 
+  private fun teardownFragment() {
+    liveInstances.remove(instanceId)
+
+    // Stop the frame callback loop
+    frameCallback?.let {
+      try {
+        Choreographer.getInstance().removeFrameCallback(it)
+      } catch (e: Exception) {
+        Log.w(TAG, "Failed to remove frame callback during teardown: ${e.message}")
+      }
+    }
+    frameCallback = null
+
+    // Remove the old fragment from the FragmentManager
+    fragment?.let { frag ->
+      try {
+        val activity = findActivity()
+        activity?.supportFragmentManager
+          ?.beginTransaction()
+          ?.remove(frag)
+          ?.commitNowAllowingStateLoss()
+      } catch (e: Exception) {
+        Log.w(TAG, "teardownFragment: failed to remove fragment: ${e.message}")
+      }
+    }
+
+    // Clear the hostView children and reset state
+    hostView.removeAllViews()
+    fragment = null
+    isFragmentAdded = false
+    isBuilding = false
+
+    // Replace the cancelled scope with a fresh one
+    scope.cancel()
+    scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+  }
+
   private fun buildForViewIfReady() {
     if (!isAttached) return
     if (isFragmentAdded) return
@@ -199,20 +237,20 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
   private fun addFragment(frag: BaseReaderFragment) {
     if (isFragmentAdded) return
 
+    // Force-clear any stale instances whose hostViews are still in Fabric's
+    // tree. Teardown removes their fragment + children; GONE hides the
+    // hostView in case the WebView's hardware layer persists.
+    liveInstances.values.toList().filter { it !== this }.forEach { other ->
+      other.teardownFragment()
+      other.hostView.visibility = View.GONE
+    }
+    liveInstances[instanceId] = this
+
     fragment = frag
     isFragmentAdded = true
     setupLayout()
 
-    val activity = hostView.context as? FragmentActivity
-      ?: (hostView.context as? android.content.ContextWrapper)?.let {
-        var ctx = it.baseContext
-        while (ctx is android.content.ContextWrapper) {
-          if (ctx is FragmentActivity) return@let ctx
-          ctx = ctx.baseContext
-        }
-        null
-      }
-
+    val activity = findActivity()
     if (activity == null) {
       Log.e(TAG, "Could not find FragmentActivity")
       return
@@ -249,7 +287,7 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
           FrameLayout.LayoutParams.MATCH_PARENT
         )
       }
-    }
+    } ?: Log.w(TAG, "addFragment: fragment view is null after commitNow!")
 
     // Apply pending state
     preferences?.let { updatePreferences() }
@@ -329,4 +367,15 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
     }
   }
 
+  private fun findActivity(): FragmentActivity? {
+    return hostView.context as? FragmentActivity
+      ?: (hostView.context as? android.content.ContextWrapper)?.let {
+        var ctx = it.baseContext
+        while (ctx is android.content.ContextWrapper) {
+          if (ctx is FragmentActivity) return ctx
+          ctx = ctx.baseContext
+        }
+        null
+      }
+  }
 }
