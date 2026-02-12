@@ -1,3 +1,12 @@
+# [5.0.0-rc.4](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.3...v5.0.0-rc.4) (2026-02-12)
+
+
+### Bug Fixes
+
+* **android, ios:** fix an selectionAction props causing rendering issues ([1d1ff03](https://github.com/5-stones/react-native-readium/commit/1d1ff039fe06150e14806244c4193a77c8df4acf))
+
+
+
 # [5.0.0-rc.3](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.2...v5.0.0-rc.3) (2026-02-12)
 
 
