@@ -1,47 +1,32 @@
 package com.reactnativereadium.utils
 
-import org.json.JSONObject
+/**
+ * Result of normalizing a Nitro href string for use with the Readium 3.x SDK.
+ *
+ * @property resourcePath The resource path without leading "/" or fragment (e.g. "OEBPS/chapter1.xhtml")
+ * @property fragment The fragment identifier without "#" prefix (e.g. "pgepubid00005"), or null if not present
+ */
+data class NormalizedHref(val resourcePath: String, val fragment: String?)
 
 /**
- * Normalizes an href by removing leading slashes for consistency across platforms.
+ * Normalizes an href string from the JS/Nitro layer for use with the Readium 3.x SDK.
  *
- * The Readium toolkit expects hrefs in relative format (e.g., "OPS/main3.xml")
- * rather than absolute format (e.g., "/OPS/main3.xml").
- *
- * @param href The href to normalize
- * @return The normalized href without leading slash
+ * Handles two issues:
+ * - Readium 3.x uses relative hrefs (e.g. "OEBPS/chapter1.xhtml") rather than
+ *   root-relative ("/OEBPS/chapter1.xhtml") which was the convention in Readium 2.x.
+ * - Readium 3.x expects fragment identifiers (e.g. "#chapter1") in
+ *   `Locator.Locations.fragments`, not embedded in the href URL.
  */
-fun normalizeHref(href: String): String {
-  return if (href.startsWith("/")) {
-    href.removePrefix("/")
+fun normalizeHref(href: String): NormalizedHref {
+  val withoutSlash = if (href.startsWith("/")) href.removePrefix("/") else href
+  val fragmentIndex = withoutSlash.indexOf('#')
+
+  return if (fragmentIndex >= 0) {
+    NormalizedHref(
+      resourcePath = withoutSlash.substring(0, fragmentIndex),
+      fragment = withoutSlash.substring(fragmentIndex + 1)
+    )
   } else {
-    href
+    NormalizedHref(resourcePath = withoutSlash, fragment = null)
   }
 }
-
-/**
- * Normalizes a location JSONObject by normalizing its href.
- *
- * @param location The location JSONObject to normalize
- * @return A new JSONObject with normalized href
- */
-fun normalizeLocation(location: JSONObject): JSONObject {
-  val normalized = JSONObject(location.toString()) // Deep copy
-
-  if (normalized.has("href")) {
-    val href = normalized.getString("href")
-    val normalizedHref = normalizeHref(href)
-    if (href != normalizedHref) {
-      normalized.put("href", normalizedHref)
-    }
-  }
-
-  return normalized
-}
-
-/**
- * Extension function to normalize the href in a JSONObject.
- *
- * @return A new JSONObject with normalized href
- */
-fun JSONObject.normalizedLocation(): JSONObject = normalizeLocation(this)

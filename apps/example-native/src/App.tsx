@@ -9,19 +9,8 @@ const Stack = createNativeStackNavigator();
 function ReaderScreen() {
   return (
     <Reader
-      epubUrl="https://test.opds.io/assets/moby/file.epub"
-      epubPath={`${RNFS.DocumentDirectoryPath}/moby-dick.epub`}
-      initialLocation={{
-        href: '/OPS/main3.xml',
-        title: 'Chapter 2 - The Carpet-Bag',
-        type: 'application/xhtml+xml',
-        target: 27,
-        locations: {
-          position: 24,
-          progression: 0,
-          totalProgression: 0.03392330383480826,
-        },
-      }}
+      epubUrl="https://www.gutenberg.org/ebooks/3296.epub3.images"
+      epubPath={`${RNFS.DocumentDirectoryPath}/confessions.epub2`}
     />
   );
 }

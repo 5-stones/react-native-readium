@@ -6,12 +6,6 @@ import ReadiumStreamer
 import UIKit
 import ReadiumNavigator
 
-// Nitro-generated types shadow Readium SDK types of the same name.
-// Use these aliases when referring to the Readium SDK types explicitly.
-typealias RDecoration = ReadiumNavigator.Decoration
-typealias RLocator = ReadiumShared.Locator
-typealias RLink = ReadiumShared.Link
-
 class HybridReadiumView: HybridReadiumViewSpec {
 
   // MARK: - HybridReadiumViewSpec conformance
@@ -128,7 +122,7 @@ class HybridReadiumView: HybridReadiumViewSpec {
       guard let self = self else { return }
       guard let navigator = self.readerViewController?.navigator else { return }
       guard let loc = self.location else { return }
-      guard let locator = self.nitroLocatorToReadium(loc) else { return }
+      guard let locator = nitroLocatorToReadium(loc) else { return }
 
       let currentLocation = navigator.currentLocation
       if let currentLocation, locator.hashValue == currentLocation.hashValue {
@@ -148,36 +142,6 @@ class HybridReadiumView: HybridReadiumViewSpec {
 
     let epubPrefs = nitroPreferencesToEPUB(prefs)
     navigator.submitPreferences(epubPrefs)
-  }
-
-  private func nitroPreferencesToEPUB(_ prefs: Preferences) -> EPUBPreferences {
-    return EPUBPreferences(
-      backgroundColor: prefs.backgroundColor.flatMap { ReadiumNavigator.Color(hex: $0) },
-      columnCount: prefs.columnCount.flatMap { ColumnCount(rawValue: $0) },
-      fontFamily: prefs.fontFamily.map { FontFamily(rawValue: $0) },
-      fontSize: prefs.fontSize,
-      fontWeight: prefs.fontWeight,
-      hyphens: prefs.hyphens,
-      imageFilter: prefs.imageFilter.flatMap { ImageFilter(rawValue: $0) },
-      language: prefs.language.map { Language(code: .bcp47($0)) },
-      letterSpacing: prefs.letterSpacing,
-      ligatures: prefs.ligatures,
-      lineHeight: prefs.lineHeight,
-      pageMargins: prefs.pageMargins,
-      paragraphIndent: prefs.paragraphIndent,
-      paragraphSpacing: prefs.paragraphSpacing,
-      publisherStyles: prefs.publisherStyles,
-      readingProgression: prefs.readingProgression.flatMap { ReadiumNavigator.ReadingProgression(rawValue: $0) },
-      scroll: prefs.scroll,
-      spread: prefs.spread.flatMap { Spread(rawValue: $0) },
-      textAlign: prefs.textAlign.flatMap { TextAlignment(rawValue: $0) },
-      textColor: prefs.textColor.flatMap { ReadiumNavigator.Color(hex: $0) },
-      textNormalization: prefs.textNormalization,
-      theme: prefs.theme.flatMap { Theme(rawValue: $0) },
-      typeScale: prefs.typeScale,
-      verticalText: prefs.verticalText,
-      wordSpacing: prefs.wordSpacing
-    )
   }
 
   // MARK: - Decorations
@@ -200,7 +164,7 @@ class HybridReadiumView: HybridReadiumViewSpec {
         navigator.observeDecorationInteractions(inGroup: group.name) { [weak self] event in
           guard let self = self else { return }
 
-          let decorationPayload = self.readiumDecorationToNitro(event.decoration, group: event.group)
+          let decorationPayload = readiumDecorationToNitro(event.decoration, group: event.group)
 
           var rect: Rect?
           if let r = event.rect {
@@ -225,103 +189,11 @@ class HybridReadiumView: HybridReadiumViewSpec {
     }
   }
 
-  // MARK: - Conversion helpers
+  // MARK: - Selection Actions
 
-  private func nitroLocatorToReadium(_ loc: Locator) -> RLocator? {
-    let locatorData = LocatorData(
-      href: loc.href,
-      type: loc.type,
-      title: loc.title,
-      locations: loc.locations.map {
-        LocationsData(progression: $0.progression, position: $0.position.map { Int($0) }, totalProgression: $0.totalProgression)
-      },
-      text: loc.text.map {
-        TextData(before: $0.before, highlight: $0.highlight, after: $0.after)
-      }
-    )
-    return locatorData.toLocator()
-  }
-
-  private func nitroDecorationToReadium(_ dec: Decoration) -> RDecoration? {
-    guard let readiumLocator = nitroLocatorToReadium(dec.locator) else { return nil }
-
-    let styleData = StyleData(type: dec.style.type, tint: dec.style.tint, isActive: dec.style.isActive)
-    guard let readiumStyle = styleData.toDecorationStyle() else { return nil }
-
-    var userInfo: [AnyHashable: AnyHashable] = [:]
-    if let extras = dec.extras {
-      for (key, value) in extras {
-        userInfo[key] = value
-      }
-    }
-
-    return RDecoration(
-      id: dec.id,
-      locator: readiumLocator,
-      style: readiumStyle,
-      userInfo: userInfo
-    )
-  }
-
-  private func readiumDecorationToNitro(_ dec: RDecoration, group: String) -> Decoration {
-    let locator = readiumLocatorToNitro(dec.locator)
-
-    var styleType = "highlight"
-    var tint: String?
-    var isActive: Bool?
-
-    if let highlightConfig = dec.style.config as? RDecoration.Style.HighlightConfig {
-      styleType = "highlight"
-      tint = highlightConfig.tint.map { colorToHex($0) }
-      isActive = highlightConfig.isActive
-    }
-
-    let style = DecorationStyle(type: styleType, tint: tint, isActive: isActive, id: nil, html: nil, css: nil, layout: nil, width: nil)
-
-    var extras: [String: String]?
-    if !dec.userInfo.isEmpty {
-      var dict: [String: String] = [:]
-      for (key, value) in dec.userInfo {
-        if let k = key as? String {
-          dict[k] = "\(value)"
-        }
-      }
-      extras = dict
-    }
-
-    return Decoration(id: dec.id, locator: locator, style: style, extras: extras)
-  }
-
-  private func readiumLocatorToNitro(_ loc: RLocator) -> Locator {
-    let locations = LocatorLocations(
-      progression: loc.locations.progression ?? 0,
-      position: loc.locations.position.map { Double($0) },
-      totalProgression: loc.locations.totalProgression
-    )
-
-    let text: LocatorText? = {
-      let t = loc.text
-      if t.after == nil && t.before == nil && t.highlight == nil { return nil }
-      return LocatorText(before: t.before, highlight: t.highlight, after: t.after)
-    }()
-
-    return Locator(
-      href: loc.href.string,
-      type: loc.mediaType.string,
-      target: nil,
-      title: loc.title,
-      locations: locations,
-      text: text
-    )
-  }
-
-  private func colorToHex(_ color: UIColor) -> String {
-    var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
-    color.getRed(&r, green: &g, blue: &b, alpha: &a)
-    if a < 1.0 {
-      return String(format: "#%02X%02X%02X%02X", Int(a * 255), Int(r * 255), Int(g * 255), Int(b * 255))
-    }
-    return String(format: "#%02X%02X%02X", Int(r * 255), Int(g * 255), Int(b * 255))
+  private func updateSelectionActions() {
+    guard let actions = selectionActions, !actions.isEmpty else { return }
+    // Selection actions are applied during fragment setup
   }
 
   // MARK: - View lifecycle
@@ -329,7 +201,7 @@ class HybridReadiumView: HybridReadiumViewSpec {
   private func addViewControllerAsSubview(_ vc: ReaderViewController) {
     vc.publisher.sink(receiveValue: { [weak self] locator in
       guard let self = self else { return }
-      let nitroLocator = self.readiumLocatorToNitro(locator)
+      let nitroLocator = readiumLocatorToNitro(locator)
       self.onLocationChange?(nitroLocator)
     })
     .store(in: &subscriptions)
@@ -368,7 +240,7 @@ class HybridReadiumView: HybridReadiumViewSpec {
       var tocLinks: [Link] = []
       switch tocResult {
       case .success(let links):
-        tocLinks = links.map { self.readiumLinkToNitro($0) }
+        tocLinks = links.map { readiumLinkToNitro($0) }
       case .failure:
         tocLinks = []
       }
@@ -376,12 +248,12 @@ class HybridReadiumView: HybridReadiumViewSpec {
       var positions: [Locator] = []
       switch positionsResult {
       case .success(let pos):
-        positions = pos.map { self.readiumLocatorToNitro($0) }
+        positions = pos.map { readiumLocatorToNitro($0) }
       case .failure:
         positions = []
       }
 
-      let metadata = self.readiumMetadataToNitro(vc.publication.metadata)
+      let metadata = readiumMetadataToNitro(vc.publication.metadata)
 
       let event = PublicationReadyEvent(
         tableOfContents: tocLinks,
@@ -391,64 +263,6 @@ class HybridReadiumView: HybridReadiumViewSpec {
 
       self.onPublicationReady?(event)
     }
-  }
-
-  private func readiumLinkToNitro(_ link: RLink) -> Link {
-    return Link(
-      href: link.href.description,
-      templated: link.templated,
-      type: link.mediaType?.string,
-      title: link.title,
-      rels: link.rels.map { "\($0)" },
-      height: nil,
-      width: nil,
-      bitrate: nil,
-      duration: nil,
-      languages: link.languages
-    )
-  }
-
-  private func readiumMetadataToNitro(_ meta: ReadiumShared.Metadata) -> PublicationMetadata {
-    func contributors(_ list: [ReadiumShared.Contributor]) -> [margelo.nitro.readium.Contributor]? {
-      guard !list.isEmpty else { return nil }
-      return list.map { Contributor(name: $0.name, sortAs: $0.sortAs, identifier: $0.identifier, role: nil, position: nil) }
-    }
-
-    func subjects(_ list: [ReadiumShared.Subject]) -> [margelo.nitro.readium.Subject]? {
-      guard !list.isEmpty else { return nil }
-      return list.map { Subject(name: $0.name, sortAs: $0.sortAs, code: $0.code, scheme: $0.scheme) }
-    }
-
-    return PublicationMetadata(
-      title: meta.title ?? "Untitled",
-      sortAs: meta.sortAs,
-      subtitle: meta.subtitle,
-      identifier: meta.identifier,
-      accessibility: nil,
-      modified: meta.modified?.description,
-      published: meta.published?.description,
-      language: meta.languages.isEmpty ? nil : meta.languages,
-      author: contributors(meta.authors),
-      translator: contributors(meta.translators),
-      editor: contributors(meta.editors),
-      artist: contributors(meta.artists),
-      illustrator: contributors(meta.illustrators),
-      letterer: contributors(meta.letterers),
-      penciler: contributors(meta.pencilers),
-      colorist: contributors(meta.colorists),
-      inker: contributors(meta.inkers),
-      narrator: contributors(meta.narrators),
-      contributor: contributors(meta.contributors),
-      publisher: contributors(meta.publishers),
-      imprint: contributors(meta.imprints),
-      subject: subjects(meta.subjects),
-      layout: nil,
-      readingProgression: meta.readingProgression.rawValue,
-      description: meta.description,
-      duration: meta.duration,
-      numberOfPages: meta.numberOfPages.map { Double($0) },
-      belongsTo: nil
-    )
   }
 
   // MARK: - Imperative navigation
