@@ -1,3 +1,12 @@
+# [5.0.0-rc.3](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.2...v5.0.0-rc.3) (2026-02-12)
+
+
+### Bug Fixes
+
+* **ios:** fix an install issue due to missing scripts in the npm distribution ([04388a3](https://github.com/5-stones/react-native-readium/commit/04388a33352a6fe3fe8f8933644f89b04f98807b))
+
+
+
 # [5.0.0-rc.2](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.1...v5.0.0-rc.2) (2026-02-12)
 
 
