@@ -60,13 +60,13 @@ This library uses [Nitro Modules](https://nitro.margelo.com/) and supports both 
 **NPM**
 
 ```sh
-npm install react-native-readium
+npm install react-native-readium react-native-nitro-modules
 ```
 
 **Yarn**
 
 ```sh
-yarn add react-native-readium
+yarn add react-native-readium react-native-nitro-modules
 ```
 
 #### iOS
@@ -77,12 +77,14 @@ Requirements:
 - Swift compiler: Swift 6.0
 - Xcode: Xcode 16.2 (or newer)
 
-Due to the current state of the `Readium` swift libraries you need to manually
-update your `Podfile` ([see more on that here](https://github.com/readium/swift-toolkit/issues/38)).
+The Readium pods live in a custom spec repo, so you need to add the Readium
+source to your `Podfile` ([see more on that here](https://github.com/readium/swift-toolkit/issues/38)).
 
 ##### Breaking change when upgrading from v4 to v5!
 
-If you are migrating from v4 to v5, please note that you must update your iOS Podfile to use the new Readium Pods (see iOS documentation below). Please make a note of both the new Pod names and the addition of the `source`'s in the Podfile.
+If you are migrating from v4 to v5, please note that you must update your iOS
+Podfile to add the Readium spec repo `source` and the `readium_pods` /
+`readium_post_install` helpers shown below.
 
 ```rb
 # ./ios/Podfile
@@ -98,14 +100,12 @@ platform :ios, '13.4'
 target 'ExampleApp' do
   config = use_native_modules!
   ...
-  pod 'ReadiumGCDWebServer', :modular_headers => true
-  pod 'ReadiumAdapterGCDWebServer', '~> 3.5.0'
-  pod 'ReadiumInternal',  '~> 3.5.0'
-  pod 'ReadiumShared',    '~> 3.5.0'
-  pod 'ReadiumStreamer',  '~> 3.5.0'
-  pod 'ReadiumNavigator', '~> 3.5.0'
-  pod 'Minizip', modular_headers: true
+  readium_pods
   ...
+  post_install do |installer|
+    react_native_post_install(installer, ...)
+    readium_post_install(installer)
+  end
 end
 ```
 
@@ -213,6 +213,8 @@ const MyComponent: React.FC = () => {
 ```
 
 ### Highlights & Note Taking
+
+![Decorators](https://github.com/5-stones/react-native-readium/blob/main/docs/demo-decorators.gif)
 
 The `selectionActions`, `decorations`, `onSelectionAction`, and `onDecorationActivated` props work together to build highlighting and note-taking features. Here's how the flow works:
 

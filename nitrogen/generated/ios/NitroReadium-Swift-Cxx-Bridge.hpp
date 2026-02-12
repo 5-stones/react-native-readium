@@ -42,6 +42,8 @@ namespace margelo::nitro::readium { struct Preferences; }
 namespace margelo::nitro::readium { struct PublicationMetadata; }
 // Forward declaration of `PublicationReadyEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct PublicationReadyEvent; }
+// Forward declaration of `ReadiumFile` to properly resolve imports.
+namespace margelo::nitro::readium { struct ReadiumFile; }
 // Forward declaration of `Rect` to properly resolve imports.
 namespace margelo::nitro::readium { struct Rect; }
 // Forward declaration of `SelectionActionEvent` to properly resolve imports.
@@ -77,6 +79,7 @@ namespace NitroReadium { class HybridReadiumViewSpec_cxx; }
 #include "Preferences.hpp"
 #include "PublicationMetadata.hpp"
 #include "PublicationReadyEvent.hpp"
+#include "ReadiumFile.hpp"
 #include "Rect.hpp"
 #include "SelectionAction.hpp"
 #include "SelectionActionEvent.hpp"
@@ -110,7 +113,7 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline double get_std__optional_double_(const std::optional<double>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<std::string>
@@ -125,7 +128,7 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline std::string get_std__optional_std__string_(const std::optional<std::string>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<LocatorLocations>
@@ -140,7 +143,7 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline LocatorLocations get_std__optional_LocatorLocations_(const std::optional<LocatorLocations>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<LocatorText>
@@ -155,7 +158,7 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline LocatorText get_std__optional_LocatorText_(const std::optional<LocatorText>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<Locator>
@@ -170,7 +173,22 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline Locator get_std__optional_Locator_(const std::optional<Locator>& optional) noexcept {
-    return *optional;
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<ReadiumFile>
+  /**
+   * Specialized version of `std::optional<ReadiumFile>`.
+   */
+  using std__optional_ReadiumFile_ = std::optional<ReadiumFile>;
+  inline std::optional<ReadiumFile> create_std__optional_ReadiumFile_(const ReadiumFile& value) noexcept {
+    return std::optional<ReadiumFile>(value);
+  }
+  inline bool has_value_std__optional_ReadiumFile_(const std::optional<ReadiumFile>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline ReadiumFile get_std__optional_ReadiumFile_(const std::optional<ReadiumFile>& optional) noexcept {
+    return optional.value();
   }
   
   // pragma MARK: std::optional<bool>
@@ -185,7 +203,7 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline bool get_std__optional_bool_(const std::optional<bool>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<Preferences>
@@ -200,7 +218,7 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline Preferences get_std__optional_Preferences_(const std::optional<Preferences>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::unordered_map<std::string, std::string>
@@ -240,7 +258,7 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline std::unordered_map<std::string, std::string> get_std__optional_std__unordered_map_std__string__std__string__(const std::optional<std::unordered_map<std::string, std::string>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::vector<Decoration>
@@ -277,7 +295,7 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline std::vector<DecorationGroup> get_std__optional_std__vector_DecorationGroup__(const std::optional<std::vector<DecorationGroup>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::vector<SelectionAction>
@@ -303,7 +321,7 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline std::vector<SelectionAction> get_std__optional_std__vector_SelectionAction__(const std::optional<std::vector<SelectionAction>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::function<void(const Locator& /* locator */)>
@@ -326,6 +344,21 @@ namespace margelo::nitro::readium::bridge::swift {
   Func_void_Locator create_Func_void_Locator(void* NON_NULL swiftClosureWrapper) noexcept;
   inline Func_void_Locator_Wrapper wrap_Func_void_Locator(Func_void_Locator value) noexcept {
     return Func_void_Locator_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<std::function<void(const Locator& /* locator */)>>
+  /**
+   * Specialized version of `std::optional<std::function<void(const Locator& / * locator * /)>>`.
+   */
+  using std__optional_std__function_void_const_Locator_____locator______ = std::optional<std::function<void(const Locator& /* locator */)>>;
+  inline std::optional<std::function<void(const Locator& /* locator */)>> create_std__optional_std__function_void_const_Locator_____locator______(const std::function<void(const Locator& /* locator */)>& value) noexcept {
+    return std::optional<std::function<void(const Locator& /* locator */)>>(value);
+  }
+  inline bool has_value_std__optional_std__function_void_const_Locator_____locator______(const std::optional<std::function<void(const Locator& /* locator */)>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::function<void(const Locator& /* locator */)> get_std__optional_std__function_void_const_Locator_____locator______(const std::optional<std::function<void(const Locator& /* locator */)>>& optional) noexcept {
+    return optional.value();
   }
   
   // pragma MARK: std::vector<std::string>
@@ -351,7 +384,7 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline std::vector<std::string> get_std__optional_std__vector_std__string__(const std::optional<std::vector<std::string>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::vector<Link>
@@ -388,7 +421,7 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline AccessibilityCertification get_std__optional_AccessibilityCertification_(const std::optional<AccessibilityCertification>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<Accessibility>
@@ -403,7 +436,7 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline Accessibility get_std__optional_Accessibility_(const std::optional<Accessibility>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::vector<Contributor>
@@ -429,7 +462,7 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline std::vector<Contributor> get_std__optional_std__vector_Contributor__(const std::optional<std::vector<Contributor>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::vector<Subject>
@@ -455,7 +488,7 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline std::vector<Subject> get_std__optional_std__vector_Subject__(const std::optional<std::vector<Subject>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::vector<SeriesInfo>
@@ -481,7 +514,7 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline std::vector<SeriesInfo> get_std__optional_std__vector_SeriesInfo__(const std::optional<std::vector<SeriesInfo>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<BelongsTo>
@@ -496,7 +529,7 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline BelongsTo get_std__optional_BelongsTo_(const std::optional<BelongsTo>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::function<void(const PublicationReadyEvent& /* event */)>
@@ -521,6 +554,21 @@ namespace margelo::nitro::readium::bridge::swift {
     return Func_void_PublicationReadyEvent_Wrapper(std::move(value));
   }
   
+  // pragma MARK: std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>
+  /**
+   * Specialized version of `std::optional<std::function<void(const PublicationReadyEvent& / * event * /)>>`.
+   */
+  using std__optional_std__function_void_const_PublicationReadyEvent_____event______ = std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>;
+  inline std::optional<std::function<void(const PublicationReadyEvent& /* event */)>> create_std__optional_std__function_void_const_PublicationReadyEvent_____event______(const std::function<void(const PublicationReadyEvent& /* event */)>& value) noexcept {
+    return std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>(value);
+  }
+  inline bool has_value_std__optional_std__function_void_const_PublicationReadyEvent_____event______(const std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::function<void(const PublicationReadyEvent& /* event */)> get_std__optional_std__function_void_const_PublicationReadyEvent_____event______(const std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>& optional) noexcept {
+    return optional.value();
+  }
+  
   // pragma MARK: std::optional<Rect>
   /**
    * Specialized version of `std::optional<Rect>`.
@@ -533,7 +581,7 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline Rect get_std__optional_Rect_(const std::optional<Rect>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<Point>
@@ -548,7 +596,7 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline Point get_std__optional_Point_(const std::optional<Point>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::function<void(const DecorationActivatedEvent& /* event */)>
@@ -573,6 +621,21 @@ namespace margelo::nitro::readium::bridge::swift {
     return Func_void_DecorationActivatedEvent_Wrapper(std::move(value));
   }
   
+  // pragma MARK: std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>
+  /**
+   * Specialized version of `std::optional<std::function<void(const DecorationActivatedEvent& / * event * /)>>`.
+   */
+  using std__optional_std__function_void_const_DecorationActivatedEvent_____event______ = std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>;
+  inline std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>> create_std__optional_std__function_void_const_DecorationActivatedEvent_____event______(const std::function<void(const DecorationActivatedEvent& /* event */)>& value) noexcept {
+    return std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>(value);
+  }
+  inline bool has_value_std__optional_std__function_void_const_DecorationActivatedEvent_____event______(const std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::function<void(const DecorationActivatedEvent& /* event */)> get_std__optional_std__function_void_const_DecorationActivatedEvent_____event______(const std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>& optional) noexcept {
+    return optional.value();
+  }
+  
   // pragma MARK: std::function<void(const SelectionEvent& /* event */)>
   /**
    * Specialized version of `std::function<void(const SelectionEvent&)>`.
@@ -595,6 +658,21 @@ namespace margelo::nitro::readium::bridge::swift {
     return Func_void_SelectionEvent_Wrapper(std::move(value));
   }
   
+  // pragma MARK: std::optional<std::function<void(const SelectionEvent& /* event */)>>
+  /**
+   * Specialized version of `std::optional<std::function<void(const SelectionEvent& / * event * /)>>`.
+   */
+  using std__optional_std__function_void_const_SelectionEvent_____event______ = std::optional<std::function<void(const SelectionEvent& /* event */)>>;
+  inline std::optional<std::function<void(const SelectionEvent& /* event */)>> create_std__optional_std__function_void_const_SelectionEvent_____event______(const std::function<void(const SelectionEvent& /* event */)>& value) noexcept {
+    return std::optional<std::function<void(const SelectionEvent& /* event */)>>(value);
+  }
+  inline bool has_value_std__optional_std__function_void_const_SelectionEvent_____event______(const std::optional<std::function<void(const SelectionEvent& /* event */)>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::function<void(const SelectionEvent& /* event */)> get_std__optional_std__function_void_const_SelectionEvent_____event______(const std::optional<std::function<void(const SelectionEvent& /* event */)>>& optional) noexcept {
+    return optional.value();
+  }
+  
   // pragma MARK: std::function<void(const SelectionActionEvent& /* event */)>
   /**
    * Specialized version of `std::function<void(const SelectionActionEvent&)>`.
@@ -615,6 +693,21 @@ namespace margelo::nitro::readium::bridge::swift {
   Func_void_SelectionActionEvent create_Func_void_SelectionActionEvent(void* NON_NULL swiftClosureWrapper) noexcept;
   inline Func_void_SelectionActionEvent_Wrapper wrap_Func_void_SelectionActionEvent(Func_void_SelectionActionEvent value) noexcept {
     return Func_void_SelectionActionEvent_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<std::function<void(const SelectionActionEvent& /* event */)>>
+  /**
+   * Specialized version of `std::optional<std::function<void(const SelectionActionEvent& / * event * /)>>`.
+   */
+  using std__optional_std__function_void_const_SelectionActionEvent_____event______ = std::optional<std::function<void(const SelectionActionEvent& /* event */)>>;
+  inline std::optional<std::function<void(const SelectionActionEvent& /* event */)>> create_std__optional_std__function_void_const_SelectionActionEvent_____event______(const std::function<void(const SelectionActionEvent& /* event */)>& value) noexcept {
+    return std::optional<std::function<void(const SelectionActionEvent& /* event */)>>(value);
+  }
+  inline bool has_value_std__optional_std__function_void_const_SelectionActionEvent_____event______(const std::optional<std::function<void(const SelectionActionEvent& /* event */)>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::function<void(const SelectionActionEvent& /* event */)> get_std__optional_std__function_void_const_SelectionActionEvent_____event______(const std::optional<std::function<void(const SelectionActionEvent& /* event */)>>& optional) noexcept {
+    return optional.value();
   }
   
   // pragma MARK: std::shared_ptr<HybridReadiumViewSpec>

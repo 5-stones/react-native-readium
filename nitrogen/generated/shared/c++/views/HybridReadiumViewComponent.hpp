@@ -17,8 +17,8 @@
 #include <react/renderer/components/view/ViewProps.h>
 
 #include "ReadiumFile.hpp"
-#include "Locator.hpp"
 #include <optional>
+#include "Locator.hpp"
 #include "Preferences.hpp"
 #include "DecorationGroup.hpp"
 #include <vector>
@@ -51,16 +51,16 @@ namespace margelo::nitro::readium::views {
                            const react::RawProps& rawProps);
 
   public:
-    CachedProp<ReadiumFile> file;
+    CachedProp<std::optional<ReadiumFile>> file;
     CachedProp<std::optional<Locator>> location;
     CachedProp<std::optional<Preferences>> preferences;
     CachedProp<std::optional<std::vector<DecorationGroup>>> decorations;
     CachedProp<std::optional<std::vector<SelectionAction>>> selectionActions;
-    CachedProp<std::function<void(const Locator& /* locator */)>> onLocationChange;
-    CachedProp<std::function<void(const PublicationReadyEvent& /* event */)>> onPublicationReady;
-    CachedProp<std::function<void(const DecorationActivatedEvent& /* event */)>> onDecorationActivated;
-    CachedProp<std::function<void(const SelectionEvent& /* event */)>> onSelectionChange;
-    CachedProp<std::function<void(const SelectionActionEvent& /* event */)>> onSelectionAction;
+    CachedProp<std::optional<std::function<void(const Locator& /* locator */)>>> onLocationChange;
+    CachedProp<std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>> onPublicationReady;
+    CachedProp<std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>> onDecorationActivated;
+    CachedProp<std::optional<std::function<void(const SelectionEvent& /* event */)>>> onSelectionChange;
+    CachedProp<std::optional<std::function<void(const SelectionActionEvent& /* event */)>>> onSelectionAction;
     CachedProp<std::optional<std::function<void(const std::shared_ptr<HybridReadiumViewSpec>& /* ref */)>>> hybridRef;
 
   private:

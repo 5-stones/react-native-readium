@@ -59,21 +59,25 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
       []
     );
 
+    const isReady = width > 0 && height > 0;
+
     return (
       <View style={styles.container} onLayout={onLayout}>
-        <NitroReadiumView
-          style={{ width, height }}
-          {...props}
-          preferences={preferences}
-          decorations={decorations}
-          selectionActions={selectionActions}
-          onLocationChange={callback(onLocationChange ?? noop)}
-          onPublicationReady={callback(onPublicationReady ?? noop)}
-          onDecorationActivated={callback(onDecorationActivated ?? noop)}
-          onSelectionChange={callback(onSelectionChange ?? noop)}
-          onSelectionAction={callback(onSelectionAction ?? noop)}
-          ref={nativeRef}
-        />
+        {isReady && (
+          <NitroReadiumView
+            style={{ width, height }}
+            {...props}
+            preferences={preferences}
+            decorations={decorations}
+            selectionActions={selectionActions}
+            onLocationChange={callback(onLocationChange ?? noop)}
+            onPublicationReady={callback(onPublicationReady ?? noop)}
+            onDecorationActivated={callback(onDecorationActivated ?? noop)}
+            onSelectionChange={callback(onSelectionChange ?? noop)}
+            onSelectionAction={callback(onSelectionAction ?? noop)}
+            ref={nativeRef}
+          />
+        )}
       </View>
     );
   }

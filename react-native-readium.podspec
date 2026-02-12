@@ -8,6 +8,10 @@ if File.exist?(nitrogen_autolinking)
   load nitrogen_autolinking
 end
 
+# Load Podfile helpers (defines readium_pods() and readium_post_install() for Podfile use)
+load File.join(__dir__, "scripts/readium_pods.rb")
+load File.join(__dir__, "scripts/readium_post_install.rb")
+
 Pod::Spec.new do |s|
   s.name         = "react-native-readium"
   s.version      = package["version"]
@@ -31,18 +35,14 @@ Pod::Spec.new do |s|
   s.dependency 'ReadiumNavigator','~> 3.5.0'
   s.dependency 'ReadiumAdapterGCDWebServer', '~> 3.5.0'
   s.dependency 'ReadiumInternal'
-  s.dependency 'React-Fabric'
-  s.dependency 'Yoga'
 
-  # Add header search paths for React Fabric / Yoga internal headers
-  s.pod_target_xcconfig = {
-    "HEADER_SEARCH_PATHS" => "\"${PODS_ROOT}/Headers/Private/Yoga\" \"${PODS_ROOT}/Headers/Public/Yoga\""
-  }
+  # Adds React Native dependencies, framework header search paths, and
+  # folly/compiler flags needed for use_frameworks!(:linkage => :static)
+  install_modules_dependencies(s)
 
   # Add nitrogen generated files, NitroModules dependency, and C++20/interop config
   if defined?(add_nitrogen_files)
     add_nitrogen_files(s)
   end
-
 
 end

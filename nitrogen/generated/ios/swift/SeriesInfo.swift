@@ -35,6 +35,13 @@ public extension SeriesInfo {
   
   @inline(__always)
   var position: Double? {
-    return self.__position.value
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__position) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__position)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
   }
 }

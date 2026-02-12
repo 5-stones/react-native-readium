@@ -33,8 +33,8 @@ namespace margelo::nitro::readium { struct SelectionEvent; }
 namespace margelo::nitro::readium { struct SelectionActionEvent; }
 
 #include "ReadiumFile.hpp"
-#include "Locator.hpp"
 #include <optional>
+#include "Locator.hpp"
 #include "Preferences.hpp"
 #include "DecorationGroup.hpp"
 #include <vector>
@@ -72,8 +72,8 @@ namespace margelo::nitro::readium {
 
     public:
       // Properties
-      virtual ReadiumFile getFile() = 0;
-      virtual void setFile(const ReadiumFile& file) = 0;
+      virtual std::optional<ReadiumFile> getFile() = 0;
+      virtual void setFile(const std::optional<ReadiumFile>& file) = 0;
       virtual std::optional<Locator> getLocation() = 0;
       virtual void setLocation(const std::optional<Locator>& location) = 0;
       virtual std::optional<Preferences> getPreferences() = 0;
@@ -82,16 +82,16 @@ namespace margelo::nitro::readium {
       virtual void setDecorations(const std::optional<std::vector<DecorationGroup>>& decorations) = 0;
       virtual std::optional<std::vector<SelectionAction>> getSelectionActions() = 0;
       virtual void setSelectionActions(const std::optional<std::vector<SelectionAction>>& selectionActions) = 0;
-      virtual std::function<void(const Locator& /* locator */)> getOnLocationChange() = 0;
-      virtual void setOnLocationChange(const std::function<void(const Locator& /* locator */)>& onLocationChange) = 0;
-      virtual std::function<void(const PublicationReadyEvent& /* event */)> getOnPublicationReady() = 0;
-      virtual void setOnPublicationReady(const std::function<void(const PublicationReadyEvent& /* event */)>& onPublicationReady) = 0;
-      virtual std::function<void(const DecorationActivatedEvent& /* event */)> getOnDecorationActivated() = 0;
-      virtual void setOnDecorationActivated(const std::function<void(const DecorationActivatedEvent& /* event */)>& onDecorationActivated) = 0;
-      virtual std::function<void(const SelectionEvent& /* event */)> getOnSelectionChange() = 0;
-      virtual void setOnSelectionChange(const std::function<void(const SelectionEvent& /* event */)>& onSelectionChange) = 0;
-      virtual std::function<void(const SelectionActionEvent& /* event */)> getOnSelectionAction() = 0;
-      virtual void setOnSelectionAction(const std::function<void(const SelectionActionEvent& /* event */)>& onSelectionAction) = 0;
+      virtual std::optional<std::function<void(const Locator& /* locator */)>> getOnLocationChange() = 0;
+      virtual void setOnLocationChange(const std::optional<std::function<void(const Locator& /* locator */)>>& onLocationChange) = 0;
+      virtual std::optional<std::function<void(const PublicationReadyEvent& /* event */)>> getOnPublicationReady() = 0;
+      virtual void setOnPublicationReady(const std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>& onPublicationReady) = 0;
+      virtual std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>> getOnDecorationActivated() = 0;
+      virtual void setOnDecorationActivated(const std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>& onDecorationActivated) = 0;
+      virtual std::optional<std::function<void(const SelectionEvent& /* event */)>> getOnSelectionChange() = 0;
+      virtual void setOnSelectionChange(const std::optional<std::function<void(const SelectionEvent& /* event */)>>& onSelectionChange) = 0;
+      virtual std::optional<std::function<void(const SelectionActionEvent& /* event */)>> getOnSelectionAction() = 0;
+      virtual void setOnSelectionAction(const std::optional<std::function<void(const SelectionActionEvent& /* event */)>>& onSelectionAction) = 0;
 
     public:
       // Methods

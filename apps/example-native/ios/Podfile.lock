@@ -1929,14 +1929,39 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
     - SocketRocket
-  - react-native-readium (5.0.0-rc.0):
+  - react-native-readium (5.0.0-rc.1):
+    - boost
+    - DoubleConversion
+    - fast_float
+    - fmt
+    - glog
+    - hermes-engine
     - NitroModules
+    - RCT-Folly
+    - RCT-Folly/Fabric
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
     - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
     - ReadiumAdapterGCDWebServer (~> 3.5.0)
     - ReadiumInternal
     - ReadiumNavigator (~> 3.5.0)
     - ReadiumShared (~> 3.5.0)
     - ReadiumStreamer (~> 3.5.0)
+    - SocketRocket
     - Yoga
   - react-native-safe-area-context (5.6.2):
     - boost
@@ -2815,12 +2840,7 @@ DEPENDENCIES:
   - ReactAppDependencyProvider (from `build/generated/ios/ReactAppDependencyProvider`)
   - ReactCodegen (from `build/generated/ios/ReactCodegen`)
   - ReactCommon/turbomodule/core (from `../../../node_modules/react-native/ReactCommon`)
-  - ReadiumAdapterGCDWebServer (~> 3.5.0)
   - ReadiumGCDWebServer
-  - ReadiumInternal (~> 3.5.0)
-  - ReadiumNavigator (~> 3.5.0)
-  - ReadiumShared (~> 3.5.0)
-  - ReadiumStreamer (~> 3.5.0)
   - RNFS (from `../../../node_modules/react-native-fs`)
   - RNScreens (from `../../../node_modules/react-native-screens`)
   - RNVectorIcons (from `../../../node_modules/react-native-vector-icons`)
@@ -3063,7 +3083,7 @@ SPEC CHECKSUMS:
   React-logger: 6ac901f5c7f7321d2be1a40b203bccc2e23411e3
   React-Mapbuffer: 2e0e7cc5b7064eaed9c8b8afc3a87621cb7ef5cd
   React-microtasksnativemodule: dd4d33b251b57e5027c572c6d0b45cbfbcfaa386
-  react-native-readium: 7ca661d184b0474b4e3f8659b26d6996bae0143a
+  react-native-readium: 91c36f87c56e2bfef6c4eda171f2f5c86e8fef69
   react-native-safe-area-context: 54d812805f3c4e08a4580ad086cbde1d8780c2e4
   react-native-slider: 5da4af460d0dd1346f927e829dfecbb81bd46f91
   React-NativeModulesApple: 7f2f2fed3f6c858889eb61d09941be965d52df58
@@ -3114,6 +3134,6 @@ SPEC CHECKSUMS:
   SwiftSoup: 9ec2526c76ebc3fe5d3157c82b40b45a27eeb82d
   Yoga: 5bd0956bf9cb16f75101e78b5e852c7577bc5a45
 
-PODFILE CHECKSUM: fe15b251516595039a4095910190940cfe0691dc
+PODFILE CHECKSUM: 4d537715bc50ccd6e1d3c473700f9526d77c74b1
 
 COCOAPODS: 1.16.2

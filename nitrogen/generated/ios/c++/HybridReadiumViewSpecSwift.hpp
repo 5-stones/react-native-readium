@@ -60,9 +60,9 @@ namespace margelo::nitro::readium { struct SelectionEvent; }
 namespace margelo::nitro::readium { struct SelectionActionEvent; }
 
 #include "ReadiumFile.hpp"
+#include <optional>
 #include <string>
 #include "Locator.hpp"
-#include <optional>
 #include "LocatorLocations.hpp"
 #include "LocatorText.hpp"
 #include "Preferences.hpp"
@@ -134,11 +134,12 @@ namespace margelo::nitro::readium {
 
   public:
     // Properties
-    inline ReadiumFile getFile() noexcept override {
-      return _swiftPart.getFile();
+    inline std::optional<ReadiumFile> getFile() noexcept override {
+      auto __result = _swiftPart.getFile();
+      return __result;
     }
-    inline void setFile(const ReadiumFile& file) noexcept override {
-      _swiftPart.setFile(std::forward<decltype(file)>(file));
+    inline void setFile(const std::optional<ReadiumFile>& file) noexcept override {
+      _swiftPart.setFile(file);
     }
     inline std::optional<Locator> getLocation() noexcept override {
       auto __result = _swiftPart.getLocation();
@@ -168,39 +169,39 @@ namespace margelo::nitro::readium {
     inline void setSelectionActions(const std::optional<std::vector<SelectionAction>>& selectionActions) noexcept override {
       _swiftPart.setSelectionActions(selectionActions);
     }
-    inline std::function<void(const Locator& /* locator */)> getOnLocationChange() noexcept override {
+    inline std::optional<std::function<void(const Locator& /* locator */)>> getOnLocationChange() noexcept override {
       auto __result = _swiftPart.getOnLocationChange();
       return __result;
     }
-    inline void setOnLocationChange(const std::function<void(const Locator& /* locator */)>& onLocationChange) noexcept override {
+    inline void setOnLocationChange(const std::optional<std::function<void(const Locator& /* locator */)>>& onLocationChange) noexcept override {
       _swiftPart.setOnLocationChange(onLocationChange);
     }
-    inline std::function<void(const PublicationReadyEvent& /* event */)> getOnPublicationReady() noexcept override {
+    inline std::optional<std::function<void(const PublicationReadyEvent& /* event */)>> getOnPublicationReady() noexcept override {
       auto __result = _swiftPart.getOnPublicationReady();
       return __result;
     }
-    inline void setOnPublicationReady(const std::function<void(const PublicationReadyEvent& /* event */)>& onPublicationReady) noexcept override {
+    inline void setOnPublicationReady(const std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>& onPublicationReady) noexcept override {
       _swiftPart.setOnPublicationReady(onPublicationReady);
     }
-    inline std::function<void(const DecorationActivatedEvent& /* event */)> getOnDecorationActivated() noexcept override {
+    inline std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>> getOnDecorationActivated() noexcept override {
       auto __result = _swiftPart.getOnDecorationActivated();
       return __result;
     }
-    inline void setOnDecorationActivated(const std::function<void(const DecorationActivatedEvent& /* event */)>& onDecorationActivated) noexcept override {
+    inline void setOnDecorationActivated(const std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>& onDecorationActivated) noexcept override {
       _swiftPart.setOnDecorationActivated(onDecorationActivated);
     }
-    inline std::function<void(const SelectionEvent& /* event */)> getOnSelectionChange() noexcept override {
+    inline std::optional<std::function<void(const SelectionEvent& /* event */)>> getOnSelectionChange() noexcept override {
       auto __result = _swiftPart.getOnSelectionChange();
       return __result;
     }
-    inline void setOnSelectionChange(const std::function<void(const SelectionEvent& /* event */)>& onSelectionChange) noexcept override {
+    inline void setOnSelectionChange(const std::optional<std::function<void(const SelectionEvent& /* event */)>>& onSelectionChange) noexcept override {
       _swiftPart.setOnSelectionChange(onSelectionChange);
     }
-    inline std::function<void(const SelectionActionEvent& /* event */)> getOnSelectionAction() noexcept override {
+    inline std::optional<std::function<void(const SelectionActionEvent& /* event */)>> getOnSelectionAction() noexcept override {
       auto __result = _swiftPart.getOnSelectionAction();
       return __result;
     }
-    inline void setOnSelectionAction(const std::function<void(const SelectionActionEvent& /* event */)>& onSelectionAction) noexcept override {
+    inline void setOnSelectionAction(const std::optional<std::function<void(const SelectionActionEvent& /* event */)>>& onSelectionAction) noexcept override {
       _swiftPart.setOnSelectionAction(onSelectionAction);
     }
 

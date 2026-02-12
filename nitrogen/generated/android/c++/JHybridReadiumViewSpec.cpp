@@ -55,10 +55,10 @@ namespace margelo::nitro::readium { struct SelectionEvent; }
 namespace margelo::nitro::readium { struct SelectionActionEvent; }
 
 #include "ReadiumFile.hpp"
+#include <optional>
 #include "JReadiumFile.hpp"
 #include <string>
 #include "Locator.hpp"
-#include <optional>
 #include "JLocator.hpp"
 #include "LocatorLocations.hpp"
 #include "JLocatorLocations.hpp"
@@ -148,14 +148,14 @@ namespace margelo::nitro::readium {
   }
 
   // Properties
-  ReadiumFile JHybridReadiumViewSpec::getFile() {
+  std::optional<ReadiumFile> JHybridReadiumViewSpec::getFile() {
     static const auto method = javaClassStatic()->getMethod<jni::local_ref<JReadiumFile>()>("getFile");
     auto __result = method(_javaPart);
-    return __result->toCpp();
+    return __result != nullptr ? std::make_optional(__result->toCpp()) : std::nullopt;
   }
-  void JHybridReadiumViewSpec::setFile(const ReadiumFile& file) {
+  void JHybridReadiumViewSpec::setFile(const std::optional<ReadiumFile>& file) {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JReadiumFile> /* file */)>("setFile");
-    method(_javaPart, JReadiumFile::fromCpp(file));
+    method(_javaPart, file.has_value() ? JReadiumFile::fromCpp(file.value()) : nullptr);
   }
   std::optional<Locator> JHybridReadiumViewSpec::getLocation() {
     static const auto method = javaClassStatic()->getMethod<jni::local_ref<JLocator>()>("getLocation");
@@ -229,10 +229,10 @@ namespace margelo::nitro::readium {
       return __array;
     }() : nullptr);
   }
-  std::function<void(const Locator& /* locator */)> JHybridReadiumViewSpec::getOnLocationChange() {
+  std::optional<std::function<void(const Locator& /* locator */)>> JHybridReadiumViewSpec::getOnLocationChange() {
     static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void_Locator::javaobject>()>("getOnLocationChange_cxx");
     auto __result = method(_javaPart);
-    return [&]() -> std::function<void(const Locator& /* locator */)> {
+    return __result != nullptr ? std::make_optional([&]() -> std::function<void(const Locator& /* locator */)> {
       if (__result->isInstanceOf(JFunc_void_Locator_cxx::javaClassStatic())) [[likely]] {
         auto downcast = jni::static_ref_cast<JFunc_void_Locator_cxx::javaobject>(__result);
         return downcast->cthis()->getFunction();
@@ -240,16 +240,16 @@ namespace margelo::nitro::readium {
         auto __resultRef = jni::make_global(__result);
         return JNICallable<JFunc_void_Locator, void(Locator)>(std::move(__resultRef));
       }
-    }();
+    }()) : std::nullopt;
   }
-  void JHybridReadiumViewSpec::setOnLocationChange(const std::function<void(const Locator& /* locator */)>& onLocationChange) {
+  void JHybridReadiumViewSpec::setOnLocationChange(const std::optional<std::function<void(const Locator& /* locator */)>>& onLocationChange) {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_Locator::javaobject> /* onLocationChange */)>("setOnLocationChange_cxx");
-    method(_javaPart, JFunc_void_Locator_cxx::fromCpp(onLocationChange));
+    method(_javaPart, onLocationChange.has_value() ? JFunc_void_Locator_cxx::fromCpp(onLocationChange.value()) : nullptr);
   }
-  std::function<void(const PublicationReadyEvent& /* event */)> JHybridReadiumViewSpec::getOnPublicationReady() {
+  std::optional<std::function<void(const PublicationReadyEvent& /* event */)>> JHybridReadiumViewSpec::getOnPublicationReady() {
     static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void_PublicationReadyEvent::javaobject>()>("getOnPublicationReady_cxx");
     auto __result = method(_javaPart);
-    return [&]() -> std::function<void(const PublicationReadyEvent& /* event */)> {
+    return __result != nullptr ? std::make_optional([&]() -> std::function<void(const PublicationReadyEvent& /* event */)> {
       if (__result->isInstanceOf(JFunc_void_PublicationReadyEvent_cxx::javaClassStatic())) [[likely]] {
         auto downcast = jni::static_ref_cast<JFunc_void_PublicationReadyEvent_cxx::javaobject>(__result);
         return downcast->cthis()->getFunction();
@@ -257,16 +257,16 @@ namespace margelo::nitro::readium {
         auto __resultRef = jni::make_global(__result);
         return JNICallable<JFunc_void_PublicationReadyEvent, void(PublicationReadyEvent)>(std::move(__resultRef));
       }
-    }();
+    }()) : std::nullopt;
   }
-  void JHybridReadiumViewSpec::setOnPublicationReady(const std::function<void(const PublicationReadyEvent& /* event */)>& onPublicationReady) {
+  void JHybridReadiumViewSpec::setOnPublicationReady(const std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>& onPublicationReady) {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_PublicationReadyEvent::javaobject> /* onPublicationReady */)>("setOnPublicationReady_cxx");
-    method(_javaPart, JFunc_void_PublicationReadyEvent_cxx::fromCpp(onPublicationReady));
+    method(_javaPart, onPublicationReady.has_value() ? JFunc_void_PublicationReadyEvent_cxx::fromCpp(onPublicationReady.value()) : nullptr);
   }
-  std::function<void(const DecorationActivatedEvent& /* event */)> JHybridReadiumViewSpec::getOnDecorationActivated() {
+  std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>> JHybridReadiumViewSpec::getOnDecorationActivated() {
     static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void_DecorationActivatedEvent::javaobject>()>("getOnDecorationActivated_cxx");
     auto __result = method(_javaPart);
-    return [&]() -> std::function<void(const DecorationActivatedEvent& /* event */)> {
+    return __result != nullptr ? std::make_optional([&]() -> std::function<void(const DecorationActivatedEvent& /* event */)> {
       if (__result->isInstanceOf(JFunc_void_DecorationActivatedEvent_cxx::javaClassStatic())) [[likely]] {
         auto downcast = jni::static_ref_cast<JFunc_void_DecorationActivatedEvent_cxx::javaobject>(__result);
         return downcast->cthis()->getFunction();
@@ -274,16 +274,16 @@ namespace margelo::nitro::readium {
         auto __resultRef = jni::make_global(__result);
         return JNICallable<JFunc_void_DecorationActivatedEvent, void(DecorationActivatedEvent)>(std::move(__resultRef));
       }
-    }();
+    }()) : std::nullopt;
   }
-  void JHybridReadiumViewSpec::setOnDecorationActivated(const std::function<void(const DecorationActivatedEvent& /* event */)>& onDecorationActivated) {
+  void JHybridReadiumViewSpec::setOnDecorationActivated(const std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>& onDecorationActivated) {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_DecorationActivatedEvent::javaobject> /* onDecorationActivated */)>("setOnDecorationActivated_cxx");
-    method(_javaPart, JFunc_void_DecorationActivatedEvent_cxx::fromCpp(onDecorationActivated));
+    method(_javaPart, onDecorationActivated.has_value() ? JFunc_void_DecorationActivatedEvent_cxx::fromCpp(onDecorationActivated.value()) : nullptr);
   }
-  std::function<void(const SelectionEvent& /* event */)> JHybridReadiumViewSpec::getOnSelectionChange() {
+  std::optional<std::function<void(const SelectionEvent& /* event */)>> JHybridReadiumViewSpec::getOnSelectionChange() {
     static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void_SelectionEvent::javaobject>()>("getOnSelectionChange_cxx");
     auto __result = method(_javaPart);
-    return [&]() -> std::function<void(const SelectionEvent& /* event */)> {
+    return __result != nullptr ? std::make_optional([&]() -> std::function<void(const SelectionEvent& /* event */)> {
       if (__result->isInstanceOf(JFunc_void_SelectionEvent_cxx::javaClassStatic())) [[likely]] {
         auto downcast = jni::static_ref_cast<JFunc_void_SelectionEvent_cxx::javaobject>(__result);
         return downcast->cthis()->getFunction();
@@ -291,16 +291,16 @@ namespace margelo::nitro::readium {
         auto __resultRef = jni::make_global(__result);
         return JNICallable<JFunc_void_SelectionEvent, void(SelectionEvent)>(std::move(__resultRef));
       }
-    }();
+    }()) : std::nullopt;
   }
-  void JHybridReadiumViewSpec::setOnSelectionChange(const std::function<void(const SelectionEvent& /* event */)>& onSelectionChange) {
+  void JHybridReadiumViewSpec::setOnSelectionChange(const std::optional<std::function<void(const SelectionEvent& /* event */)>>& onSelectionChange) {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_SelectionEvent::javaobject> /* onSelectionChange */)>("setOnSelectionChange_cxx");
-    method(_javaPart, JFunc_void_SelectionEvent_cxx::fromCpp(onSelectionChange));
+    method(_javaPart, onSelectionChange.has_value() ? JFunc_void_SelectionEvent_cxx::fromCpp(onSelectionChange.value()) : nullptr);
   }
-  std::function<void(const SelectionActionEvent& /* event */)> JHybridReadiumViewSpec::getOnSelectionAction() {
+  std::optional<std::function<void(const SelectionActionEvent& /* event */)>> JHybridReadiumViewSpec::getOnSelectionAction() {
     static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void_SelectionActionEvent::javaobject>()>("getOnSelectionAction_cxx");
     auto __result = method(_javaPart);
-    return [&]() -> std::function<void(const SelectionActionEvent& /* event */)> {
+    return __result != nullptr ? std::make_optional([&]() -> std::function<void(const SelectionActionEvent& /* event */)> {
       if (__result->isInstanceOf(JFunc_void_SelectionActionEvent_cxx::javaClassStatic())) [[likely]] {
         auto downcast = jni::static_ref_cast<JFunc_void_SelectionActionEvent_cxx::javaobject>(__result);
         return downcast->cthis()->getFunction();
@@ -308,11 +308,11 @@ namespace margelo::nitro::readium {
         auto __resultRef = jni::make_global(__result);
         return JNICallable<JFunc_void_SelectionActionEvent, void(SelectionActionEvent)>(std::move(__resultRef));
       }
-    }();
+    }()) : std::nullopt;
   }
-  void JHybridReadiumViewSpec::setOnSelectionAction(const std::function<void(const SelectionActionEvent& /* event */)>& onSelectionAction) {
+  void JHybridReadiumViewSpec::setOnSelectionAction(const std::optional<std::function<void(const SelectionActionEvent& /* event */)>>& onSelectionAction) {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_SelectionActionEvent::javaobject> /* onSelectionAction */)>("setOnSelectionAction_cxx");
-    method(_javaPart, JFunc_void_SelectionActionEvent_cxx::fromCpp(onSelectionAction));
+    method(_javaPart, onSelectionAction.has_value() ? JFunc_void_SelectionActionEvent_cxx::fromCpp(onSelectionAction.value()) : nullptr);
   }
 
   // Methods

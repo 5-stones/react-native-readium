@@ -46,7 +46,7 @@ abstract class HybridReadiumViewSpec: HybridView() {
   @get:Keep
   @set:DoNotStrip
   @set:Keep
-  abstract var file: ReadiumFile
+  abstract var file: ReadiumFile?
   
   @get:DoNotStrip
   @get:Keep
@@ -72,74 +72,74 @@ abstract class HybridReadiumViewSpec: HybridView() {
   @set:Keep
   abstract var selectionActions: Array<SelectionAction>?
   
-  abstract var onLocationChange: (locator: Locator) -> Unit
+  abstract var onLocationChange: ((locator: Locator) -> Unit)?
   
-  private var onLocationChange_cxx: Func_void_Locator
+  private var onLocationChange_cxx: Func_void_Locator?
     @Keep
     @DoNotStrip
     get() {
-      return Func_void_Locator_java(onLocationChange)
+      return onLocationChange?.let { Func_void_Locator_java(it) }
     }
     @Keep
     @DoNotStrip
     set(value) {
-      onLocationChange = value
+      onLocationChange = value?.let { it }
     }
   
-  abstract var onPublicationReady: (event: PublicationReadyEvent) -> Unit
+  abstract var onPublicationReady: ((event: PublicationReadyEvent) -> Unit)?
   
-  private var onPublicationReady_cxx: Func_void_PublicationReadyEvent
+  private var onPublicationReady_cxx: Func_void_PublicationReadyEvent?
     @Keep
     @DoNotStrip
     get() {
-      return Func_void_PublicationReadyEvent_java(onPublicationReady)
+      return onPublicationReady?.let { Func_void_PublicationReadyEvent_java(it) }
     }
     @Keep
     @DoNotStrip
     set(value) {
-      onPublicationReady = value
+      onPublicationReady = value?.let { it }
     }
   
-  abstract var onDecorationActivated: (event: DecorationActivatedEvent) -> Unit
+  abstract var onDecorationActivated: ((event: DecorationActivatedEvent) -> Unit)?
   
-  private var onDecorationActivated_cxx: Func_void_DecorationActivatedEvent
+  private var onDecorationActivated_cxx: Func_void_DecorationActivatedEvent?
     @Keep
     @DoNotStrip
     get() {
-      return Func_void_DecorationActivatedEvent_java(onDecorationActivated)
+      return onDecorationActivated?.let { Func_void_DecorationActivatedEvent_java(it) }
     }
     @Keep
     @DoNotStrip
     set(value) {
-      onDecorationActivated = value
+      onDecorationActivated = value?.let { it }
     }
   
-  abstract var onSelectionChange: (event: SelectionEvent) -> Unit
+  abstract var onSelectionChange: ((event: SelectionEvent) -> Unit)?
   
-  private var onSelectionChange_cxx: Func_void_SelectionEvent
+  private var onSelectionChange_cxx: Func_void_SelectionEvent?
     @Keep
     @DoNotStrip
     get() {
-      return Func_void_SelectionEvent_java(onSelectionChange)
+      return onSelectionChange?.let { Func_void_SelectionEvent_java(it) }
     }
     @Keep
     @DoNotStrip
     set(value) {
-      onSelectionChange = value
+      onSelectionChange = value?.let { it }
     }
   
-  abstract var onSelectionAction: (event: SelectionActionEvent) -> Unit
+  abstract var onSelectionAction: ((event: SelectionActionEvent) -> Unit)?
   
-  private var onSelectionAction_cxx: Func_void_SelectionActionEvent
+  private var onSelectionAction_cxx: Func_void_SelectionActionEvent?
     @Keep
     @DoNotStrip
     get() {
-      return Func_void_SelectionActionEvent_java(onSelectionAction)
+      return onSelectionAction?.let { Func_void_SelectionActionEvent_java(it) }
     }
     @Keep
     @DoNotStrip
     set(value) {
-      onSelectionAction = value
+      onSelectionAction = value?.let { it }
     }
 
   // Methods

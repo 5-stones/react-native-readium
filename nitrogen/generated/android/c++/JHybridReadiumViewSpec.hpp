@@ -51,8 +51,8 @@ namespace margelo::nitro::readium {
 
   public:
     // Properties
-    ReadiumFile getFile() override;
-    void setFile(const ReadiumFile& file) override;
+    std::optional<ReadiumFile> getFile() override;
+    void setFile(const std::optional<ReadiumFile>& file) override;
     std::optional<Locator> getLocation() override;
     void setLocation(const std::optional<Locator>& location) override;
     std::optional<Preferences> getPreferences() override;
@@ -61,16 +61,16 @@ namespace margelo::nitro::readium {
     void setDecorations(const std::optional<std::vector<DecorationGroup>>& decorations) override;
     std::optional<std::vector<SelectionAction>> getSelectionActions() override;
     void setSelectionActions(const std::optional<std::vector<SelectionAction>>& selectionActions) override;
-    std::function<void(const Locator& /* locator */)> getOnLocationChange() override;
-    void setOnLocationChange(const std::function<void(const Locator& /* locator */)>& onLocationChange) override;
-    std::function<void(const PublicationReadyEvent& /* event */)> getOnPublicationReady() override;
-    void setOnPublicationReady(const std::function<void(const PublicationReadyEvent& /* event */)>& onPublicationReady) override;
-    std::function<void(const DecorationActivatedEvent& /* event */)> getOnDecorationActivated() override;
-    void setOnDecorationActivated(const std::function<void(const DecorationActivatedEvent& /* event */)>& onDecorationActivated) override;
-    std::function<void(const SelectionEvent& /* event */)> getOnSelectionChange() override;
-    void setOnSelectionChange(const std::function<void(const SelectionEvent& /* event */)>& onSelectionChange) override;
-    std::function<void(const SelectionActionEvent& /* event */)> getOnSelectionAction() override;
-    void setOnSelectionAction(const std::function<void(const SelectionActionEvent& /* event */)>& onSelectionAction) override;
+    std::optional<std::function<void(const Locator& /* locator */)>> getOnLocationChange() override;
+    void setOnLocationChange(const std::optional<std::function<void(const Locator& /* locator */)>>& onLocationChange) override;
+    std::optional<std::function<void(const PublicationReadyEvent& /* event */)>> getOnPublicationReady() override;
+    void setOnPublicationReady(const std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>& onPublicationReady) override;
+    std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>> getOnDecorationActivated() override;
+    void setOnDecorationActivated(const std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>& onDecorationActivated) override;
+    std::optional<std::function<void(const SelectionEvent& /* event */)>> getOnSelectionChange() override;
+    void setOnSelectionChange(const std::optional<std::function<void(const SelectionEvent& /* event */)>>& onSelectionChange) override;
+    std::optional<std::function<void(const SelectionActionEvent& /* event */)>> getOnSelectionAction() override;
+    void setOnSelectionAction(const std::optional<std::function<void(const SelectionActionEvent& /* event */)>>& onSelectionAction) override;
 
   public:
     // Methods

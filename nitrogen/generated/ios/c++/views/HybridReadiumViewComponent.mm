@@ -72,7 +72,7 @@ using namespace margelo::nitro::readium::views;
   // 2. Update each prop individually
   swiftPart.beforeUpdate();
 
-  // file: struct
+  // file: optional
   if (newViewProps.file.isDirty) {
     swiftPart.setFile(newViewProps.file.value);
     newViewProps.file.isDirty = false;
@@ -97,27 +97,27 @@ using namespace margelo::nitro::readium::views;
     swiftPart.setSelectionActions(newViewProps.selectionActions.value);
     newViewProps.selectionActions.isDirty = false;
   }
-  // onLocationChange: function
+  // onLocationChange: optional
   if (newViewProps.onLocationChange.isDirty) {
     swiftPart.setOnLocationChange(newViewProps.onLocationChange.value);
     newViewProps.onLocationChange.isDirty = false;
   }
-  // onPublicationReady: function
+  // onPublicationReady: optional
   if (newViewProps.onPublicationReady.isDirty) {
     swiftPart.setOnPublicationReady(newViewProps.onPublicationReady.value);
     newViewProps.onPublicationReady.isDirty = false;
   }
-  // onDecorationActivated: function
+  // onDecorationActivated: optional
   if (newViewProps.onDecorationActivated.isDirty) {
     swiftPart.setOnDecorationActivated(newViewProps.onDecorationActivated.value);
     newViewProps.onDecorationActivated.isDirty = false;
   }
-  // onSelectionChange: function
+  // onSelectionChange: optional
   if (newViewProps.onSelectionChange.isDirty) {
     swiftPart.setOnSelectionChange(newViewProps.onSelectionChange.value);
     newViewProps.onSelectionChange.isDirty = false;
   }
-  // onSelectionAction: function
+  // onSelectionAction: optional
   if (newViewProps.onSelectionAction.isDirty) {
     swiftPart.setOnSelectionAction(newViewProps.onSelectionAction.value);
     newViewProps.onSelectionAction.isDirty = false;

@@ -26,12 +26,12 @@ namespace margelo::nitro::readium::views {
                                                  const HybridReadiumViewProps& sourceProps,
                                                  const react::RawProps& rawProps):
     react::ViewProps(context, sourceProps, rawProps, filterObjectKeys),
-    file([&]() -> CachedProp<ReadiumFile> {
+    file([&]() -> CachedProp<std::optional<ReadiumFile>> {
       try {
         const react::RawValue* rawValue = rawProps.at("file", nullptr, nullptr);
         if (rawValue == nullptr) return sourceProps.file;
         const auto& [runtime, value] = (std::pair<jsi::Runtime*, jsi::Value>)*rawValue;
-        return CachedProp<ReadiumFile>::fromRawValue(*runtime, value, sourceProps.file);
+        return CachedProp<std::optional<ReadiumFile>>::fromRawValue(*runtime, value, sourceProps.file);
       } catch (const std::exception& exc) {
         throw std::runtime_error(std::string("ReadiumView.file: ") + exc.what());
       }
@@ -76,52 +76,52 @@ namespace margelo::nitro::readium::views {
         throw std::runtime_error(std::string("ReadiumView.selectionActions: ") + exc.what());
       }
     }()),
-    onLocationChange([&]() -> CachedProp<std::function<void(const Locator& /* locator */)>> {
+    onLocationChange([&]() -> CachedProp<std::optional<std::function<void(const Locator& /* locator */)>>> {
       try {
         const react::RawValue* rawValue = rawProps.at("onLocationChange", nullptr, nullptr);
         if (rawValue == nullptr) return sourceProps.onLocationChange;
         const auto& [runtime, value] = (std::pair<jsi::Runtime*, jsi::Value>)*rawValue;
-        return CachedProp<std::function<void(const Locator& /* locator */)>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.onLocationChange);
+        return CachedProp<std::optional<std::function<void(const Locator& /* locator */)>>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.onLocationChange);
       } catch (const std::exception& exc) {
         throw std::runtime_error(std::string("ReadiumView.onLocationChange: ") + exc.what());
       }
     }()),
-    onPublicationReady([&]() -> CachedProp<std::function<void(const PublicationReadyEvent& /* event */)>> {
+    onPublicationReady([&]() -> CachedProp<std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>> {
       try {
         const react::RawValue* rawValue = rawProps.at("onPublicationReady", nullptr, nullptr);
         if (rawValue == nullptr) return sourceProps.onPublicationReady;
         const auto& [runtime, value] = (std::pair<jsi::Runtime*, jsi::Value>)*rawValue;
-        return CachedProp<std::function<void(const PublicationReadyEvent& /* event */)>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.onPublicationReady);
+        return CachedProp<std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.onPublicationReady);
       } catch (const std::exception& exc) {
         throw std::runtime_error(std::string("ReadiumView.onPublicationReady: ") + exc.what());
       }
     }()),
-    onDecorationActivated([&]() -> CachedProp<std::function<void(const DecorationActivatedEvent& /* event */)>> {
+    onDecorationActivated([&]() -> CachedProp<std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>> {
       try {
         const react::RawValue* rawValue = rawProps.at("onDecorationActivated", nullptr, nullptr);
         if (rawValue == nullptr) return sourceProps.onDecorationActivated;
         const auto& [runtime, value] = (std::pair<jsi::Runtime*, jsi::Value>)*rawValue;
-        return CachedProp<std::function<void(const DecorationActivatedEvent& /* event */)>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.onDecorationActivated);
+        return CachedProp<std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.onDecorationActivated);
       } catch (const std::exception& exc) {
         throw std::runtime_error(std::string("ReadiumView.onDecorationActivated: ") + exc.what());
       }
     }()),
-    onSelectionChange([&]() -> CachedProp<std::function<void(const SelectionEvent& /* event */)>> {
+    onSelectionChange([&]() -> CachedProp<std::optional<std::function<void(const SelectionEvent& /* event */)>>> {
       try {
         const react::RawValue* rawValue = rawProps.at("onSelectionChange", nullptr, nullptr);
         if (rawValue == nullptr) return sourceProps.onSelectionChange;
         const auto& [runtime, value] = (std::pair<jsi::Runtime*, jsi::Value>)*rawValue;
-        return CachedProp<std::function<void(const SelectionEvent& /* event */)>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.onSelectionChange);
+        return CachedProp<std::optional<std::function<void(const SelectionEvent& /* event */)>>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.onSelectionChange);
       } catch (const std::exception& exc) {
         throw std::runtime_error(std::string("ReadiumView.onSelectionChange: ") + exc.what());
       }
     }()),
-    onSelectionAction([&]() -> CachedProp<std::function<void(const SelectionActionEvent& /* event */)>> {
+    onSelectionAction([&]() -> CachedProp<std::optional<std::function<void(const SelectionActionEvent& /* event */)>>> {
       try {
         const react::RawValue* rawValue = rawProps.at("onSelectionAction", nullptr, nullptr);
         if (rawValue == nullptr) return sourceProps.onSelectionAction;
         const auto& [runtime, value] = (std::pair<jsi::Runtime*, jsi::Value>)*rawValue;
-        return CachedProp<std::function<void(const SelectionActionEvent& /* event */)>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.onSelectionAction);
+        return CachedProp<std::optional<std::function<void(const SelectionActionEvent& /* event */)>>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.onSelectionAction);
       } catch (const std::exception& exc) {
         throw std::runtime_error(std::string("ReadiumView.onSelectionAction: ") + exc.what());
       }

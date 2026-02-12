@@ -10,16 +10,16 @@ import NitroModules
 /// See ``HybridReadiumViewSpec``
 public protocol HybridReadiumViewSpec_protocol: HybridObject, HybridView {
   // Properties
-  var file: ReadiumFile { get set }
+  var file: ReadiumFile? { get set }
   var location: Locator? { get set }
   var preferences: Preferences? { get set }
   var decorations: [DecorationGroup]? { get set }
   var selectionActions: [SelectionAction]? { get set }
-  var onLocationChange: (_ locator: Locator) -> Void { get set }
-  var onPublicationReady: (_ event: PublicationReadyEvent) -> Void { get set }
-  var onDecorationActivated: (_ event: DecorationActivatedEvent) -> Void { get set }
-  var onSelectionChange: (_ event: SelectionEvent) -> Void { get set }
-  var onSelectionAction: (_ event: SelectionActionEvent) -> Void { get set }
+  var onLocationChange: ((_ locator: Locator) -> Void)? { get set }
+  var onPublicationReady: ((_ event: PublicationReadyEvent) -> Void)? { get set }
+  var onDecorationActivated: ((_ event: DecorationActivatedEvent) -> Void)? { get set }
+  var onSelectionChange: ((_ event: SelectionEvent) -> Void)? { get set }
+  var onSelectionAction: ((_ event: SelectionActionEvent) -> Void)? { get set }
 
   // Methods
   func goForward() throws -> Void

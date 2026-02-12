@@ -18,8 +18,9 @@ class HybridReadiumView: HybridReadiumViewSpec {
 
   var view: UIView { hostView }
 
-  var file: ReadiumFile = ReadiumFile(url: "", initialLocation: nil) {
+  var file: ReadiumFile? = nil {
     didSet {
+      guard let file = file else { return }
       pendingFileUrl = file.url
       pendingInitialLocation = file.initialLocation
       tryLoadBook()
@@ -51,11 +52,11 @@ class HybridReadiumView: HybridReadiumViewSpec {
     }
   }
 
-  var onLocationChange: (Locator) -> Void = { _ in }
-  var onPublicationReady: (PublicationReadyEvent) -> Void = { _ in }
-  var onDecorationActivated: (DecorationActivatedEvent) -> Void = { _ in }
-  var onSelectionChange: (SelectionEvent) -> Void = { _ in }
-  var onSelectionAction: (SelectionActionEvent) -> Void = { _ in }
+  var onLocationChange: ((Locator) -> Void)? = nil
+  var onPublicationReady: ((PublicationReadyEvent) -> Void)? = nil
+  var onDecorationActivated: ((DecorationActivatedEvent) -> Void)? = nil
+  var onSelectionChange: ((SelectionEvent) -> Void)? = nil
+  var onSelectionAction: ((SelectionActionEvent) -> Void)? = nil
 
   // MARK: - Private state
 
@@ -218,7 +219,7 @@ class HybridReadiumView: HybridReadiumViewSpec {
             point: point
           )
 
-          self.onDecorationActivated(payload)
+          self.onDecorationActivated?(payload)
         }
       }
     }
@@ -329,7 +330,7 @@ class HybridReadiumView: HybridReadiumViewSpec {
     vc.publisher.sink(receiveValue: { [weak self] locator in
       guard let self = self else { return }
       let nitroLocator = self.readiumLocatorToNitro(locator)
-      self.onLocationChange(nitroLocator)
+      self.onLocationChange?(nitroLocator)
     })
     .store(in: &subscriptions)
 
@@ -388,7 +389,7 @@ class HybridReadiumView: HybridReadiumViewSpec {
         metadata: metadata
       )
 
-      self.onPublicationReady(event)
+      self.onPublicationReady?(event)
     }
   }
 
@@ -493,6 +494,6 @@ extension HybridReadiumView: SelectionActionDelegate {
       actionId: actionId
     )
 
-    self.onSelectionAction(event)
+    self.onSelectionAction?(event)
   }
 }

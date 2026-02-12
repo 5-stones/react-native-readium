@@ -76,10 +76,12 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
   }
 
   // Props
-  override var file: ReadiumFile = ReadiumFile("", null)
+  override var file: ReadiumFile? = null
     set(value) {
       field = value
-      buildForViewIfReady()
+      if (value != null) {
+        buildForViewIfReady()
+      }
     }
 
   override var location: Locator? = null
@@ -106,11 +108,11 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
       updateSelectionActions()
     }
 
-  override var onLocationChange: (locator: Locator) -> Unit = {}
-  override var onPublicationReady: (event: PublicationReadyEvent) -> Unit = {}
-  override var onDecorationActivated: (event: DecorationActivatedEvent) -> Unit = {}
-  override var onSelectionChange: (event: SelectionEvent) -> Unit = {}
-  override var onSelectionAction: (event: SelectionActionEvent) -> Unit = {}
+  override var onLocationChange: ((locator: Locator) -> Unit)? = null
+  override var onPublicationReady: ((event: PublicationReadyEvent) -> Unit)? = null
+  override var onDecorationActivated: ((event: DecorationActivatedEvent) -> Unit)? = null
+  override var onSelectionChange: ((event: SelectionEvent) -> Unit)? = null
+  override var onSelectionAction: ((event: SelectionActionEvent) -> Unit)? = null
 
   private fun ensureService() {
     if (svc == null) {
@@ -442,7 +444,8 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
     if (!isAttached) return
     if (isFragmentAdded) return
     if (isBuilding) return
-    val fileUrl = file.url
+    val currentFile = file ?: return
+    val fileUrl = currentFile.url
     if (fileUrl.isEmpty()) return
 
     ensureService()
@@ -453,7 +456,7 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
     val path = fileUrl.replace("^(file:/+)?(/.*)$".toRegex(), "$2")
 
     // Convert initial location
-    val initialLocator = file.initialLocation?.let { loc ->
+    val initialLocator = currentFile.initialLocation?.let { loc ->
       nitroLocatorToReadium(loc)?.let { com.reactnativereadium.utils.LinkOrLocator.Locator(it) }
     }
 
@@ -521,7 +524,7 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
       when (event) {
         is ReaderViewModel.Event.LocatorUpdate -> {
           val payload = readiumLocatorToNitro(event.locator)
-          onLocationChange(payload)
+          onLocationChange?.invoke(payload)
         }
         is ReaderViewModel.Event.PublicationReady -> {
           val payload = PublicationReadyEvent(
@@ -529,7 +532,7 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
             positions = event.positions.map { readiumLocatorToNitro(it) }.toTypedArray(),
             metadata = readiumMetadataToNitro(event.metadata)
           )
-          onPublicationReady(payload)
+          onPublicationReady?.invoke(payload)
         }
         is ReaderViewModel.Event.DecorationActivated -> {
           val decoration = readiumDecorationToNitro(event.decoration)
@@ -543,14 +546,14 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
             rect = rect,
             point = point
           )
-          onDecorationActivated(payload)
+          onDecorationActivated?.invoke(payload)
         }
         is ReaderViewModel.Event.SelectionChanged -> {
           val payload = SelectionEvent(
             locator = event.locator?.let { readiumLocatorToNitro(it) },
             selectedText = event.selectedText
           )
-          onSelectionChange(payload)
+          onSelectionChange?.invoke(payload)
         }
         is ReaderViewModel.Event.SelectionAction -> {
           val payload = SelectionActionEvent(
@@ -558,7 +561,7 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
             selectedText = event.selectedText,
             actionId = event.actionId
           )
-          onSelectionAction(payload)
+          onSelectionAction?.invoke(payload)
         }
       }
     }

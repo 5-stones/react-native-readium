@@ -229,16 +229,16 @@ export interface ReadiumFile {
 // ── HybridView ───────────────────────────────────────────────────────────────
 
 export interface ReadiumViewProps extends HybridViewProps {
-  file: ReadiumFile;
+  file?: ReadiumFile;
   location?: Locator;
   preferences?: Preferences;
   decorations?: DecorationGroup[];
   selectionActions?: SelectionAction[];
-  onLocationChange: (locator: Locator) => void;
-  onPublicationReady: (event: PublicationReadyEvent) => void;
-  onDecorationActivated: (event: DecorationActivatedEvent) => void;
-  onSelectionChange: (event: SelectionEvent) => void;
-  onSelectionAction: (event: SelectionActionEvent) => void;
+  onLocationChange?: (locator: Locator) => void;
+  onPublicationReady?: (event: PublicationReadyEvent) => void;
+  onDecorationActivated?: (event: DecorationActivatedEvent) => void;
+  onSelectionChange?: (event: SelectionEvent) => void;
+  onSelectionAction?: (event: SelectionActionEvent) => void;
 }
 
 export interface ReadiumViewMethods extends HybridViewMethods {

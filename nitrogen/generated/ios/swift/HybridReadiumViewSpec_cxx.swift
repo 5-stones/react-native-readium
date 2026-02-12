@@ -121,14 +121,20 @@ open class HybridReadiumViewSpec_cxx {
   }
 
   // Properties
-  public final var file: ReadiumFile {
+  public final var file: bridge.std__optional_ReadiumFile_ {
     @inline(__always)
     get {
-      return self.__implementation.file
+      return { () -> bridge.std__optional_ReadiumFile_ in
+        if let __unwrappedValue = self.__implementation.file {
+          return bridge.create_std__optional_ReadiumFile_(__unwrappedValue)
+        } else {
+          return .init()
+        }
+      }()
     }
     @inline(__always)
     set {
-      self.__implementation.file = newValue
+      self.__implementation.file = newValue.value
     }
   }
   
@@ -226,96 +232,161 @@ open class HybridReadiumViewSpec_cxx {
     }
   }
   
-  public final var onLocationChange: bridge.Func_void_Locator {
+  public final var onLocationChange: bridge.std__optional_std__function_void_const_Locator_____locator______ {
     @inline(__always)
     get {
-      return { () -> bridge.Func_void_Locator in
-        let __closureWrapper = Func_void_Locator(self.__implementation.onLocationChange)
-        return bridge.create_Func_void_Locator(__closureWrapper.toUnsafe())
+      return { () -> bridge.std__optional_std__function_void_const_Locator_____locator______ in
+        if let __unwrappedValue = self.__implementation.onLocationChange {
+          return bridge.create_std__optional_std__function_void_const_Locator_____locator______({ () -> bridge.Func_void_Locator in
+            let __closureWrapper = Func_void_Locator(__unwrappedValue)
+            return bridge.create_Func_void_Locator(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
       }()
     }
     @inline(__always)
     set {
-      self.__implementation.onLocationChange = { () -> (Locator) -> Void in
-        let __wrappedFunction = bridge.wrap_Func_void_Locator(newValue)
-        return { (__locator: Locator) -> Void in
-          __wrappedFunction.call(__locator)
+      self.__implementation.onLocationChange = { () -> ((_ locator: Locator) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_const_Locator_____locator______(newValue) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_const_Locator_____locator______(newValue)
+          return { () -> (Locator) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_Locator(__unwrapped)
+            return { (__locator: Locator) -> Void in
+              __wrappedFunction.call(__locator)
+            }
+          }()
+        } else {
+          return nil
         }
       }()
     }
   }
   
-  public final var onPublicationReady: bridge.Func_void_PublicationReadyEvent {
+  public final var onPublicationReady: bridge.std__optional_std__function_void_const_PublicationReadyEvent_____event______ {
     @inline(__always)
     get {
-      return { () -> bridge.Func_void_PublicationReadyEvent in
-        let __closureWrapper = Func_void_PublicationReadyEvent(self.__implementation.onPublicationReady)
-        return bridge.create_Func_void_PublicationReadyEvent(__closureWrapper.toUnsafe())
+      return { () -> bridge.std__optional_std__function_void_const_PublicationReadyEvent_____event______ in
+        if let __unwrappedValue = self.__implementation.onPublicationReady {
+          return bridge.create_std__optional_std__function_void_const_PublicationReadyEvent_____event______({ () -> bridge.Func_void_PublicationReadyEvent in
+            let __closureWrapper = Func_void_PublicationReadyEvent(__unwrappedValue)
+            return bridge.create_Func_void_PublicationReadyEvent(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
       }()
     }
     @inline(__always)
     set {
-      self.__implementation.onPublicationReady = { () -> (PublicationReadyEvent) -> Void in
-        let __wrappedFunction = bridge.wrap_Func_void_PublicationReadyEvent(newValue)
-        return { (__event: PublicationReadyEvent) -> Void in
-          __wrappedFunction.call(__event)
+      self.__implementation.onPublicationReady = { () -> ((_ event: PublicationReadyEvent) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_const_PublicationReadyEvent_____event______(newValue) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_const_PublicationReadyEvent_____event______(newValue)
+          return { () -> (PublicationReadyEvent) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_PublicationReadyEvent(__unwrapped)
+            return { (__event: PublicationReadyEvent) -> Void in
+              __wrappedFunction.call(__event)
+            }
+          }()
+        } else {
+          return nil
         }
       }()
     }
   }
   
-  public final var onDecorationActivated: bridge.Func_void_DecorationActivatedEvent {
+  public final var onDecorationActivated: bridge.std__optional_std__function_void_const_DecorationActivatedEvent_____event______ {
     @inline(__always)
     get {
-      return { () -> bridge.Func_void_DecorationActivatedEvent in
-        let __closureWrapper = Func_void_DecorationActivatedEvent(self.__implementation.onDecorationActivated)
-        return bridge.create_Func_void_DecorationActivatedEvent(__closureWrapper.toUnsafe())
+      return { () -> bridge.std__optional_std__function_void_const_DecorationActivatedEvent_____event______ in
+        if let __unwrappedValue = self.__implementation.onDecorationActivated {
+          return bridge.create_std__optional_std__function_void_const_DecorationActivatedEvent_____event______({ () -> bridge.Func_void_DecorationActivatedEvent in
+            let __closureWrapper = Func_void_DecorationActivatedEvent(__unwrappedValue)
+            return bridge.create_Func_void_DecorationActivatedEvent(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
       }()
     }
     @inline(__always)
     set {
-      self.__implementation.onDecorationActivated = { () -> (DecorationActivatedEvent) -> Void in
-        let __wrappedFunction = bridge.wrap_Func_void_DecorationActivatedEvent(newValue)
-        return { (__event: DecorationActivatedEvent) -> Void in
-          __wrappedFunction.call(__event)
+      self.__implementation.onDecorationActivated = { () -> ((_ event: DecorationActivatedEvent) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_const_DecorationActivatedEvent_____event______(newValue) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_const_DecorationActivatedEvent_____event______(newValue)
+          return { () -> (DecorationActivatedEvent) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_DecorationActivatedEvent(__unwrapped)
+            return { (__event: DecorationActivatedEvent) -> Void in
+              __wrappedFunction.call(__event)
+            }
+          }()
+        } else {
+          return nil
         }
       }()
     }
   }
   
-  public final var onSelectionChange: bridge.Func_void_SelectionEvent {
+  public final var onSelectionChange: bridge.std__optional_std__function_void_const_SelectionEvent_____event______ {
     @inline(__always)
     get {
-      return { () -> bridge.Func_void_SelectionEvent in
-        let __closureWrapper = Func_void_SelectionEvent(self.__implementation.onSelectionChange)
-        return bridge.create_Func_void_SelectionEvent(__closureWrapper.toUnsafe())
+      return { () -> bridge.std__optional_std__function_void_const_SelectionEvent_____event______ in
+        if let __unwrappedValue = self.__implementation.onSelectionChange {
+          return bridge.create_std__optional_std__function_void_const_SelectionEvent_____event______({ () -> bridge.Func_void_SelectionEvent in
+            let __closureWrapper = Func_void_SelectionEvent(__unwrappedValue)
+            return bridge.create_Func_void_SelectionEvent(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
       }()
     }
     @inline(__always)
     set {
-      self.__implementation.onSelectionChange = { () -> (SelectionEvent) -> Void in
-        let __wrappedFunction = bridge.wrap_Func_void_SelectionEvent(newValue)
-        return { (__event: SelectionEvent) -> Void in
-          __wrappedFunction.call(__event)
+      self.__implementation.onSelectionChange = { () -> ((_ event: SelectionEvent) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_const_SelectionEvent_____event______(newValue) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_const_SelectionEvent_____event______(newValue)
+          return { () -> (SelectionEvent) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_SelectionEvent(__unwrapped)
+            return { (__event: SelectionEvent) -> Void in
+              __wrappedFunction.call(__event)
+            }
+          }()
+        } else {
+          return nil
         }
       }()
     }
   }
   
-  public final var onSelectionAction: bridge.Func_void_SelectionActionEvent {
+  public final var onSelectionAction: bridge.std__optional_std__function_void_const_SelectionActionEvent_____event______ {
     @inline(__always)
     get {
-      return { () -> bridge.Func_void_SelectionActionEvent in
-        let __closureWrapper = Func_void_SelectionActionEvent(self.__implementation.onSelectionAction)
-        return bridge.create_Func_void_SelectionActionEvent(__closureWrapper.toUnsafe())
+      return { () -> bridge.std__optional_std__function_void_const_SelectionActionEvent_____event______ in
+        if let __unwrappedValue = self.__implementation.onSelectionAction {
+          return bridge.create_std__optional_std__function_void_const_SelectionActionEvent_____event______({ () -> bridge.Func_void_SelectionActionEvent in
+            let __closureWrapper = Func_void_SelectionActionEvent(__unwrappedValue)
+            return bridge.create_Func_void_SelectionActionEvent(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
       }()
     }
     @inline(__always)
     set {
-      self.__implementation.onSelectionAction = { () -> (SelectionActionEvent) -> Void in
-        let __wrappedFunction = bridge.wrap_Func_void_SelectionActionEvent(newValue)
-        return { (__event: SelectionActionEvent) -> Void in
-          __wrappedFunction.call(__event)
+      self.__implementation.onSelectionAction = { () -> ((_ event: SelectionActionEvent) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_const_SelectionActionEvent_____event______(newValue) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_const_SelectionActionEvent_____event______(newValue)
+          return { () -> (SelectionActionEvent) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_SelectionActionEvent(__unwrapped)
+            return { (__event: SelectionActionEvent) -> Void in
+              __wrappedFunction.call(__event)
+            }
+          }()
+        } else {
+          return nil
         }
       }()
     }

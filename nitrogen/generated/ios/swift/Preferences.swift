@@ -216,12 +216,26 @@ public extension Preferences {
   
   @inline(__always)
   var fontSize: Double? {
-    return self.__fontSize.value
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__fontSize) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__fontSize)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
   }
   
   @inline(__always)
   var fontWeight: Double? {
-    return self.__fontWeight.value
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__fontWeight) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__fontWeight)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
   }
   
   @inline(__always)
@@ -262,7 +276,14 @@ public extension Preferences {
   
   @inline(__always)
   var letterSpacing: Double? {
-    return self.__letterSpacing.value
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__letterSpacing) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__letterSpacing)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
   }
   
   @inline(__always)
@@ -279,22 +300,50 @@ public extension Preferences {
   
   @inline(__always)
   var lineHeight: Double? {
-    return self.__lineHeight.value
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__lineHeight) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__lineHeight)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
   }
   
   @inline(__always)
   var pageMargins: Double? {
-    return self.__pageMargins.value
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__pageMargins) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__pageMargins)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
   }
   
   @inline(__always)
   var paragraphIndent: Double? {
-    return self.__paragraphIndent.value
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__paragraphIndent) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__paragraphIndent)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
   }
   
   @inline(__always)
   var paragraphSpacing: Double? {
-    return self.__paragraphSpacing.value
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__paragraphSpacing) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__paragraphSpacing)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
   }
   
   @inline(__always)
@@ -395,7 +444,14 @@ public extension Preferences {
   
   @inline(__always)
   var typeScale: Double? {
-    return self.__typeScale.value
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__typeScale) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__typeScale)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
   }
   
   @inline(__always)
@@ -412,7 +468,14 @@ public extension Preferences {
   
   @inline(__always)
   var wordSpacing: Double? {
-    return self.__wordSpacing.value
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__wordSpacing) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__wordSpacing)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
   }
   
   @inline(__always)

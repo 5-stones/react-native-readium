@@ -58,7 +58,14 @@ public extension Locator {
   
   @inline(__always)
   var target: Double? {
-    return self.__target.value
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__target) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__target)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
   }
   
   @inline(__always)

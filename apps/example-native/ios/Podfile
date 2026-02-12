@@ -32,13 +32,7 @@ target 'ReadiumExample' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  pod 'ReadiumGCDWebServer', :modular_headers => true
-  pod 'ReadiumAdapterGCDWebServer', '~> 3.5.0'
-  pod 'ReadiumInternal',  '~> 3.5.0'
-  pod 'ReadiumShared',    '~> 3.5.0'
-  pod 'ReadiumStreamer',  '~> 3.5.0'
-  pod 'ReadiumNavigator', '~> 3.5.0'
-  pod 'Minizip', modular_headers: true
+  readium_pods
 
   post_install do |installer|
     react_native_post_install(
@@ -48,18 +42,6 @@ target 'ReadiumExample' do
       # :ccache_enabled => true
     )
 
-    # Minizip is a C library whose headers use extern "C" blocks.
-    # When react-native-readium enables SWIFT_OBJC_INTEROP_MODE=objcxx,
-    # clang tries to compile Minizip as a C++ module, which breaks.
-    # Rewrite the modulemap with [extern_c] so clang treats it as C.
-    minizip_modulemap = File.join(installer.sandbox.root, 'Headers', 'Public', 'Minizip', 'Minizip.modulemap')
-    if File.exist?(minizip_modulemap)
-      File.write(minizip_modulemap, <<~MODULEMAP)
-        module Minizip [extern_c] [system] {
-          header "Minizip-umbrella.h"
-          export *
-        }
-      MODULEMAP
-    end
+    readium_post_install(installer)
   end
 end
