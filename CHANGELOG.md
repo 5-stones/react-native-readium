@@ -1,3 +1,12 @@
+# [5.0.0-rc.5](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.4...v5.0.0-rc.5) (2026-02-12)
+
+
+### Bug Fixes
+
+* **android, ios:** fix an issue with fragment parsing and remove dead code ([5fe514d](https://github.com/5-stones/react-native-readium/commit/5fe514d6856f945781c06e6f65ffe33399be461e))
+
+
+
 # [5.0.0-rc.4](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.3...v5.0.0-rc.4) (2026-02-12)
 
 
