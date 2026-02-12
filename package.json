@@ -15,6 +15,7 @@
     "cpp",
     "nitrogen/generated",
     "nitro.json",
+    "scripts/*.rb",
     "react-native-readium.podspec",
     "!lib/typescript/example",
     "!android/build",
