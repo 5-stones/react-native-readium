@@ -1,3 +1,12 @@
+# [5.0.0-rc.6](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.5...v5.0.0-rc.6) (2026-02-12)
+
+
+### Bug Fixes
+
+* **android:** fix an issue with android where switching between epubs wasn't working ([f3062a5](https://github.com/5-stones/react-native-readium/commit/f3062a5c3390c878772f460571e980fa4d8bb292))
+
+
+
 # [5.0.0-rc.5](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.4...v5.0.0-rc.5) (2026-02-12)
 
 
