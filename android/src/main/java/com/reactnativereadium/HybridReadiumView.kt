@@ -160,7 +160,13 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
 
   override fun goForward() { fragment?.goForward() }
   override fun goBackward() { fragment?.goBackward() }
-  override fun destroy() { cleanup() }
+  override fun destroy() {
+    if (android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) {
+      cleanup()
+    } else {
+      hostView.post { cleanup() }
+    }
+  }
 
   // MARK: - Fragment management
 
