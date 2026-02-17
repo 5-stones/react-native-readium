@@ -1,3 +1,12 @@
+# [5.0.0-rc.8](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.7...v5.0.0-rc.8) (2026-02-17)
+
+
+### Bug Fixes
+
+* **android:** fix runtime exception due to incorrect thread access ([f82c3f7](https://github.com/5-stones/react-native-readium/commit/f82c3f7afc3e6dbe52136e7a0a07b7730817d29b))
+
+
+
 # [5.0.0-rc.7](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.6...v5.0.0-rc.7) (2026-02-17)
 
 
