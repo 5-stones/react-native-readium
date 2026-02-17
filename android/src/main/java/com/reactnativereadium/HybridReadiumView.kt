@@ -3,6 +3,7 @@ package com.margelo.nitro.reactnativereadium
 import android.util.Log
 import android.view.Choreographer
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentActivity
 import com.reactnativereadium.reader.BaseReaderFragment
@@ -45,6 +46,7 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
   private var isFragmentAdded = false
   private var isBuilding = false
   private var isAttached = false
+  private var isDestroyed = false
   private var frameCallback: Choreographer.FrameCallback? = null
 
   override val view: View get() = hostView
@@ -119,61 +121,57 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
 
   private fun updateLocation() {
     val loc = location ?: return
-    if (fragment == null) return
-
+    val frag = fragment ?: return
     val readiumLocator = nitroLocatorToReadium(loc) ?: return
-    fragment?.go(com.reactnativereadium.utils.LinkOrLocator.Locator(readiumLocator), true)
+    frag.go(com.reactnativereadium.utils.LinkOrLocator.Locator(readiumLocator), true)
   }
 
   // MARK: - Preferences
 
   private fun updatePreferences() {
     val prefs = preferences ?: return
-    if (fragment == null) return
-
-    val epubPrefs = nitroPreferencesToEpub(prefs)
-    if (fragment is EpubReaderFragment) {
-      (fragment as EpubReaderFragment).updatePreferences(epubPrefs)
-    }
+    val frag = fragment as? EpubReaderFragment ?: return
+    frag.updatePreferences(nitroPreferencesToEpub(prefs))
   }
 
   // MARK: - Decorations
 
   private fun updateDecorations() {
     val groups = decorations ?: return
-    if (fragment == null) return
+    val frag = fragment ?: return
 
     val readiumGroups = mutableMapOf<String, List<org.readium.r2.navigator.Decoration>>()
     for (group in groups) {
       readiumGroups[group.name] = group.decorations.mapNotNull { nitroDecorationToReadium(it) }
     }
 
-    fragment?.applyDecorations(readiumGroups)
+    frag.applyDecorations(readiumGroups)
   }
 
   // MARK: - Selection Actions
 
   private fun updateSelectionActions() {
     val actions = selectionActions?.takeIf { it.isNotEmpty() } ?: return
-    if (fragment == null) return
-
-    val fragmentActions = actions.map { FragmentSelectionAction(it.id, it.label) }
-    if (fragment is EpubReaderFragment) {
-      (fragment as EpubReaderFragment).updateSelectionActions(fragmentActions)
-    }
+    val frag = fragment as? EpubReaderFragment ?: return
+    frag.updateSelectionActions(actions.map { FragmentSelectionAction(it.id, it.label) })
   }
 
   // MARK: - Imperative navigation
 
   override fun goForward() { fragment?.goForward() }
   override fun goBackward() { fragment?.goBackward() }
+  override fun destroy() { cleanup() }
 
   // MARK: - Fragment management
 
+  /**
+   * Tears down the current fragment and resets state so a new fragment can
+   * be built. Safe to call multiple times. Does NOT detach hostView from the
+   * tree — use [cleanup] for permanent removal.
+   */
   private fun teardownFragment() {
     liveInstances.remove(instanceId)
 
-    // Stop the frame callback loop
     frameCallback?.let {
       try {
         Choreographer.getInstance().removeFrameCallback(it)
@@ -183,11 +181,9 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
     }
     frameCallback = null
 
-    // Remove the old fragment from the FragmentManager
     fragment?.let { frag ->
       try {
-        val activity = findActivity()
-        activity?.supportFragmentManager
+        findActivity()?.supportFragmentManager
           ?.beginTransaction()
           ?.remove(frag)
           ?.commitNowAllowingStateLoss()
@@ -196,18 +192,30 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
       }
     }
 
-    // Clear the hostView children and reset state
     hostView.removeAllViews()
     fragment = null
     isFragmentAdded = false
     isBuilding = false
 
-    // Replace the cancelled scope with a fresh one
     scope.cancel()
     scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
   }
 
+  /**
+   * Called by ViewManager.onDropViewInstance when Fabric permanently removes
+   * the view. Tears down the fragment and physically detaches hostView from
+   * the tree so it cannot overlay or intercept touches on other views.
+   */
+  internal fun cleanup() {
+    if (isDestroyed) return
+    isDestroyed = true
+
+    teardownFragment()
+    (hostView.parent as? ViewGroup)?.removeView(hostView)
+  }
+
   private fun buildForViewIfReady() {
+    if (isDestroyed) return
     if (!isAttached) return
     if (isFragmentAdded) return
     if (isBuilding) return
@@ -222,7 +230,6 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
 
     val path = fileUrl.replace("^(file:/+)?(/.*)$".toRegex(), "$2")
 
-    // Convert initial location
     val initialLocator = currentFile.initialLocation?.let { loc ->
       nitroLocatorToReadium(loc)?.let { com.reactnativereadium.utils.LinkOrLocator.Locator(it) }
     }
@@ -238,11 +245,9 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
     if (isFragmentAdded) return
 
     // Force-clear any stale instances whose hostViews are still in Fabric's
-    // tree. Teardown removes their fragment + children; GONE hides the
-    // hostView in case the WebView's hardware layer persists.
+    // tree from a key-change remount.
     liveInstances.values.toList().filter { it !== this }.forEach { other ->
-      other.teardownFragment()
-      other.hostView.visibility = View.GONE
+      other.cleanup()
     }
     liveInstances[instanceId] = this
 
@@ -276,7 +281,7 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
     // to hostView if needed.
     frag.view?.let { fragView ->
       if (fragView.parent !== hostView) {
-        (fragView.parent as? android.view.ViewGroup)?.removeView(fragView)
+        (fragView.parent as? ViewGroup)?.removeView(fragView)
         hostView.addView(fragView, FrameLayout.LayoutParams(
           FrameLayout.LayoutParams.MATCH_PARENT,
           FrameLayout.LayoutParams.MATCH_PARENT
@@ -289,53 +294,45 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
       }
     } ?: Log.w(TAG, "addFragment: fragment view is null after commitNow!")
 
-    // Apply pending state
     preferences?.let { updatePreferences() }
     decorations?.let { updateDecorations() }
 
-    // Subscribe to fragment events
     frag.channel.receive(frag) { event ->
       when (event) {
         is ReaderViewModel.Event.LocatorUpdate -> {
-          val payload = readiumLocatorToNitro(event.locator)
-          onLocationChange?.invoke(payload)
+          onLocationChange?.invoke(readiumLocatorToNitro(event.locator))
         }
         is ReaderViewModel.Event.PublicationReady -> {
-          val payload = PublicationReadyEvent(
+          onPublicationReady?.invoke(PublicationReadyEvent(
             tableOfContents = event.tableOfContents.map { readiumLinkToNitro(it) }.toTypedArray(),
             positions = event.positions.map { readiumLocatorToNitro(it) }.toTypedArray(),
             metadata = readiumMetadataToNitro(event.metadata)
-          )
-          onPublicationReady?.invoke(payload)
+          ))
         }
         is ReaderViewModel.Event.DecorationActivated -> {
-          val decoration = readiumDecorationToNitro(event.decoration)
           val rect = event.rect?.let {
             Rect(x = it.left.toDouble(), y = it.top.toDouble(), width = it.width().toDouble(), height = it.height().toDouble())
           }
           val point = event.point?.let { Point(x = it.x.toDouble(), y = it.y.toDouble()) }
-          val payload = DecorationActivatedEvent(
-            decoration = decoration,
+          onDecorationActivated?.invoke(DecorationActivatedEvent(
+            decoration = readiumDecorationToNitro(event.decoration),
             group = event.group,
             rect = rect,
             point = point
-          )
-          onDecorationActivated?.invoke(payload)
+          ))
         }
         is ReaderViewModel.Event.SelectionChanged -> {
-          val payload = SelectionEvent(
+          onSelectionChange?.invoke(SelectionEvent(
             locator = event.locator?.let { readiumLocatorToNitro(it) },
             selectedText = event.selectedText
-          )
-          onSelectionChange?.invoke(payload)
+          ))
         }
         is ReaderViewModel.Event.SelectionAction -> {
-          val payload = SelectionActionEvent(
+          onSelectionAction?.invoke(SelectionActionEvent(
             locator = readiumLocatorToNitro(event.locator),
             selectedText = event.selectedText,
             actionId = event.actionId
-          )
-          onSelectionAction?.invoke(payload)
+          ))
         }
       }
     }
@@ -368,14 +365,11 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
   }
 
   private fun findActivity(): FragmentActivity? {
-    return hostView.context as? FragmentActivity
-      ?: (hostView.context as? android.content.ContextWrapper)?.let {
-        var ctx = it.baseContext
-        while (ctx is android.content.ContextWrapper) {
-          if (ctx is FragmentActivity) return ctx
-          ctx = ctx.baseContext
-        }
-        null
-      }
+    var ctx: android.content.Context? = hostView.context
+    while (ctx != null) {
+      if (ctx is FragmentActivity) return ctx
+      ctx = (ctx as? android.content.ContextWrapper)?.baseContext
+    }
+    return null
   }
 }

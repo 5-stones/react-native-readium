@@ -15,8 +15,6 @@ export interface ReaderProps {
   epubPath?: string;
   /** Initial location to open the book at */
   initialLocation?: Locator;
-  /** Available books to switch between. Shows a picker button when provided with 2+ entries. */
-  books?: BookOption[];
 }
 
 export interface CurrentSelection {

@@ -150,6 +150,10 @@ abstract class HybridReadiumViewSpec: HybridView() {
   @DoNotStrip
   @Keep
   abstract fun goBackward(): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun destroy(): Unit
 
   private external fun initHybrid(): HybridData
 

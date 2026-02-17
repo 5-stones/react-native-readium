@@ -36,6 +36,7 @@ namespace margelo::nitro::readium {
       prototype.registerHybridSetter("onSelectionAction", &HybridReadiumViewSpec::setOnSelectionAction);
       prototype.registerHybridMethod("goForward", &HybridReadiumViewSpec::goForward);
       prototype.registerHybridMethod("goBackward", &HybridReadiumViewSpec::goBackward);
+      prototype.registerHybridMethod("destroy", &HybridReadiumViewSpec::destroy);
     });
   }
 

@@ -324,5 +324,9 @@ namespace margelo::nitro::readium {
     static const auto method = javaClassStatic()->getMethod<void()>("goBackward");
     method(_javaPart);
   }
+  void JHybridReadiumViewSpec::destroy() {
+    static const auto method = javaClassStatic()->getMethod<void()>("destroy");
+    method(_javaPart);
+  }
 
 } // namespace margelo::nitro::readium

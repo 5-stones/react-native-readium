@@ -219,6 +219,12 @@ namespace margelo::nitro::readium {
         std::rethrow_exception(__result.error());
       }
     }
+    inline void destroy() override {
+      auto __result = _swiftPart.destroy();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
 
   private:
     NitroReadium::HybridReadiumViewSpec_cxx _swiftPart;

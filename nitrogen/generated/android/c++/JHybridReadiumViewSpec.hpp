@@ -76,6 +76,7 @@ namespace margelo::nitro::readium {
     // Methods
     void goForward() override;
     void goBackward() override;
+    void destroy() override;
 
   private:
     friend HybridBase;

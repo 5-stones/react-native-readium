@@ -281,18 +281,32 @@ class HybridReadiumView: HybridReadiumViewSpec {
     }
   }
 
+  func destroy() {
+    if Thread.isMainThread {
+      cleanup()
+    } else {
+      DispatchQueue.main.async { [weak self] in
+        self?.cleanup()
+      }
+    }
+  }
+
   // Cleanup
   func cleanup() {
-    readerViewController?.willMove(toParent: nil)
-    readerViewController?.view.removeFromSuperview()
-    readerViewController?.removeFromParent()
+    guard let vc = readerViewController else { return }
+    readerViewController = nil
+
+    vc.willMove(toParent: nil)
+    if vc.view.superview != nil {
+      vc.view.removeFromSuperview()
+    }
+    vc.removeFromParent()
 
     for subscription in subscriptions {
       subscription.cancel()
     }
     subscriptions = Set<AnyCancellable>()
     activeDecorationGroups.removeAll()
-    readerViewController = nil
   }
 }
 

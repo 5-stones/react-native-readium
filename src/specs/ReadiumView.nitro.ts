@@ -244,6 +244,7 @@ export interface ReadiumViewProps extends HybridViewProps {
 export interface ReadiumViewMethods extends HybridViewMethods {
   goForward(): void;
   goBackward(): void;
+  destroy(): void;
 }
 
 export type ReadiumView = HybridView<ReadiumViewProps, ReadiumViewMethods>;

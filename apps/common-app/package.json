@@ -5,17 +5,18 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "peerDependencies": {
+    "@gorhom/bottom-sheet": "*",
     "@react-native-community/slider": "*",
-    "@react-navigation/native": "*",
-    "@react-navigation/native-stack": "*",
     "@rneui/base": "*",
     "@rneui/themed": "*",
     "react": "*",
     "react-native": "*",
     "react-native-fs": "*",
+    "react-native-gesture-handler": "*",
     "react-native-readium": "*",
+    "react-native-reanimated": "*",
     "react-native-safe-area-context": "*",
-    "react-native-screens": "*",
-    "react-native-vector-icons": "*"
+    "react-native-vector-icons": "*",
+    "react-native-worklets": "*"
   }
 }

@@ -1,8 +1,8 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useState, useCallback } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { Reader, RNFS } from 'common-app';
+import { HomeScreen, ReaderBottomSheet, RNFS } from 'common-app';
 import type { BookOption } from 'common-app';
 
 const books: BookOption[] = [
@@ -22,24 +22,37 @@ const books: BookOption[] = [
   },
 ];
 
-const Stack = createNativeStackNavigator();
-
-function ReaderScreen() {
-  return (
-    <Reader
-      epubUrl={books[0]!.epubUrl}
-      epubPath={books[0]!.epubPath}
-      books={books}
-    />
-  );
-}
-
 export default function App() {
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [selectedBook, setSelectedBook] = useState<BookOption | null>(null);
+
+  const handleSelectBook = useCallback((book: BookOption) => {
+    setSelectedBook(book);
+    setSheetOpen(true);
+  }, []);
+
+  const handleClearBook = useCallback(() => {
+    setSelectedBook(null);
+  }, []);
+
+  const handleCloseSheet = useCallback(() => {
+    setSheetOpen(false);
+    setSelectedBook(null);
+  }, []);
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Reader" component={ReaderScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <HomeScreen books={books} onSelectBook={handleSelectBook} />
+        {sheetOpen && (
+          <ReaderBottomSheet
+            key={selectedBook?.id ?? 'empty'}
+            book={selectedBook}
+            onClearBook={handleClearBook}
+            onClose={handleCloseSheet}
+          />
+        )}
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   );
 }

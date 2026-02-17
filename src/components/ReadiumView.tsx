@@ -1,5 +1,6 @@
 import React, {
   useCallback,
+  useEffect,
   useState,
   forwardRef,
   useRef,
@@ -28,7 +29,7 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
     },
     forwardedRef
   ) => {
-    const nativeRef = useRef<any>(null);
+    const hybridRef = useRef<any>(null);
     const [{ height, width }, setDimensions] = useState<Dimensions>({
       width: 0,
       height: 0,
@@ -53,11 +54,17 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
     useImperativeHandle(
       forwardedRef,
       () => ({
-        goForward: () => nativeRef.current?.goForward(),
-        goBackward: () => nativeRef.current?.goBackward(),
+        goForward: () => hybridRef.current?.goForward(),
+        goBackward: () => hybridRef.current?.goBackward(),
       }),
       []
     );
+
+    useEffect(() => {
+      return () => {
+        hybridRef.current?.destroy();
+      };
+    }, []);
 
     const isReady = width > 0 && height > 0;
 
@@ -75,7 +82,9 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
             onDecorationActivated={callback(onDecorationActivated ?? noop)}
             onSelectionChange={callback(onSelectionChange ?? noop)}
             onSelectionAction={callback(onSelectionAction ?? noop)}
-            ref={nativeRef}
+            hybridRef={callback((ref: any) => {
+              hybridRef.current = ref;
+            })}
           />
         )}
       </View>

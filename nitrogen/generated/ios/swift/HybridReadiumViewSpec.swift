@@ -24,6 +24,7 @@ public protocol HybridReadiumViewSpec_protocol: HybridObject, HybridView {
   // Methods
   func goForward() throws -> Void
   func goBackward() throws -> Void
+  func destroy() throws -> Void
 }
 
 public extension HybridReadiumViewSpec_protocol {

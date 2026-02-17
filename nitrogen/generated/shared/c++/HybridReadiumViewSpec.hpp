@@ -97,6 +97,7 @@ namespace margelo::nitro::readium {
       // Methods
       virtual void goForward() = 0;
       virtual void goBackward() = 0;
+      virtual void destroy() = 0;
 
     protected:
       // Hybrid Setup
