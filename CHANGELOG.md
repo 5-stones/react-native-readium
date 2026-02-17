@@ -1,3 +1,12 @@
+# [5.0.0-rc.7](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.6...v5.0.0-rc.7) (2026-02-17)
+
+
+### Bug Fixes
+
+* **android, ios:** cleanup reader views when unmounted ([e5e72a6](https://github.com/5-stones/react-native-readium/commit/e5e72a65d9b4a84dc6b87cd9d7d2bedeb55e3736))
+
+
+
 # [5.0.0-rc.6](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.5...v5.0.0-rc.6) (2026-02-12)
 
 
