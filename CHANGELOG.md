@@ -1,3 +1,12 @@
+# [5.0.0-rc.9](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.8...v5.0.0-rc.9) (2026-02-19)
+
+
+### Bug Fixes
+
+* **android:** fix an issue with 16kb page sizes on android ([630e3b7](https://github.com/5-stones/react-native-readium/commit/630e3b73441ac4fcb6226303672fd7a97acd2d17))
+
+
+
 # [5.0.0-rc.8](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.7...v5.0.0-rc.8) (2026-02-17)
 
 
