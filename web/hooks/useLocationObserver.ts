@@ -8,27 +8,25 @@ export const useLocationObserver = (
   navigator?: EpubNavigator | null,
   location?: Link | Locator | null
 ) => {
-  const lastHrefRef = useRef<string | null>(null);
+  // Track the last location we navigated to, preventing feedback loops:
+  // navigator.go() → positionChanged → onLocationChange → setLocation → go() again
+  const lastNavigatedRef = useRef<string | null>(null);
+
+  const locator = location as Locator | null;
+  const href = locator?.href;
+  const progression = locator?.locations?.progression;
 
   useDeepCompareEffect(() => {
-    // Only navigate if we have a navigator, a location, and the href has changed.
-    // Skip navigation if location.locations exists with progression and totalProgression
-    // (it's from the navigator's positionChanged callback)
-    const hasFullLocationData =
-      'locations' in (location ?? {}) &&
-      (location as Locator).locations?.progression !== undefined &&
-      (location as Locator).locations?.totalProgression !== undefined;
+    if (!navigator || !location) return;
 
-    if (
-      navigator &&
-      location &&
-      location.href !== lastHrefRef.current &&
-      !hasFullLocationData
-    ) {
-      lastHrefRef.current = location.href;
-      // For Link objects (from TOC), we can pass them directly
-      // @ts-ignore
-      navigator.go(location, true, () => {});
+    const fingerprint = `${href}:${progression}`;
+
+    if (fingerprint === lastNavigatedRef.current) {
+      return;
     }
-  }, [location?.href, !!navigator]);
+
+    lastNavigatedRef.current = fingerprint;
+    // @ts-ignore
+    navigator.go(location, true, () => {});
+  }, [href, progression, !!navigator]);
 };
