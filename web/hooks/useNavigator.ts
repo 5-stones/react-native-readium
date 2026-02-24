@@ -95,7 +95,17 @@ export const useNavigator = ({
       const publication = new Publication({ manifest, fetcher });
 
       // 4. Create positions array for navigation
-      const positionsArray = createPositions(publication);
+      // Try loading granular positions from manifest (generated server-side),
+      // fall back to chapter-based positions for older manifests
+      let positionsArray: Locator[];
+      try {
+        const manifestPositions = await publication.positionsFromManifest();
+        positionsArray = manifestPositions.length > 0
+          ? manifestPositions
+          : createPositions(publication);
+      } catch {
+        positionsArray = createPositions(publication);
+      }
       readingOrder.current = positionsArray;
       setPositions(positionsArray);
 
