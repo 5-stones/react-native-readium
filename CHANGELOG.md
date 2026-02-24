@@ -1,3 +1,18 @@
+# [5.0.0-rc.10](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.9...v5.0.0-rc.10) (2026-02-24)
+
+
+### Features
+
+* **android, ios, web:** reimplement nested sub-navigation for ToC in nitro ([79c3329](https://github.com/5-stones/react-native-readium/commit/79c33297e28c47a024c3f2d07d2ba961781bff2d))
+
+
+### BREAKING CHANGES
+
+* **android, ios, web:** Several fields dropped from Link (templated, type, height, width, bitrate,
+duration, alternates). `rel`s changed from `Set<string>` to `string[]`
+
+
+
 # [5.0.0-rc.9](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.8...v5.0.0-rc.9) (2026-02-19)
 
 
