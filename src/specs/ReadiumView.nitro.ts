@@ -31,15 +31,13 @@ export interface Locator {
 
 export interface Link {
   href: string;
-  templated: boolean;
-  type?: string;
   title?: string;
   rels?: string[];
-  height?: number;
-  width?: number;
-  bitrate?: number;
-  duration?: number;
   languages?: string[];
+  depth?: number;
+  hasChildren?: boolean;
+  parentHref?: string;
+  position?: number;
 }
 
 // ── Preferences ──────────────────────────────────────────────────────────────

@@ -18,14 +18,8 @@ public extension Link {
   /**
    * Create a new instance of `Link`.
    */
-  init(href: String, templated: Bool, type: String?, title: String?, rels: [String]?, height: Double?, width: Double?, bitrate: Double?, duration: Double?, languages: [String]?) {
-    self.init(std.string(href), templated, { () -> bridge.std__optional_std__string_ in
-      if let __unwrappedValue = type {
-        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
-      } else {
-        return .init()
-      }
-    }(), { () -> bridge.std__optional_std__string_ in
+  init(href: String, title: String?, rels: [String]?, languages: [String]?, depth: Double?, hasChildren: Bool?, parentHref: String?, position: Double?) {
+    self.init(std.string(href), { () -> bridge.std__optional_std__string_ in
       if let __unwrappedValue = title {
         return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
       } else {
@@ -43,30 +37,6 @@ public extension Link {
       } else {
         return .init()
       }
-    }(), { () -> bridge.std__optional_double_ in
-      if let __unwrappedValue = height {
-        return bridge.create_std__optional_double_(__unwrappedValue)
-      } else {
-        return .init()
-      }
-    }(), { () -> bridge.std__optional_double_ in
-      if let __unwrappedValue = width {
-        return bridge.create_std__optional_double_(__unwrappedValue)
-      } else {
-        return .init()
-      }
-    }(), { () -> bridge.std__optional_double_ in
-      if let __unwrappedValue = bitrate {
-        return bridge.create_std__optional_double_(__unwrappedValue)
-      } else {
-        return .init()
-      }
-    }(), { () -> bridge.std__optional_double_ in
-      if let __unwrappedValue = duration {
-        return bridge.create_std__optional_double_(__unwrappedValue)
-      } else {
-        return .init()
-      }
     }(), { () -> bridge.std__optional_std__vector_std__string__ in
       if let __unwrappedValue = languages {
         return bridge.create_std__optional_std__vector_std__string__({ () -> bridge.std__vector_std__string_ in
@@ -79,29 +49,36 @@ public extension Link {
       } else {
         return .init()
       }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = depth {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_bool_ in
+      if let __unwrappedValue = hasChildren {
+        return bridge.create_std__optional_bool_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__string_ in
+      if let __unwrappedValue = parentHref {
+        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = position {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
     }())
   }
 
   @inline(__always)
   var href: String {
     return String(self.__href)
-  }
-  
-  @inline(__always)
-  var templated: Bool {
-    return self.__templated
-  }
-  
-  @inline(__always)
-  var type: String? {
-    return { () -> String? in
-      if bridge.has_value_std__optional_std__string_(self.__type) {
-        let __unwrapped = bridge.get_std__optional_std__string_(self.__type)
-        return String(__unwrapped)
-      } else {
-        return nil
-      }
-    }()
   }
   
   @inline(__always)
@@ -129,59 +106,59 @@ public extension Link {
   }
   
   @inline(__always)
-  var height: Double? {
-    return { () -> Double? in
-      if bridge.has_value_std__optional_double_(self.__height) {
-        let __unwrapped = bridge.get_std__optional_double_(self.__height)
-        return __unwrapped
-      } else {
-        return nil
-      }
-    }()
-  }
-  
-  @inline(__always)
-  var width: Double? {
-    return { () -> Double? in
-      if bridge.has_value_std__optional_double_(self.__width) {
-        let __unwrapped = bridge.get_std__optional_double_(self.__width)
-        return __unwrapped
-      } else {
-        return nil
-      }
-    }()
-  }
-  
-  @inline(__always)
-  var bitrate: Double? {
-    return { () -> Double? in
-      if bridge.has_value_std__optional_double_(self.__bitrate) {
-        let __unwrapped = bridge.get_std__optional_double_(self.__bitrate)
-        return __unwrapped
-      } else {
-        return nil
-      }
-    }()
-  }
-  
-  @inline(__always)
-  var duration: Double? {
-    return { () -> Double? in
-      if bridge.has_value_std__optional_double_(self.__duration) {
-        let __unwrapped = bridge.get_std__optional_double_(self.__duration)
-        return __unwrapped
-      } else {
-        return nil
-      }
-    }()
-  }
-  
-  @inline(__always)
   var languages: [String]? {
     return { () -> [String]? in
       if bridge.has_value_std__optional_std__vector_std__string__(self.__languages) {
         let __unwrapped = bridge.get_std__optional_std__vector_std__string__(self.__languages)
         return __unwrapped.map({ __item in String(__item) })
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var depth: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__depth) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__depth)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var hasChildren: Bool? {
+    return { () -> Bool? in
+      if bridge.has_value_std__optional_bool_(self.__hasChildren) {
+        let __unwrapped = bridge.get_std__optional_bool_(self.__hasChildren)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var parentHref: String? {
+    return { () -> String? in
+      if bridge.has_value_std__optional_std__string_(self.__parentHref) {
+        let __unwrapped = bridge.get_std__optional_std__string_(self.__parentHref)
+        return String(__unwrapped)
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var position: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__position) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__position)
+        return __unwrapped
       } else {
         return nil
       }

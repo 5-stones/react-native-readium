@@ -203,19 +203,28 @@ internal fun readiumLocatorToNitro(loc: ReadiumLocator): Locator {
   )
 }
 
-internal fun readiumLinkToNitro(link: ReadiumLink): Link {
+internal fun readiumLinkToNitro(link: ReadiumLink, depth: Double = 0.0, parentHref: String? = null, position: Double = 0.0): Link {
   return Link(
     href = link.href.toString(),
-    templated = link.href.isTemplated,
-    type = link.mediaType?.toString(),
     title = link.title,
     rels = link.rels.toTypedArray(),
-    height = null,
-    width = null,
-    bitrate = null,
-    duration = null,
-    languages = link.languages.toTypedArray()
+    languages = link.languages.toTypedArray(),
+    depth = depth,
+    hasChildren = if (link.children.isNotEmpty()) true else null,
+    parentHref = parentHref,
+    position = position
   )
+}
+
+internal fun flattenReadiumLinks(links: List<ReadiumLink>, depth: Double = 0.0, parentHref: String? = null): List<Link> {
+  val result = mutableListOf<Link>()
+  for ((index, link) in links.withIndex()) {
+    result.add(readiumLinkToNitro(link, depth, parentHref, index.toDouble()))
+    if (link.children.isNotEmpty()) {
+      result.addAll(flattenReadiumLinks(link.children, depth + 1, link.href.toString()))
+    }
+  }
+  return result
 }
 
 internal fun readiumDecorationToNitro(dec: ReadiumDecoration): Decoration {

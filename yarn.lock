@@ -8330,6 +8330,7 @@ __metadata:
   dependencies:
     "@babel/core": 7.28.4
     "@expo/next-adapter": 6.0.0
+    "@gorhom/bottom-sheet": ^5.1.8
     "@next/bundle-analyzer": 15.5.4
     "@react-native-community/slider": ^5.1.2
     "@react-navigation/native": ^7.0.15
@@ -8346,7 +8347,9 @@ __metadata:
     react-dom: 19.0.0
     react-native: 0.83.1
     react-native-fs: ^2.20.0
+    react-native-gesture-handler: ^2.24.0
     react-native-readium: "workspace:*"
+    react-native-reanimated: ^4.0.0
     react-native-safe-area-context: ^5.6.2
     react-native-screens: ^4.19.0
     react-native-vector-icons: ^9.1.0

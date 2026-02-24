@@ -16,6 +16,7 @@ import com.reactnativereadium.utils.nitroLocatorToReadium
 import com.reactnativereadium.utils.nitroDecorationToReadium
 import com.reactnativereadium.utils.readiumLocatorToNitro
 import com.reactnativereadium.utils.readiumLinkToNitro
+import com.reactnativereadium.utils.flattenReadiumLinks
 import com.reactnativereadium.utils.readiumDecorationToNitro
 import com.reactnativereadium.utils.readiumMetadataToNitro
 import kotlinx.coroutines.CoroutineScope
@@ -310,7 +311,7 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
         }
         is ReaderViewModel.Event.PublicationReady -> {
           onPublicationReady?.invoke(PublicationReadyEvent(
-            tableOfContents = event.tableOfContents.map { readiumLinkToNitro(it) }.toTypedArray(),
+            tableOfContents = flattenReadiumLinks(event.tableOfContents).toTypedArray(),
             positions = event.positions.map { readiumLocatorToNitro(it) }.toTypedArray(),
             metadata = readiumMetadataToNitro(event.metadata)
           ))

@@ -1929,7 +1929,7 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
     - SocketRocket
-  - react-native-readium (5.0.0-rc.6):
+  - react-native-readium (5.0.0-rc.9):
     - boost
     - DoubleConversion
     - fast_float
@@ -3301,7 +3301,7 @@ SPEC CHECKSUMS:
   React-logger: 6ac901f5c7f7321d2be1a40b203bccc2e23411e3
   React-Mapbuffer: 2e0e7cc5b7064eaed9c8b8afc3a87621cb7ef5cd
   React-microtasksnativemodule: dd4d33b251b57e5027c572c6d0b45cbfbcfaa386
-  react-native-readium: 76bae7e4557501a9de01b17234dafd810a86396b
+  react-native-readium: 0f552ae7239adeef2d8a689ebce3bde4a224738e
   react-native-safe-area-context: 54d812805f3c4e08a4580ad086cbde1d8780c2e4
   react-native-slider: 5da4af460d0dd1346f927e829dfecbb81bd46f91
   React-NativeModulesApple: 7f2f2fed3f6c858889eb61d09941be965d52df58

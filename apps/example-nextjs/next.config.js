@@ -12,6 +12,7 @@ const config = {
     ignoreDuringBuilds: true,
   },
   transpilePackages: [
+    '@gorhom/bottom-sheet',
     '@react-native-community/slider',
     '@react-navigation/native',
     '@react-navigation/native-stack',
@@ -19,7 +20,10 @@ const config = {
     '@rneui/themed',
     'common-app',
     'react-native-fs',
+    'react-native-gesture-handler',
     'react-native-ratings',
+    'react-native-reanimated',
+    'react-native-worklets',
     'react-native-readium',
     'react-native-safe-area-context',
     'react-native-screens',
@@ -40,6 +44,16 @@ const config = {
       })
     );
 
+    // Polyfill `global` for browser (needed by @gorhom/bottom-sheet and gesture handler)
+    if (!isServer) {
+      webpackConfig.plugins.push(
+        new webpack.BannerPlugin({
+          banner: 'if(typeof global==="undefined"){var global=globalThis;}',
+          raw: true,
+        })
+      );
+    }
+
     // Configure aliases - must be done for both client and server
     webpackConfig.resolve.alias = {
       ...(webpackConfig.resolve.alias || {}),
@@ -49,6 +63,11 @@ const config = {
       // Alias react-native to react-native-web
       'react-native$': path.resolve(__dirname, 'react-native-shim.js'),
       'react-native': path.resolve(__dirname, 'react-native-shim.js'),
+      // Ensure single instance of react-native-reanimated
+      'react-native-reanimated': path.resolve(
+        __dirname,
+        '../../node_modules/react-native-reanimated'
+      ),
       // Ensure single instance of safe-area-context
       'react-native-safe-area-context': path.resolve(
         __dirname,

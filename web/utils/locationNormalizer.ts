@@ -52,7 +52,7 @@ export function convertToNavigatorLocator(
   // The Readium navigator will handle finding the exact position
   return {
     href: normalized.href,
-    type: normalized.type || 'application/xhtml+xml',
+    type: 'application/xhtml+xml',
     title: normalized.title,
   } as Locator;
 }

@@ -240,7 +240,7 @@ class HybridReadiumView: HybridReadiumViewSpec {
       var tocLinks: [Link] = []
       switch tocResult {
       case .success(let links):
-        tocLinks = links.map { readiumLinkToNitro($0) }
+        tocLinks = flattenReadiumLinks(links)
       case .failure:
         tocLinks = []
       }

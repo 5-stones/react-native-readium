@@ -10,6 +10,8 @@ import { View, StyleSheet } from 'react-native';
 import { callback } from 'react-native-nitro-modules';
 
 import type { Dimensions } from '../interfaces';
+import type { PublicationReadyEvent as SpecPublicationReadyEvent } from '../specs/ReadiumView.nitro';
+import { buildLinkTree } from '../utils/buildLinkTree';
 import { NitroReadiumView } from './NitroReadiumView';
 export type { ReadiumViewRef, ReadiumProps } from './ReadiumView.types';
 import type { ReadiumViewRef, ReadiumProps } from './ReadiumView.types';
@@ -51,6 +53,17 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
 
     const noop = () => {};
 
+    const handlePublicationReady = useCallback(
+      (event: SpecPublicationReadyEvent) => {
+        if (!onPublicationReady) return;
+        onPublicationReady({
+          ...event,
+          tableOfContents: buildLinkTree(event.tableOfContents),
+        });
+      },
+      [onPublicationReady]
+    );
+
     useImperativeHandle(
       forwardedRef,
       () => ({
@@ -78,7 +91,7 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
             decorations={decorations}
             selectionActions={selectionActions ?? []}
             onLocationChange={callback(onLocationChange ?? noop)}
-            onPublicationReady={callback(onPublicationReady ?? noop)}
+            onPublicationReady={callback(handlePublicationReady)}
             onDecorationActivated={callback(onDecorationActivated ?? noop)}
             onSelectionChange={callback(onSelectionChange ?? noop)}
             onSelectionAction={callback(onSelectionAction ?? noop)}

@@ -20,6 +20,13 @@ const books: BookOption[] = [
     epubUrl: 'https://www.gutenberg.org/ebooks/3296.epub3.images',
     epubPath: `${RNFS.DocumentDirectoryPath}/confessions.epub`,
   },
+  {
+    id: 'brothers-karamazov',
+    title: 'The Brothers Karamazov',
+    author: 'Fyodor Dostoevsky',
+    bundledAsset: 'the-brothers-karamazov.epub',
+    epubPath: `${RNFS.DocumentDirectoryPath}/the-brothers-karamazov.epub`,
+  },
 ];
 
 export default function App() {

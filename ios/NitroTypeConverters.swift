@@ -132,19 +132,28 @@ func readiumLocatorToNitro(_ loc: RLocator) -> Locator {
   )
 }
 
-func readiumLinkToNitro(_ link: RLink) -> Link {
+func readiumLinkToNitro(_ link: RLink, depth: Double = 0, parentHref: String? = nil, position: Double = 0) -> Link {
   return Link(
     href: link.href,
-    templated: link.templated,
-    type: link.mediaType?.string,
     title: link.title,
     rels: link.rels.map { "\($0)" },
-    height: nil,
-    width: nil,
-    bitrate: nil,
-    duration: nil,
-    languages: link.languages
+    languages: link.languages,
+    depth: depth,
+    hasChildren: link.children.isEmpty ? nil : true,
+    parentHref: parentHref,
+    position: position
   )
+}
+
+func flattenReadiumLinks(_ links: [RLink], depth: Double = 0, parentHref: String? = nil) -> [Link] {
+  var result: [Link] = []
+  for (index, link) in links.enumerated() {
+    result.append(readiumLinkToNitro(link, depth: depth, parentHref: parentHref, position: Double(index)))
+    if !link.children.isEmpty {
+      result.append(contentsOf: flattenReadiumLinks(link.children, depth: depth + 1, parentHref: link.href))
+    }
+  }
+  return result
 }
 
 func readiumMetadataToNitro(_ meta: ReadiumShared.Metadata) -> PublicationMetadata {

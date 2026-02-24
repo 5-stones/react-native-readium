@@ -1,16 +1,31 @@
 import { useState, useEffect } from 'react';
+import { Platform } from 'react-native';
 import type { File, Locator } from 'react-native-readium';
 import RNFS from '../utils/RNFS';
 
 interface UseEpubFileOptions {
-  epubUrl: string;
+  epubUrl?: string;
   epubPath?: string;
+  bundledAsset?: string;
   initialLocation?: Locator;
+}
+
+async function copyBundledAsset(
+  assetName: string,
+  destPath: string
+): Promise<void> {
+  if (Platform.OS === 'android') {
+    await RNFS.copyFileAssets(assetName, destPath);
+  } else {
+    const sourcePath = `${RNFS.MainBundlePath}/${assetName}`;
+    await RNFS.copyFile(sourcePath, destPath);
+  }
 }
 
 export const useEpubFile = ({
   epubUrl,
   epubPath,
+  bundledAsset,
   initialLocation,
 }: UseEpubFileOptions) => {
   const [file, setFile] = useState<File>();
@@ -25,28 +40,34 @@ export const useEpubFile = ({
         setIsLoading(true);
         setError(null);
 
-        let url = epubUrl;
+        let url = epubUrl || '';
 
         if (epubPath) {
-          // For native platforms, use epubPath if provided, otherwise generate from epubUrl
-          const localPath =
-            epubPath ||
-            `${RNFS.DocumentDirectoryPath}/${epubUrl.split('/').pop()}`;
-
+          const localPath = epubPath;
           const exists = await RNFS.exists(localPath);
 
           if (!exists) {
-            console.log(`Downloading file: '${epubUrl}'`);
-            const { promise } = RNFS.downloadFile({
-              fromUrl: epubUrl,
-              toFile: localPath,
-              background: true,
-              discretionary: true,
-            });
-
-            await promise;
+            if (bundledAsset) {
+              console.log(
+                `Copying bundled asset: '${bundledAsset}' to '${localPath}'`
+              );
+              await copyBundledAsset(bundledAsset, localPath);
+            } else if (epubUrl) {
+              console.log(`Downloading file: '${epubUrl}'`);
+              const { promise } = RNFS.downloadFile({
+                fromUrl: epubUrl,
+                toFile: localPath,
+                background: true,
+                discretionary: true,
+              });
+              await promise;
+            } else {
+              throw new Error(
+                'No source available: epubUrl or bundledAsset is required'
+              );
+            }
           } else {
-            console.log('File already exists. Skipping download.', epubUrl, localPath);
+            console.log('File already exists. Skipping.', localPath);
           }
 
           url = localPath;
@@ -74,7 +95,7 @@ export const useEpubFile = ({
     return () => {
       cancelled = true;
     };
-  }, [epubUrl, epubPath, initialLocation]);
+  }, [epubUrl, epubPath, bundledAsset, initialLocation]);
 
   return { file, isLoading, error };
 };

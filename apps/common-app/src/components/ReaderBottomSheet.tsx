@@ -120,6 +120,7 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
                   key={book.id}
                   epubUrl={book.epubUrl}
                   epubPath={book.epubPath}
+                  bundledAsset={book.bundledAsset}
                   onReaderReady={handleReaderReady}
                 />
                 <TouchableOpacity

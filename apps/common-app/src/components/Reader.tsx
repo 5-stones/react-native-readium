@@ -47,6 +47,7 @@ interface ReaderProps extends BaseReaderProps {
 export const Reader: React.FC<ReaderProps> = ({
   epubUrl,
   epubPath,
+  bundledAsset,
   initialLocation,
   onReaderReady,
 }) => {
@@ -55,6 +56,7 @@ export const Reader: React.FC<ReaderProps> = ({
   const { file, isLoading, error } = useEpubFile({
     epubUrl,
     epubPath,
+    bundledAsset,
     initialLocation,
   });
 

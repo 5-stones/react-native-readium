@@ -133,7 +133,6 @@ export const useNavigator = ({
 
         // @ts-ignore - Type compatibility between Readium types and our interfaces
         onPublicationReady({
-          // @ts-ignore
           tableOfContents: tocItems,
           // @ts-ignore
           positions: positionsArray,

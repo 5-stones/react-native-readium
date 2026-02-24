@@ -4,15 +4,19 @@ export interface BookOption {
   id: string;
   title: string;
   author: string;
-  epubUrl: string;
+  epubUrl?: string;
   epubPath?: string;
+  /** Filename of an epub bundled in the app assets (e.g. 'book.epub') */
+  bundledAsset?: string;
 }
 
 export interface ReaderProps {
   /** URL to the EPUB file (used for web or downloading on native) */
-  epubUrl: string;
+  epubUrl?: string;
   /** Local file path for the EPUB (used on native platforms after download) */
   epubPath?: string;
+  /** Filename of an epub bundled in the app assets (e.g. 'book.epub') */
+  bundledAsset?: string;
   /** Initial location to open the book at */
   initialLocation?: Locator;
 }

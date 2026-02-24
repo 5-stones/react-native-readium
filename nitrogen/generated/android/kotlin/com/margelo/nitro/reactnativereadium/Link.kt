@@ -22,31 +22,25 @@ data class Link(
   val href: String,
   @DoNotStrip
   @Keep
-  val templated: Boolean,
-  @DoNotStrip
-  @Keep
-  val type: String?,
-  @DoNotStrip
-  @Keep
   val title: String?,
   @DoNotStrip
   @Keep
   val rels: Array<String>?,
   @DoNotStrip
   @Keep
-  val height: Double?,
+  val languages: Array<String>?,
   @DoNotStrip
   @Keep
-  val width: Double?,
+  val depth: Double?,
   @DoNotStrip
   @Keep
-  val bitrate: Double?,
+  val hasChildren: Boolean?,
   @DoNotStrip
   @Keep
-  val duration: Double?,
+  val parentHref: String?,
   @DoNotStrip
   @Keep
-  val languages: Array<String>?
+  val position: Double?
 ) {
   /* primary constructor */
 
@@ -58,8 +52,8 @@ data class Link(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(href: String, templated: Boolean, type: String?, title: String?, rels: Array<String>?, height: Double?, width: Double?, bitrate: Double?, duration: Double?, languages: Array<String>?): Link {
-      return Link(href, templated, type, title, rels, height, width, bitrate, duration, languages)
+    private fun fromCpp(href: String, title: String?, rels: Array<String>?, languages: Array<String>?, depth: Double?, hasChildren: Boolean?, parentHref: String?, position: Double?): Link {
+      return Link(href, title, rels, languages, depth, hasChildren, parentHref, position)
     }
   }
 }
