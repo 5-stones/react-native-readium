@@ -11,8 +11,8 @@ class AssociatedColors {
 
         switch theme {
         case .sepia:
-            mainColor = UIColor.init(red: 250/255, green: 244/255, blue: 232/255, alpha: 1)
-            textColor = UIColor.init(red: 18/255, green: 18/255, blue: 18/255, alpha: 1)
+            mainColor = UIColor.init(red: 244/255, green: 236/255, blue: 216/255, alpha: 1) // #f4ecd8
+            textColor = UIColor.init(red: 95/255, green: 75/255, blue: 50/255, alpha: 1)   // #5f4b32
         case .dark:
             mainColor = UIColor.black
             textColor = UIColor.init(red: 254/255, green: 254/255, blue: 254/255, alpha: 1)

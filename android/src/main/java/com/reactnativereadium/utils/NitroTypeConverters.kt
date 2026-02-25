@@ -21,9 +21,20 @@ import org.readium.r2.navigator.Decoration as ReadiumDecoration
 
 // MARK: - Nitro → Readium converters
 
+// Sepia theme colors — unified across iOS, Android, and web
+private const val SEPIA_BACKGROUND = "#f4ecd8"
+private const val SEPIA_TEXT = "#5f4b32"
+
 internal fun nitroPreferencesToEpub(prefs: Preferences): ReadiumEpubPreferences {
+  // When theme is sepia and no explicit colors are set, inject our unified
+  // sepia colors so the result matches iOS and web exactly.
+  val bgColor = prefs.backgroundColor?.let { parseReadiumColor(it) }
+    ?: if (prefs.theme == "sepia" && prefs.backgroundColor == null) parseReadiumColor(SEPIA_BACKGROUND) else null
+  val txtColor = prefs.textColor?.let { parseReadiumColor(it) }
+    ?: if (prefs.theme == "sepia" && prefs.textColor == null) parseReadiumColor(SEPIA_TEXT) else null
+
   return ReadiumEpubPreferences(
-    backgroundColor = prefs.backgroundColor?.let { parseReadiumColor(it) },
+    backgroundColor = bgColor,
     columnCount = prefs.columnCount?.let { parseColumnCount(it) },
     fontFamily = prefs.fontFamily?.let { FontFamily(it) },
     fontSize = prefs.fontSize,
@@ -42,7 +53,7 @@ internal fun nitroPreferencesToEpub(prefs: Preferences): ReadiumEpubPreferences 
     scroll = prefs.scroll,
     spread = prefs.spread?.let { parseSpread(it) },
     textAlign = prefs.textAlign?.let { parseTextAlign(it) },
-    textColor = prefs.textColor?.let { parseReadiumColor(it) },
+    textColor = txtColor,
     textNormalization = prefs.textNormalization,
     theme = prefs.theme?.let { parseTheme(it) },
     typeScale = prefs.typeScale,

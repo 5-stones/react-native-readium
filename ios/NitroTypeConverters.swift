@@ -12,9 +12,21 @@ typealias RLink = ReadiumShared.Link
 
 // MARK: - Nitro → Readium converters
 
+// Sepia theme colors — unified across iOS, Android, and web
+private let sepiaBackground = "#f4ecd8"
+private let sepiaText = "#5f4b32"
+
 func nitroPreferencesToEPUB(_ prefs: Preferences) -> EPUBPreferences {
+  // When theme is sepia and no explicit colors are set, inject our unified
+  // sepia colors so the result matches Android and web exactly.
+  let isSepia = prefs.theme == "sepia"
+  let bgColor = prefs.backgroundColor.flatMap { ReadiumNavigator.Color(hex: $0) }
+    ?? (isSepia && prefs.backgroundColor == nil ? ReadiumNavigator.Color(hex: sepiaBackground) : nil)
+  let txtColor = prefs.textColor.flatMap { ReadiumNavigator.Color(hex: $0) }
+    ?? (isSepia && prefs.textColor == nil ? ReadiumNavigator.Color(hex: sepiaText) : nil)
+
   return EPUBPreferences(
-    backgroundColor: prefs.backgroundColor.flatMap { ReadiumNavigator.Color(hex: $0) },
+    backgroundColor: bgColor,
     columnCount: prefs.columnCount.flatMap { ColumnCount(rawValue: $0) },
     fontFamily: prefs.fontFamily.map { FontFamily(rawValue: $0) },
     fontSize: prefs.fontSize,
@@ -33,7 +45,7 @@ func nitroPreferencesToEPUB(_ prefs: Preferences) -> EPUBPreferences {
     scroll: prefs.scroll,
     spread: prefs.spread.flatMap { Spread(rawValue: $0) },
     textAlign: prefs.textAlign.flatMap { TextAlignment(rawValue: $0) },
-    textColor: prefs.textColor.flatMap { ReadiumNavigator.Color(hex: $0) },
+    textColor: txtColor,
     textNormalization: prefs.textNormalization,
     theme: prefs.theme.flatMap { Theme(rawValue: $0) },
     typeScale: prefs.typeScale,
