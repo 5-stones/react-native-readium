@@ -1,3 +1,13 @@
+# [5.0.0-rc.15](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.14...v5.0.0-rc.15) (2026-02-25)
+
+
+### Bug Fixes
+
+* **web:** fix an issue with the web build due to newer [@readium](https://github.com/readium) versions ([c1e9026](https://github.com/5-stones/react-native-readium/commit/c1e90269f2e9762aa30275e3b6569db508b5fea9))
+* **web:** fix various issues with readium web by upgrading the readium packages ([52dc0c4](https://github.com/5-stones/react-native-readium/commit/52dc0c443db251819f18675b8e982dad45c29396))
+
+
+
 # [5.0.0-rc.14](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.13...v5.0.0-rc.14) (2026-02-25)
 
 
