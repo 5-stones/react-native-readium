@@ -178,7 +178,7 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
         </style>
         {!navigator && <div style={loaderStyle}>Loading reader...</div>}
         <main
-          ref={(el) => setContainer(el)}
+          ref={setContainer}
           style={styles.readiumContainer}
           id="readium-container"
           aria-label="Publication"

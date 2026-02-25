@@ -31,6 +31,7 @@ export const useNavigator = ({
   onPositionChange,
 }: RefProps) => {
   const [navigator, setNavigator] = useState<EpubNavigator | null>(null);
+  const navigatorRef = useRef<EpubNavigator | null>(null);
   const [positions, setPositions] = useState<Locator[]>([]);
   const readingOrder = useRef<Locator[]>([]);
 
@@ -82,6 +83,8 @@ export const useNavigator = ({
   );
 
   useEffect(() => {
+    let cancelled = false;
+
     async function initializeNavigator() {
       if (!container) return;
 
@@ -90,6 +93,7 @@ export const useNavigator = ({
 
       // 2. Fetch and deserialize the manifest
       const { manifest, fetcher } = await fetchManifest(publicationURL);
+      if (cancelled) return;
 
       // 3. Create the publication
       const publication = new Publication({ manifest, fetcher });
@@ -106,6 +110,8 @@ export const useNavigator = ({
       } catch {
         positionsArray = createPositions(publication);
       }
+      if (cancelled) return;
+
       readingOrder.current = positionsArray;
       setPositions(positionsArray);
 
@@ -135,6 +141,7 @@ export const useNavigator = ({
         configuration as any
       );
       await nav.load();
+      if (cancelled) return;
 
       // 8. Emit onPublicationReady event
       if (onPublicationReady) {
@@ -150,10 +157,18 @@ export const useNavigator = ({
         });
       }
 
+      navigatorRef.current = nav;
       setNavigator(nav);
     }
 
     initializeNavigator();
+
+    return () => {
+      cancelled = true;
+      navigatorRef.current?.destroy();
+      navigatorRef.current = null;
+      setNavigator(null);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file.url, container]);
 

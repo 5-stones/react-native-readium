@@ -8,6 +8,7 @@ import { Reader } from './Reader';
 import type { ReaderHandle } from './Reader';
 import { ControlBar } from './ControlBar';
 import type { BookOption } from '../types/reader.types';
+import type { ReadiumProps } from 'react-native-readium';
 
 type ContentMode = 'reader' | 'details';
 
@@ -15,6 +16,8 @@ interface ReaderBottomSheetProps {
   book: BookOption | null;
   onClearBook: () => void;
   onClose: () => void;
+  initialPreferences?: ReadiumProps['preferences'];
+  onPreferencesChange?: (preferences: ReadiumProps['preferences']) => void;
 }
 
 const snapPoints = ['100%'];
@@ -56,6 +59,8 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
   book,
   onClearBook,
   onClose,
+  initialPreferences,
+  onPreferencesChange,
 }) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [readerHandle, setReaderHandle] = useState<ReaderHandle | null>(null);
@@ -122,6 +127,8 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
                   epubPath={book.epubPath}
                   bundledAsset={book.bundledAsset}
                   onReaderReady={handleReaderReady}
+                  initialPreferences={initialPreferences}
+                  onPreferencesChange={onPreferencesChange}
                 />
                 <TouchableOpacity
                   style={styles.detailsFab}

@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useDeepCompareEffect } from 'use-deep-compare';
 
 import { EpubNavigator, EpubPreferences } from '@readium/navigator';
@@ -27,7 +28,7 @@ const PAGE_GUTTER_BASE = 20;
 /**
  * Maps our app's preferences to the navigator's expected format
  */
-function mapPreferencesToNavigator(preferences: any): EpubPreferences {
+export function mapPreferencesToNavigator(preferences: any): EpubPreferences {
   const mapped: any = { ...preferences };
 
   // Map pageMargins to pageGutter (the navigator uses pageGutter, not pageMargins)
@@ -60,10 +61,19 @@ export const usePreferencesObserver = (
   navigator?: EpubNavigator | null,
   preferences?: any
 ) => {
+  // Track navigator identity so we re-apply preferences when the navigator
+  // instance changes (not just when it goes from null → non-null).
+  const navigatorId = useRef(0);
+  const prevNavigator = useRef(navigator);
+  if (prevNavigator.current !== navigator) {
+    prevNavigator.current = navigator;
+    navigatorId.current += 1;
+  }
+
   useDeepCompareEffect(() => {
     if (navigator && preferences) {
       const mappedPreferences = mapPreferencesToNavigator(preferences);
       navigator?.submitPreferences(mappedPreferences);
     }
-  }, [preferences, !!navigator]);
+  }, [preferences, navigatorId.current]);
 };

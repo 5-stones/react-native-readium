@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import type {
   Link,
   Locator,
@@ -6,13 +6,25 @@ import type {
   PublicationReadyEvent,
 } from 'react-native-readium';
 
-export const useReaderState = () => {
+export interface UseReaderStateOptions {
+  initialPreferences?: ReadiumProps['preferences'];
+  onPreferencesChange?: (preferences: ReadiumProps['preferences']) => void;
+}
+
+export const useReaderState = (options?: UseReaderStateOptions) => {
   const [toc, setToc] = useState<Link[] | null>([]);
   const [positions, setPositions] = useState<Locator[]>([]);
   const [location, setLocation] = useState<Locator | undefined>();
-  const [preferences, setPreferences] = useState<ReadiumProps['preferences']>({
-    theme: 'dark',
-  });
+  const [preferences, _setPreferences] = useState<ReadiumProps['preferences']>(
+    options?.initialPreferences ?? { theme: 'dark' }
+  );
+  const onPreferencesChangeRef = useRef(options?.onPreferencesChange);
+  onPreferencesChangeRef.current = options?.onPreferencesChange;
+
+  const setPreferences = useCallback((prefs: ReadiumProps['preferences']) => {
+    _setPreferences(prefs);
+    onPreferencesChangeRef.current?.(prefs);
+  }, []);
 
   const handleLocationChange = useCallback((locator: Locator) => {
     setLocation(locator);

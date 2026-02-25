@@ -43,6 +43,8 @@ export interface ReaderHandle {
 
 interface ReaderProps extends BaseReaderProps {
   onReaderReady?: (handle: ReaderHandle) => void;
+  initialPreferences?: ReadiumProps['preferences'];
+  onPreferencesChange?: (preferences: ReadiumProps['preferences']) => void;
 }
 
 export const Reader: React.FC<ReaderProps> = ({
@@ -51,6 +53,8 @@ export const Reader: React.FC<ReaderProps> = ({
   bundledAsset,
   initialLocation,
   onReaderReady,
+  initialPreferences,
+  onPreferencesChange,
 }) => {
   const ref = useRef<ReadiumViewRef>(null);
 
@@ -68,7 +72,7 @@ export const Reader: React.FC<ReaderProps> = ({
     setPreferences,
     handleLocationChange,
     handlePublicationReady: baseHandlePublicationReady,
-  } = useReaderState();
+  } = useReaderState({ initialPreferences, onPreferencesChange });
 
   const navigateToLocator = useCallback((locator: Locator) => {
     ref.current?.goTo(locator);
