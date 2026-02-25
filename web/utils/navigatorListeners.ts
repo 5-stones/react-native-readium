@@ -1,6 +1,9 @@
 import {
   BasicTextSelection,
+  ContextMenuEvent,
   FrameClickEvent,
+  KeyboardEventData,
+  SuspiciousActivityEvent,
 } from '@readium/navigator-html-injectables';
 import { EpubNavigatorListeners } from '@readium/navigator';
 import { Locator } from '@readium/shared';
@@ -54,6 +57,15 @@ export function createNavigatorListeners(
       return false;
     },
     textSelected: function (_selection: BasicTextSelection): void {
+      // noop
+    },
+    contentProtection: function (_type: string, _data: SuspiciousActivityEvent): void {
+      // noop
+    },
+    contextMenu: function (_data: ContextMenuEvent): void {
+      // noop
+    },
+    peripheral: function (_data: KeyboardEventData): void {
       // noop
     },
   };
