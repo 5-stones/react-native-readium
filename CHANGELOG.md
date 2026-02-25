@@ -1,3 +1,12 @@
+# [5.0.0-rc.14](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.13...v5.0.0-rc.14) (2026-02-25)
+
+
+### Bug Fixes
+
+* **android, ios:** unify sepia theme colors across platforms ([1e92b3a](https://github.com/5-stones/react-native-readium/commit/1e92b3a1a957f558da55ded6839efc62ff6ca076))
+
+
+
 # [5.0.0-rc.13](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.12...v5.0.0-rc.13) (2026-02-25)
 
 
