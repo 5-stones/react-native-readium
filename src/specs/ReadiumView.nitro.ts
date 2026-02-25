@@ -228,7 +228,6 @@ export interface ReadiumFile {
 
 export interface ReadiumViewProps extends HybridViewProps {
   file?: ReadiumFile;
-  location?: Locator;
   preferences?: Preferences;
   decorations?: DecorationGroup[];
   selectionActions?: SelectionAction[];
@@ -240,6 +239,7 @@ export interface ReadiumViewProps extends HybridViewProps {
 }
 
 export interface ReadiumViewMethods extends HybridViewMethods {
+  goTo(locator: Locator): void;
   goForward(): void;
   goBackward(): void;
   destroy(): void;

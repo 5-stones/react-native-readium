@@ -11,7 +11,6 @@ import NitroModules
 public protocol HybridReadiumViewSpec_protocol: HybridObject, HybridView {
   // Properties
   var file: ReadiumFile? { get set }
-  var location: Locator? { get set }
   var preferences: Preferences? { get set }
   var decorations: [DecorationGroup]? { get set }
   var selectionActions: [SelectionAction]? { get set }
@@ -22,6 +21,7 @@ public protocol HybridReadiumViewSpec_protocol: HybridObject, HybridView {
   var onSelectionAction: ((_ event: SelectionActionEvent) -> Void)? { get set }
 
   // Methods
+  func goTo(locator: Locator) throws -> Void
   func goForward() throws -> Void
   func goBackward() throws -> Void
   func destroy() throws -> Void

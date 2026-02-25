@@ -36,16 +36,6 @@ namespace margelo::nitro::readium::views {
         throw std::runtime_error(std::string("ReadiumView.file: ") + exc.what());
       }
     }()),
-    location([&]() -> CachedProp<std::optional<Locator>> {
-      try {
-        const react::RawValue* rawValue = rawProps.at("location", nullptr, nullptr);
-        if (rawValue == nullptr) return sourceProps.location;
-        const auto& [runtime, value] = (std::pair<jsi::Runtime*, jsi::Value>)*rawValue;
-        return CachedProp<std::optional<Locator>>::fromRawValue(*runtime, value, sourceProps.location);
-      } catch (const std::exception& exc) {
-        throw std::runtime_error(std::string("ReadiumView.location: ") + exc.what());
-      }
-    }()),
     preferences([&]() -> CachedProp<std::optional<Preferences>> {
       try {
         const react::RawValue* rawValue = rawProps.at("preferences", nullptr, nullptr);
@@ -140,7 +130,6 @@ namespace margelo::nitro::readium::views {
   bool HybridReadiumViewProps::filterObjectKeys(const std::string& propName) {
     switch (hashString(propName)) {
       case hashString("file"): return true;
-      case hashString("location"): return true;
       case hashString("preferences"): return true;
       case hashString("decorations"): return true;
       case hashString("selectionActions"): return true;

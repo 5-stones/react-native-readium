@@ -5,9 +5,9 @@ import { View, StyleSheet } from 'react-native';
 import {
   useNavigator,
   usePreferencesObserver,
-  useLocationObserver,
   useDecorationsObserver,
 } from '../../web/hooks';
+import { convertToNavigatorLocator } from '../../web/utils/locationNormalizer';
 import type { ReadiumProps as BaseReadiumProps, ReadiumViewRef as BaseReadiumViewRef } from './ReadiumView.types';
 
 export type ReadiumProps = BaseReadiumProps & {
@@ -27,7 +27,6 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
     {
       file,
       preferences,
-      location,
       decorations,
       onLocationChange,
       onPublicationReady,
@@ -57,6 +56,14 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
     useImperativeHandle(
       ref,
       () => ({
+        goTo: (locator) => {
+          if (!navigator) return;
+          const navLocator = convertToNavigatorLocator(locator);
+          if (navLocator) {
+            // @ts-ignore
+            navigator.go(navLocator, true, () => {});
+          }
+        },
         goForward: () => {
           navigator?.goForward(true, () => {});
         },
@@ -76,7 +83,6 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
     );
 
     usePreferencesObserver(navigator, preferences);
-    useLocationObserver(navigator, location);
     useDecorationsObserver(navigator, decorationsRecord, onDecorationActivated);
 
     // Generate position label text

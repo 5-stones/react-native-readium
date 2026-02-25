@@ -67,6 +67,7 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
     useImperativeHandle(
       forwardedRef,
       () => ({
+        goTo: (locator) => hybridRef.current?.goTo(locator),
         goForward: () => hybridRef.current?.goForward(),
         goBackward: () => hybridRef.current?.goBackward(),
       }),

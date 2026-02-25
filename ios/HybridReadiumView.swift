@@ -21,12 +21,6 @@ class HybridReadiumView: HybridReadiumViewSpec {
     }
   }
 
-  var location: Locator? = nil {
-    didSet {
-      updateLocation()
-    }
-  }
-
   var preferences: Preferences? = nil {
     didSet {
       updatePreferences()
@@ -113,24 +107,6 @@ class HybridReadiumView: HybridReadiumViewSpec {
         self.addViewControllerAsSubview(vc)
       }
     )
-  }
-
-  // MARK: - Location
-
-  private func updateLocation() {
-    Task { @MainActor [weak self] in
-      guard let self = self else { return }
-      guard let navigator = self.readerViewController?.navigator else { return }
-      guard let loc = self.location else { return }
-      guard let locator = nitroLocatorToReadium(loc) else { return }
-
-      let currentLocation = navigator.currentLocation
-      if let currentLocation, locator.hashValue == currentLocation.hashValue {
-        return
-      }
-
-      _ = await navigator.go(to: locator, options: .animated)
-    }
   }
 
   // MARK: - Preferences
@@ -266,6 +242,15 @@ class HybridReadiumView: HybridReadiumViewSpec {
   }
 
   // MARK: - Imperative navigation
+
+  func goTo(locator: Locator) {
+    Task { @MainActor [weak self] in
+      guard let self else { return }
+      guard let navigator = self.readerViewController?.navigator else { return }
+      guard let readiumLocator = nitroLocatorToReadium(locator) else { return }
+      _ = await navigator.go(to: readiumLocator, options: .animated)
+    }
+  }
 
   func goForward() {
     Task { @MainActor in

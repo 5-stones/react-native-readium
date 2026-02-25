@@ -141,13 +141,6 @@ namespace margelo::nitro::readium {
     inline void setFile(const std::optional<ReadiumFile>& file) noexcept override {
       _swiftPart.setFile(file);
     }
-    inline std::optional<Locator> getLocation() noexcept override {
-      auto __result = _swiftPart.getLocation();
-      return __result;
-    }
-    inline void setLocation(const std::optional<Locator>& location) noexcept override {
-      _swiftPart.setLocation(location);
-    }
     inline std::optional<Preferences> getPreferences() noexcept override {
       auto __result = _swiftPart.getPreferences();
       return __result;
@@ -207,6 +200,12 @@ namespace margelo::nitro::readium {
 
   public:
     // Methods
+    inline void goTo(const Locator& locator) override {
+      auto __result = _swiftPart.goTo(std::forward<decltype(locator)>(locator));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
     inline void goForward() override {
       auto __result = _swiftPart.goForward();
       if (__result.hasError()) [[unlikely]] {

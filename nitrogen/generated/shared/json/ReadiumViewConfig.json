@@ -5,7 +5,6 @@
   "directEventTypes": {},
   "validAttributes": {
     "file": true,
-    "location": true,
     "preferences": true,
     "decorations": true,
     "selectionActions": true,

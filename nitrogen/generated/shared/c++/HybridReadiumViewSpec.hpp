@@ -15,14 +15,14 @@
 
 // Forward declaration of `ReadiumFile` to properly resolve imports.
 namespace margelo::nitro::readium { struct ReadiumFile; }
-// Forward declaration of `Locator` to properly resolve imports.
-namespace margelo::nitro::readium { struct Locator; }
 // Forward declaration of `Preferences` to properly resolve imports.
 namespace margelo::nitro::readium { struct Preferences; }
 // Forward declaration of `DecorationGroup` to properly resolve imports.
 namespace margelo::nitro::readium { struct DecorationGroup; }
 // Forward declaration of `SelectionAction` to properly resolve imports.
 namespace margelo::nitro::readium { struct SelectionAction; }
+// Forward declaration of `Locator` to properly resolve imports.
+namespace margelo::nitro::readium { struct Locator; }
 // Forward declaration of `PublicationReadyEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct PublicationReadyEvent; }
 // Forward declaration of `DecorationActivatedEvent` to properly resolve imports.
@@ -34,11 +34,11 @@ namespace margelo::nitro::readium { struct SelectionActionEvent; }
 
 #include "ReadiumFile.hpp"
 #include <optional>
-#include "Locator.hpp"
 #include "Preferences.hpp"
 #include "DecorationGroup.hpp"
 #include <vector>
 #include "SelectionAction.hpp"
+#include "Locator.hpp"
 #include <functional>
 #include "PublicationReadyEvent.hpp"
 #include "DecorationActivatedEvent.hpp"
@@ -74,8 +74,6 @@ namespace margelo::nitro::readium {
       // Properties
       virtual std::optional<ReadiumFile> getFile() = 0;
       virtual void setFile(const std::optional<ReadiumFile>& file) = 0;
-      virtual std::optional<Locator> getLocation() = 0;
-      virtual void setLocation(const std::optional<Locator>& location) = 0;
       virtual std::optional<Preferences> getPreferences() = 0;
       virtual void setPreferences(const std::optional<Preferences>& preferences) = 0;
       virtual std::optional<std::vector<DecorationGroup>> getDecorations() = 0;
@@ -95,6 +93,7 @@ namespace margelo::nitro::readium {
 
     public:
       // Methods
+      virtual void goTo(const Locator& locator) = 0;
       virtual void goForward() = 0;
       virtual void goBackward() = 0;
       virtual void destroy() = 0;

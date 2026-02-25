@@ -53,8 +53,6 @@ namespace margelo::nitro::readium {
     // Properties
     std::optional<ReadiumFile> getFile() override;
     void setFile(const std::optional<ReadiumFile>& file) override;
-    std::optional<Locator> getLocation() override;
-    void setLocation(const std::optional<Locator>& location) override;
     std::optional<Preferences> getPreferences() override;
     void setPreferences(const std::optional<Preferences>& preferences) override;
     std::optional<std::vector<DecorationGroup>> getDecorations() override;
@@ -74,6 +72,7 @@ namespace margelo::nitro::readium {
 
   public:
     // Methods
+    void goTo(const Locator& locator) override;
     void goForward() override;
     void goBackward() override;
     void destroy() override;

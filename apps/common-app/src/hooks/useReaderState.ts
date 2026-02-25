@@ -23,17 +23,6 @@ export const useReaderState = () => {
     setPositions(event.positions || []);
   }, []);
 
-  const navigateToTocItem = useCallback((loc: Link) => {
-    setLocation({
-      href: loc.href,
-      type: loc.type || 'application/xhtml+xml',
-      title: loc.title || '',
-      locations: {
-        progression: 0,
-      },
-    });
-  }, []);
-
   return {
     // State
     toc,
@@ -42,12 +31,10 @@ export const useReaderState = () => {
     preferences,
 
     // Setters
-    setLocation,
     setPreferences,
 
     // Handlers
     handleLocationChange,
     handlePublicationReady,
-    navigateToTocItem,
   };
 };

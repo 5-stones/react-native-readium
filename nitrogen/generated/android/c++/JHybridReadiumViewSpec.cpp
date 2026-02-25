@@ -157,15 +157,6 @@ namespace margelo::nitro::readium {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JReadiumFile> /* file */)>("setFile");
     method(_javaPart, file.has_value() ? JReadiumFile::fromCpp(file.value()) : nullptr);
   }
-  std::optional<Locator> JHybridReadiumViewSpec::getLocation() {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JLocator>()>("getLocation");
-    auto __result = method(_javaPart);
-    return __result != nullptr ? std::make_optional(__result->toCpp()) : std::nullopt;
-  }
-  void JHybridReadiumViewSpec::setLocation(const std::optional<Locator>& location) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JLocator> /* location */)>("setLocation");
-    method(_javaPart, location.has_value() ? JLocator::fromCpp(location.value()) : nullptr);
-  }
   std::optional<Preferences> JHybridReadiumViewSpec::getPreferences() {
     static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPreferences>()>("getPreferences");
     auto __result = method(_javaPart);
@@ -316,6 +307,10 @@ namespace margelo::nitro::readium {
   }
 
   // Methods
+  void JHybridReadiumViewSpec::goTo(const Locator& locator) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JLocator> /* locator */)>("goTo");
+    method(_javaPart, JLocator::fromCpp(locator));
+  }
   void JHybridReadiumViewSpec::goForward() {
     static const auto method = javaClassStatic()->getMethod<void()>("goForward");
     method(_javaPart);

@@ -16,8 +16,6 @@ namespace margelo::nitro::readium {
     registerHybrids(this, [](Prototype& prototype) {
       prototype.registerHybridGetter("file", &HybridReadiumViewSpec::getFile);
       prototype.registerHybridSetter("file", &HybridReadiumViewSpec::setFile);
-      prototype.registerHybridGetter("location", &HybridReadiumViewSpec::getLocation);
-      prototype.registerHybridSetter("location", &HybridReadiumViewSpec::setLocation);
       prototype.registerHybridGetter("preferences", &HybridReadiumViewSpec::getPreferences);
       prototype.registerHybridSetter("preferences", &HybridReadiumViewSpec::setPreferences);
       prototype.registerHybridGetter("decorations", &HybridReadiumViewSpec::getDecorations);
@@ -34,6 +32,7 @@ namespace margelo::nitro::readium {
       prototype.registerHybridSetter("onSelectionChange", &HybridReadiumViewSpec::setOnSelectionChange);
       prototype.registerHybridGetter("onSelectionAction", &HybridReadiumViewSpec::getOnSelectionAction);
       prototype.registerHybridSetter("onSelectionAction", &HybridReadiumViewSpec::setOnSelectionAction);
+      prototype.registerHybridMethod("goTo", &HybridReadiumViewSpec::goTo);
       prototype.registerHybridMethod("goForward", &HybridReadiumViewSpec::goForward);
       prototype.registerHybridMethod("goBackward", &HybridReadiumViewSpec::goBackward);
       prototype.registerHybridMethod("destroy", &HybridReadiumViewSpec::destroy);

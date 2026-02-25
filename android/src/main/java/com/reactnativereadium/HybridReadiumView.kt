@@ -79,12 +79,6 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
       }
     }
 
-  override var location: Locator? = null
-    set(value) {
-      field = value
-      updateLocation()
-    }
-
   override var preferences: Preferences? = null
     set(value) {
       field = value
@@ -118,15 +112,6 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
     }
   }
 
-  // MARK: - Location
-
-  private fun updateLocation() {
-    val loc = location ?: return
-    val frag = fragment ?: return
-    val readiumLocator = nitroLocatorToReadium(loc) ?: return
-    frag.go(com.reactnativereadium.utils.LinkOrLocator.Locator(readiumLocator), true)
-  }
-
   // MARK: - Preferences
 
   private fun updatePreferences() {
@@ -158,6 +143,18 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
   }
 
   // MARK: - Imperative navigation
+
+  override fun goTo(locator: Locator) {
+    val action = Runnable {
+      val readiumLocator = nitroLocatorToReadium(locator) ?: return@Runnable
+      fragment?.go(com.reactnativereadium.utils.LinkOrLocator.Locator(readiumLocator), true)
+    }
+    if (android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) {
+      action.run()
+    } else {
+      hostView.post(action)
+    }
+  }
 
   override fun goForward() { fragment?.goForward() }
   override fun goBackward() { fragment?.goBackward() }

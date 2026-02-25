@@ -138,23 +138,6 @@ open class HybridReadiumViewSpec_cxx {
     }
   }
   
-  public final var location: bridge.std__optional_Locator_ {
-    @inline(__always)
-    get {
-      return { () -> bridge.std__optional_Locator_ in
-        if let __unwrappedValue = self.__implementation.location {
-          return bridge.create_std__optional_Locator_(__unwrappedValue)
-        } else {
-          return .init()
-        }
-      }()
-    }
-    @inline(__always)
-    set {
-      self.__implementation.location = newValue.value
-    }
-  }
-  
   public final var preferences: bridge.std__optional_Preferences_ {
     @inline(__always)
     get {
@@ -393,6 +376,17 @@ open class HybridReadiumViewSpec_cxx {
   }
 
   // Methods
+  @inline(__always)
+  public final func goTo(locator: Locator) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.goTo(locator: locator)
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
   @inline(__always)
   public final func goForward() -> bridge.Result_void_ {
     do {

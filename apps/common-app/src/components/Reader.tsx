@@ -1,7 +1,8 @@
-import React, { useRef } from 'react';
+import React, { useRef, useCallback } from 'react';
 import { View, Text, Platform } from 'react-native';
 import { ReadiumView } from 'react-native-readium';
 import type {
+  ReadiumViewRef,
   ReadiumProps,
   Link,
   Locator,
@@ -33,7 +34,7 @@ export interface ReaderHandle {
   location: Locator | undefined;
   preferences: ReadiumProps['preferences'];
   setPreferences: (prefs: ReadiumProps['preferences']) => void;
-  setLocation: (loc: Locator | undefined) => void;
+  navigateToLocator: (locator: Locator) => void;
   navigateToTocItem: (item: Link) => void;
   highlights: Decoration[];
   deleteHighlight: (id: string) => void;
@@ -51,7 +52,7 @@ export const Reader: React.FC<ReaderProps> = ({
   initialLocation,
   onReaderReady,
 }) => {
-  const ref = useRef<any>(undefined);
+  const ref = useRef<ReadiumViewRef>(null);
 
   const { file, isLoading, error } = useEpubFile({
     epubUrl,
@@ -64,12 +65,25 @@ export const Reader: React.FC<ReaderProps> = ({
     toc,
     location,
     preferences,
-    setLocation,
     setPreferences,
     handleLocationChange,
     handlePublicationReady: baseHandlePublicationReady,
-    navigateToTocItem,
   } = useReaderState();
+
+  const navigateToLocator = useCallback((locator: Locator) => {
+    ref.current?.goTo(locator);
+  }, []);
+
+  const navigateToTocItem = useCallback((item: Link) => {
+    ref.current?.goTo({
+      href: item.href,
+      type: item.type || 'application/xhtml+xml',
+      title: item.title || '',
+      locations: {
+        progression: 0,
+      },
+    });
+  }, []);
 
   const {
     decorations,
@@ -105,7 +119,7 @@ export const Reader: React.FC<ReaderProps> = ({
         location,
         preferences,
         setPreferences,
-        setLocation,
+        navigateToLocator,
         navigateToTocItem,
         highlights,
         deleteHighlight: handleDeleteHighlight,
@@ -119,7 +133,7 @@ export const Reader: React.FC<ReaderProps> = ({
     highlights,
     onReaderReady,
     setPreferences,
-    setLocation,
+    navigateToLocator,
     navigateToTocItem,
     handleDeleteHighlight,
     handleEditHighlight,
@@ -156,7 +170,6 @@ export const Reader: React.FC<ReaderProps> = ({
           <ReadiumView
             ref={ref}
             file={file}
-            location={location}
             preferences={preferences}
             decorations={decorations}
             selectionActions={selectionActions}

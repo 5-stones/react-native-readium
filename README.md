@@ -326,8 +326,7 @@ DRM is not supported at this time. However, there is a clear path to [support it
 
 | Name                     | Type                                                                                                                                                                                             | Optional           | Description                                                                                                                                                                                                                                                                                                                                                                        |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `file`                   | [`File`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/File.ts)                                                                                                      | :x:                | A file object containing the path to the eBook file on disk.                                                                                                                                                                                                                                                                                                                       |
-| `location`               | [`Locator`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/Locator.ts) \| [`Link`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/Link.ts) | :white_check_mark: | A locator prop that allows you to externally control the location of the reader (e.g. Chapters or Bookmarks). <br/><br/>:warning: If you want to set the `location` of an ebook on initial load, you should use the `File.initialLocation` property (look at the `file` prop). See more [here](https://github.com/5-stones/react-native-readium/issues/16#issuecomment-1344128937) |
+| `file`                   | [`File`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/File.ts)                                                                                                      | :x:                | A file object containing the path to the eBook file on disk. Use `File.initialLocation` to set the reader's position on mount.                                                                                                                                                                                                                                                     |
 | `preferences`            | [`Partial<Preferences>`](https://github.com/readium/swift-toolkit/blob/main/docs/Guides/Navigator%20Preferences.md#appendix-preference-constraints)                                              | :white_check_mark: | An object that allows you to control various aspects of the reader's UI (epub only)                                                                                                                                                                                                                                                                                                |
 | `decorations`            | [`DecorationGroup[]`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/Decoration.ts)                                                                                   | :white_check_mark: | An array of decoration groups to render in the publication (e.g. highlights, underlines).                                                                                                                                                                                                                                                                                           |
 | `selectionActions`       | [`SelectionAction[]`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/SelectionAction.ts)                                                                              | :white_check_mark: | Custom actions to show in the context menu when the user selects text.                                                                                                                                                                                                                                                                                                             |
@@ -345,10 +344,14 @@ The `ReadiumView` component accepts a ref that exposes imperative navigation met
 ```tsx
 import React, { useRef } from 'react';
 import { ReadiumView } from 'react-native-readium';
-import type { ReadiumViewRef } from 'react-native-readium';
+import type { ReadiumViewRef, Locator } from 'react-native-readium';
 
 const MyComponent: React.FC = () => {
   const ref = useRef<ReadiumViewRef>(null);
+
+  const goToChapter = (locator: Locator) => {
+    ref.current?.goTo(locator);
+  };
 
   return (
     <>
@@ -360,10 +363,11 @@ const MyComponent: React.FC = () => {
 };
 ```
 
-| Method        | Description                                              |
-| ------------- | -------------------------------------------------------- |
-| `goForward()` | Navigate forward in the publication (e.g. next page).    |
-| `goBackward()`| Navigate backward in the publication (e.g. previous page). |
+| Method             | Description                                                                      |
+| ------------------ | -------------------------------------------------------------------------------- |
+| `goTo(locator)`    | Navigate to a specific location in the publication (e.g. a chapter or bookmark). |
+| `goForward()`      | Navigate forward in the publication (e.g. next page).                            |
+| `goBackward()`     | Navigate backward in the publication (e.g. previous page).                       |
 
 #### :warning: Web vs Native File URLs
 

@@ -41,10 +41,6 @@ void JHybridReadiumViewStateUpdater::updateViewProps(jni::alias_ref<jni::JClass>
     view->setFile(props->file.value);
     props->file.isDirty = false;
   }
-  if (props->location.isDirty) {
-    view->setLocation(props->location.value);
-    props->location.isDirty = false;
-  }
   if (props->preferences.isDirty) {
     view->setPreferences(props->preferences.value);
     props->preferences.isDirty = false;

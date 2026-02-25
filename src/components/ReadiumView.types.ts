@@ -11,13 +11,13 @@ import type {
 } from '../interfaces';
 
 export type ReadiumViewRef = {
+  goTo: (locator: Locator) => void;
   goForward: () => void;
   goBackward: () => void;
 };
 
 export type ReadiumProps = {
   file: File;
-  location?: Locator;
   preferences: Preferences;
   decorations?: DecorationGroup[];
   selectionActions?: SelectionAction[];

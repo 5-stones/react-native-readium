@@ -77,11 +77,6 @@ using namespace margelo::nitro::readium::views;
     swiftPart.setFile(newViewProps.file.value);
     newViewProps.file.isDirty = false;
   }
-  // location: optional
-  if (newViewProps.location.isDirty) {
-    swiftPart.setLocation(newViewProps.location.value);
-    newViewProps.location.isDirty = false;
-  }
   // preferences: optional
   if (newViewProps.preferences.isDirty) {
     swiftPart.setPreferences(newViewProps.preferences.value);

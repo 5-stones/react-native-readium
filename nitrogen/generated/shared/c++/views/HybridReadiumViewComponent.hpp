@@ -18,11 +18,11 @@
 
 #include "ReadiumFile.hpp"
 #include <optional>
-#include "Locator.hpp"
 #include "Preferences.hpp"
 #include "DecorationGroup.hpp"
 #include <vector>
 #include "SelectionAction.hpp"
+#include "Locator.hpp"
 #include <functional>
 #include "PublicationReadyEvent.hpp"
 #include "DecorationActivatedEvent.hpp"
@@ -52,7 +52,6 @@ namespace margelo::nitro::readium::views {
 
   public:
     CachedProp<std::optional<ReadiumFile>> file;
-    CachedProp<std::optional<Locator>> location;
     CachedProp<std::optional<Preferences>> preferences;
     CachedProp<std::optional<std::vector<DecorationGroup>>> decorations;
     CachedProp<std::optional<std::vector<SelectionAction>>> selectionActions;

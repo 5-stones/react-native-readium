@@ -52,12 +52,6 @@ abstract class HybridReadiumViewSpec: HybridView() {
   @get:Keep
   @set:DoNotStrip
   @set:Keep
-  abstract var location: Locator?
-  
-  @get:DoNotStrip
-  @get:Keep
-  @set:DoNotStrip
-  @set:Keep
   abstract var preferences: Preferences?
   
   @get:DoNotStrip
@@ -143,6 +137,10 @@ abstract class HybridReadiumViewSpec: HybridView() {
     }
 
   // Methods
+  @DoNotStrip
+  @Keep
+  abstract fun goTo(locator: Locator): Unit
+  
   @DoNotStrip
   @Keep
   abstract fun goForward(): Unit
