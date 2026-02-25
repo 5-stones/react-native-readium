@@ -27,6 +27,13 @@ const books: BookOption[] = [
     author: 'Lewis Carroll',
     epubUrl: 'https://alice.dita.digital/manifest.json',
   },
+  {
+    id: 'moby-dick',
+    title: 'Moby Dick',
+    author: 'Herman Melville',
+    epubUrl:
+      'https://ott-5stones-staging-assets.b-cdn.net/assets/public/moby-dick_epub/none/manifest.json',
+  },
 ];
 
 const styles = StyleSheet.create({

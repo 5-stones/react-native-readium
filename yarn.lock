@@ -1975,6 +1975,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@edrlab/thorium-locales@github:edrlab/thorium-locales":
+  version: 1.0.0
+  resolution: "@edrlab/thorium-locales@https://github.com/edrlab/thorium-locales.git#commit=88dacee6db0e01862b9a381e350573cc4722203a"
+  checksum: ec6092e8374ec031e4a5581064b40338fd4dda619a6fa6d6c19498ea7e72dbde1104190383d917cfc5909cdd01df46a1aefb3bc79fd37226589e3279a93627f3
+  languageName: node
+  linkType: hard
+
 "@egjs/hammerjs@npm:^2.0.17":
   version: 2.0.17
   resolution: "@egjs/hammerjs@npm:2.0.17"
@@ -4304,31 +4311,33 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@readium/css@npm:^2.0.0-beta.24":
-  version: 2.0.0-beta.24
-  resolution: "@readium/css@npm:2.0.0-beta.24"
-  checksum: 570d4a308be0e5e2b75daf293ac0b53b346f712316bc38bf7a6e64403f0e1210f2faa699226af2038a934c84f708703d957c5092ce33041cb8e86c7363386a15
+"@readium/css@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@readium/css@npm:2.0.0"
+  checksum: 091587123ae92f54574195a9057c27e2188646e254306877e1871b50fd7b0ebf6d9c1dc48d17993fd6ba04000f69896b6543c3d4d4b2a966160e4d67fc40d5c3
   languageName: node
   linkType: hard
 
-"@readium/navigator-html-injectables@npm:^2.2.2":
-  version: 2.2.2
-  resolution: "@readium/navigator-html-injectables@npm:2.2.2"
-  checksum: fe9f17430ea15b42a18acdeb6d73fd584a38f3668118a00722d2f4068f3294e1b841dcc42a8deab39d4a3ff51ee39ddef46f5be2ce4f066e7b56937d4af75d76
+"@readium/navigator-html-injectables@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "@readium/navigator-html-injectables@npm:2.3.0"
+  checksum: 4a019508eebedf625554cfc05682be4997353a9f8cc44e08af0c861ec53d8afc048d2e784cdc0c4b369a60de9ccb9dc5faa39dffdaa8b24912c0ecf6cf23354a
   languageName: node
   linkType: hard
 
-"@readium/navigator@npm:^2.2.5":
-  version: 2.2.5
-  resolution: "@readium/navigator@npm:2.2.5"
-  checksum: c9a38fed73f12566d6a1a8731752f3b0c5b0932a61dacc18b4d03b43ae3c344d144b58db4e295d7f891a93bd2fa346d55077172618485477e022fe8f6ce05e47
+"@readium/navigator@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "@readium/navigator@npm:2.3.0"
+  checksum: 21d88b59b8d86d5e9e45a77ed3ba22a6d62a2e8060ba3275664504b7ad3593332679b016d3c0e8fdc4c4d13ef6f3598e29d060fae419675455005aaa1bcaf340
   languageName: node
   linkType: hard
 
-"@readium/shared@npm:^2.1.2":
-  version: 2.1.2
-  resolution: "@readium/shared@npm:2.1.2"
-  checksum: 8ea981a3c46dbaefe6ec4b473e2810498d87aa281fbd5319386018fb6ecdd5fbeea1f1373a85629239ad02ef5a2852305af150354ebb7e7dff801b0b93e257c6
+"@readium/shared@npm:^2.1.5":
+  version: 2.1.5
+  resolution: "@readium/shared@npm:2.1.5"
+  dependencies:
+    "@edrlab/thorium-locales": "github:edrlab/thorium-locales"
+  checksum: 814831a964b8fd0f9f653491273f85100e01aaa28a874cf9f6a8c7209b1b408a685ed0cdcdfa78ab0204de64b8884ee94dfe303234a3a08c3af90147520f9a43
   languageName: node
   linkType: hard
 
@@ -14145,10 +14154,10 @@ __metadata:
     "@commitlint/config-conventional": ^17.0.2
     "@evilmartians/lefthook": ^1.5.0
     "@react-native/eslint-config": 0.83.0
-    "@readium/css": ^2.0.0-beta.24
-    "@readium/navigator": ^2.2.5
-    "@readium/navigator-html-injectables": ^2.2.2
-    "@readium/shared": ^2.1.2
+    "@readium/css": ^2.0.0
+    "@readium/navigator": ^2.3.0
+    "@readium/navigator-html-injectables": ^2.3.0
+    "@readium/shared": ^2.1.5
     "@release-it/conventional-changelog": ^5.0.0
     "@types/jest": ^29.5.13
     "@types/react": ^19.2.0

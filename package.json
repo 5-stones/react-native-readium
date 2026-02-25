@@ -178,10 +178,10 @@
     "useTabs": false
   },
   "dependencies": {
-    "@readium/css": "^2.0.0-beta.24",
-    "@readium/navigator": "^2.2.5",
-    "@readium/navigator-html-injectables": "^2.2.2",
-    "@readium/shared": "^2.1.2",
+    "@readium/css": "^2.0.0",
+    "@readium/navigator": "^2.3.0",
+    "@readium/navigator-html-injectables": "^2.3.0",
+    "@readium/shared": "^2.1.5",
     "use-deep-compare": "^1.1.0"
   },
   "engines": {
