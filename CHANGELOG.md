@@ -1,3 +1,13 @@
+# [5.0.0-rc.11](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.10...v5.0.0-rc.11) (2026-02-25)
+
+
+### Bug Fixes
+
+* **web:** do not ignore location changes within hrefs and containing totalProgression (as bookmarks might) ([c5272f7](https://github.com/5-stones/react-native-readium/commit/c5272f7f87182a6900ee95e1ad967d5bf12c91bb))
+* **web:** if the manifests links to positions, use those for the positionArray ([48b9503](https://github.com/5-stones/react-native-readium/commit/48b9503251c68ad47246a43796e0dbd1183e8a41))
+
+
+
 # [5.0.0-rc.10](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.9...v5.0.0-rc.10) (2026-02-24)
 
 
