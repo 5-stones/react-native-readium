@@ -1,3 +1,19 @@
+# [5.0.0-rc.12](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.11...v5.0.0-rc.12) (2026-02-25)
+
+
+### Features
+
+* **android, ios, web:** replace location prop with imperative goTo() ref method ([0ce0635](https://github.com/5-stones/react-native-readium/commit/0ce06355060c69736afb8d81cfb7dfe2a18be9b5))
+
+
+### BREAKING CHANGES
+
+* **android, ios, web:** Navigation is now imperative only via ref.current.goTo(locator), matching the
+existing goForward()/goBackward() pattern. The useLocationObserver hook (web) is removed. Initial
+position on mount is still handled via File.initialLocation.
+
+
+
 # [5.0.0-rc.11](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.10...v5.0.0-rc.11) (2026-02-25)
 
 
