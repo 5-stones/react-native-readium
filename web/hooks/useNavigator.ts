@@ -4,15 +4,15 @@ import { EpubNavigator } from '@readium/navigator';
 import { Locator, Publication } from '@readium/shared';
 
 import type { ReadiumProps } from '../../src/components/ReadiumView';
-import { normalizeMetadata } from '../utils/metadataNormalizer';
-import { fetchManifest } from '../utils/manifestFetcher';
-import { createNavigatorListeners } from '../utils/navigatorListeners';
 import {
-  normalizePublicationURL,
+  createNavigatorListeners,
   createPositions,
   extractTableOfContents,
-} from '../utils/publicationUtils';
-import { convertToNavigatorLocator } from '../utils/locationNormalizer';
+  fetchManifest,
+  normalizeMetadata,
+  normalizePublicationURL,
+  sanitizeInitialLocation,
+} from '../utils';
 
 interface RefProps
   extends Pick<
@@ -121,10 +121,12 @@ export const useNavigator = ({
         onPositionChange
       );
 
-      // 6. Process initial location
-      const initialPosition = file.initialLocation
-        ? convertToNavigatorLocator(file.initialLocation)
-        : undefined;
+      // 6. Process initial location, sanitizing the position number to match
+      // the resolved positions array (handles scheme mismatch between sessions)
+      const initialPosition = sanitizeInitialLocation(
+        file.initialLocation,
+        positionsArray
+      );
 
       // 7. Initialize and load the navigator
       const configuration = {
