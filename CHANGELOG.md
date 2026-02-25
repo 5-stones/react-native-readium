@@ -1,3 +1,12 @@
+# [5.0.0-rc.13](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.12...v5.0.0-rc.13) (2026-02-25)
+
+
+### Bug Fixes
+
+* **web:** fix an issue with improper navigator teardown on web ([76fe730](https://github.com/5-stones/react-native-readium/commit/76fe7308b563f9b3ecc93615613015261f3eabcd))
+
+
+
 # [5.0.0-rc.12](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.11...v5.0.0-rc.12) (2026-02-25)
 
 
