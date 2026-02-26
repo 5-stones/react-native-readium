@@ -1,3 +1,12 @@
+# [5.0.0-rc.16](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.15...v5.0.0-rc.16) (2026-02-26)
+
+
+### Bug Fixes
+
+* **web:** sanitize initialLocation for back compat with old locators lacking position ([cbcf45f](https://github.com/5-stones/react-native-readium/commit/cbcf45f7a448540d80830cbc458652d8b02c7cbb))
+
+
+
 # [5.0.0-rc.15](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.14...v5.0.0-rc.15) (2026-02-25)
 
 
