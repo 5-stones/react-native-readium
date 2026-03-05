@@ -23,7 +23,7 @@
     "react-native": "0.83.1",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.24.0",
-    "react-native-nitro-modules": "^0.33.2",
+    "react-native-nitro-modules": "^0.35.0",
     "react-native-readium": "workspace:*",
     "react-native-reanimated": "^4.0.0",
     "react-native-safe-area-context": "^5.6.2",

@@ -30,7 +30,7 @@ public:
 
 public:
   static void updateViewProps(jni::alias_ref<jni::JClass> /* class */,
-                              jni::alias_ref<JHybridReadiumViewSpec::javaobject> view,
+                              jni::alias_ref<JHybridReadiumViewSpec::JavaPart> view,
                               jni::alias_ref<JStateWrapper::javaobject> stateWrapperInterface);
 
 public:

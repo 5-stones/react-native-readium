@@ -27,30 +27,40 @@
 namespace margelo::nitro::readium {
 
 int initialize(JavaVM* vm) {
+  return facebook::jni::initialize(vm, []() {
+    ::margelo::nitro::readium::registerAllNatives();
+  });
+}
+
+struct JHybridReadiumViewSpecImpl: public jni::JavaClass<JHybridReadiumViewSpecImpl, JHybridReadiumViewSpec::JavaPart> {
+  static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/HybridReadiumView;";
+  static std::shared_ptr<JHybridReadiumViewSpec> create() {
+    static auto constructorFn = javaClassStatic()->getConstructor<JHybridReadiumViewSpecImpl::javaobject()>();
+    jni::local_ref<JHybridReadiumViewSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
+    return javaPart->getJHybridReadiumViewSpec();
+  }
+};
+
+void registerAllNatives() {
   using namespace margelo::nitro;
   using namespace margelo::nitro::readium;
-  using namespace facebook;
 
-  return facebook::jni::initialize(vm, [] {
-    // Register native JNI methods
-    margelo::nitro::readium::JHybridReadiumViewSpec::registerNatives();
-    margelo::nitro::readium::JFunc_void_Locator_cxx::registerNatives();
-    margelo::nitro::readium::JFunc_void_PublicationReadyEvent_cxx::registerNatives();
-    margelo::nitro::readium::JFunc_void_DecorationActivatedEvent_cxx::registerNatives();
-    margelo::nitro::readium::JFunc_void_SelectionEvent_cxx::registerNatives();
-    margelo::nitro::readium::JFunc_void_SelectionActionEvent_cxx::registerNatives();
-    margelo::nitro::readium::views::JHybridReadiumViewStateUpdater::registerNatives();
+  // Register native JNI methods
+  margelo::nitro::readium::JHybridReadiumViewSpec::CxxPart::registerNatives();
+  margelo::nitro::readium::JFunc_void_Locator_cxx::registerNatives();
+  margelo::nitro::readium::JFunc_void_PublicationReadyEvent_cxx::registerNatives();
+  margelo::nitro::readium::JFunc_void_DecorationActivatedEvent_cxx::registerNatives();
+  margelo::nitro::readium::JFunc_void_SelectionEvent_cxx::registerNatives();
+  margelo::nitro::readium::JFunc_void_SelectionActionEvent_cxx::registerNatives();
+  margelo::nitro::readium::views::JHybridReadiumViewStateUpdater::registerNatives();
 
-    // Register Nitro Hybrid Objects
-    HybridObjectRegistry::registerHybridObjectConstructor(
-      "ReadiumView",
-      []() -> std::shared_ptr<HybridObject> {
-        static DefaultConstructableObject<JHybridReadiumViewSpec::javaobject> object("com/margelo/nitro/reactnativereadium/HybridReadiumView");
-        auto instance = object.create();
-        return instance->cthis()->shared();
-      }
-    );
-  });
+  // Register Nitro Hybrid Objects
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "ReadiumView",
+    []() -> std::shared_ptr<HybridObject> {
+      return JHybridReadiumViewSpecImpl::create();
+    }
+  );
 }
 
 } // namespace margelo::nitro::readium

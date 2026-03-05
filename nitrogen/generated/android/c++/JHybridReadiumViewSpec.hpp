@@ -18,34 +18,33 @@ namespace margelo::nitro::readium {
 
   using namespace facebook;
 
-  class JHybridReadiumViewSpec: public jni::HybridClass<JHybridReadiumViewSpec, JHybridObject>,
-                                public virtual HybridReadiumViewSpec {
+  class JHybridReadiumViewSpec: public virtual HybridReadiumViewSpec, public virtual JHybridObject {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/HybridReadiumViewSpec;";
-    static jni::local_ref<jhybriddata> initHybrid(jni::alias_ref<jhybridobject> jThis);
-    static void registerNatives();
+    struct JavaPart: public jni::JavaClass<JavaPart, JHybridObject::JavaPart> {
+      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/HybridReadiumViewSpec;";
+      std::shared_ptr<JHybridReadiumViewSpec> getJHybridReadiumViewSpec();
+    };
+    struct CxxPart: public jni::HybridClass<CxxPart, JHybridObject::CxxPart> {
+      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/HybridReadiumViewSpec$CxxPart;";
+      static jni::local_ref<jhybriddata> initHybrid(jni::alias_ref<jhybridobject> jThis);
+      static void registerNatives();
+      using HybridBase::HybridBase;
+    protected:
+      std::shared_ptr<JHybridObject> createHybridObject(const jni::local_ref<JHybridObject::JavaPart>& javaPart) override;
+    };
 
-  protected:
-    // C++ constructor (called from Java via `initHybrid()`)
-    explicit JHybridReadiumViewSpec(jni::alias_ref<jhybridobject> jThis) :
+  public:
+    explicit JHybridReadiumViewSpec(const jni::local_ref<JHybridReadiumViewSpec::JavaPart>& javaPart):
       HybridObject(HybridReadiumViewSpec::TAG),
-      HybridBase(jThis),
-      _javaPart(jni::make_global(jThis)) {}
-
-  public:
+      JHybridObject(javaPart),
+      _javaPart(jni::make_global(javaPart)) {}
     ~JHybridReadiumViewSpec() override {
       // Hermes GC can destroy JS objects on a non-JNI Thread.
       jni::ThreadScope::WithClassLoader([&] { _javaPart.reset(); });
     }
 
   public:
-    size_t getExternalMemorySize() noexcept override;
-    bool equals(const std::shared_ptr<HybridObject>& other) override;
-    void dispose() noexcept override;
-    std::string toString() override;
-
-  public:
-    inline const jni::global_ref<JHybridReadiumViewSpec::javaobject>& getJavaPart() const noexcept {
+    inline const jni::global_ref<JHybridReadiumViewSpec::JavaPart>& getJavaPart() const noexcept {
       return _javaPart;
     }
 
@@ -78,9 +77,7 @@ namespace margelo::nitro::readium {
     void destroy() override;
 
   private:
-    friend HybridBase;
-    using HybridBase::HybridBase;
-    jni::global_ref<JHybridReadiumViewSpec::javaobject> _javaPart;
+    jni::global_ref<JHybridReadiumViewSpec::JavaPart> _javaPart;
   };
 
 } // namespace margelo::nitro::readium

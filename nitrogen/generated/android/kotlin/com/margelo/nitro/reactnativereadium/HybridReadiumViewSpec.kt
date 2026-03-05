@@ -10,6 +10,7 @@ package com.margelo.nitro.reactnativereadium
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
+import com.margelo.nitro.core.HybridObject
 import com.margelo.nitro.views.HybridView
 
 /**
@@ -24,23 +25,6 @@ import com.margelo.nitro.views.HybridView
   "LocalVariableName", "PropertyName", "PrivatePropertyName", "FunctionName"
 )
 abstract class HybridReadiumViewSpec: HybridView() {
-  @DoNotStrip
-  private var mHybridData: HybridData = initHybrid()
-
-  init {
-    super.updateNative(mHybridData)
-  }
-
-  override fun updateNative(hybridData: HybridData) {
-    mHybridData = hybridData
-    super.updateNative(hybridData)
-  }
-
-  // Default implementation of `HybridObject.toString()`
-  override fun toString(): String {
-    return "[HybridObject ReadiumView]"
-  }
-
   // Properties
   @get:DoNotStrip
   @get:Keep
@@ -153,7 +137,21 @@ abstract class HybridReadiumViewSpec: HybridView() {
   @Keep
   abstract fun destroy(): Unit
 
-  private external fun initHybrid(): HybridData
+  // Default implementation of `HybridObject.toString()`
+  override fun toString(): String {
+    return "[HybridObject ReadiumView]"
+  }
+
+  // C++ backing class
+  @DoNotStrip
+  @Keep
+  protected open class CxxPart(javaPart: HybridReadiumViewSpec): HybridObject.CxxPart(javaPart) {
+    // C++ JHybridReadiumViewSpec::CxxPart::initHybrid(...)
+    external override fun initHybrid(): HybridData
+  }
+  override fun createCxxPart(): CxxPart {
+    return CxxPart(this)
+  }
 
   companion object {
     protected const val TAG = "HybridReadiumViewSpec"

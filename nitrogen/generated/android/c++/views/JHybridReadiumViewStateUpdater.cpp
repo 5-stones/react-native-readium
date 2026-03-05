@@ -16,9 +16,9 @@ using namespace facebook;
 using ConcreteStateData = react::ConcreteState<HybridReadiumViewState>;
 
 void JHybridReadiumViewStateUpdater::updateViewProps(jni::alias_ref<jni::JClass> /* class */,
-                                           jni::alias_ref<JHybridReadiumViewSpec::javaobject> javaView,
+                                           jni::alias_ref<JHybridReadiumViewSpec::JavaPart> javaView,
                                            jni::alias_ref<JStateWrapper::javaobject> stateWrapperInterface) {
-  JHybridReadiumViewSpec* view = javaView->cthis();
+  std::shared_ptr<JHybridReadiumViewSpec> hybridView = javaView->getJHybridReadiumViewSpec();
 
   // Get concrete StateWrapperImpl from passed StateWrapper interface object
   jobject rawStateWrapper = stateWrapperInterface.get();
@@ -38,39 +38,39 @@ void JHybridReadiumViewStateUpdater::updateViewProps(jni::alias_ref<jni::JClass>
 
   // Update all props if they are dirty
   if (props->file.isDirty) {
-    view->setFile(props->file.value);
+    hybridView->setFile(props->file.value);
     props->file.isDirty = false;
   }
   if (props->preferences.isDirty) {
-    view->setPreferences(props->preferences.value);
+    hybridView->setPreferences(props->preferences.value);
     props->preferences.isDirty = false;
   }
   if (props->decorations.isDirty) {
-    view->setDecorations(props->decorations.value);
+    hybridView->setDecorations(props->decorations.value);
     props->decorations.isDirty = false;
   }
   if (props->selectionActions.isDirty) {
-    view->setSelectionActions(props->selectionActions.value);
+    hybridView->setSelectionActions(props->selectionActions.value);
     props->selectionActions.isDirty = false;
   }
   if (props->onLocationChange.isDirty) {
-    view->setOnLocationChange(props->onLocationChange.value);
+    hybridView->setOnLocationChange(props->onLocationChange.value);
     props->onLocationChange.isDirty = false;
   }
   if (props->onPublicationReady.isDirty) {
-    view->setOnPublicationReady(props->onPublicationReady.value);
+    hybridView->setOnPublicationReady(props->onPublicationReady.value);
     props->onPublicationReady.isDirty = false;
   }
   if (props->onDecorationActivated.isDirty) {
-    view->setOnDecorationActivated(props->onDecorationActivated.value);
+    hybridView->setOnDecorationActivated(props->onDecorationActivated.value);
     props->onDecorationActivated.isDirty = false;
   }
   if (props->onSelectionChange.isDirty) {
-    view->setOnSelectionChange(props->onSelectionChange.value);
+    hybridView->setOnSelectionChange(props->onSelectionChange.value);
     props->onSelectionChange.isDirty = false;
   }
   if (props->onSelectionAction.isDirty) {
-    view->setOnSelectionAction(props->onSelectionAction.value);
+    hybridView->setOnSelectionAction(props->onSelectionAction.value);
     props->onSelectionAction.isDirty = false;
   }
 
@@ -79,8 +79,7 @@ void JHybridReadiumViewStateUpdater::updateViewProps(jni::alias_ref<jni::JClass>
     // hybridRef changed - call it with new this
     const auto& maybeFunc = props->hybridRef.value;
     if (maybeFunc.has_value()) {
-      std::shared_ptr<JHybridReadiumViewSpec> shared = javaView->cthis()->shared_cast<JHybridReadiumViewSpec>();
-      maybeFunc.value()(shared);
+      maybeFunc.value()(hybridView);
     }
     props->hybridRef.isDirty = false;
   }
