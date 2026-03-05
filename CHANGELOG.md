@@ -1,3 +1,12 @@
+# [5.0.0-rc.17](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.16...v5.0.0-rc.17) (2026-03-05)
+
+
+### Features
+
+* **android:** upgrade nitrogen to fix android issues ([3354e7e](https://github.com/5-stones/react-native-readium/commit/3354e7eb49b0594113a62c914719b2fd14e393a6))
+
+
+
 # [5.0.0-rc.16](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.15...v5.0.0-rc.16) (2026-02-26)
 
 
