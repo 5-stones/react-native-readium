@@ -30,7 +30,7 @@ final class ReaderModule: ReaderModuleAPI {
     self.delegate = delegate
 
     formatModules = [
-      // CBZModule(delegate: self),
+      CBZModule(delegate: self),
       EPUBModule(delegate: self),
     ]
 

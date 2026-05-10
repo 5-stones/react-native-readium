@@ -1,4 +1,5 @@
 <resources>
     <string name="no_result">No result</string>
     <string name="epub_navigator_tag">epub_navigator</string>
+    <string name="image_navigator_tag">image_navigator</string>
 </resources>

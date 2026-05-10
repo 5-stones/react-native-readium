@@ -1,21 +1,25 @@
 import type { Locator } from 'react-native-readium';
 
+export type PublicationFormat = 'epub' | 'cbz';
+
 export interface BookOption {
   id: string;
   title: string;
   author: string;
-  epubUrl?: string;
-  epubPath?: string;
-  /** Filename of an epub bundled in the app assets (e.g. 'book.epub') */
+  format?: PublicationFormat;
+  url?: string;
+  path?: string;
+  /** Filename of a file bundled in the app assets (e.g. 'book.epub' or 'comic.cbz') */
   bundledAsset?: string;
 }
 
 export interface ReaderProps {
-  /** URL to the EPUB file (used for web or downloading on native) */
-  epubUrl?: string;
-  /** Local file path for the EPUB (used on native platforms after download) */
-  epubPath?: string;
-  /** Filename of an epub bundled in the app assets (e.g. 'book.epub') */
+  format?: PublicationFormat;
+  /** URL to the publication file (web or download source on native) */
+  url?: string;
+  /** Local file path (native, after download or copy from bundle) */
+  path?: string;
+  /** Filename of a file bundled in the app assets (e.g. 'book.epub' or 'comic.cbz') */
   bundledAsset?: string;
   /** Initial location to open the book at */
   initialLocation?: Locator;

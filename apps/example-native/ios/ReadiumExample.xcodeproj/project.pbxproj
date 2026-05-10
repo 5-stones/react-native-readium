@@ -15,6 +15,7 @@
 		815D5B6FA95BA07A3C1E77F8 /* libPods-ReadiumExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B862455935D64D3826D1780F /* libPods-ReadiumExample.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A1B2C3D4E5F60718A1B2C3D5 /* the-brothers-karamazov.epub in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718A1B2C3D4 /* the-brothers-karamazov.epub */; };
+		BB2CAFE000000000000000002 /* bobby_make_believe_sample.cbz in Resources */ = {isa = PBXBuildFile; fileRef = BB2CAFE000000000000000001 /* bobby_make_believe_sample.cbz */; };
 		E461B59F65233381FD4757D0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0F7A153113BA277AD9F4CA21 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +52,7 @@
 		A1B2C3D4E5F60718A1B2C3D4 /* the-brothers-karamazov.epub */ = {isa = PBXFileReference; lastKnownFileType = file; name = "the-brothers-karamazov.epub"; path = "../resources/the-brothers-karamazov.epub"; sourceTree = "<group>"; };
 		B334C6DBDA9937FDFBC060B8 /* Pods-ReadiumExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReadiumExample.debug.xcconfig"; path = "Target Support Files/Pods-ReadiumExample/Pods-ReadiumExample.debug.xcconfig"; sourceTree = "<group>"; };
 		B862455935D64D3826D1780F /* libPods-ReadiumExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReadiumExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BB2CAFE000000000000000001 /* bobby_make_believe_sample.cbz */ = {isa = PBXFileReference; lastKnownFileType = file; name = bobby_make_believe_sample.cbz; path = ../resources/bobby_make_believe_sample.cbz; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -158,6 +160,7 @@
 			isa = PBXGroup;
 			children = (
 				A1B2C3D4E5F60718A1B2C3D4 /* the-brothers-karamazov.epub */,
+				BB2CAFE000000000000000001 /* bobby_make_believe_sample.cbz */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -306,6 +309,7 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				E461B59F65233381FD4757D0 /* PrivacyInfo.xcprivacy in Resources */,
 				A1B2C3D4E5F60718A1B2C3D5 /* the-brothers-karamazov.epub in Resources */,
+				BB2CAFE000000000000000002 /* bobby_make_believe_sample.cbz in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

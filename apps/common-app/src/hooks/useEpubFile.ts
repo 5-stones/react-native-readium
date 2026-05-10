@@ -4,8 +4,8 @@ import type { File, Locator } from 'react-native-readium';
 import RNFS from '../utils/RNFS';
 
 interface UseEpubFileOptions {
-  epubUrl?: string;
-  epubPath?: string;
+  url?: string;
+  path?: string;
   bundledAsset?: string;
   initialLocation?: Locator;
 }
@@ -23,8 +23,8 @@ async function copyBundledAsset(
 }
 
 export const useEpubFile = ({
-  epubUrl,
-  epubPath,
+  url,
+  path,
   bundledAsset,
   initialLocation,
 }: UseEpubFileOptions) => {
@@ -40,10 +40,10 @@ export const useEpubFile = ({
         setIsLoading(true);
         setError(null);
 
-        let url = epubUrl || '';
+        let fileUrl = url || '';
 
-        if (epubPath) {
-          const localPath = epubPath;
+        if (path) {
+          const localPath = path;
           const exists = await RNFS.exists(localPath);
 
           if (!exists) {
@@ -52,10 +52,10 @@ export const useEpubFile = ({
                 `Copying bundled asset: '${bundledAsset}' to '${localPath}'`
               );
               await copyBundledAsset(bundledAsset, localPath);
-            } else if (epubUrl) {
-              console.log(`Downloading file: '${epubUrl}'`);
+            } else if (url) {
+              console.log(`Downloading file: '${url}'`);
               const { promise } = RNFS.downloadFile({
-                fromUrl: epubUrl,
+                fromUrl: url,
                 toFile: localPath,
                 background: true,
                 discretionary: true,
@@ -63,19 +63,19 @@ export const useEpubFile = ({
               await promise;
             } else {
               throw new Error(
-                'No source available: epubUrl or bundledAsset is required'
+                'No source available: url or bundledAsset is required'
               );
             }
           } else {
             console.log('File already exists. Skipping.', localPath);
           }
 
-          url = localPath;
+          fileUrl = localPath;
         }
 
         if (!cancelled) {
           setFile({
-            url,
+            url: fileUrl,
             initialLocation,
           });
           setIsLoading(false);
@@ -95,7 +95,7 @@ export const useEpubFile = ({
     return () => {
       cancelled = true;
     };
-  }, [epubUrl, epubPath, bundledAsset, initialLocation]);
+  }, [url, path, bundledAsset, initialLocation]);
 
   return { file, isLoading, error };
 };

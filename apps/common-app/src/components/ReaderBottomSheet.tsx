@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Reader } from './Reader';
 import type { ReaderHandle } from './Reader';
 import { ControlBar } from './ControlBar';
-import type { BookOption } from '../types/reader.types';
+import type { BookOption, PublicationFormat } from '../types/reader.types';
 import type { ReadiumProps } from 'react-native-readium';
 
 type ContentMode = 'reader' | 'details';
@@ -102,7 +102,7 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
       <View style={styles.content}>
         {contentMode === 'reader' ? (
           <>
-            {book && readerHandle ? (
+            {book && readerHandle && book.format !== 'cbz' ? (
               <ControlBar
                 preferences={readerHandle.preferences}
                 onPreferencesChange={readerHandle.setPreferences}
@@ -123,8 +123,9 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
               <View style={styles.readerContainer}>
                 <Reader
                   key={book.id}
-                  epubUrl={book.epubUrl}
-                  epubPath={book.epubPath}
+                  format={book.format}
+                  url={book.url}
+                  path={book.path}
                   bundledAsset={book.bundledAsset}
                   onReaderReady={handleReaderReady}
                   initialPreferences={initialPreferences}

@@ -25,7 +25,7 @@ import { styles } from '../styles/reader';
 import type { ReaderProps as BaseReaderProps } from '../types/reader.types';
 export type { BookOption } from '../types/reader.types';
 
-const selectionActions: SelectionAction[] = [
+const epubSelectionActions: SelectionAction[] = [
   { id: 'highlight', label: '📑 Highlight' },
 ];
 
@@ -48,8 +48,9 @@ interface ReaderProps extends BaseReaderProps {
 }
 
 export const Reader: React.FC<ReaderProps> = ({
-  epubUrl,
-  epubPath,
+  format = 'epub',
+  url,
+  path,
   bundledAsset,
   initialLocation,
   onReaderReady,
@@ -59,8 +60,8 @@ export const Reader: React.FC<ReaderProps> = ({
   const ref = useRef<ReadiumViewRef>(null);
 
   const { file, isLoading, error } = useEpubFile({
-    epubUrl,
-    epubPath,
+    url,
+    path,
     bundledAsset,
     initialLocation,
   });
@@ -146,7 +147,7 @@ export const Reader: React.FC<ReaderProps> = ({
   if (isLoading || !file) {
     return (
       <View style={styles.loadingContainer}>
-        <Text>Loading EPUB...</Text>
+        <Text>Loading...</Text>
       </View>
     );
   }
@@ -154,7 +155,7 @@ export const Reader: React.FC<ReaderProps> = ({
   if (error) {
     return (
       <View style={styles.loadingContainer}>
-        <Text>Error loading EPUB: {error.message}</Text>
+        <Text>Error loading file: {error.message}</Text>
       </View>
     );
   }
@@ -174,14 +175,14 @@ export const Reader: React.FC<ReaderProps> = ({
           <ReadiumView
             ref={ref}
             file={file}
-            preferences={preferences}
-            decorations={decorations}
-            selectionActions={selectionActions}
+            preferences={format === 'epub' ? preferences : undefined}
+            decorations={format === 'epub' ? decorations : undefined}
+            selectionActions={format === 'epub' ? epubSelectionActions : undefined}
             onLocationChange={handleLocationChange}
             onPublicationReady={handlePublicationReady}
-            onDecorationActivated={handleDecorationActivated}
-            onSelectionChange={handleSelectionChange}
-            onSelectionAction={handleSelectionAction}
+            onDecorationActivated={format === 'epub' ? handleDecorationActivated : undefined}
+            onSelectionChange={format === 'epub' ? handleSelectionChange : undefined}
+            onSelectionAction={format === 'epub' ? handleSelectionAction : undefined}
           />
         </View>
 

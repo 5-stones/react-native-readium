@@ -27,8 +27,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       onPress={() => onSelectBook(item)}
       activeOpacity={0.7}
     >
-      <View style={styles.iconContainer}>
-        <MaterialIcons name="menu-book" size={32} color="#007AFF" />
+      <View style={[styles.iconContainer, item.format === 'cbz' && styles.iconContainerCbz]}>
+        <MaterialIcons
+          name={item.format === 'cbz' ? 'image' : 'menu-book'}
+          size={32}
+          color={item.format === 'cbz' ? '#FF6B35' : '#007AFF'}
+        />
       </View>
       <View style={styles.cardContent}>
         <Text style={styles.title} numberOfLines={2}>
@@ -98,6 +102,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 14,
+  },
+  iconContainerCbz: {
+    backgroundColor: '#FFF0EB',
   },
   cardContent: {
     flex: 1,

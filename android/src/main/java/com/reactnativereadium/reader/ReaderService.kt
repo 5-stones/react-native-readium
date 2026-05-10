@@ -5,6 +5,7 @@ import com.facebook.react.util.RNLog
 import com.reactnativereadium.utils.LinkOrLocator
 import java.io.File
 import java.util.Locale
+import org.readium.r2.shared.ExperimentalReadiumApi
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
 import org.readium.r2.shared.util.FileExtension
@@ -93,10 +94,15 @@ class ReaderService(
         asset = asset,
         allowUserInteraction = false
       )
-      .onSuccess {
-        val locator = locatorFromLinkOrLocator(initialLocation, it)
-        val readerFragment = EpubReaderFragment.newInstance()
-        readerFragment.initFactory(it, locator)
+      .onSuccess { publication ->
+        val locator = locatorFromLinkOrLocator(initialLocation, publication)
+        @OptIn(ExperimentalReadiumApi::class)
+        val readerFragment: BaseReaderFragment =
+          if (publication.conformsTo(Publication.Profile.DIVINA)) {
+            ImageReaderFragment.newInstance().also { it.initFactory(publication, locator) }
+          } else {
+            EpubReaderFragment.newInstance().also { it.initFactory(publication, locator) }
+          }
         callback.invoke(readerFragment)
       }
       .onFailure {

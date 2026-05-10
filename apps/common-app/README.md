@@ -66,8 +66,8 @@ import { Reader } from 'common-app';
 function App() {
   return (
     <Reader
-      epubUrl="https://example.com/book.epub"
-      epubPath="/local/path/to/book.epub" // Optional for native
+      url="https://example.com/book.epub"
+      path="/local/path/to/book.epub" // Optional for native
       initialLocation={{
         href: '/chapter1.xhtml',
         type: 'application/xhtml+xml',
@@ -96,8 +96,8 @@ Main reader component that orchestrates all features.
 
 **Props:**
 
-- `epubUrl` (string): URL to the EPUB file
-- `epubPath` (string, optional): Local file path for native platforms
+- `url` (string): URL to the publication file (EPUB, Readium Web Publication manifest, etc.)
+- `path` (string, optional): Local file path for native platforms
 - `initialLocation` (Locator, optional): Starting location in the book
 
 **Features:**
