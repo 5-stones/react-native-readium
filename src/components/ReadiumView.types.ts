@@ -8,12 +8,16 @@ import type {
   DecorationActivatedEvent,
   SelectionEvent,
   SelectionActionEvent,
+  SearchOptions,
+  SearchResultsEvent,
 } from '../interfaces';
 
 export type ReadiumViewRef = {
   goTo: (locator: Locator) => void;
   goForward: () => void;
   goBackward: () => void;
+  search: (query: string, options?: SearchOptions) => void;
+  clearSearch: () => void;
 };
 
 export type ReadiumProps = {
@@ -27,4 +31,5 @@ export type ReadiumProps = {
   onDecorationActivated?: (event: DecorationActivatedEvent) => void;
   onSelectionChange?: (event: SelectionEvent) => void;
   onSelectionAction?: (event: SelectionActionEvent) => void;
+  onSearchResults?: (event: SearchResultsEvent) => void;
 };

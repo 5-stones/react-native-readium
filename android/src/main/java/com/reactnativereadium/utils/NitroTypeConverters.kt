@@ -12,6 +12,8 @@ import org.readium.r2.navigator.preferences.TextAlign
 import org.readium.r2.navigator.preferences.Theme
 import org.readium.r2.navigator.preferences.Color as ReadiumColor
 import org.readium.r2.shared.util.Language
+import org.readium.r2.shared.publication.services.search.SearchService
+
 import org.readium.r2.shared.publication.Locator as ReadiumLocator
 import org.readium.r2.shared.publication.Link as ReadiumLink
 import org.readium.r2.shared.publication.Metadata as ReadiumMetadata
@@ -321,3 +323,12 @@ internal fun readiumMetadataToNitro(meta: ReadiumMetadata): PublicationMetadata 
 }
 
 internal fun colorToHex(color: Int): String = String.format("#%08X", color)
+
+internal fun nitroSearchOptionsToReadium(options: SearchOptions): SearchService.Options =
+  SearchService.Options(
+    caseSensitive = options.caseSensitive ?: false,
+    diacriticSensitive = options.diacriticSensitive ?: false,
+    wholeWord = options.wholeWord ?: false,
+    regularExpression = options.regularExpression ?: false,
+    language = options.language
+  )

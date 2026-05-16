@@ -58,6 +58,12 @@ namespace margelo::nitro::readium { struct Point; }
 namespace margelo::nitro::readium { struct SelectionEvent; }
 // Forward declaration of `SelectionActionEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct SelectionActionEvent; }
+// Forward declaration of `SearchResultsEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchResultsEvent; }
+// Forward declaration of `SearchResult` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchResult; }
+// Forward declaration of `SearchOptions` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchOptions; }
 
 #include "ReadiumFile.hpp"
 #include <optional>
@@ -87,6 +93,9 @@ namespace margelo::nitro::readium { struct SelectionActionEvent; }
 #include "Point.hpp"
 #include "SelectionEvent.hpp"
 #include "SelectionActionEvent.hpp"
+#include "SearchResultsEvent.hpp"
+#include "SearchResult.hpp"
+#include "SearchOptions.hpp"
 
 #include "NitroReadium-Swift-Cxx-Umbrella.hpp"
 
@@ -197,6 +206,13 @@ namespace margelo::nitro::readium {
     inline void setOnSelectionAction(const std::optional<std::function<void(const SelectionActionEvent& /* event */)>>& onSelectionAction) noexcept override {
       _swiftPart.setOnSelectionAction(onSelectionAction);
     }
+    inline std::optional<std::function<void(const SearchResultsEvent& /* event */)>> getOnSearchResults() noexcept override {
+      auto __result = _swiftPart.getOnSearchResults();
+      return __result;
+    }
+    inline void setOnSearchResults(const std::optional<std::function<void(const SearchResultsEvent& /* event */)>>& onSearchResults) noexcept override {
+      _swiftPart.setOnSearchResults(onSearchResults);
+    }
 
   public:
     // Methods
@@ -220,6 +236,18 @@ namespace margelo::nitro::readium {
     }
     inline void destroy() override {
       auto __result = _swiftPart.destroy();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void search(const std::string& query, const std::optional<SearchOptions>& options) override {
+      auto __result = _swiftPart.search(query, options);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void clearSearch() override {
+      auto __result = _swiftPart.clearSearch();
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

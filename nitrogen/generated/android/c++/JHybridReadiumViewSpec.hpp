@@ -68,6 +68,8 @@ namespace margelo::nitro::readium {
     void setOnSelectionChange(const std::optional<std::function<void(const SelectionEvent& /* event */)>>& onSelectionChange) override;
     std::optional<std::function<void(const SelectionActionEvent& /* event */)>> getOnSelectionAction() override;
     void setOnSelectionAction(const std::optional<std::function<void(const SelectionActionEvent& /* event */)>>& onSelectionAction) override;
+    std::optional<std::function<void(const SearchResultsEvent& /* event */)>> getOnSearchResults() override;
+    void setOnSearchResults(const std::optional<std::function<void(const SearchResultsEvent& /* event */)>>& onSearchResults) override;
 
   public:
     // Methods
@@ -75,6 +77,8 @@ namespace margelo::nitro::readium {
     void goForward() override;
     void goBackward() override;
     void destroy() override;
+    void search(const std::string& query, const std::optional<SearchOptions>& options) override;
+    void clearSearch() override;
 
   private:
     jni::global_ref<JHybridReadiumViewSpec::JavaPart> _javaPart;

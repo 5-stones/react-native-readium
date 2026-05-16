@@ -84,7 +84,7 @@ open class HybridReadiumViewSpec_cxx {
     }
   }
 
-  
+
 
   /**
    * Get the memory size of the Swift class (plus size of any other allocations)
@@ -137,7 +137,7 @@ open class HybridReadiumViewSpec_cxx {
       self.__implementation.file = newValue.value
     }
   }
-  
+
   public final var preferences: bridge.std__optional_Preferences_ {
     @inline(__always)
     get {
@@ -154,7 +154,7 @@ open class HybridReadiumViewSpec_cxx {
       self.__implementation.preferences = newValue.value
     }
   }
-  
+
   public final var decorations: bridge.std__optional_std__vector_DecorationGroup__ {
     @inline(__always)
     get {
@@ -184,7 +184,7 @@ open class HybridReadiumViewSpec_cxx {
       }()
     }
   }
-  
+
   public final var selectionActions: bridge.std__optional_std__vector_SelectionAction__ {
     @inline(__always)
     get {
@@ -214,7 +214,7 @@ open class HybridReadiumViewSpec_cxx {
       }()
     }
   }
-  
+
   public final var onLocationChange: bridge.std__optional_std__function_void_const_Locator_____locator______ {
     @inline(__always)
     get {
@@ -246,7 +246,7 @@ open class HybridReadiumViewSpec_cxx {
       }()
     }
   }
-  
+
   public final var onPublicationReady: bridge.std__optional_std__function_void_const_PublicationReadyEvent_____event______ {
     @inline(__always)
     get {
@@ -278,7 +278,7 @@ open class HybridReadiumViewSpec_cxx {
       }()
     }
   }
-  
+
   public final var onDecorationActivated: bridge.std__optional_std__function_void_const_DecorationActivatedEvent_____event______ {
     @inline(__always)
     get {
@@ -310,7 +310,7 @@ open class HybridReadiumViewSpec_cxx {
       }()
     }
   }
-  
+
   public final var onSelectionChange: bridge.std__optional_std__function_void_const_SelectionEvent_____event______ {
     @inline(__always)
     get {
@@ -342,7 +342,7 @@ open class HybridReadiumViewSpec_cxx {
       }()
     }
   }
-  
+
   public final var onSelectionAction: bridge.std__optional_std__function_void_const_SelectionActionEvent_____event______ {
     @inline(__always)
     get {
@@ -375,6 +375,38 @@ open class HybridReadiumViewSpec_cxx {
     }
   }
 
+  public final var onSearchResults: bridge.std__optional_std__function_void_const_SearchResultsEvent_____event______ {
+    @inline(__always)
+    get {
+      return { () -> bridge.std__optional_std__function_void_const_SearchResultsEvent_____event______ in
+        if let __unwrappedValue = self.__implementation.onSearchResults {
+          return bridge.create_std__optional_std__function_void_const_SearchResultsEvent_____event______({ () -> bridge.Func_void_SearchResultsEvent in
+            let __closureWrapper = Func_void_SearchResultsEvent(__unwrappedValue)
+            return bridge.create_Func_void_SearchResultsEvent(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__implementation.onSearchResults = { () -> ((_ event: SearchResultsEvent) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_const_SearchResultsEvent_____event______(newValue) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_const_SearchResultsEvent_____event______(newValue)
+          return { () -> (SearchResultsEvent) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_SearchResultsEvent(__unwrapped)
+            return { (__event: SearchResultsEvent) -> Void in
+              __wrappedFunction.call(__event)
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
+    }
+  }
+
   // Methods
   @inline(__always)
   public final func goTo(locator: Locator) -> bridge.Result_void_ {
@@ -386,7 +418,7 @@ open class HybridReadiumViewSpec_cxx {
       return bridge.create_Result_void_(__exceptionPtr)
     }
   }
-  
+
   @inline(__always)
   public final func goForward() -> bridge.Result_void_ {
     do {
@@ -397,7 +429,7 @@ open class HybridReadiumViewSpec_cxx {
       return bridge.create_Result_void_(__exceptionPtr)
     }
   }
-  
+
   @inline(__always)
   public final func goBackward() -> bridge.Result_void_ {
     do {
@@ -408,7 +440,7 @@ open class HybridReadiumViewSpec_cxx {
       return bridge.create_Result_void_(__exceptionPtr)
     }
   }
-  
+
   @inline(__always)
   public final func destroy() -> bridge.Result_void_ {
     do {
@@ -419,19 +451,41 @@ open class HybridReadiumViewSpec_cxx {
       return bridge.create_Result_void_(__exceptionPtr)
     }
   }
-  
+
+  @inline(__always)
+  public final func search(query: std.string, options: bridge.std__optional_SearchOptions_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.search(query: String(query), options: options.value)
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+
+  @inline(__always)
+  public final func clearSearch() -> bridge.Result_void_ {
+    do {
+      try self.__implementation.clearSearch()
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+
   public final func getView() -> UnsafeMutableRawPointer {
     return Unmanaged.passRetained(__implementation.view).toOpaque()
   }
-  
+
   public final func beforeUpdate() {
     __implementation.beforeUpdate()
   }
-  
+
   public final func afterUpdate() {
     __implementation.afterUpdate()
   }
-  
+
   public final func maybePrepareForRecycle() {
     guard let recyclable = __implementation as? any RecyclableView else { return }
     recyclable.prepareForRecycle()

@@ -24,6 +24,7 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
       onDecorationActivated,
       onSelectionChange,
       onSelectionAction,
+      onSearchResults,
       preferences,
       decorations,
       selectionActions,
@@ -70,6 +71,8 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
         goTo: (locator) => hybridRef.current?.goTo(locator),
         goForward: () => hybridRef.current?.goForward(),
         goBackward: () => hybridRef.current?.goBackward(),
+        search: (query, options) => hybridRef.current?.search(query, options),
+        clearSearch: () => hybridRef.current?.clearSearch(),
       }),
       []
     );
@@ -96,6 +99,7 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
             onDecorationActivated={callback(onDecorationActivated ?? noop)}
             onSelectionChange={callback(onSelectionChange ?? noop)}
             onSelectionAction={callback(onSelectionAction ?? noop)}
+            onSearchResults={callback(onSearchResults ?? noop)}
             hybridRef={callback((ref: any) => {
               hybridRef.current = ref;
             })}

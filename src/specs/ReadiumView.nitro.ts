@@ -191,6 +191,30 @@ export interface PublicationMetadata {
   belongsTo?: BelongsTo;
 }
 
+// ── Search ────────────────────────────────────────────────────────────────────
+
+export interface SearchOptions {
+  caseSensitive?: boolean;
+  diacriticSensitive?: boolean;
+  wholeWord?: boolean;
+  regularExpression?: boolean;
+  language?: string;
+}
+
+export interface SearchResult {
+  locator: Locator;
+  before?: string;
+  highlight?: string;
+  after?: string;
+}
+
+export interface SearchResultsEvent {
+  query: string;
+  results: SearchResult[];
+  totalCount?: number;
+  isSupported: boolean;
+}
+
 // ── Events ───────────────────────────────────────────────────────────────────
 
 export interface PublicationReadyEvent {
@@ -236,6 +260,7 @@ export interface ReadiumViewProps extends HybridViewProps {
   onDecorationActivated?: (event: DecorationActivatedEvent) => void;
   onSelectionChange?: (event: SelectionEvent) => void;
   onSelectionAction?: (event: SelectionActionEvent) => void;
+  onSearchResults?: (event: SearchResultsEvent) => void;
 }
 
 export interface ReadiumViewMethods extends HybridViewMethods {
@@ -243,6 +268,8 @@ export interface ReadiumViewMethods extends HybridViewMethods {
   goForward(): void;
   goBackward(): void;
   destroy(): void;
+  search(query: string, options?: SearchOptions): void;
+  clearSearch(): void;
 }
 
 export type ReadiumView = HybridView<ReadiumViewProps, ReadiumViewMethods>;

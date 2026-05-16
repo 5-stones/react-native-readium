@@ -114,6 +114,11 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
                 onEditHighlight={readerHandle.editHighlight}
                 onClearBook={onClearBook}
                 onClose={handleClose}
+                onSearch={readerHandle.search}
+                onClearSearch={readerHandle.clearSearch}
+                searchResults={readerHandle.searchResults}
+                isSearching={readerHandle.isSearching}
+                isSearchSupported={readerHandle.isSearchSupported}
               />
             ) : (
               <EmptyBar onClose={handleClose} />

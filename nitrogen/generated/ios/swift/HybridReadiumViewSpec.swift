@@ -19,12 +19,15 @@ public protocol HybridReadiumViewSpec_protocol: HybridObject, HybridView {
   var onDecorationActivated: ((_ event: DecorationActivatedEvent) -> Void)? { get set }
   var onSelectionChange: ((_ event: SelectionEvent) -> Void)? { get set }
   var onSelectionAction: ((_ event: SelectionActionEvent) -> Void)? { get set }
+  var onSearchResults: ((_ event: SearchResultsEvent) -> Void)? { get set }
 
   // Methods
   func goTo(locator: Locator) throws -> Void
   func goForward() throws -> Void
   func goBackward() throws -> Void
   func destroy() throws -> Void
+  func search(query: String, options: SearchOptions?) throws -> Void
+  func clearSearch() throws -> Void
 }
 
 public extension HybridReadiumViewSpec_protocol {

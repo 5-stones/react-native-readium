@@ -45,6 +45,7 @@ class HybridReadiumView: HybridReadiumViewSpec {
   var onDecorationActivated: ((DecorationActivatedEvent) -> Void)? = nil
   var onSelectionChange: ((SelectionEvent) -> Void)? = nil
   var onSelectionAction: ((SelectionActionEvent) -> Void)? = nil
+  var onSearchResults: ((SearchResultsEvent) -> Void)? = nil
 
   // MARK: - Private state
 
@@ -274,6 +275,65 @@ class HybridReadiumView: HybridReadiumViewSpec {
         self?.cleanup()
       }
     }
+  }
+
+  func search(query: String, options: SearchOptions?) {
+    guard let publication = readerViewController?.publication else {
+      onSearchResults?(SearchResultsEvent(
+        query: query, results: [], totalCount: nil, isSupported: false
+      ))
+      return
+    }
+
+    let readiumOptions = options.map { nitroSearchOptionsToReadium($0) }
+
+    Task { @MainActor [weak self] in
+      guard let self else { return }
+
+      let searchResult = await publication.search(query: query, options: readiumOptions)
+
+      switch searchResult {
+      case .failure(let error) where "\(error)".contains("publicationNotSearchable"):
+        self.onSearchResults?(SearchResultsEvent(
+          query: query, results: [], totalCount: nil, isSupported: false
+        ))
+
+      case .failure:
+        self.onSearchResults?(SearchResultsEvent(
+          query: query, results: [], totalCount: nil, isSupported: true
+        ))
+
+      case .success(let iterator):
+        var allLocators: [RLocator] = []
+        var done = false
+        while !done {
+          let pageResult = await iterator.next()
+          switch pageResult {
+          case .success(let page):
+            if let page = page {
+              allLocators.append(contentsOf: page.locators)
+            } else {
+              done = true
+            }
+          case .failure:
+            done = true
+          }
+        }
+        let total = iterator.resultCount
+        iterator.close()
+
+        self.onSearchResults?(SearchResultsEvent(
+          query: query,
+          results: allLocators.map { nitroSearchResultFromReadium($0) },
+          totalCount: total.map { Double($0) },
+          isSupported: true
+        ))
+      }
+    }
+  }
+
+  func clearSearch() {
+    // Search state is managed by JS; nothing to clean up natively
   }
 
   // Cleanup

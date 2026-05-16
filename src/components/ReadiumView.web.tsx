@@ -70,6 +70,12 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
         goBackward: () => {
           navigator?.goBackward(true, () => {});
         },
+        search: () => {
+          /* Search not yet supported on web */
+        },
+        clearSearch: () => {
+          /* Search not yet supported on web */
+        },
         /** @deprecated Use goForward() */
         nextPage: () => {
           navigator?.goForward(true, () => {});

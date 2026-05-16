@@ -19,6 +19,8 @@ import com.reactnativereadium.utils.readiumLinkToNitro
 import com.reactnativereadium.utils.flattenReadiumLinks
 import com.reactnativereadium.utils.readiumDecorationToNitro
 import com.reactnativereadium.utils.readiumMetadataToNitro
+import com.reactnativereadium.utils.nitroSearchOptionsToReadium
+import org.readium.r2.shared.publication.services.search.SearchService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -102,6 +104,7 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
   override var onDecorationActivated: ((event: DecorationActivatedEvent) -> Unit)? = null
   override var onSelectionChange: ((event: SelectionEvent) -> Unit)? = null
   override var onSelectionAction: ((event: SelectionActionEvent) -> Unit)? = null
+  override var onSearchResults: ((event: SearchResultsEvent) -> Unit)? = null
 
   private fun ensureService() {
     if (svc == null) {
@@ -164,6 +167,24 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
     } else {
       hostView.post { cleanup() }
     }
+  }
+
+  override fun search(query: String, options: SearchOptions?) {
+    val frag = fragment as? EpubReaderFragment ?: run {
+      onSearchResults?.invoke(SearchResultsEvent(
+        query = query,
+        results = emptyArray(),
+        totalCount = null,
+        isSupported = false
+      ))
+      return
+    }
+    val readiumOptions = options?.let { nitroSearchOptionsToReadium(it) } ?: SearchService.Options()
+    hostView.post { frag.search(query, readiumOptions) }
+  }
+
+  override fun clearSearch() {
+    (fragment as? EpubReaderFragment)?.clearSearch()
   }
 
   // MARK: - Fragment management
@@ -336,6 +357,21 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
             locator = readiumLocatorToNitro(event.locator),
             selectedText = event.selectedText,
             actionId = event.actionId
+          ))
+        }
+        is ReaderViewModel.Event.SearchResults -> {
+          onSearchResults?.invoke(SearchResultsEvent(
+            query = event.query,
+            results = event.results.map { locator ->
+              SearchResult(
+                locator = readiumLocatorToNitro(locator),
+                before = locator.text.before,
+                highlight = locator.text.highlight,
+                after = locator.text.after
+              )
+            }.toTypedArray(),
+            totalCount = event.totalCount?.toDouble(),
+            isSupported = event.isSupported
           ))
         }
       }

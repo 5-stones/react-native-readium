@@ -53,6 +53,12 @@ namespace margelo::nitro::readium { struct Point; }
 namespace margelo::nitro::readium { struct SelectionEvent; }
 // Forward declaration of `SelectionActionEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct SelectionActionEvent; }
+// Forward declaration of `SearchResultsEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchResultsEvent; }
+// Forward declaration of `SearchResult` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchResult; }
+// Forward declaration of `SearchOptions` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchOptions; }
 
 #include "ReadiumFile.hpp"
 #include <optional>
@@ -111,6 +117,13 @@ namespace margelo::nitro::readium { struct SelectionActionEvent; }
 #include "SelectionActionEvent.hpp"
 #include "JFunc_void_SelectionActionEvent.hpp"
 #include "JSelectionActionEvent.hpp"
+#include "SearchResultsEvent.hpp"
+#include "JFunc_void_SearchResultsEvent.hpp"
+#include "JSearchResultsEvent.hpp"
+#include "SearchResult.hpp"
+#include "JSearchResult.hpp"
+#include "SearchOptions.hpp"
+#include "JSearchOptions.hpp"
 
 namespace margelo::nitro::readium {
 
@@ -299,6 +312,23 @@ namespace margelo::nitro::readium {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_SelectionActionEvent::javaobject> /* onSelectionAction */)>("setOnSelectionAction_cxx");
     method(_javaPart, onSelectionAction.has_value() ? JFunc_void_SelectionActionEvent_cxx::fromCpp(onSelectionAction.value()) : nullptr);
   }
+  std::optional<std::function<void(const SearchResultsEvent& /* event */)>> JHybridReadiumViewSpec::getOnSearchResults() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void_SearchResultsEvent::javaobject>()>("getOnSearchResults_cxx");
+    auto __result = method(_javaPart);
+    return __result != nullptr ? std::make_optional([&]() -> std::function<void(const SearchResultsEvent& /* event */)> {
+      if (__result->isInstanceOf(JFunc_void_SearchResultsEvent_cxx::javaClassStatic())) [[likely]] {
+        auto downcast = jni::static_ref_cast<JFunc_void_SearchResultsEvent_cxx::javaobject>(__result);
+        return downcast->cthis()->getFunction();
+      } else {
+        auto __resultRef = jni::make_global(__result);
+        return JNICallable<JFunc_void_SearchResultsEvent, void(SearchResultsEvent)>(std::move(__resultRef));
+      }
+    }()) : std::nullopt;
+  }
+  void JHybridReadiumViewSpec::setOnSearchResults(const std::optional<std::function<void(const SearchResultsEvent& /* event */)>>& onSearchResults) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_SearchResultsEvent::javaobject> /* onSearchResults */)>("setOnSearchResults_cxx");
+    method(_javaPart, onSearchResults.has_value() ? JFunc_void_SearchResultsEvent_cxx::fromCpp(onSearchResults.value()) : nullptr);
+  }
 
   // Methods
   void JHybridReadiumViewSpec::goTo(const Locator& locator) {
@@ -315,6 +345,14 @@ namespace margelo::nitro::readium {
   }
   void JHybridReadiumViewSpec::destroy() {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void()>("destroy");
+    method(_javaPart);
+  }
+  void JHybridReadiumViewSpec::search(const std::string& query, const std::optional<SearchOptions>& options) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* query */, jni::alias_ref<JSearchOptions> /* options */)>("search");
+    method(_javaPart, jni::make_jstring(query), options.has_value() ? JSearchOptions::fromCpp(options.value()) : nullptr);
+  }
+  void JHybridReadiumViewSpec::clearSearch() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void()>("clearSearch");
     method(_javaPart);
   }
 

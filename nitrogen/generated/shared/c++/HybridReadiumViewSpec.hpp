@@ -31,6 +31,10 @@ namespace margelo::nitro::readium { struct DecorationActivatedEvent; }
 namespace margelo::nitro::readium { struct SelectionEvent; }
 // Forward declaration of `SelectionActionEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct SelectionActionEvent; }
+// Forward declaration of `SearchResultsEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchResultsEvent; }
+// Forward declaration of `SearchOptions` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchOptions; }
 
 #include "ReadiumFile.hpp"
 #include <optional>
@@ -44,6 +48,9 @@ namespace margelo::nitro::readium { struct SelectionActionEvent; }
 #include "DecorationActivatedEvent.hpp"
 #include "SelectionEvent.hpp"
 #include "SelectionActionEvent.hpp"
+#include "SearchResultsEvent.hpp"
+#include <string>
+#include "SearchOptions.hpp"
 
 namespace margelo::nitro::readium {
 
@@ -90,6 +97,8 @@ namespace margelo::nitro::readium {
       virtual void setOnSelectionChange(const std::optional<std::function<void(const SelectionEvent& /* event */)>>& onSelectionChange) = 0;
       virtual std::optional<std::function<void(const SelectionActionEvent& /* event */)>> getOnSelectionAction() = 0;
       virtual void setOnSelectionAction(const std::optional<std::function<void(const SelectionActionEvent& /* event */)>>& onSelectionAction) = 0;
+      virtual std::optional<std::function<void(const SearchResultsEvent& /* event */)>> getOnSearchResults() = 0;
+      virtual void setOnSearchResults(const std::optional<std::function<void(const SearchResultsEvent& /* event */)>>& onSearchResults) = 0;
 
     public:
       // Methods
@@ -97,6 +106,8 @@ namespace margelo::nitro::readium {
       virtual void goForward() = 0;
       virtual void goBackward() = 0;
       virtual void destroy() = 0;
+      virtual void search(const std::string& query, const std::optional<SearchOptions>& options) = 0;
+      virtual void clearSearch() = 0;
 
     protected:
       // Hybrid Setup

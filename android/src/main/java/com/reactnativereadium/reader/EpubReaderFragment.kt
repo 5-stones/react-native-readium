@@ -24,6 +24,9 @@ import org.readium.r2.navigator.epub.EpubNavigatorFactory
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
 import org.readium.r2.navigator.preferences.Theme
+import org.readium.r2.shared.ExperimentalReadiumApi
+import org.readium.r2.shared.publication.services.search.SearchService
+import org.readium.r2.shared.publication.services.search.search
 
 data class SelectionAction(
     val id: String,
@@ -101,6 +104,42 @@ class EpubReaderFragment : VisualReaderFragment() {
 
     fun updateSelectionActions(actions: List<SelectionAction>) {
       selectionActions = actions
+    }
+
+    @OptIn(ExperimentalReadiumApi::class)
+    fun search(query: String, options: SearchService.Options = SearchService.Options()) {
+      viewLifecycleOwner.lifecycleScope.launch {
+        val iterator = model.publication.search(query, options)
+        if (iterator == null) {
+          channel.send(ReaderViewModel.Event.SearchResults(
+            query = query,
+            results = emptyList(),
+            totalCount = null,
+            isSupported = false
+          ))
+          return@launch
+        }
+        val results = mutableListOf<org.readium.r2.shared.publication.Locator>()
+        try {
+          var page = iterator.next().getOrNull()
+          while (page != null) {
+            results.addAll(page.locators)
+            page = iterator.next().getOrNull()
+          }
+        } catch (_: Exception) { /* return partial results */ } finally {
+          iterator.close()
+        }
+        channel.send(ReaderViewModel.Event.SearchResults(
+          query = query,
+          results = results,
+          totalCount = iterator.resultCount,
+          isSupported = true
+        ))
+      }
+    }
+
+    fun clearSearch() {
+      // Search state is managed by JS; nothing to clean up natively
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

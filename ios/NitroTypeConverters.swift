@@ -168,6 +168,25 @@ func flattenReadiumLinks(_ links: [RLink], depth: Double = 0, parentHref: String
   return result
 }
 
+func nitroSearchOptionsToReadium(_ options: SearchOptions) -> ReadiumShared.SearchOptions {
+  ReadiumShared.SearchOptions(
+    caseSensitive: options.caseSensitive,
+    diacriticSensitive: options.diacriticSensitive,
+    wholeWord: options.wholeWord,
+    language: options.language.map { Language(code: .bcp47($0)) },
+    regularExpression: options.regularExpression
+  )
+}
+
+func nitroSearchResultFromReadium(_ locator: RLocator) -> SearchResult {
+  SearchResult(
+    locator: readiumLocatorToNitro(locator),
+    before: locator.text.before,
+    highlight: locator.text.highlight,
+    after: locator.text.after
+  )
+}
+
 func readiumMetadataToNitro(_ meta: ReadiumShared.Metadata) -> PublicationMetadata {
   func contributors(_ list: [ReadiumShared.Contributor]) -> [margelo.nitro.readium.Contributor]? {
     guard !list.isEmpty else { return nil }
