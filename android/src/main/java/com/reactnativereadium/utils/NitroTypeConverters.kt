@@ -324,11 +324,12 @@ internal fun readiumMetadataToNitro(meta: ReadiumMetadata): PublicationMetadata 
 
 internal fun colorToHex(color: Int): String = String.format("#%08X", color)
 
-internal fun nitroSearchOptionsToReadium(options: SearchOptions): SearchService.Options =
-  SearchService.Options(
-    caseSensitive = options.caseSensitive ?: false,
-    diacriticSensitive = options.diacriticSensitive ?: false,
-    wholeWord = options.wholeWord ?: false,
-    regularExpression = options.regularExpression ?: false,
-    language = options.language
-  )
+internal fun nitroSearchOptionsToReadium(options: SearchOptions): SearchService.Options {
+  var result = SearchService.Options()
+  options.caseSensitive?.let { result = result.copy(caseSensitive = it) }
+  options.diacriticSensitive?.let { result = result.copy(diacriticSensitive = it) }
+  options.wholeWord?.let { result = result.copy(wholeWord = it) }
+  options.regularExpression?.let { result = result.copy(regularExpression = it) }
+  options.language?.let { result = result.copy(language = it) }
+  return result
+}

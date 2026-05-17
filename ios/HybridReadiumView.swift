@@ -52,6 +52,7 @@ class HybridReadiumView: HybridReadiumViewSpec {
   private let hostView = UIView()
   private var readerService = ReaderService()
   private var readerViewController: ReaderViewController?
+  private var currentSearchTask: Task<Void, Never>?
   private var subscriptions = Set<AnyCancellable>()
   private var pendingFileUrl: String?
   private var pendingInitialLocation: Locator?
@@ -278,7 +279,16 @@ class HybridReadiumView: HybridReadiumViewSpec {
   }
 
   func search(query: String, options: SearchOptions?) {
+    currentSearchTask?.cancel()
+
     guard let publication = readerViewController?.publication else {
+      onSearchResults?(SearchResultsEvent(
+        query: query, results: [], totalCount: nil, isSupported: false
+      ))
+      return
+    }
+
+    guard publication.findService(SearchService.self) != nil else {
       onSearchResults?(SearchResultsEvent(
         query: query, results: [], totalCount: nil, isSupported: false
       ))
@@ -287,17 +297,12 @@ class HybridReadiumView: HybridReadiumViewSpec {
 
     let readiumOptions = options.map { nitroSearchOptionsToReadium($0) }
 
-    Task { @MainActor [weak self] in
-      guard let self else { return }
+    currentSearchTask = Task { @MainActor [weak self] in
+      guard let self, !Task.isCancelled else { return }
 
       let searchResult = await publication.search(query: query, options: readiumOptions)
 
       switch searchResult {
-      case .failure(let error) where "\(error)".contains("publicationNotSearchable"):
-        self.onSearchResults?(SearchResultsEvent(
-          query: query, results: [], totalCount: nil, isSupported: false
-        ))
-
       case .failure:
         self.onSearchResults?(SearchResultsEvent(
           query: query, results: [], totalCount: nil, isSupported: true
@@ -306,7 +311,7 @@ class HybridReadiumView: HybridReadiumViewSpec {
       case .success(let iterator):
         var allLocators: [RLocator] = []
         var done = false
-        while !done {
+        while !done && !Task.isCancelled {
           let pageResult = await iterator.next()
           switch pageResult {
           case .success(let page):
@@ -315,13 +320,15 @@ class HybridReadiumView: HybridReadiumViewSpec {
             } else {
               done = true
             }
-          case .failure:
+          case .failure(let error):
+            print("[Search] iteration error: \(error)")
             done = true
           }
         }
         let total = iterator.resultCount
         iterator.close()
 
+        guard !Task.isCancelled else { return }
         self.onSearchResults?(SearchResultsEvent(
           query: query,
           results: allLocators.map { nitroSearchResultFromReadium($0) },

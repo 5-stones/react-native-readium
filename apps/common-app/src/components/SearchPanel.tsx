@@ -123,7 +123,8 @@ export const SearchPanel: React.FC<SearchPanelProps> = ({
   );
 
   const keyExtractor = useCallback(
-    (_: SearchResult, index: number) => String(index),
+    (item: SearchResult, index: number) =>
+      `${item.locator.href}-${item.locator.locations?.progression ?? ''}-${index}`,
     []
   );
 

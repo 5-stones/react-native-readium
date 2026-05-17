@@ -14,6 +14,7 @@ import androidx.fragment.app.commitNow
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.reactnativereadium.R
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.readium.r2.navigator.DecorableNavigator
 import org.readium.r2.navigator.SelectableNavigator
@@ -50,6 +51,7 @@ class EpubReaderFragment : VisualReaderFragment() {
 
     // Selection actions configuration
     private var selectionActions: List<SelectionAction> = emptyList()
+    private var currentSearchJob: Job? = null
 
     // Custom selection action mode callback for adding custom action buttons
     val customSelectionActionModeCallback: ActionMode.Callback by lazy {
@@ -108,7 +110,9 @@ class EpubReaderFragment : VisualReaderFragment() {
 
     @OptIn(ExperimentalReadiumApi::class)
     fun search(query: String, options: SearchService.Options = SearchService.Options()) {
-      viewLifecycleOwner.lifecycleScope.launch {
+      currentSearchJob?.cancel()
+
+      currentSearchJob = viewLifecycleOwner.lifecycleScope.launch {
         val iterator = model.publication.search(query, options)
         if (iterator == null) {
           channel.send(ReaderViewModel.Event.SearchResults(
@@ -119,20 +123,27 @@ class EpubReaderFragment : VisualReaderFragment() {
           ))
           return@launch
         }
+
         val results = mutableListOf<org.readium.r2.shared.publication.Locator>()
+        var resultCount: Int? = null
         try {
           var page = iterator.next().getOrNull()
           while (page != null) {
             results.addAll(page.locators)
             page = iterator.next().getOrNull()
           }
-        } catch (_: Exception) { /* return partial results */ } finally {
+          resultCount = iterator.resultCount
+        } catch (e: kotlinx.coroutines.CancellationException) {
+          throw e
+        } catch (e: Exception) {
+          android.util.Log.w("EpubReaderFragment", "Search iteration error", e)
+        } finally {
           iterator.close()
         }
         channel.send(ReaderViewModel.Event.SearchResults(
           query = query,
           results = results,
-          totalCount = iterator.resultCount,
+          totalCount = resultCount,
           isSupported = true
         ))
       }

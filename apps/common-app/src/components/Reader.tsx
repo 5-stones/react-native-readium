@@ -83,13 +83,12 @@ export const Reader: React.FC<ReaderProps> = ({
   } = useReaderState({ initialPreferences, onPreferencesChange });
 
   const {
-    query: searchQuery,
     results: searchResults,
     isSearching,
     isSupported: isSearchSupported,
     handleSearchResults,
     markSearching,
-    clear: clearSearchState,
+    clear: clearSearch,
   } = useSearch();
 
   const navigateToLocator = useCallback((locator: Locator) => {
@@ -100,10 +99,6 @@ export const Reader: React.FC<ReaderProps> = ({
     markSearching();
     ref.current?.search(query, options);
   }, [markSearching]);
-
-  const clearSearch = useCallback(() => {
-    clearSearchState();
-  }, [clearSearchState]);
 
   const navigateToTocItem = useCallback((item: Link) => {
     ref.current?.goTo({
