@@ -38,12 +38,12 @@ public extension SearchResultsEvent {
   var query: String {
     return String(self.__query)
   }
-
+  
   @inline(__always)
   var results: [SearchResult] {
     return self.__results.map({ __item in __item })
   }
-
+  
   @inline(__always)
   var totalCount: Double? {
     return { () -> Double? in
@@ -55,7 +55,7 @@ public extension SearchResultsEvent {
       }
     }()
   }
-
+  
   @inline(__always)
   var isSupported: Bool {
     return self.__isSupported

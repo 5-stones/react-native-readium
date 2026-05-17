@@ -31,27 +31,27 @@ abstract class HybridReadiumViewSpec: HybridView() {
   @set:DoNotStrip
   @set:Keep
   abstract var file: ReadiumFile?
-
+  
   @get:DoNotStrip
   @get:Keep
   @set:DoNotStrip
   @set:Keep
   abstract var preferences: Preferences?
-
+  
   @get:DoNotStrip
   @get:Keep
   @set:DoNotStrip
   @set:Keep
   abstract var decorations: Array<DecorationGroup>?
-
+  
   @get:DoNotStrip
   @get:Keep
   @set:DoNotStrip
   @set:Keep
   abstract var selectionActions: Array<SelectionAction>?
-
+  
   abstract var onLocationChange: ((locator: Locator) -> Unit)?
-
+  
   private var onLocationChange_cxx: Func_void_Locator?
     @Keep
     @DoNotStrip
@@ -63,9 +63,9 @@ abstract class HybridReadiumViewSpec: HybridView() {
     set(value) {
       onLocationChange = value?.let { it }
     }
-
+  
   abstract var onPublicationReady: ((event: PublicationReadyEvent) -> Unit)?
-
+  
   private var onPublicationReady_cxx: Func_void_PublicationReadyEvent?
     @Keep
     @DoNotStrip
@@ -77,9 +77,9 @@ abstract class HybridReadiumViewSpec: HybridView() {
     set(value) {
       onPublicationReady = value?.let { it }
     }
-
+  
   abstract var onDecorationActivated: ((event: DecorationActivatedEvent) -> Unit)?
-
+  
   private var onDecorationActivated_cxx: Func_void_DecorationActivatedEvent?
     @Keep
     @DoNotStrip
@@ -91,9 +91,9 @@ abstract class HybridReadiumViewSpec: HybridView() {
     set(value) {
       onDecorationActivated = value?.let { it }
     }
-
+  
   abstract var onSelectionChange: ((event: SelectionEvent) -> Unit)?
-
+  
   private var onSelectionChange_cxx: Func_void_SelectionEvent?
     @Keep
     @DoNotStrip
@@ -105,9 +105,9 @@ abstract class HybridReadiumViewSpec: HybridView() {
     set(value) {
       onSelectionChange = value?.let { it }
     }
-
+  
   abstract var onSelectionAction: ((event: SelectionActionEvent) -> Unit)?
-
+  
   private var onSelectionAction_cxx: Func_void_SelectionActionEvent?
     @Keep
     @DoNotStrip
@@ -119,9 +119,9 @@ abstract class HybridReadiumViewSpec: HybridView() {
     set(value) {
       onSelectionAction = value?.let { it }
     }
-
+  
   abstract var onSearchResults: ((event: SearchResultsEvent) -> Unit)?
-
+  
   private var onSearchResults_cxx: Func_void_SearchResultsEvent?
     @Keep
     @DoNotStrip
@@ -138,26 +138,22 @@ abstract class HybridReadiumViewSpec: HybridView() {
   @DoNotStrip
   @Keep
   abstract fun goTo(locator: Locator): Unit
-
+  
   @DoNotStrip
   @Keep
   abstract fun goForward(): Unit
-
+  
   @DoNotStrip
   @Keep
   abstract fun goBackward(): Unit
-
+  
   @DoNotStrip
   @Keep
   abstract fun destroy(): Unit
-
+  
   @DoNotStrip
   @Keep
   abstract fun search(query: String, options: SearchOptions?): Unit
-
-  @DoNotStrip
-  @Keep
-  abstract fun clearSearch(): Unit
 
   // Default implementation of `HybridObject.toString()`
   override fun toString(): String {

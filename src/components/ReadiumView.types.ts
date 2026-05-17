@@ -17,7 +17,6 @@ export type ReadiumViewRef = {
   goForward: () => void;
   goBackward: () => void;
   search: (query: string, options?: SearchOptions) => void;
-  clearSearch: () => void;
 };
 
 export type ReadiumProps = {

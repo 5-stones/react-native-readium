@@ -72,7 +72,6 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
         goForward: () => hybridRef.current?.goForward(),
         goBackward: () => hybridRef.current?.goBackward(),
         search: (query, options) => hybridRef.current?.search(query, options),
-        clearSearch: () => hybridRef.current?.clearSearch(),
       }),
       []
     );

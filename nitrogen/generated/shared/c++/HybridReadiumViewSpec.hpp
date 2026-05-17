@@ -107,7 +107,6 @@ namespace margelo::nitro::readium {
       virtual void goBackward() = 0;
       virtual void destroy() = 0;
       virtual void search(const std::string& query, const std::optional<SearchOptions>& options) = 0;
-      virtual void clearSearch() = 0;
 
     protected:
       // Hybrid Setup

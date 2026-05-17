@@ -44,7 +44,7 @@ public extension SearchResult {
   var locator: Locator {
     return self.__locator
   }
-
+  
   @inline(__always)
   var before: String? {
     return { () -> String? in
@@ -56,7 +56,7 @@ public extension SearchResult {
       }
     }()
   }
-
+  
   @inline(__always)
   var highlight: String? {
     return { () -> String? in
@@ -68,7 +68,7 @@ public extension SearchResult {
       }
     }()
   }
-
+  
   @inline(__always)
   var after: String? {
     return { () -> String? in

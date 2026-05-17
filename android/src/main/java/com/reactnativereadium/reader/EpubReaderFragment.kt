@@ -138,10 +138,6 @@ class EpubReaderFragment : VisualReaderFragment() {
       }
     }
 
-    fun clearSearch() {
-      // Search state is managed by JS; nothing to clean up natively
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
       check(::navigatorFactory.isInitialized) { "EpubReaderFragment factory was not initialized" }
 

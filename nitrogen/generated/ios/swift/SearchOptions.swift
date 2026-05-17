@@ -63,7 +63,7 @@ public extension SearchOptions {
       }
     }()
   }
-
+  
   @inline(__always)
   var diacriticSensitive: Bool? {
     return { () -> Bool? in
@@ -75,7 +75,7 @@ public extension SearchOptions {
       }
     }()
   }
-
+  
   @inline(__always)
   var wholeWord: Bool? {
     return { () -> Bool? in
@@ -87,7 +87,7 @@ public extension SearchOptions {
       }
     }()
   }
-
+  
   @inline(__always)
   var regularExpression: Bool? {
     return { () -> Bool? in
@@ -99,7 +99,7 @@ public extension SearchOptions {
       }
     }()
   }
-
+  
   @inline(__always)
   var language: String? {
     return { () -> String? in

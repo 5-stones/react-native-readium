@@ -269,7 +269,6 @@ export interface ReadiumViewMethods extends HybridViewMethods {
   goBackward(): void;
   destroy(): void;
   search(query: string, options?: SearchOptions): void;
-  clearSearch(): void;
 }
 
 export type ReadiumView = HybridView<ReadiumViewProps, ReadiumViewMethods>;

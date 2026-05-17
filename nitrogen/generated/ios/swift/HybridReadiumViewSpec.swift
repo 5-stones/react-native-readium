@@ -27,7 +27,6 @@ public protocol HybridReadiumViewSpec_protocol: HybridObject, HybridView {
   func goBackward() throws -> Void
   func destroy() throws -> Void
   func search(query: String, options: SearchOptions?) throws -> Void
-  func clearSearch() throws -> Void
 }
 
 public extension HybridReadiumViewSpec_protocol {

@@ -103,7 +103,6 @@ export const Reader: React.FC<ReaderProps> = ({
 
   const clearSearch = useCallback(() => {
     clearSearchState();
-    ref.current?.clearSearch();
   }, [clearSearchState]);
 
   const navigateToTocItem = useCallback((item: Link) => {

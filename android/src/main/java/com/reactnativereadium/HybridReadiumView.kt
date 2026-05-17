@@ -183,10 +183,6 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
     hostView.post { frag.search(query, readiumOptions) }
   }
 
-  override fun clearSearch() {
-    (fragment as? EpubReaderFragment)?.clearSearch()
-  }
-
   // MARK: - Fragment management
 
   /**

@@ -246,12 +246,6 @@ namespace margelo::nitro::readium {
         std::rethrow_exception(__result.error());
       }
     }
-    inline void clearSearch() override {
-      auto __result = _swiftPart.clearSearch();
-      if (__result.hasError()) [[unlikely]] {
-        std::rethrow_exception(__result.error());
-      }
-    }
 
   private:
     NitroReadium::HybridReadiumViewSpec_cxx _swiftPart;

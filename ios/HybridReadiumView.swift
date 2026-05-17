@@ -332,10 +332,6 @@ class HybridReadiumView: HybridReadiumViewSpec {
     }
   }
 
-  func clearSearch() {
-    // Search state is managed by JS; nothing to clean up natively
-  }
-
   // Cleanup
   func cleanup() {
     guard let vc = readerViewController else { return }

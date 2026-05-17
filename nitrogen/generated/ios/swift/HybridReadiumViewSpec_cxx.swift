@@ -84,7 +84,7 @@ open class HybridReadiumViewSpec_cxx {
     }
   }
 
-
+  
 
   /**
    * Get the memory size of the Swift class (plus size of any other allocations)
@@ -137,7 +137,7 @@ open class HybridReadiumViewSpec_cxx {
       self.__implementation.file = newValue.value
     }
   }
-
+  
   public final var preferences: bridge.std__optional_Preferences_ {
     @inline(__always)
     get {
@@ -154,7 +154,7 @@ open class HybridReadiumViewSpec_cxx {
       self.__implementation.preferences = newValue.value
     }
   }
-
+  
   public final var decorations: bridge.std__optional_std__vector_DecorationGroup__ {
     @inline(__always)
     get {
@@ -184,7 +184,7 @@ open class HybridReadiumViewSpec_cxx {
       }()
     }
   }
-
+  
   public final var selectionActions: bridge.std__optional_std__vector_SelectionAction__ {
     @inline(__always)
     get {
@@ -214,7 +214,7 @@ open class HybridReadiumViewSpec_cxx {
       }()
     }
   }
-
+  
   public final var onLocationChange: bridge.std__optional_std__function_void_const_Locator_____locator______ {
     @inline(__always)
     get {
@@ -246,7 +246,7 @@ open class HybridReadiumViewSpec_cxx {
       }()
     }
   }
-
+  
   public final var onPublicationReady: bridge.std__optional_std__function_void_const_PublicationReadyEvent_____event______ {
     @inline(__always)
     get {
@@ -278,7 +278,7 @@ open class HybridReadiumViewSpec_cxx {
       }()
     }
   }
-
+  
   public final var onDecorationActivated: bridge.std__optional_std__function_void_const_DecorationActivatedEvent_____event______ {
     @inline(__always)
     get {
@@ -310,7 +310,7 @@ open class HybridReadiumViewSpec_cxx {
       }()
     }
   }
-
+  
   public final var onSelectionChange: bridge.std__optional_std__function_void_const_SelectionEvent_____event______ {
     @inline(__always)
     get {
@@ -342,7 +342,7 @@ open class HybridReadiumViewSpec_cxx {
       }()
     }
   }
-
+  
   public final var onSelectionAction: bridge.std__optional_std__function_void_const_SelectionActionEvent_____event______ {
     @inline(__always)
     get {
@@ -374,7 +374,7 @@ open class HybridReadiumViewSpec_cxx {
       }()
     }
   }
-
+  
   public final var onSearchResults: bridge.std__optional_std__function_void_const_SearchResultsEvent_____event______ {
     @inline(__always)
     get {
@@ -418,7 +418,7 @@ open class HybridReadiumViewSpec_cxx {
       return bridge.create_Result_void_(__exceptionPtr)
     }
   }
-
+  
   @inline(__always)
   public final func goForward() -> bridge.Result_void_ {
     do {
@@ -429,7 +429,7 @@ open class HybridReadiumViewSpec_cxx {
       return bridge.create_Result_void_(__exceptionPtr)
     }
   }
-
+  
   @inline(__always)
   public final func goBackward() -> bridge.Result_void_ {
     do {
@@ -440,7 +440,7 @@ open class HybridReadiumViewSpec_cxx {
       return bridge.create_Result_void_(__exceptionPtr)
     }
   }
-
+  
   @inline(__always)
   public final func destroy() -> bridge.Result_void_ {
     do {
@@ -451,7 +451,7 @@ open class HybridReadiumViewSpec_cxx {
       return bridge.create_Result_void_(__exceptionPtr)
     }
   }
-
+  
   @inline(__always)
   public final func search(query: std.string, options: bridge.std__optional_SearchOptions_) -> bridge.Result_void_ {
     do {
@@ -462,30 +462,19 @@ open class HybridReadiumViewSpec_cxx {
       return bridge.create_Result_void_(__exceptionPtr)
     }
   }
-
-  @inline(__always)
-  public final func clearSearch() -> bridge.Result_void_ {
-    do {
-      try self.__implementation.clearSearch()
-      return bridge.create_Result_void_()
-    } catch (let __error) {
-      let __exceptionPtr = __error.toCpp()
-      return bridge.create_Result_void_(__exceptionPtr)
-    }
-  }
-
+  
   public final func getView() -> UnsafeMutableRawPointer {
     return Unmanaged.passRetained(__implementation.view).toOpaque()
   }
-
+  
   public final func beforeUpdate() {
     __implementation.beforeUpdate()
   }
-
+  
   public final func afterUpdate() {
     __implementation.afterUpdate()
   }
-
+  
   public final func maybePrepareForRecycle() {
     guard let recyclable = __implementation as? any RecyclableView else { return }
     recyclable.prepareForRecycle()

@@ -78,7 +78,6 @@ namespace margelo::nitro::readium {
     void goBackward() override;
     void destroy() override;
     void search(const std::string& query, const std::optional<SearchOptions>& options) override;
-    void clearSearch() override;
 
   private:
     jni::global_ref<JHybridReadiumViewSpec::JavaPart> _javaPart;

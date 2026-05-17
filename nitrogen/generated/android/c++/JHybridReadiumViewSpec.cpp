@@ -351,9 +351,5 @@ namespace margelo::nitro::readium {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* query */, jni::alias_ref<JSearchOptions> /* options */)>("search");
     method(_javaPart, jni::make_jstring(query), options.has_value() ? JSearchOptions::fromCpp(options.value()) : nullptr);
   }
-  void JHybridReadiumViewSpec::clearSearch() {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<void()>("clearSearch");
-    method(_javaPart);
-  }
 
 } // namespace margelo::nitro::readium
