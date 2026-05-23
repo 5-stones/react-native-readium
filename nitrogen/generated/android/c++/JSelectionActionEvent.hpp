@@ -18,6 +18,7 @@
 #include "LocatorText.hpp"
 #include <optional>
 #include <string>
+#include <vector>
 
 namespace margelo::nitro::readium {
 
@@ -28,7 +29,7 @@ namespace margelo::nitro::readium {
    */
   struct JSelectionActionEvent final: public jni::JavaClass<JSelectionActionEvent> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/SelectionActionEvent;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/SelectionActionEvent;";
 
   public:
     /**

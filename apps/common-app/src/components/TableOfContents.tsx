@@ -1,9 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import type { Link } from 'react-native-readium';
 import { ReaderButton } from './ReaderButton';
 import { BaseModal } from './BaseModal';
 import { modalStyles } from '../styles/modal';
+import { palette, radii, space, typography } from '../styles/theme';
 
 export interface TableOfContentsProps {
   items?: Link[] | null;
@@ -31,32 +33,31 @@ const TocItem: React.FC<TocItemProps> = ({
   return (
     <>
       <TouchableOpacity
-        style={[modalStyles.cardItem, { marginLeft: depth * 20 }]}
+        style={[styles.row, { paddingLeft: space.sm + depth * 18 }]}
         onPress={() => onPress(item)}
-        activeOpacity={0.7}
+        activeOpacity={0.6}
       >
-        <View style={styles.itemContent}>
-          {hasChildren ? (
-            <TouchableOpacity
-              style={styles.toggleButton}
-              onPress={(e) => {
-                e.stopPropagation();
-                onToggle(item.href);
-              }}
-              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-            >
-              <Text style={styles.toggleIcon}>
-                {isExpanded ? '▼' : '▶'}
-              </Text>
-            </TouchableOpacity>
-          ) : (
-            <View style={styles.togglePlaceholder} />
-          )}
-          <Text style={styles.title} numberOfLines={2}>
-            {item.title || item.href}
-          </Text>
-          <Text style={styles.chevron}>›</Text>
-        </View>
+        {hasChildren ? (
+          <TouchableOpacity
+            style={styles.toggleButton}
+            onPress={(e) => {
+              e.stopPropagation();
+              onToggle(item.href);
+            }}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <MaterialIcons
+              name={isExpanded ? 'keyboard-arrow-down' : 'chevron-right'}
+              size={18}
+              color={palette.textSecondary}
+            />
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.togglePlaceholder} />
+        )}
+        <Text style={styles.title} numberOfLines={2}>
+          {item.title || item.href}
+        </Text>
       </TouchableOpacity>
       {hasChildren && isExpanded &&
         item.children!.map((child, idx) => (
@@ -105,11 +106,11 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
 
   return (
     <>
-      <ReaderButton size={35} name="list" onPress={() => setIsOpen(true)} />
+      <ReaderButton size={22} name="format-list-bulleted" onPress={() => setIsOpen(true)} />
 
       <BaseModal
         visible={isOpen}
-        title="Table of Contents"
+        title="Contents"
         onClose={() => setIsOpen(false)}
       >
         {items.length === 0 ? (
@@ -117,16 +118,18 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
             No table of contents available
           </Text>
         ) : (
-          items.map((item, idx) => (
-            <TocItem
-              key={item.href + idx}
-              item={item}
-              depth={0}
-              onPress={handleItemPress}
-              expandedItems={expandedItems}
-              onToggle={handleToggle}
-            />
-          ))
+          <View style={styles.list}>
+            {items.map((item, idx) => (
+              <TocItem
+                key={item.href + idx}
+                item={item}
+                depth={0}
+                onPress={handleItemPress}
+                expandedItems={expandedItems}
+                onToggle={handleToggle}
+              />
+            ))}
+          </View>
         )}
       </BaseModal>
     </>
@@ -134,36 +137,34 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
 };
 
 const styles = StyleSheet.create({
-  itemContent: {
+  list: {
+    backgroundColor: palette.surface,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: palette.border,
+    overflow: 'hidden',
+  },
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    paddingVertical: space.md,
+    paddingRight: space.lg,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: palette.border,
   },
   toggleButton: {
     width: 24,
     height: 24,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 8,
+    marginRight: space.sm,
   },
   togglePlaceholder: {
     width: 24,
-    marginRight: 8,
-  },
-  toggleIcon: {
-    fontSize: 12,
-    color: '#666666',
+    marginRight: space.sm,
   },
   title: {
+    ...typography.body,
     flex: 1,
-    fontSize: 15,
-    fontWeight: '500',
-    color: '#333333',
-    marginRight: 12,
-  },
-  chevron: {
-    fontSize: 24,
-    color: '#999999',
-    fontWeight: '300',
   },
 });

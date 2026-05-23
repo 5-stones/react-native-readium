@@ -32,8 +32,8 @@
 namespace margelo::nitro::readium { struct Locator; }
 
 #include <string>
-#include "Locator.hpp"
 #include <optional>
+#include "Locator.hpp"
 
 namespace margelo::nitro::readium {
 
@@ -43,11 +43,13 @@ namespace margelo::nitro::readium {
   struct ReadiumFile final {
   public:
     std::string url     SWIFT_PRIVATE;
+    std::optional<std::string> mediaType     SWIFT_PRIVATE;
+    std::optional<std::string> formatHint     SWIFT_PRIVATE;
     std::optional<Locator> initialLocation     SWIFT_PRIVATE;
 
   public:
     ReadiumFile() = default;
-    explicit ReadiumFile(std::string url, std::optional<Locator> initialLocation): url(url), initialLocation(initialLocation) {}
+    explicit ReadiumFile(std::string url, std::optional<std::string> mediaType, std::optional<std::string> formatHint, std::optional<Locator> initialLocation): url(url), mediaType(mediaType), formatHint(formatHint), initialLocation(initialLocation) {}
 
   public:
     friend bool operator==(const ReadiumFile& lhs, const ReadiumFile& rhs) = default;
@@ -64,12 +66,16 @@ namespace margelo::nitro {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::readium::ReadiumFile(
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "url"))),
+        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "mediaType"))),
+        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "formatHint"))),
         JSIConverter<std::optional<margelo::nitro::readium::Locator>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "initialLocation")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::readium::ReadiumFile& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "url"), JSIConverter<std::string>::toJSI(runtime, arg.url));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "mediaType"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.mediaType));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "formatHint"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.formatHint));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "initialLocation"), JSIConverter<std::optional<margelo::nitro::readium::Locator>>::toJSI(runtime, arg.initialLocation));
       return obj;
     }
@@ -82,6 +88,8 @@ namespace margelo::nitro {
         return false;
       }
       if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "url")))) return false;
+      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "mediaType")))) return false;
+      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "formatHint")))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::readium::Locator>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "initialLocation")))) return false;
       return true;
     }

@@ -11,7 +11,9 @@ class ReaderViewController: UIViewController, Loggable {
 
   weak var moduleDelegate: ReaderFormatModuleDelegate?
 
-  let navigator: UIViewController & Navigator
+  /// The Readium navigator. May or may not be a UIViewController (audio
+  /// navigators are headless).
+  let navigator: Navigator
   let publication: Publication
   let bookId: String
 
@@ -33,7 +35,7 @@ class ReaderViewController: UIViewController, Loggable {
   }()
 
   init(
-    navigator: UIViewController & Navigator,
+    navigator: Navigator,
     publication: Publication,
     bookId: String
   ) {
@@ -84,9 +86,15 @@ class ReaderViewController: UIViewController, Loggable {
       stackView.leftAnchor.constraint(equalTo: view.leftAnchor)
     ])
 
-    addChild(navigator)
-    stackView.addArrangedSubview(navigator.view)
-    navigator.didMove(toParent: self)
+    // Only add the navigator as a child view controller if it actually IS a
+    // UIViewController. Visual navigators (EPUB, PDF, CBZ) are UIViewControllers
+    // and provide their own UI. Headless navigators (audio) provide no UI and
+    // the host RN side renders its own media controls.
+    if let navigatorVC = navigator as? UIViewController {
+      addChild(navigatorVC)
+      stackView.addArrangedSubview(navigatorVC.view)
+      navigatorVC.didMove(toParent: self)
+    }
 
     stackView.addArrangedSubview(accessibilityToolbar)
 
@@ -94,9 +102,11 @@ class ReaderViewController: UIViewController, Loggable {
     positionLabel.font = .systemFont(ofSize: 12)
     positionLabel.textColor = .darkGray
     view.addSubview(positionLabel)
+    let positionBottomAnchor =
+      (navigator as? UIViewController)?.view.bottomAnchor ?? view.bottomAnchor
     NSLayoutConstraint.activate([
       positionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-      positionLabel.bottomAnchor.constraint(equalTo: navigator.view.bottomAnchor, constant: -20)
+      positionLabel.bottomAnchor.constraint(equalTo: positionBottomAnchor, constant: -20)
     ])
 
     configureNavigatorInteractions()

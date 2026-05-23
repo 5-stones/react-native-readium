@@ -25,7 +25,7 @@ namespace margelo::nitro::readium {
    */
   struct JBelongsTo final: public jni::JavaClass<JBelongsTo> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/BelongsTo;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/BelongsTo;";
 
   public:
     /**
@@ -40,26 +40,26 @@ namespace margelo::nitro::readium {
       static const auto fieldCollection = clazz->getField<jni::JArrayClass<JSeriesInfo>>("collection");
       jni::local_ref<jni::JArrayClass<JSeriesInfo>> collection = this->getFieldValue(fieldCollection);
       return BelongsTo(
-        series != nullptr ? std::make_optional([&]() {
-          size_t __size = series->size();
+        series != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<SeriesInfo> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = series->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt,
-        collection != nullptr ? std::make_optional([&]() {
-          size_t __size = collection->size();
+        }(series)) : std::nullopt,
+        collection != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<SeriesInfo> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = collection->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt
+        }(collection)) : std::nullopt
       );
     }
 
@@ -74,26 +74,26 @@ namespace margelo::nitro::readium {
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
-        value.series.has_value() ? [&]() {
-          size_t __size = value.series.value().size();
+        value.series.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JSeriesInfo>> __array = jni::JArrayClass<JSeriesInfo>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.series.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JSeriesInfo::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.collection.has_value() ? [&]() {
-          size_t __size = value.collection.value().size();
+        }(value.series.value()) : nullptr,
+        value.collection.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JSeriesInfo>> __array = jni::JArrayClass<JSeriesInfo>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.collection.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JSeriesInfo::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr
+        }(value.collection.value()) : nullptr
       );
     }
   };

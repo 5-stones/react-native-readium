@@ -35,7 +35,7 @@ namespace margelo::nitro::readium {
    */
   struct JPublicationMetadata final: public jni::JavaClass<JPublicationMetadata> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/PublicationMetadata;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/PublicationMetadata;";
 
   public:
     /**
@@ -109,156 +109,156 @@ namespace margelo::nitro::readium {
         accessibility != nullptr ? std::make_optional(accessibility->toCpp()) : std::nullopt,
         modified != nullptr ? std::make_optional(modified->toStdString()) : std::nullopt,
         published != nullptr ? std::make_optional(published->toStdString()) : std::nullopt,
-        language != nullptr ? std::make_optional([&]() {
-          size_t __size = language->size();
+        language != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<std::string> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = language->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toStdString());
           }
           return __vector;
-        }()) : std::nullopt,
-        author != nullptr ? std::make_optional([&]() {
-          size_t __size = author->size();
+        }(language)) : std::nullopt,
+        author != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<Contributor> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = author->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt,
-        translator != nullptr ? std::make_optional([&]() {
-          size_t __size = translator->size();
+        }(author)) : std::nullopt,
+        translator != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<Contributor> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = translator->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt,
-        editor != nullptr ? std::make_optional([&]() {
-          size_t __size = editor->size();
+        }(translator)) : std::nullopt,
+        editor != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<Contributor> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = editor->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt,
-        artist != nullptr ? std::make_optional([&]() {
-          size_t __size = artist->size();
+        }(editor)) : std::nullopt,
+        artist != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<Contributor> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = artist->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt,
-        illustrator != nullptr ? std::make_optional([&]() {
-          size_t __size = illustrator->size();
+        }(artist)) : std::nullopt,
+        illustrator != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<Contributor> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = illustrator->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt,
-        letterer != nullptr ? std::make_optional([&]() {
-          size_t __size = letterer->size();
+        }(illustrator)) : std::nullopt,
+        letterer != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<Contributor> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = letterer->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt,
-        penciler != nullptr ? std::make_optional([&]() {
-          size_t __size = penciler->size();
+        }(letterer)) : std::nullopt,
+        penciler != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<Contributor> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = penciler->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt,
-        colorist != nullptr ? std::make_optional([&]() {
-          size_t __size = colorist->size();
+        }(penciler)) : std::nullopt,
+        colorist != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<Contributor> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = colorist->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt,
-        inker != nullptr ? std::make_optional([&]() {
-          size_t __size = inker->size();
+        }(colorist)) : std::nullopt,
+        inker != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<Contributor> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = inker->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt,
-        narrator != nullptr ? std::make_optional([&]() {
-          size_t __size = narrator->size();
+        }(inker)) : std::nullopt,
+        narrator != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<Contributor> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = narrator->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt,
-        contributor != nullptr ? std::make_optional([&]() {
-          size_t __size = contributor->size();
+        }(narrator)) : std::nullopt,
+        contributor != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<Contributor> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = contributor->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt,
-        publisher != nullptr ? std::make_optional([&]() {
-          size_t __size = publisher->size();
+        }(contributor)) : std::nullopt,
+        publisher != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<Contributor> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = publisher->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt,
-        imprint != nullptr ? std::make_optional([&]() {
-          size_t __size = imprint->size();
+        }(publisher)) : std::nullopt,
+        imprint != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<Contributor> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = imprint->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt,
-        subject != nullptr ? std::make_optional([&]() {
-          size_t __size = subject->size();
+        }(imprint)) : std::nullopt,
+        subject != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<Subject> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = subject->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt,
+        }(subject)) : std::nullopt,
         layout != nullptr ? std::make_optional(layout->toStdString()) : std::nullopt,
         readingProgression != nullptr ? std::make_optional(readingProgression->toStdString()) : std::nullopt,
         description != nullptr ? std::make_optional(description->toStdString()) : std::nullopt,
@@ -286,156 +286,156 @@ namespace margelo::nitro::readium {
         value.accessibility.has_value() ? JAccessibility::fromCpp(value.accessibility.value()) : nullptr,
         value.modified.has_value() ? jni::make_jstring(value.modified.value()) : nullptr,
         value.published.has_value() ? jni::make_jstring(value.published.value()) : nullptr,
-        value.language.has_value() ? [&]() {
-          size_t __size = value.language.value().size();
+        value.language.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.language.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = jni::make_jstring(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.author.has_value() ? [&]() {
-          size_t __size = value.author.value().size();
+        }(value.language.value()) : nullptr,
+        value.author.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JContributor>> __array = jni::JArrayClass<JContributor>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.author.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JContributor::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.translator.has_value() ? [&]() {
-          size_t __size = value.translator.value().size();
+        }(value.author.value()) : nullptr,
+        value.translator.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JContributor>> __array = jni::JArrayClass<JContributor>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.translator.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JContributor::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.editor.has_value() ? [&]() {
-          size_t __size = value.editor.value().size();
+        }(value.translator.value()) : nullptr,
+        value.editor.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JContributor>> __array = jni::JArrayClass<JContributor>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.editor.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JContributor::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.artist.has_value() ? [&]() {
-          size_t __size = value.artist.value().size();
+        }(value.editor.value()) : nullptr,
+        value.artist.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JContributor>> __array = jni::JArrayClass<JContributor>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.artist.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JContributor::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.illustrator.has_value() ? [&]() {
-          size_t __size = value.illustrator.value().size();
+        }(value.artist.value()) : nullptr,
+        value.illustrator.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JContributor>> __array = jni::JArrayClass<JContributor>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.illustrator.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JContributor::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.letterer.has_value() ? [&]() {
-          size_t __size = value.letterer.value().size();
+        }(value.illustrator.value()) : nullptr,
+        value.letterer.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JContributor>> __array = jni::JArrayClass<JContributor>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.letterer.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JContributor::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.penciler.has_value() ? [&]() {
-          size_t __size = value.penciler.value().size();
+        }(value.letterer.value()) : nullptr,
+        value.penciler.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JContributor>> __array = jni::JArrayClass<JContributor>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.penciler.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JContributor::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.colorist.has_value() ? [&]() {
-          size_t __size = value.colorist.value().size();
+        }(value.penciler.value()) : nullptr,
+        value.colorist.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JContributor>> __array = jni::JArrayClass<JContributor>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.colorist.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JContributor::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.inker.has_value() ? [&]() {
-          size_t __size = value.inker.value().size();
+        }(value.colorist.value()) : nullptr,
+        value.inker.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JContributor>> __array = jni::JArrayClass<JContributor>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.inker.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JContributor::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.narrator.has_value() ? [&]() {
-          size_t __size = value.narrator.value().size();
+        }(value.inker.value()) : nullptr,
+        value.narrator.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JContributor>> __array = jni::JArrayClass<JContributor>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.narrator.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JContributor::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.contributor.has_value() ? [&]() {
-          size_t __size = value.contributor.value().size();
+        }(value.narrator.value()) : nullptr,
+        value.contributor.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JContributor>> __array = jni::JArrayClass<JContributor>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.contributor.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JContributor::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.publisher.has_value() ? [&]() {
-          size_t __size = value.publisher.value().size();
+        }(value.contributor.value()) : nullptr,
+        value.publisher.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JContributor>> __array = jni::JArrayClass<JContributor>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.publisher.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JContributor::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.imprint.has_value() ? [&]() {
-          size_t __size = value.imprint.value().size();
+        }(value.publisher.value()) : nullptr,
+        value.imprint.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JContributor>> __array = jni::JArrayClass<JContributor>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.imprint.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JContributor::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.subject.has_value() ? [&]() {
-          size_t __size = value.subject.value().size();
+        }(value.imprint.value()) : nullptr,
+        value.subject.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JSubject>> __array = jni::JArrayClass<JSubject>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.subject.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JSubject::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
+        }(value.subject.value()) : nullptr,
         value.layout.has_value() ? jni::make_jstring(value.layout.value()) : nullptr,
         value.readingProgression.has_value() ? jni::make_jstring(value.readingProgression.value()) : nullptr,
         value.description.has_value() ? jni::make_jstring(value.description.value()) : nullptr,

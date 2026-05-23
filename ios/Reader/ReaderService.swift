@@ -35,6 +35,7 @@ final class ReaderService: Loggable {
     locator: ReadiumShared.Locator?,
     selectionActions: [SelectionActionData]?,
     sender: UIViewController?,
+    failure: @escaping (ReaderError) -> Void,
     completion: @escaping (ReaderViewController) -> Void
   ) {
     guard let reader = self.app?.reader else { return }
@@ -45,6 +46,7 @@ final class ReaderService: Loggable {
         receiveCompletion: { [weak self] completion in
           if case .failure(let error) = completion {
             self?.log(.error, "Failed to open publication: \(error)")
+            failure(error)
           }
         },
         receiveValue: { pub in

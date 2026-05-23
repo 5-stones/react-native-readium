@@ -30,10 +30,9 @@ Pod::Spec.new do |s|
   s.swift_version = "5.0"
   s.module_name   = "NitroReadium"
 
-  s.dependency 'ReadiumShared',   '~> 3.5.0'
-  s.dependency 'ReadiumStreamer', '~> 3.5.0'
-  s.dependency 'ReadiumNavigator','~> 3.5.0'
-  s.dependency 'ReadiumAdapterGCDWebServer', '~> 3.5.0'
+  s.dependency 'ReadiumShared',   '~> 3.9.0'
+  s.dependency 'ReadiumStreamer', '~> 3.9.0'
+  s.dependency 'ReadiumNavigator','~> 3.9.0'
   s.dependency 'ReadiumInternal'
 
   # Adds React Native dependencies, framework header search paths, and

@@ -22,7 +22,7 @@ namespace margelo::nitro::readium {
    */
   struct JAccessibilityCertification final: public jni::JavaClass<JAccessibilityCertification> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/AccessibilityCertification;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/AccessibilityCertification;";
 
   public:
     /**

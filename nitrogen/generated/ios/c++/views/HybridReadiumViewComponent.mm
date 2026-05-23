@@ -17,6 +17,13 @@
 #import "HybridReadiumViewSpecSwift.hpp"
 #import "NitroReadium-Swift-Cxx-Umbrella.hpp"
 
+#if __has_include(<cxxreact/ReactNativeVersion.h>)
+#include <cxxreact/ReactNativeVersion.h>
+#if REACT_NATIVE_VERSION_MINOR >= 82
+#define ENABLE_RCT_COMPONENT_VIEW_INVALIDATE
+#endif
+#endif
+
 using namespace facebook;
 using namespace margelo::nitro::readium;
 using namespace margelo::nitro::readium::views;
@@ -102,6 +109,26 @@ using namespace margelo::nitro::readium::views;
     swiftPart.setOnPublicationReady(newViewProps.onPublicationReady.value);
     newViewProps.onPublicationReady.isDirty = false;
   }
+  // onReady: optional
+  if (newViewProps.onReady.isDirty) {
+    swiftPart.setOnReady(newViewProps.onReady.value);
+    newViewProps.onReady.isDirty = false;
+  }
+  // onError: optional
+  if (newViewProps.onError.isDirty) {
+    swiftPart.setOnError(newViewProps.onError.value);
+    newViewProps.onError.isDirty = false;
+  }
+  // onUnsupportedCapability: optional
+  if (newViewProps.onUnsupportedCapability.isDirty) {
+    swiftPart.setOnUnsupportedCapability(newViewProps.onUnsupportedCapability.value);
+    newViewProps.onUnsupportedCapability.isDirty = false;
+  }
+  // onSearchProgress: optional
+  if (newViewProps.onSearchProgress.isDirty) {
+    swiftPart.setOnSearchProgress(newViewProps.onSearchProgress.value);
+    newViewProps.onSearchProgress.isDirty = false;
+  }
   // onDecorationActivated: optional
   if (newViewProps.onDecorationActivated.isDirty) {
     swiftPart.setOnDecorationActivated(newViewProps.onDecorationActivated.value);
@@ -116,6 +143,16 @@ using namespace margelo::nitro::readium::views;
   if (newViewProps.onSelectionAction.isDirty) {
     swiftPart.setOnSelectionAction(newViewProps.onSelectionAction.value);
     newViewProps.onSelectionAction.isDirty = false;
+  }
+  // onMediaStateChange: optional
+  if (newViewProps.onMediaStateChange.isDirty) {
+    swiftPart.setOnMediaStateChange(newViewProps.onMediaStateChange.value);
+    newViewProps.onMediaStateChange.isDirty = false;
+  }
+  // onMediaError: optional
+  if (newViewProps.onMediaError.isDirty) {
+    swiftPart.setOnMediaError(newViewProps.onMediaError.value);
+    newViewProps.onMediaError.isDirty = false;
   }
 
   swiftPart.afterUpdate();
@@ -143,5 +180,13 @@ using namespace margelo::nitro::readium::views;
   NitroReadium::HybridReadiumViewSpec_cxx& swiftPart = _hybridView->getSwiftPart();
   swiftPart.maybePrepareForRecycle();
 }
+
+#ifdef ENABLE_RCT_COMPONENT_VIEW_INVALIDATE
+- (void)invalidate {
+  NitroReadium::HybridReadiumViewSpec_cxx& swiftPart = _hybridView->getSwiftPart();
+  swiftPart.onDropView();
+  [super invalidate];
+}
+#endif
 
 @end

@@ -21,11 +21,11 @@ namespace margelo::nitro::readium {
   class JHybridReadiumViewSpec: public virtual HybridReadiumViewSpec, public virtual JHybridObject {
   public:
     struct JavaPart: public jni::JavaClass<JavaPart, JHybridObject::JavaPart> {
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/HybridReadiumViewSpec;";
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/HybridReadiumViewSpec;";
       std::shared_ptr<JHybridReadiumViewSpec> getJHybridReadiumViewSpec();
     };
     struct CxxPart: public jni::HybridClass<CxxPart, JHybridObject::CxxPart> {
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/HybridReadiumViewSpec$CxxPart;";
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/HybridReadiumViewSpec$CxxPart;";
       static jni::local_ref<jhybriddata> initHybrid(jni::alias_ref<jhybridobject> jThis);
       static void registerNatives();
       using HybridBase::HybridBase;
@@ -62,12 +62,24 @@ namespace margelo::nitro::readium {
     void setOnLocationChange(const std::optional<std::function<void(const Locator& /* locator */)>>& onLocationChange) override;
     std::optional<std::function<void(const PublicationReadyEvent& /* event */)>> getOnPublicationReady() override;
     void setOnPublicationReady(const std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>& onPublicationReady) override;
+    std::optional<std::function<void(const PublicationInfo& /* event */)>> getOnReady() override;
+    void setOnReady(const std::optional<std::function<void(const PublicationInfo& /* event */)>>& onReady) override;
+    std::optional<std::function<void(const ReadiumError& /* error */)>> getOnError() override;
+    void setOnError(const std::optional<std::function<void(const ReadiumError& /* error */)>>& onError) override;
+    std::optional<std::function<void(const UnsupportedCapabilityEvent& /* event */)>> getOnUnsupportedCapability() override;
+    void setOnUnsupportedCapability(const std::optional<std::function<void(const UnsupportedCapabilityEvent& /* event */)>>& onUnsupportedCapability) override;
+    std::optional<std::function<void(const SearchProgressEvent& /* event */)>> getOnSearchProgress() override;
+    void setOnSearchProgress(const std::optional<std::function<void(const SearchProgressEvent& /* event */)>>& onSearchProgress) override;
     std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>> getOnDecorationActivated() override;
     void setOnDecorationActivated(const std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>& onDecorationActivated) override;
     std::optional<std::function<void(const SelectionEvent& /* event */)>> getOnSelectionChange() override;
     void setOnSelectionChange(const std::optional<std::function<void(const SelectionEvent& /* event */)>>& onSelectionChange) override;
     std::optional<std::function<void(const SelectionActionEvent& /* event */)>> getOnSelectionAction() override;
     void setOnSelectionAction(const std::optional<std::function<void(const SelectionActionEvent& /* event */)>>& onSelectionAction) override;
+    std::optional<std::function<void(const MediaState& /* state */)>> getOnMediaStateChange() override;
+    void setOnMediaStateChange(const std::optional<std::function<void(const MediaState& /* state */)>>& onMediaStateChange) override;
+    std::optional<std::function<void(const ReadiumError& /* error */)>> getOnMediaError() override;
+    void setOnMediaError(const std::optional<std::function<void(const ReadiumError& /* error */)>>& onMediaError) override;
 
   public:
     // Methods
@@ -75,6 +87,28 @@ namespace margelo::nitro::readium {
     void goForward() override;
     void goBackward() override;
     void destroy() override;
+    std::shared_ptr<Promise<PublicationInfo>> getPublication() override;
+    std::shared_ptr<Promise<Locator>> getCurrentLocation() override;
+    std::shared_ptr<Promise<SelectionEvent>> getCurrentSelection() override;
+    void clearSelection() override;
+    std::shared_ptr<Promise<bool>> setSelection(const Locator& locator) override;
+    std::shared_ptr<Promise<std::vector<SearchResult>>> search(const std::string& query, const std::optional<SearchOptions>& options) override;
+    void cancelSearch() override;
+    std::shared_ptr<Promise<ResourceResponse>> getResource(const std::string& href) override;
+    std::shared_ptr<Promise<std::vector<Locator>>> getPositions() override;
+    std::shared_ptr<Promise<std::vector<Link>>> getTableOfContents() override;
+    void applyPreferences(const Preferences& preferences) override;
+    void setPdfPreferences(const PdfPreferences& preferences) override;
+    void setComicPreferences(const ComicPreferences& preferences) override;
+    void setAudioPreferences(const AudioPreferences& preferences) override;
+    void play() override;
+    void pause() override;
+    void stop() override;
+    void seekTo(double position) override;
+    void skipToNext() override;
+    void skipToPrevious() override;
+    void setPlaybackRate(double rate) override;
+    std::shared_ptr<Promise<MediaState>> getMediaState() override;
 
   private:
     jni::global_ref<JHybridReadiumViewSpec::JavaPart> _javaPart;

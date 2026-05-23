@@ -34,7 +34,7 @@ namespace margelo::nitro::readium {
    */
   struct JDecorationGroup final: public jni::JavaClass<JDecorationGroup> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/DecorationGroup;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/DecorationGroup;";
 
   public:
     /**
@@ -50,16 +50,16 @@ namespace margelo::nitro::readium {
       jni::local_ref<jni::JArrayClass<JDecoration>> decorations = this->getFieldValue(fieldDecorations);
       return DecorationGroup(
         name->toStdString(),
-        [&]() {
-          size_t __size = decorations->size();
+        [&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<Decoration> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = decorations->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()
+        }(decorations)
       );
     }
 
@@ -75,16 +75,16 @@ namespace margelo::nitro::readium {
       return create(
         clazz,
         jni::make_jstring(value.name),
-        [&]() {
-          size_t __size = value.decorations.size();
+        [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JDecoration>> __array = jni::JArrayClass<JDecoration>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.decorations[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JDecoration::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }()
+        }(value.decorations)
       );
     }
   };

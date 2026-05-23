@@ -6,13 +6,15 @@ import {
   View,
   Platform,
 } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { palette } from '../styles/theme';
 
 export interface ReaderButtonProps {
   name: string;
   onPress: () => void;
   style?: ViewStyle;
   size?: number;
+  color?: string;
 }
 
 export const ReaderButton: React.FC<ReaderButtonProps> = ({
@@ -20,21 +22,21 @@ export const ReaderButton: React.FC<ReaderButtonProps> = ({
   onPress,
   size = 60,
   style = {},
+  color,
 }) => {
+  const iconColor =
+    color ?? (Platform.OS === 'web' ? palette.textSecondary : palette.textPrimary);
+
   return (
     <View style={[styles.container, style]}>
       <TouchableOpacity
         onPress={onPress}
         style={styles.button}
-        activeOpacity={0.7}
+        activeOpacity={0.6}
         accessibilityRole="button"
         accessibilityLabel={`${name} button`}
       >
-        <MaterialIcons
-          name={name}
-          size={size}
-          color={Platform.OS === 'web' ? '#666' : undefined}
-        />
+        <MaterialIcons name={name} size={size} color={iconColor} />
       </TouchableOpacity>
     </View>
   );

@@ -1,23 +1,22 @@
 {
-  "extends": "@react-native/typescript-config",
+  "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "allowJs": false,
-    "allowSyntheticDefaultImports": true,
-    "types": ["jest"],
-    "declaration": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
+    "strict": true,
     "jsx": "react-native",
-    "lib": ["es2017", "DOM", "DOM.Iterable"],
-    "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "react-native-readium": ["../../src/index.tsx"]
-    },
-    "strict": true,
-    "target": "esnext",
-    "skipLibCheck": true
+      "react-native-readium": [
+        "../../src/index.tsx"
+      ]
+    }
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "**/__tests__/*", "**/node_modules", "**/Pods"]
+  "include": [
+    "src",
+    "index.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/__tests__/*",
+    "**/Pods"
+  ]
 }

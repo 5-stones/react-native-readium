@@ -9,6 +9,7 @@ package com.margelo.nitro.reactnativereadium
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -22,9 +23,33 @@ data class ReadiumFile(
   val url: String,
   @DoNotStrip
   @Keep
+  val mediaType: String?,
+  @DoNotStrip
+  @Keep
+  val formatHint: String?,
+  @DoNotStrip
+  @Keep
   val initialLocation: Locator?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is ReadiumFile) return false
+    return Objects.deepEquals(this.url, other.url)
+      && Objects.deepEquals(this.mediaType, other.mediaType)
+      && Objects.deepEquals(this.formatHint, other.formatHint)
+      && Objects.deepEquals(this.initialLocation, other.initialLocation)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      url,
+      mediaType,
+      formatHint,
+      initialLocation
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**
@@ -34,8 +59,8 @@ data class ReadiumFile(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(url: String, initialLocation: Locator?): ReadiumFile {
-      return ReadiumFile(url, initialLocation)
+    private fun fromCpp(url: String, mediaType: String?, formatHint: String?, initialLocation: Locator?): ReadiumFile {
+      return ReadiumFile(url, mediaType, formatHint, initialLocation)
     }
   }
 }

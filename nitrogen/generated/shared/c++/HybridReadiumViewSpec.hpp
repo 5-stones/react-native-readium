@@ -25,12 +25,36 @@ namespace margelo::nitro::readium { struct SelectionAction; }
 namespace margelo::nitro::readium { struct Locator; }
 // Forward declaration of `PublicationReadyEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct PublicationReadyEvent; }
+// Forward declaration of `PublicationInfo` to properly resolve imports.
+namespace margelo::nitro::readium { struct PublicationInfo; }
+// Forward declaration of `ReadiumError` to properly resolve imports.
+namespace margelo::nitro::readium { struct ReadiumError; }
+// Forward declaration of `UnsupportedCapabilityEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct UnsupportedCapabilityEvent; }
+// Forward declaration of `SearchProgressEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchProgressEvent; }
 // Forward declaration of `DecorationActivatedEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct DecorationActivatedEvent; }
 // Forward declaration of `SelectionEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct SelectionEvent; }
 // Forward declaration of `SelectionActionEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct SelectionActionEvent; }
+// Forward declaration of `MediaState` to properly resolve imports.
+namespace margelo::nitro::readium { struct MediaState; }
+// Forward declaration of `SearchResult` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchResult; }
+// Forward declaration of `SearchOptions` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchOptions; }
+// Forward declaration of `ResourceResponse` to properly resolve imports.
+namespace margelo::nitro::readium { struct ResourceResponse; }
+// Forward declaration of `Link` to properly resolve imports.
+namespace margelo::nitro::readium { struct Link; }
+// Forward declaration of `PdfPreferences` to properly resolve imports.
+namespace margelo::nitro::readium { struct PdfPreferences; }
+// Forward declaration of `ComicPreferences` to properly resolve imports.
+namespace margelo::nitro::readium { struct ComicPreferences; }
+// Forward declaration of `AudioPreferences` to properly resolve imports.
+namespace margelo::nitro::readium { struct AudioPreferences; }
 
 #include "ReadiumFile.hpp"
 #include <optional>
@@ -41,9 +65,23 @@ namespace margelo::nitro::readium { struct SelectionActionEvent; }
 #include "Locator.hpp"
 #include <functional>
 #include "PublicationReadyEvent.hpp"
+#include "PublicationInfo.hpp"
+#include "ReadiumError.hpp"
+#include "UnsupportedCapabilityEvent.hpp"
+#include "SearchProgressEvent.hpp"
 #include "DecorationActivatedEvent.hpp"
 #include "SelectionEvent.hpp"
 #include "SelectionActionEvent.hpp"
+#include "MediaState.hpp"
+#include <NitroModules/Promise.hpp>
+#include "SearchResult.hpp"
+#include <string>
+#include "SearchOptions.hpp"
+#include "ResourceResponse.hpp"
+#include "Link.hpp"
+#include "PdfPreferences.hpp"
+#include "ComicPreferences.hpp"
+#include "AudioPreferences.hpp"
 
 namespace margelo::nitro::readium {
 
@@ -84,12 +122,24 @@ namespace margelo::nitro::readium {
       virtual void setOnLocationChange(const std::optional<std::function<void(const Locator& /* locator */)>>& onLocationChange) = 0;
       virtual std::optional<std::function<void(const PublicationReadyEvent& /* event */)>> getOnPublicationReady() = 0;
       virtual void setOnPublicationReady(const std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>& onPublicationReady) = 0;
+      virtual std::optional<std::function<void(const PublicationInfo& /* event */)>> getOnReady() = 0;
+      virtual void setOnReady(const std::optional<std::function<void(const PublicationInfo& /* event */)>>& onReady) = 0;
+      virtual std::optional<std::function<void(const ReadiumError& /* error */)>> getOnError() = 0;
+      virtual void setOnError(const std::optional<std::function<void(const ReadiumError& /* error */)>>& onError) = 0;
+      virtual std::optional<std::function<void(const UnsupportedCapabilityEvent& /* event */)>> getOnUnsupportedCapability() = 0;
+      virtual void setOnUnsupportedCapability(const std::optional<std::function<void(const UnsupportedCapabilityEvent& /* event */)>>& onUnsupportedCapability) = 0;
+      virtual std::optional<std::function<void(const SearchProgressEvent& /* event */)>> getOnSearchProgress() = 0;
+      virtual void setOnSearchProgress(const std::optional<std::function<void(const SearchProgressEvent& /* event */)>>& onSearchProgress) = 0;
       virtual std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>> getOnDecorationActivated() = 0;
       virtual void setOnDecorationActivated(const std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>& onDecorationActivated) = 0;
       virtual std::optional<std::function<void(const SelectionEvent& /* event */)>> getOnSelectionChange() = 0;
       virtual void setOnSelectionChange(const std::optional<std::function<void(const SelectionEvent& /* event */)>>& onSelectionChange) = 0;
       virtual std::optional<std::function<void(const SelectionActionEvent& /* event */)>> getOnSelectionAction() = 0;
       virtual void setOnSelectionAction(const std::optional<std::function<void(const SelectionActionEvent& /* event */)>>& onSelectionAction) = 0;
+      virtual std::optional<std::function<void(const MediaState& /* state */)>> getOnMediaStateChange() = 0;
+      virtual void setOnMediaStateChange(const std::optional<std::function<void(const MediaState& /* state */)>>& onMediaStateChange) = 0;
+      virtual std::optional<std::function<void(const ReadiumError& /* error */)>> getOnMediaError() = 0;
+      virtual void setOnMediaError(const std::optional<std::function<void(const ReadiumError& /* error */)>>& onMediaError) = 0;
 
     public:
       // Methods
@@ -97,6 +147,28 @@ namespace margelo::nitro::readium {
       virtual void goForward() = 0;
       virtual void goBackward() = 0;
       virtual void destroy() = 0;
+      virtual std::shared_ptr<Promise<PublicationInfo>> getPublication() = 0;
+      virtual std::shared_ptr<Promise<Locator>> getCurrentLocation() = 0;
+      virtual std::shared_ptr<Promise<SelectionEvent>> getCurrentSelection() = 0;
+      virtual void clearSelection() = 0;
+      virtual std::shared_ptr<Promise<bool>> setSelection(const Locator& locator) = 0;
+      virtual std::shared_ptr<Promise<std::vector<SearchResult>>> search(const std::string& query, const std::optional<SearchOptions>& options) = 0;
+      virtual void cancelSearch() = 0;
+      virtual std::shared_ptr<Promise<ResourceResponse>> getResource(const std::string& href) = 0;
+      virtual std::shared_ptr<Promise<std::vector<Locator>>> getPositions() = 0;
+      virtual std::shared_ptr<Promise<std::vector<Link>>> getTableOfContents() = 0;
+      virtual void applyPreferences(const Preferences& preferences) = 0;
+      virtual void setPdfPreferences(const PdfPreferences& preferences) = 0;
+      virtual void setComicPreferences(const ComicPreferences& preferences) = 0;
+      virtual void setAudioPreferences(const AudioPreferences& preferences) = 0;
+      virtual void play() = 0;
+      virtual void pause() = 0;
+      virtual void stop() = 0;
+      virtual void seekTo(double position) = 0;
+      virtual void skipToNext() = 0;
+      virtual void skipToPrevious() = 0;
+      virtual void setPlaybackRate(double rate) = 0;
+      virtual std::shared_ptr<Promise<MediaState>> getMediaState() = 0;
 
     protected:
       // Hybrid Setup

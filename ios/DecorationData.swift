@@ -18,19 +18,22 @@ struct LocatorData: Codable {
       return nil
     }
 
-    var locationsDict: [String: Any] = [:]
+    var locationsDict: [String: JSONValue] = [:]
     if let fragment = normalized.fragment {
-      locationsDict["fragments"] = [fragment]
+      locationsDict["fragments"] = .array([.string(fragment)])
     }
     if let locations = locations {
+      if let fragments = locations.fragments, !fragments.isEmpty {
+        locationsDict["fragments"] = .array(fragments.map { .string($0) })
+      }
       if let progression = locations.progression {
-        locationsDict["progression"] = progression
+        locationsDict["progression"] = .double(progression)
       }
       if let position = locations.position {
-        locationsDict["position"] = position
+        locationsDict["position"] = .integer(position)
       }
       if let totalProgression = locations.totalProgression {
-        locationsDict["totalProgression"] = totalProgression
+        locationsDict["totalProgression"] = .double(totalProgression)
       }
     }
 
@@ -38,6 +41,7 @@ struct LocatorData: Codable {
     let locatorLocations: ReadiumShared.Locator.Locations
     do {
       locatorLocations = try ReadiumShared.Locator.Locations(json: locationsDict.isEmpty ? nil : locationsDict)
+        ?? ReadiumShared.Locator.Locations()
     } catch {
       locatorLocations = ReadiumShared.Locator.Locations()
     }
@@ -66,6 +70,7 @@ struct LocatorData: Codable {
 
 /// Helper struct for deserializing locations
 struct LocationsData: Codable {
+  let fragments: [String]?
   let progression: Double?
   let position: Int?
   let totalProgression: Double?

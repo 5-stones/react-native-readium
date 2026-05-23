@@ -43,16 +43,18 @@ namespace margelo::nitro::readium {
   public:
     std::string href     SWIFT_PRIVATE;
     std::optional<std::string> title     SWIFT_PRIVATE;
+    std::optional<std::string> type     SWIFT_PRIVATE;
     std::optional<std::vector<std::string>> rels     SWIFT_PRIVATE;
     std::optional<std::vector<std::string>> languages     SWIFT_PRIVATE;
     std::optional<double> depth     SWIFT_PRIVATE;
     std::optional<bool> hasChildren     SWIFT_PRIVATE;
     std::optional<std::string> parentHref     SWIFT_PRIVATE;
     std::optional<double> position     SWIFT_PRIVATE;
+    std::optional<double> duration     SWIFT_PRIVATE;
 
   public:
     Link() = default;
-    explicit Link(std::string href, std::optional<std::string> title, std::optional<std::vector<std::string>> rels, std::optional<std::vector<std::string>> languages, std::optional<double> depth, std::optional<bool> hasChildren, std::optional<std::string> parentHref, std::optional<double> position): href(href), title(title), rels(rels), languages(languages), depth(depth), hasChildren(hasChildren), parentHref(parentHref), position(position) {}
+    explicit Link(std::string href, std::optional<std::string> title, std::optional<std::string> type, std::optional<std::vector<std::string>> rels, std::optional<std::vector<std::string>> languages, std::optional<double> depth, std::optional<bool> hasChildren, std::optional<std::string> parentHref, std::optional<double> position, std::optional<double> duration): href(href), title(title), type(type), rels(rels), languages(languages), depth(depth), hasChildren(hasChildren), parentHref(parentHref), position(position), duration(duration) {}
 
   public:
     friend bool operator==(const Link& lhs, const Link& rhs) = default;
@@ -70,24 +72,28 @@ namespace margelo::nitro {
       return margelo::nitro::readium::Link(
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "href"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "title"))),
+        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "type"))),
         JSIConverter<std::optional<std::vector<std::string>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "rels"))),
         JSIConverter<std::optional<std::vector<std::string>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "languages"))),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "depth"))),
         JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "hasChildren"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "parentHref"))),
-        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "position")))
+        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "position"))),
+        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "duration")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::readium::Link& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "href"), JSIConverter<std::string>::toJSI(runtime, arg.href));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "title"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.title));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "type"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.type));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "rels"), JSIConverter<std::optional<std::vector<std::string>>>::toJSI(runtime, arg.rels));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "languages"), JSIConverter<std::optional<std::vector<std::string>>>::toJSI(runtime, arg.languages));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "depth"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.depth));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "hasChildren"), JSIConverter<std::optional<bool>>::toJSI(runtime, arg.hasChildren));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "parentHref"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.parentHref));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "position"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.position));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "duration"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.duration));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -100,12 +106,14 @@ namespace margelo::nitro {
       }
       if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "href")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "title")))) return false;
+      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "type")))) return false;
       if (!JSIConverter<std::optional<std::vector<std::string>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "rels")))) return false;
       if (!JSIConverter<std::optional<std::vector<std::string>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "languages")))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "depth")))) return false;
       if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "hasChildren")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "parentHref")))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "position")))) return false;
+      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "duration")))) return false;
       return true;
     }
   };

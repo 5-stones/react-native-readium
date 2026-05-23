@@ -18,8 +18,20 @@ public extension LocatorLocations {
   /**
    * Create a new instance of `LocatorLocations`.
    */
-  init(progression: Double, position: Double?, totalProgression: Double?) {
-    self.init(progression, { () -> bridge.std__optional_double_ in
+  init(fragments: [String]?, progression: Double, position: Double?, totalProgression: Double?) {
+    self.init({ () -> bridge.std__optional_std__vector_std__string__ in
+      if let __unwrappedValue = fragments {
+        return bridge.create_std__optional_std__vector_std__string__({ () -> bridge.std__vector_std__string_ in
+          var __vector = bridge.create_std__vector_std__string_(__unwrappedValue.count)
+          for __item in __unwrappedValue {
+            __vector.push_back(std.string(__item))
+          }
+          return __vector
+        }())
+      } else {
+        return .init()
+      }
+    }(), progression, { () -> bridge.std__optional_double_ in
       if let __unwrappedValue = position {
         return bridge.create_std__optional_double_(__unwrappedValue)
       } else {
@@ -34,6 +46,18 @@ public extension LocatorLocations {
     }())
   }
 
+  @inline(__always)
+  var fragments: [String]? {
+    return { () -> [String]? in
+      if bridge.has_value_std__optional_std__vector_std__string__(self.__fragments) {
+        let __unwrapped = bridge.get_std__optional_std__vector_std__string__(self.__fragments)
+        return __unwrapped.map({ __item in String(__item) })
+      } else {
+        return nil
+      }
+    }()
+  }
+  
   @inline(__always)
   var progression: Double {
     return self.__progression

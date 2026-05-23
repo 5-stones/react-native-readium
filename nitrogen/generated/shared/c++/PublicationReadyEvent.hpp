@@ -34,11 +34,16 @@ namespace margelo::nitro::readium { struct Link; }
 namespace margelo::nitro::readium { struct Locator; }
 // Forward declaration of `PublicationMetadata` to properly resolve imports.
 namespace margelo::nitro::readium { struct PublicationMetadata; }
+// Forward declaration of `PublicationCapabilities` to properly resolve imports.
+namespace margelo::nitro::readium { struct PublicationCapabilities; }
 
 #include "Link.hpp"
 #include <vector>
 #include "Locator.hpp"
 #include "PublicationMetadata.hpp"
+#include <string>
+#include <optional>
+#include "PublicationCapabilities.hpp"
 
 namespace margelo::nitro::readium {
 
@@ -50,10 +55,14 @@ namespace margelo::nitro::readium {
     std::vector<Link> tableOfContents     SWIFT_PRIVATE;
     std::vector<Locator> positions     SWIFT_PRIVATE;
     PublicationMetadata metadata     SWIFT_PRIVATE;
+    std::optional<std::string> format     SWIFT_PRIVATE;
+    std::optional<PublicationCapabilities> capabilities     SWIFT_PRIVATE;
+    std::optional<std::vector<Link>> readingOrder     SWIFT_PRIVATE;
+    std::optional<std::vector<Link>> resources     SWIFT_PRIVATE;
 
   public:
     PublicationReadyEvent() = default;
-    explicit PublicationReadyEvent(std::vector<Link> tableOfContents, std::vector<Locator> positions, PublicationMetadata metadata): tableOfContents(tableOfContents), positions(positions), metadata(metadata) {}
+    explicit PublicationReadyEvent(std::vector<Link> tableOfContents, std::vector<Locator> positions, PublicationMetadata metadata, std::optional<std::string> format, std::optional<PublicationCapabilities> capabilities, std::optional<std::vector<Link>> readingOrder, std::optional<std::vector<Link>> resources): tableOfContents(tableOfContents), positions(positions), metadata(metadata), format(format), capabilities(capabilities), readingOrder(readingOrder), resources(resources) {}
 
   public:
     friend bool operator==(const PublicationReadyEvent& lhs, const PublicationReadyEvent& rhs) = default;
@@ -71,7 +80,11 @@ namespace margelo::nitro {
       return margelo::nitro::readium::PublicationReadyEvent(
         JSIConverter<std::vector<margelo::nitro::readium::Link>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "tableOfContents"))),
         JSIConverter<std::vector<margelo::nitro::readium::Locator>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "positions"))),
-        JSIConverter<margelo::nitro::readium::PublicationMetadata>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "metadata")))
+        JSIConverter<margelo::nitro::readium::PublicationMetadata>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "metadata"))),
+        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "format"))),
+        JSIConverter<std::optional<margelo::nitro::readium::PublicationCapabilities>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "capabilities"))),
+        JSIConverter<std::optional<std::vector<margelo::nitro::readium::Link>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "readingOrder"))),
+        JSIConverter<std::optional<std::vector<margelo::nitro::readium::Link>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "resources")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::readium::PublicationReadyEvent& arg) {
@@ -79,6 +92,10 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "tableOfContents"), JSIConverter<std::vector<margelo::nitro::readium::Link>>::toJSI(runtime, arg.tableOfContents));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "positions"), JSIConverter<std::vector<margelo::nitro::readium::Locator>>::toJSI(runtime, arg.positions));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "metadata"), JSIConverter<margelo::nitro::readium::PublicationMetadata>::toJSI(runtime, arg.metadata));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "format"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.format));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "capabilities"), JSIConverter<std::optional<margelo::nitro::readium::PublicationCapabilities>>::toJSI(runtime, arg.capabilities));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "readingOrder"), JSIConverter<std::optional<std::vector<margelo::nitro::readium::Link>>>::toJSI(runtime, arg.readingOrder));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "resources"), JSIConverter<std::optional<std::vector<margelo::nitro::readium::Link>>>::toJSI(runtime, arg.resources));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -92,6 +109,10 @@ namespace margelo::nitro {
       if (!JSIConverter<std::vector<margelo::nitro::readium::Link>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "tableOfContents")))) return false;
       if (!JSIConverter<std::vector<margelo::nitro::readium::Locator>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "positions")))) return false;
       if (!JSIConverter<margelo::nitro::readium::PublicationMetadata>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "metadata")))) return false;
+      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "format")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::readium::PublicationCapabilities>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "capabilities")))) return false;
+      if (!JSIConverter<std::optional<std::vector<margelo::nitro::readium::Link>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "readingOrder")))) return false;
+      if (!JSIConverter<std::optional<std::vector<margelo::nitro::readium::Link>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "resources")))) return false;
       return true;
     }
   };

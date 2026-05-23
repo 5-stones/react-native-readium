@@ -22,7 +22,7 @@ namespace margelo::nitro::readium {
    */
   struct JLocatorText final: public jni::JavaClass<JLocatorText> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/LocatorText;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/LocatorText;";
 
   public:
     /**

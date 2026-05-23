@@ -25,9 +25,14 @@
 #include "Locator.hpp"
 #include <functional>
 #include "PublicationReadyEvent.hpp"
+#include "PublicationInfo.hpp"
+#include "ReadiumError.hpp"
+#include "UnsupportedCapabilityEvent.hpp"
+#include "SearchProgressEvent.hpp"
 #include "DecorationActivatedEvent.hpp"
 #include "SelectionEvent.hpp"
 #include "SelectionActionEvent.hpp"
+#include "MediaState.hpp"
 #include <memory>
 #include "HybridReadiumViewSpec.hpp"
 
@@ -57,9 +62,15 @@ namespace margelo::nitro::readium::views {
     CachedProp<std::optional<std::vector<SelectionAction>>> selectionActions;
     CachedProp<std::optional<std::function<void(const Locator& /* locator */)>>> onLocationChange;
     CachedProp<std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>> onPublicationReady;
+    CachedProp<std::optional<std::function<void(const PublicationInfo& /* event */)>>> onReady;
+    CachedProp<std::optional<std::function<void(const ReadiumError& /* error */)>>> onError;
+    CachedProp<std::optional<std::function<void(const UnsupportedCapabilityEvent& /* event */)>>> onUnsupportedCapability;
+    CachedProp<std::optional<std::function<void(const SearchProgressEvent& /* event */)>>> onSearchProgress;
     CachedProp<std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>> onDecorationActivated;
     CachedProp<std::optional<std::function<void(const SelectionEvent& /* event */)>>> onSelectionChange;
     CachedProp<std::optional<std::function<void(const SelectionActionEvent& /* event */)>>> onSelectionAction;
+    CachedProp<std::optional<std::function<void(const MediaState& /* state */)>>> onMediaStateChange;
+    CachedProp<std::optional<std::function<void(const ReadiumError& /* error */)>>> onMediaError;
     CachedProp<std::optional<std::function<void(const std::shared_ptr<HybridReadiumViewSpec>& /* ref */)>>> hybridRef;
 
   private:

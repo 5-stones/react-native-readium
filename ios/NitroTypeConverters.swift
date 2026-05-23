@@ -60,7 +60,12 @@ func nitroLocatorToReadium(_ loc: Locator) -> RLocator? {
     type: loc.type,
     title: loc.title,
     locations: loc.locations.map {
-      LocationsData(progression: $0.progression, position: $0.position.map { Int($0) }, totalProgression: $0.totalProgression)
+      LocationsData(
+        fragments: $0.fragments,
+        progression: $0.progression,
+        position: $0.position.map { Int($0) },
+        totalProgression: $0.totalProgression
+      )
     },
     text: loc.text.map {
       TextData(before: $0.before, highlight: $0.highlight, after: $0.after)
@@ -123,6 +128,7 @@ func readiumDecorationToNitro(_ dec: RDecoration, group: String) -> Decoration {
 
 func readiumLocatorToNitro(_ loc: RLocator) -> Locator {
   let locations = LocatorLocations(
+    fragments: loc.locations.fragments,
     progression: loc.locations.progression ?? 0,
     position: loc.locations.position.map { Double($0) },
     totalProgression: loc.locations.totalProgression
@@ -148,12 +154,14 @@ func readiumLinkToNitro(_ link: RLink, depth: Double = 0, parentHref: String? = 
   return Link(
     href: link.href,
     title: link.title,
+    type: link.mediaType?.string,
     rels: link.rels.map { "\($0)" },
     languages: link.languages,
     depth: depth,
     hasChildren: link.children.isEmpty ? nil : true,
     parentHref: parentHref,
-    position: position
+    position: position,
+    duration: link.duration
   )
 }
 
@@ -208,5 +216,62 @@ func readiumMetadataToNitro(_ meta: ReadiumShared.Metadata) -> PublicationMetada
     duration: meta.duration,
     numberOfPages: meta.numberOfPages.map { Double($0) },
     belongsTo: nil
+  )
+}
+
+func readiumPublicationFormat(_ publication: Publication) -> String {
+  if publication.conforms(to: .epub) { return "epub" }
+  if publication.conforms(to: .pdf) { return "pdf" }
+  if publication.conforms(to: .divina) { return "divina" }
+  if publication.conforms(to: .audiobook) { return "audiobook" }
+  if publication.readingOrder.allSatisfy({ $0.mediaType?.string.hasPrefix("audio/") == true }) { return "audio" }
+  if publication.readingOrder.allSatisfy({ $0.mediaType?.string.hasPrefix("image/") == true }) { return "cbz" }
+  return "unknown"
+}
+
+func readiumCapabilitiesFor(format: String) -> PublicationCapabilities {
+  let isDecoratable = format == "epub"
+  let isSelectable = format == "epub" || format == "pdf"
+  let isSearchable = format == "epub" || format == "pdf"
+  let hasMedia = format == "audiobook" || format == "audio"
+
+  return PublicationCapabilities(
+    locations: true,
+    tableOfContents: true,
+    positions: true,
+    preferences: true,
+    decorations: isDecoratable,
+    selection: isSelectable,
+    search: isSearchable,
+    resources: true,
+    mediaPlayback: hasMedia,
+    mediaOverlays: false,
+    tts: false
+  )
+}
+
+func readiumPublicationInfo(_ publication: Publication, positions: [RLocator]) async -> PublicationInfo {
+  let tocLinks: [Link]
+  switch await publication.tableOfContents() {
+  case .success(let links):
+    tocLinks = flattenReadiumLinks(links)
+  case .failure:
+    tocLinks = []
+  }
+
+  let format = readiumPublicationFormat(publication)
+
+  return PublicationInfo(
+    format: format,
+    capabilities: readiumCapabilitiesFor(format: format),
+    tableOfContents: tocLinks,
+    readingOrder: publication.readingOrder.enumerated().map { index, link in
+      readiumLinkToNitro(link, position: Double(index))
+    },
+    resources: publication.resources.enumerated().map { index, link in
+      readiumLinkToNitro(link, position: Double(index))
+    },
+    positions: positions.map { readiumLocatorToNitro($0) },
+    metadata: readiumMetadataToNitro(publication.metadata)
   )
 }

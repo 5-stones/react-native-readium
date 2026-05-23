@@ -5,3 +5,6 @@ export * from './ControlBar';
 export * from './PreferencesEditor';
 export * from './TableOfContents';
 export * from './highlights';
+export * from './BookmarkManager';
+export * from './SearchModal';
+export * from './DebugModal';

@@ -18,7 +18,7 @@ public extension PublicationReadyEvent {
   /**
    * Create a new instance of `PublicationReadyEvent`.
    */
-  init(tableOfContents: [Link], positions: [Locator], metadata: PublicationMetadata) {
+  init(tableOfContents: [Link], positions: [Locator], metadata: PublicationMetadata, format: String?, capabilities: PublicationCapabilities?, readingOrder: [Link]?, resources: [Link]?) {
     self.init({ () -> bridge.std__vector_Link_ in
       var __vector = bridge.create_std__vector_Link_(tableOfContents.count)
       for __item in tableOfContents {
@@ -31,7 +31,43 @@ public extension PublicationReadyEvent {
         __vector.push_back(__item)
       }
       return __vector
-    }(), metadata)
+    }(), metadata, { () -> bridge.std__optional_std__string_ in
+      if let __unwrappedValue = format {
+        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_PublicationCapabilities_ in
+      if let __unwrappedValue = capabilities {
+        return bridge.create_std__optional_PublicationCapabilities_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__vector_Link__ in
+      if let __unwrappedValue = readingOrder {
+        return bridge.create_std__optional_std__vector_Link__({ () -> bridge.std__vector_Link_ in
+          var __vector = bridge.create_std__vector_Link_(__unwrappedValue.count)
+          for __item in __unwrappedValue {
+            __vector.push_back(__item)
+          }
+          return __vector
+        }())
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__vector_Link__ in
+      if let __unwrappedValue = resources {
+        return bridge.create_std__optional_std__vector_Link__({ () -> bridge.std__vector_Link_ in
+          var __vector = bridge.create_std__vector_Link_(__unwrappedValue.count)
+          for __item in __unwrappedValue {
+            __vector.push_back(__item)
+          }
+          return __vector
+        }())
+      } else {
+        return .init()
+      }
+    }())
   }
 
   @inline(__always)
@@ -47,5 +83,46 @@ public extension PublicationReadyEvent {
   @inline(__always)
   var metadata: PublicationMetadata {
     return self.__metadata
+  }
+  
+  @inline(__always)
+  var format: String? {
+    return { () -> String? in
+      if bridge.has_value_std__optional_std__string_(self.__format) {
+        let __unwrapped = bridge.get_std__optional_std__string_(self.__format)
+        return String(__unwrapped)
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var capabilities: PublicationCapabilities? {
+    return self.__capabilities.value
+  }
+  
+  @inline(__always)
+  var readingOrder: [Link]? {
+    return { () -> [Link]? in
+      if bridge.has_value_std__optional_std__vector_Link__(self.__readingOrder) {
+        let __unwrapped = bridge.get_std__optional_std__vector_Link__(self.__readingOrder)
+        return __unwrapped.map({ __item in __item })
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var resources: [Link]? {
+    return { () -> [Link]? in
+      if bridge.has_value_std__optional_std__vector_Link__(self.__resources) {
+        let __unwrapped = bridge.get_std__optional_std__vector_Link__(self.__resources)
+        return __unwrapped.map({ __item in __item })
+      } else {
+        return nil
+      }
+    }()
   }
 }

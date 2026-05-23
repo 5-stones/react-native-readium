@@ -6,24 +6,35 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { palette, radii, space, typography, shadow } from '../styles/theme';
 
 interface BaseModalProps {
   visible: boolean;
   title: string;
   onClose: () => void;
   children: React.ReactNode;
+  /**
+   * Optional sticky footer rendered below the scrollable content (e.g. Save/Cancel).
+   * Stays anchored at the bottom of the sheet so the user always has access to the
+   * primary actions without scrolling.
+   */
+  footer?: React.ReactNode;
 }
 
 /**
- * Base modal component with consistent styling and header
- * Used across all modals in the app for visual consistency
+ * Bottom-sheet-styled modal — rounded top, drag handle, soft surface.
+ * Lifts above the keyboard on focus.
  */
 export const BaseModal: React.FC<BaseModalProps> = ({
   visible,
   title,
   onClose,
   children,
+  footer,
 }) => {
   return (
     <Modal
@@ -32,18 +43,48 @@ export const BaseModal: React.FC<BaseModalProps> = ({
       transparent={true}
       onRequestClose={onClose}
     >
-      <View style={styles.modalOverlay}>
+      <KeyboardAvoidingView
+        style={styles.modalOverlay}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <TouchableOpacity
+          activeOpacity={1}
+          style={styles.dismissArea}
+          onPress={onClose}
+        />
         <View style={styles.modalContent}>
+          <View style={styles.handleContainer}>
+            <View style={styles.handle} />
+          </View>
+
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>{title}</Text>
-            <TouchableOpacity onPress={onClose} accessibilityLabel="Close">
-              <Text style={styles.closeButton}>✕</Text>
+            <TouchableOpacity
+              onPress={onClose}
+              accessibilityLabel="Close"
+              style={styles.closeButton}
+            >
+              <MaterialIcons
+                name="close"
+                size={20}
+                color={palette.textSecondary}
+              />
             </TouchableOpacity>
           </View>
 
-          <ScrollView style={styles.scrollView}>{children}</ScrollView>
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="interactive"
+          >
+            {children}
+          </ScrollView>
+
+          {footer ? <View style={styles.footer}>{footer}</View> : null}
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };
@@ -51,41 +92,78 @@ export const BaseModal: React.FC<BaseModalProps> = ({
 export const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: 'rgba(20, 20, 16, 0.45)',
+    justifyContent: 'flex-end',
+    ...Platform.select({
+      web: {
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+    }),
+  },
+  dismissArea: {
+    flex: 1,
   },
   modalContent: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    width: '90%',
-    maxWidth: 600,
-    maxHeight: '80%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    backgroundColor: palette.bg,
+    borderTopLeftRadius: radii.xl,
+    borderTopRightRadius: radii.xl,
+    flexShrink: 1,
+    maxHeight: '85%',
+    ...shadow.lg,
+    ...Platform.select({
+      web: {
+        borderRadius: radii.xl,
+        width: '90%',
+        maxWidth: 600,
+        maxHeight: '85%',
+      },
+    }),
+  },
+  handleContainer: {
+    alignItems: 'center',
+    paddingTop: space.sm,
+    paddingBottom: space.xs,
+  },
+  handle: {
+    width: 36,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: palette.borderStrong,
   },
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#EEEEEE',
+    paddingHorizontal: space.xl,
+    paddingTop: space.md,
+    paddingBottom: space.lg,
   },
   modalTitle: {
+    ...typography.title,
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333333',
   },
   closeButton: {
-    fontSize: 24,
-    color: '#666666',
-    fontWeight: 'bold',
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: palette.surfaceMuted,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   scrollView: {
-    padding: 20,
+    flexShrink: 1,
+    paddingHorizontal: space.xl,
+  },
+  scrollContent: {
+    paddingBottom: space.xl,
+  },
+  footer: {
+    paddingHorizontal: space.xl,
+    paddingTop: space.sm,
+    paddingBottom: space.xxl,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: palette.border,
+    backgroundColor: palette.bg,
   },
 });

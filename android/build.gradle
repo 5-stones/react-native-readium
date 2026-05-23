@@ -1,7 +1,7 @@
 buildscript {
   // Buildscript is evaluated before everything else so we can't use getExtOrDefault
   def kotlin_version = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : project.properties['Readium_kotlinVersion']
-  ext.readium_version = '3.1.0'
+  ext.readium_version = '3.2.0'
 
   repositories {
     google()
@@ -28,6 +28,7 @@ def getExtOrIntegerDefault(name) {
 
 android {
   compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
+  ndkVersion getExtOrDefault('ndkVersion')
   namespace "com.reactnativereadium"
   defaultConfig {
     minSdkVersion 24
@@ -39,7 +40,12 @@ android {
       cmake {
         cppFlags "-O2 -frtti -fexceptions -Wall -fstack-protector-all"
         arguments "-DANDROID_STL=c++_shared", "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
-        abiFilters "x86", "x86_64", "armeabi-v7a", "arm64-v8a"
+        // Respect the consumer's `reactNativeArchitectures` Gradle property so a
+        // dev building only for arm64-v8a doesn't also build armeabi-v7a / x86.
+        def archs = rootProject.hasProperty('reactNativeArchitectures')
+          ? rootProject.getProperty('reactNativeArchitectures').split(',')
+          : ['arm64-v8a', 'x86_64', 'armeabi-v7a', 'x86']
+        abiFilters(*archs)
       }
     }
   }
@@ -159,11 +165,14 @@ dependencies {
   // readium deps
   implementation "org.readium.kotlin-toolkit:readium-shared:$readium_version"
   implementation "org.readium.kotlin-toolkit:readium-streamer:$readium_version"
-  implementation ("org.readium.kotlin-toolkit:readium-navigator:$readium_version") {
-    // this package doesn't provide audio playback, so remove exoplayer
-    // transitive deps to avoid potential collisions with other projects.
-    exclude group: "com.google.android.exoplayer"
-  }
+  // Keep the exoplayer transitive dep — required by Readium's audio navigator.
+  implementation "org.readium.kotlin-toolkit:readium-navigator:$readium_version"
+  // Audiobook playback support — separate Readium artifacts on Android.
+  implementation "org.readium.kotlin-toolkit:readium-navigator-media-audio:$readium_version"
+  implementation "org.readium.kotlin-toolkit:readium-adapter-exoplayer-audio:$readium_version"
+  // media3 modules needed to construct a SimpleCache for the audio engine.
+  implementation "androidx.media3:media3-database:1.4.1"
+  implementation "androidx.media3:media3-datasource:1.4.1"
 
   // other deps
   implementation "androidx.core:core-ktx:1.13.1"

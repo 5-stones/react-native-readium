@@ -61,6 +61,22 @@ void JHybridReadiumViewStateUpdater::updateViewProps(jni::alias_ref<jni::JClass>
     hybridView->setOnPublicationReady(props->onPublicationReady.value);
     props->onPublicationReady.isDirty = false;
   }
+  if (props->onReady.isDirty) {
+    hybridView->setOnReady(props->onReady.value);
+    props->onReady.isDirty = false;
+  }
+  if (props->onError.isDirty) {
+    hybridView->setOnError(props->onError.value);
+    props->onError.isDirty = false;
+  }
+  if (props->onUnsupportedCapability.isDirty) {
+    hybridView->setOnUnsupportedCapability(props->onUnsupportedCapability.value);
+    props->onUnsupportedCapability.isDirty = false;
+  }
+  if (props->onSearchProgress.isDirty) {
+    hybridView->setOnSearchProgress(props->onSearchProgress.value);
+    props->onSearchProgress.isDirty = false;
+  }
   if (props->onDecorationActivated.isDirty) {
     hybridView->setOnDecorationActivated(props->onDecorationActivated.value);
     props->onDecorationActivated.isDirty = false;
@@ -72,6 +88,14 @@ void JHybridReadiumViewStateUpdater::updateViewProps(jni::alias_ref<jni::JClass>
   if (props->onSelectionAction.isDirty) {
     hybridView->setOnSelectionAction(props->onSelectionAction.value);
     props->onSelectionAction.isDirty = false;
+  }
+  if (props->onMediaStateChange.isDirty) {
+    hybridView->setOnMediaStateChange(props->onMediaStateChange.value);
+    props->onMediaStateChange.isDirty = false;
+  }
+  if (props->onMediaError.isDirty) {
+    hybridView->setOnMediaError(props->onMediaError.value);
+    props->onMediaError.isDirty = false;
   }
 
   // Update hybridRef if it changed

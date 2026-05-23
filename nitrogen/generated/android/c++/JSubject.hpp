@@ -22,7 +22,7 @@ namespace margelo::nitro::readium {
    */
   struct JSubject final: public jni::JavaClass<JSubject> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Subject;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Subject;";
 
   public:
     /**

@@ -72,7 +72,10 @@ abstract class BaseReaderFragment : Fragment() {
 
       channel.send(
         ReaderViewModel.Event.PublicationReady(
+          publication = model.publication,
           tableOfContents = model.publication.tableOfContents,
+          readingOrder = model.publication.readingOrder,
+          resources = model.publication.resources,
           positions = positions,
           metadata = model.publication.metadata
         )
@@ -222,6 +225,12 @@ abstract class BaseReaderFragment : Fragment() {
     }
 
     return selection.locator
+  }
+
+  fun clearSelection() {
+    // Readium Kotlin 3.2 exposes currentSelection(), but not a cross-navigator
+    // public clearSelection() API. The selection action menu clears itself after
+    // actions; this is a no-op until the toolkit exposes a stable method.
   }
 
   /**

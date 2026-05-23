@@ -21,6 +21,7 @@
 #include <optional>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace margelo::nitro::readium {
 
@@ -31,7 +32,7 @@ namespace margelo::nitro::readium {
    */
   struct JDecoration final: public jni::JavaClass<JDecoration> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Decoration;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Decoration;";
 
   public:
     /**

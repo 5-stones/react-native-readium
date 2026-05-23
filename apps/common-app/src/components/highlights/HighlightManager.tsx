@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import type { Decoration, Locator } from 'react-native-readium';
 import { ReaderButton } from '../ReaderButton';
 import { BaseModal } from '../BaseModal';
-import { modalStyles, colors } from '../../styles/modal';
+import { modalStyles } from '../../styles/modal';
+import { palette, radii, space, typography } from '../../styles/theme';
 import { showConfirmDialog } from '../../utils/dialogUtils';
 
 interface HighlightManagerProps {
@@ -32,8 +34,8 @@ export const HighlightManager: React.FC<HighlightManagerProps> = ({
   return (
     <>
       <ReaderButton
-        size={35}
-        name="bookmark"
+        size={22}
+        name="edit"
         onPress={() => setVisible(true)}
       />
 
@@ -42,117 +44,134 @@ export const HighlightManager: React.FC<HighlightManagerProps> = ({
         title="Highlights"
         onClose={() => setVisible(false)}
       >
-        <View style={styles.section}>
-          <Text style={modalStyles.sectionTitle}>
-            Your Highlights ({highlights.length})
+        <Text style={modalStyles.sectionTitle}>
+          Saved · {highlights.length}
+        </Text>
+        {highlights.length === 0 ? (
+          <Text style={modalStyles.emptyText}>
+            No highlights yet. Long-press text in the reader to create one.
           </Text>
-          {highlights.length === 0 ? (
-            <Text style={modalStyles.emptyText}>No highlights yet.</Text>
-          ) : (
-            highlights.map((highlight) => (
-              <View key={highlight.id} style={modalStyles.cardItem}>
-                <View style={styles.highlightHeader}>
-                  <View
-                    style={[
-                      styles.colorIndicator,
-                      {
-                        backgroundColor:
-                          highlight.style.type === 'highlight'
-                            ? highlight.style.tint
-                            : '#CCCCCC',
-                      },
-                    ]}
-                  />
-                  <Text style={styles.highlightLocation} numberOfLines={1}>
-                    {highlight.extras?.selectedText ||
-                      highlight.locator.title ||
-                      highlight.locator.href}
-                  </Text>
-                </View>
-
-                {highlight.extras?.note && (
-                  <Text style={styles.highlightNote}>
-                    {highlight.extras.note}
-                  </Text>
-                )}
-                <View style={styles.highlightActions}>
-                  <TouchableOpacity
-                    style={modalStyles.actionButton}
-                    onPress={() => onNavigateToHighlight(highlight.locator)}
-                  >
-                    <Text style={modalStyles.actionButtonText}>Go To</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={modalStyles.actionButton}
-                    onPress={() => {
-                      setVisible(false); // Close this modal first
-                      onEditHighlight(highlight);
-                    }}
-                  >
-                    <Text style={modalStyles.actionButtonText}>Edit</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[
-                      modalStyles.actionButton,
-                      modalStyles.destructiveButton,
-                    ]}
-                    onPress={() => handleDeleteHighlight(highlight.id)}
-                  >
-                    <Text style={modalStyles.actionButtonText}>Delete</Text>
-                  </TouchableOpacity>
-                </View>
-
-                {highlight.extras?.createdAt && (
-                  <Text style={styles.timestamp}>
-                    {new Date(highlight.extras.createdAt).toLocaleDateString()}
-                  </Text>
-                )}
+        ) : (
+          highlights.map((highlight) => (
+            <View key={highlight.id} style={modalStyles.cardItem}>
+              <View style={styles.header}>
+                <View
+                  style={[
+                    styles.colorIndicator,
+                    {
+                      backgroundColor:
+                        highlight.style.type === 'highlight'
+                          ? highlight.style.tint
+                          : palette.borderStrong,
+                    },
+                  ]}
+                />
+                <Text style={styles.location} numberOfLines={2}>
+                  {highlight.extras?.selectedText ||
+                    highlight.locator.title ||
+                    highlight.locator.href}
+                </Text>
               </View>
-            ))
-          )}
-        </View>
+
+              {highlight.extras?.note ? (
+                <View style={styles.note}>
+                  <MaterialIcons
+                    name="sticky-note-2"
+                    size={14}
+                    color={palette.textTertiary}
+                  />
+                  <Text style={styles.noteText}>{highlight.extras.note}</Text>
+                </View>
+              ) : null}
+
+              {highlight.extras?.createdAt ? (
+                <Text style={styles.timestamp}>
+                  {new Date(highlight.extras.createdAt).toLocaleDateString()}
+                </Text>
+              ) : null}
+
+              <View style={styles.actions}>
+                <TouchableOpacity
+                  style={modalStyles.actionButton}
+                  onPress={() => onNavigateToHighlight(highlight.locator)}
+                >
+                  <Text style={modalStyles.actionButtonText}>Go to</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={modalStyles.actionButton}
+                  onPress={() => {
+                    setVisible(false);
+                    onEditHighlight(highlight);
+                  }}
+                >
+                  <Text style={modalStyles.actionButtonText}>Edit</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    modalStyles.actionButton,
+                    modalStyles.destructiveButton,
+                  ]}
+                  onPress={() => handleDeleteHighlight(highlight.id)}
+                >
+                  <Text
+                    style={[
+                      modalStyles.actionButtonText,
+                      { color: palette.destructive },
+                    ]}
+                  >
+                    Delete
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))
+        )}
       </BaseModal>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  section: {
-    marginBottom: 30,
-  },
-  highlightHeader: {
+  header: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
+    alignItems: 'flex-start',
+    gap: space.sm,
+    marginBottom: space.sm,
   },
   colorIndicator: {
-    width: 20,
-    height: 20,
-    borderRadius: 4,
-    marginRight: 8,
-    borderWidth: 1,
-    borderColor: colors.border.tertiary,
+    width: 4,
+    alignSelf: 'stretch',
+    borderRadius: 2,
+    minHeight: 24,
   },
-  highlightLocation: {
+  location: {
     flex: 1,
-    fontSize: 14,
-    fontWeight: '500',
-    color: colors.text.primary,
+    ...typography.body,
+    color: palette.textPrimary,
   },
-  highlightNote: {
-    fontSize: 14,
-    color: colors.text.secondary,
-    marginBottom: 8,
-    fontStyle: 'italic',
-  },
-  highlightActions: {
+  note: {
     flexDirection: 'row',
-    gap: 8,
-    marginTop: 8,
+    alignItems: 'flex-start',
+    gap: space.xs,
+    backgroundColor: palette.surfaceMuted,
+    borderRadius: radii.sm,
+    padding: space.sm,
+    marginTop: space.xs,
+  },
+  noteText: {
+    flex: 1,
+    ...typography.small,
+    color: palette.textSecondary,
+    fontStyle: 'italic',
   },
   timestamp: {
     fontSize: 11,
-    color: colors.text.tertiary,
-    marginTop: 8,
+    color: palette.textTertiary,
+    marginTop: space.sm,
+  },
+  actions: {
+    flexDirection: 'row',
+    gap: space.sm,
+    marginTop: space.md,
   },
 });

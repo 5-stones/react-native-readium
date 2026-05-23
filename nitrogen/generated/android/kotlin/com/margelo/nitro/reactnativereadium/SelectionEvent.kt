@@ -9,6 +9,7 @@ package com.margelo.nitro.reactnativereadium
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -25,6 +26,20 @@ data class SelectionEvent(
   val selectedText: String?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is SelectionEvent) return false
+    return Objects.deepEquals(this.locator, other.locator)
+      && Objects.deepEquals(this.selectedText, other.selectedText)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      locator,
+      selectedText
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

@@ -22,6 +22,7 @@
 #include <optional>
 #include "LocatorLocations.hpp"
 #include "JLocatorLocations.hpp"
+#include <vector>
 #include "LocatorText.hpp"
 #include "JLocatorText.hpp"
 #include "DecorationStyle.hpp"
@@ -42,7 +43,7 @@ namespace margelo::nitro::readium {
    */
   struct JFunc_void_DecorationActivatedEvent: public jni::JavaClass<JFunc_void_DecorationActivatedEvent> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Func_void_DecorationActivatedEvent;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Func_void_DecorationActivatedEvent;";
 
   public:
     /**
@@ -78,7 +79,7 @@ namespace margelo::nitro::readium {
     }
 
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Func_void_DecorationActivatedEvent_cxx;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Func_void_DecorationActivatedEvent_cxx;";
     static void registerNatives() {
       registerHybrid({makeNativeMethod("invoke_cxx", JFunc_void_DecorationActivatedEvent_cxx::invoke_cxx)});
     }

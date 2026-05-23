@@ -48,6 +48,16 @@ namespace margelo::nitro::readium { struct Subject; }
 namespace margelo::nitro::readium { struct BelongsTo; }
 // Forward declaration of `SeriesInfo` to properly resolve imports.
 namespace margelo::nitro::readium { struct SeriesInfo; }
+// Forward declaration of `PublicationCapabilities` to properly resolve imports.
+namespace margelo::nitro::readium { struct PublicationCapabilities; }
+// Forward declaration of `PublicationInfo` to properly resolve imports.
+namespace margelo::nitro::readium { struct PublicationInfo; }
+// Forward declaration of `ReadiumError` to properly resolve imports.
+namespace margelo::nitro::readium { struct ReadiumError; }
+// Forward declaration of `UnsupportedCapabilityEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct UnsupportedCapabilityEvent; }
+// Forward declaration of `SearchProgressEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchProgressEvent; }
 // Forward declaration of `DecorationActivatedEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct DecorationActivatedEvent; }
 // Forward declaration of `Rect` to properly resolve imports.
@@ -58,16 +68,32 @@ namespace margelo::nitro::readium { struct Point; }
 namespace margelo::nitro::readium { struct SelectionEvent; }
 // Forward declaration of `SelectionActionEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct SelectionActionEvent; }
+// Forward declaration of `MediaState` to properly resolve imports.
+namespace margelo::nitro::readium { struct MediaState; }
+// Forward declaration of `MediaTrack` to properly resolve imports.
+namespace margelo::nitro::readium { struct MediaTrack; }
+// Forward declaration of `SearchResult` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchResult; }
+// Forward declaration of `SearchOptions` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchOptions; }
+// Forward declaration of `ResourceResponse` to properly resolve imports.
+namespace margelo::nitro::readium { struct ResourceResponse; }
+// Forward declaration of `PdfPreferences` to properly resolve imports.
+namespace margelo::nitro::readium { struct PdfPreferences; }
+// Forward declaration of `ComicPreferences` to properly resolve imports.
+namespace margelo::nitro::readium { struct ComicPreferences; }
+// Forward declaration of `AudioPreferences` to properly resolve imports.
+namespace margelo::nitro::readium { struct AudioPreferences; }
 
 #include "ReadiumFile.hpp"
 #include <optional>
 #include <string>
 #include "Locator.hpp"
 #include "LocatorLocations.hpp"
+#include <vector>
 #include "LocatorText.hpp"
 #include "Preferences.hpp"
 #include "DecorationGroup.hpp"
-#include <vector>
 #include "Decoration.hpp"
 #include "DecorationStyle.hpp"
 #include <unordered_map>
@@ -82,11 +108,25 @@ namespace margelo::nitro::readium { struct SelectionActionEvent; }
 #include "Subject.hpp"
 #include "BelongsTo.hpp"
 #include "SeriesInfo.hpp"
+#include "PublicationCapabilities.hpp"
+#include "PublicationInfo.hpp"
+#include "ReadiumError.hpp"
+#include "UnsupportedCapabilityEvent.hpp"
+#include "SearchProgressEvent.hpp"
 #include "DecorationActivatedEvent.hpp"
 #include "Rect.hpp"
 #include "Point.hpp"
 #include "SelectionEvent.hpp"
 #include "SelectionActionEvent.hpp"
+#include "MediaState.hpp"
+#include "MediaTrack.hpp"
+#include <NitroModules/Promise.hpp>
+#include "SearchResult.hpp"
+#include "SearchOptions.hpp"
+#include "ResourceResponse.hpp"
+#include "PdfPreferences.hpp"
+#include "ComicPreferences.hpp"
+#include "AudioPreferences.hpp"
 
 #include "NitroReadium-Swift-Cxx-Umbrella.hpp"
 
@@ -176,6 +216,34 @@ namespace margelo::nitro::readium {
     inline void setOnPublicationReady(const std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>& onPublicationReady) noexcept override {
       _swiftPart.setOnPublicationReady(onPublicationReady);
     }
+    inline std::optional<std::function<void(const PublicationInfo& /* event */)>> getOnReady() noexcept override {
+      auto __result = _swiftPart.getOnReady();
+      return __result;
+    }
+    inline void setOnReady(const std::optional<std::function<void(const PublicationInfo& /* event */)>>& onReady) noexcept override {
+      _swiftPart.setOnReady(onReady);
+    }
+    inline std::optional<std::function<void(const ReadiumError& /* error */)>> getOnError() noexcept override {
+      auto __result = _swiftPart.getOnError();
+      return __result;
+    }
+    inline void setOnError(const std::optional<std::function<void(const ReadiumError& /* error */)>>& onError) noexcept override {
+      _swiftPart.setOnError(onError);
+    }
+    inline std::optional<std::function<void(const UnsupportedCapabilityEvent& /* event */)>> getOnUnsupportedCapability() noexcept override {
+      auto __result = _swiftPart.getOnUnsupportedCapability();
+      return __result;
+    }
+    inline void setOnUnsupportedCapability(const std::optional<std::function<void(const UnsupportedCapabilityEvent& /* event */)>>& onUnsupportedCapability) noexcept override {
+      _swiftPart.setOnUnsupportedCapability(onUnsupportedCapability);
+    }
+    inline std::optional<std::function<void(const SearchProgressEvent& /* event */)>> getOnSearchProgress() noexcept override {
+      auto __result = _swiftPart.getOnSearchProgress();
+      return __result;
+    }
+    inline void setOnSearchProgress(const std::optional<std::function<void(const SearchProgressEvent& /* event */)>>& onSearchProgress) noexcept override {
+      _swiftPart.setOnSearchProgress(onSearchProgress);
+    }
     inline std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>> getOnDecorationActivated() noexcept override {
       auto __result = _swiftPart.getOnDecorationActivated();
       return __result;
@@ -196,6 +264,20 @@ namespace margelo::nitro::readium {
     }
     inline void setOnSelectionAction(const std::optional<std::function<void(const SelectionActionEvent& /* event */)>>& onSelectionAction) noexcept override {
       _swiftPart.setOnSelectionAction(onSelectionAction);
+    }
+    inline std::optional<std::function<void(const MediaState& /* state */)>> getOnMediaStateChange() noexcept override {
+      auto __result = _swiftPart.getOnMediaStateChange();
+      return __result;
+    }
+    inline void setOnMediaStateChange(const std::optional<std::function<void(const MediaState& /* state */)>>& onMediaStateChange) noexcept override {
+      _swiftPart.setOnMediaStateChange(onMediaStateChange);
+    }
+    inline std::optional<std::function<void(const ReadiumError& /* error */)>> getOnMediaError() noexcept override {
+      auto __result = _swiftPart.getOnMediaError();
+      return __result;
+    }
+    inline void setOnMediaError(const std::optional<std::function<void(const ReadiumError& /* error */)>>& onMediaError) noexcept override {
+      _swiftPart.setOnMediaError(onMediaError);
     }
 
   public:
@@ -223,6 +305,156 @@ namespace margelo::nitro::readium {
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
+    }
+    inline std::shared_ptr<Promise<PublicationInfo>> getPublication() override {
+      auto __result = _swiftPart.getPublication();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<Locator>> getCurrentLocation() override {
+      auto __result = _swiftPart.getCurrentLocation();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<SelectionEvent>> getCurrentSelection() override {
+      auto __result = _swiftPart.getCurrentSelection();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline void clearSelection() override {
+      auto __result = _swiftPart.clearSelection();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline std::shared_ptr<Promise<bool>> setSelection(const Locator& locator) override {
+      auto __result = _swiftPart.setSelection(std::forward<decltype(locator)>(locator));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<std::vector<SearchResult>>> search(const std::string& query, const std::optional<SearchOptions>& options) override {
+      auto __result = _swiftPart.search(query, options);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline void cancelSearch() override {
+      auto __result = _swiftPart.cancelSearch();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline std::shared_ptr<Promise<ResourceResponse>> getResource(const std::string& href) override {
+      auto __result = _swiftPart.getResource(href);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<std::vector<Locator>>> getPositions() override {
+      auto __result = _swiftPart.getPositions();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<std::vector<Link>>> getTableOfContents() override {
+      auto __result = _swiftPart.getTableOfContents();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline void applyPreferences(const Preferences& preferences) override {
+      auto __result = _swiftPart.applyPreferences(std::forward<decltype(preferences)>(preferences));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void setPdfPreferences(const PdfPreferences& preferences) override {
+      auto __result = _swiftPart.setPdfPreferences(std::forward<decltype(preferences)>(preferences));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void setComicPreferences(const ComicPreferences& preferences) override {
+      auto __result = _swiftPart.setComicPreferences(std::forward<decltype(preferences)>(preferences));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void setAudioPreferences(const AudioPreferences& preferences) override {
+      auto __result = _swiftPart.setAudioPreferences(std::forward<decltype(preferences)>(preferences));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void play() override {
+      auto __result = _swiftPart.play();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void pause() override {
+      auto __result = _swiftPart.pause();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void stop() override {
+      auto __result = _swiftPart.stop();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void seekTo(double position) override {
+      auto __result = _swiftPart.seekTo(std::forward<decltype(position)>(position));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void skipToNext() override {
+      auto __result = _swiftPart.skipToNext();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void skipToPrevious() override {
+      auto __result = _swiftPart.skipToPrevious();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void setPlaybackRate(double rate) override {
+      auto __result = _swiftPart.setPlaybackRate(std::forward<decltype(rate)>(rate));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline std::shared_ptr<Promise<MediaState>> getMediaState() override {
+      auto __result = _swiftPart.getMediaState();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
     }
 
   private:

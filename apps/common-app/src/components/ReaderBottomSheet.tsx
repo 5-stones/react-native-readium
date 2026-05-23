@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView } from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Reader } from './Reader';
@@ -9,6 +9,7 @@ import type { ReaderHandle } from './Reader';
 import { ControlBar } from './ControlBar';
 import type { BookOption } from '../types/reader.types';
 import type { ReadiumProps } from 'react-native-readium';
+import { palette, radii, space, typography, shadow } from '../styles/theme';
 
 type ContentMode = 'reader' | 'details';
 
@@ -22,33 +23,62 @@ interface ReaderBottomSheetProps {
 
 const snapPoints = ['100%'];
 
-/**
- * Shows book metadata and a button to open the reader.
- * Used to test that ReadiumView's native Fragment is fully cleaned up
- * when switching away from the Reader — if the Fragment persists, it
- * will overlay this view and block touches.
- */
+const COVER_TINTS: Array<[string, string]> = [
+  ['#E9E4DA', '#2A2823'],
+  ['#DDE7E1', '#1F3A2E'],
+  ['#E8DEEA', '#3B2A4A'],
+  ['#F4E1D2', '#5A2E18'],
+  ['#D9E2F0', '#1F3A5C'],
+  ['#EFE1DC', '#5C2B1F'],
+];
+
+const hashCode = (str: string) => {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) {
+    h = (h * 31 + str.charCodeAt(i)) | 0;
+  }
+  return Math.abs(h);
+};
+
+const tintFor = (id: string) => COVER_TINTS[hashCode(id) % COVER_TINTS.length];
+
+const initialsFor = (title: string) =>
+  title
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? '')
+    .join('');
+
 const BookDetails: React.FC<{
   book: BookOption;
   onOpenReader: () => void;
 }> = ({ book, onOpenReader }) => {
+  const [bg, fg] = tintFor(book.id);
   return (
     <ScrollView contentContainerStyle={styles.detailsContent}>
-      <View style={styles.detailsCover}>
-        <MaterialIcons name="menu-book" size={100} color="#888" />
+      <View style={[styles.detailsCover, { backgroundColor: bg }]}>
+        <Text style={[styles.detailsCoverInitials, { color: fg }]}>
+          {initialsFor(book.title)}
+        </Text>
+        <View style={[styles.detailsCoverSpine, { backgroundColor: fg }]} />
       </View>
+
+      <Text style={styles.detailsEyebrow}>Now Reading</Text>
       <Text style={styles.detailsTitle}>{book.title}</Text>
       <Text style={styles.detailsAuthor}>{book.author}</Text>
 
-      <Text style={styles.detailsDescription}>
-        This view demonstrates that the ReadiumView native Fragment is
-        properly removed when React unmounts the Reader component. If the
-        Fragment cleanup is broken, this view will be covered by the stale
-        WebView and the button below will not be pressable.
-      </Text>
+      <View style={styles.detailsCard}>
+        <Text style={styles.detailsDescription}>
+          This screen demonstrates that the ReadiumView native fragment is
+          properly torn down when the Reader unmounts — if cleanup were broken,
+          this view would be covered by a stale WebView and the button below
+          would not be tappable.
+        </Text>
+      </View>
 
       <TouchableOpacity style={styles.openReaderButton} onPress={onOpenReader}>
-        <MaterialIcons name="chrome-reader-mode" size={20} color="#FFF" />
+        <MaterialIcons name="chrome-reader-mode" size={18} color={palette.textInverse} />
         <Text style={styles.openReaderButtonText}>Open Reader</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -98,6 +128,7 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
       activeOffsetY={Platform.OS === 'android' ? [-5, 5] : undefined}
       failOffsetX={Platform.OS === 'android' ? [-5, 5] : undefined}
       handleComponent={() => null}
+      backgroundStyle={styles.sheetBackground}
     >
       <View style={styles.content}>
         {contentMode === 'reader' ? (
@@ -112,8 +143,21 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
                 onDeleteHighlight={readerHandle.deleteHighlight}
                 onNavigateToHighlight={readerHandle.navigateToLocator}
                 onEditHighlight={readerHandle.editHighlight}
+                bookmarks={readerHandle.bookmarks}
+                bookmarksLoading={readerHandle.bookmarksLoading}
+                bookmarksError={readerHandle.bookmarksError}
+                currentLocation={readerHandle.location}
+                isCurrentBookmarked={readerHandle.isCurrentBookmarked}
+                onAddBookmark={readerHandle.addBookmark}
+                onDeleteBookmark={readerHandle.deleteBookmark}
+                onNavigateToBookmark={readerHandle.navigateToLocator}
                 onClearBook={onClearBook}
                 onClose={handleClose}
+                title={book.title}
+                onSearch={readerHandle.search}
+                onCancelSearch={readerHandle.cancelSearch}
+                onNavigate={readerHandle.navigateToLocator}
+                readerHandle={readerHandle}
               />
             ) : (
               <EmptyBar onClose={handleClose} />
@@ -123,6 +167,7 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
               <View style={styles.readerContainer}>
                 <Reader
                   key={book.id}
+                  publicationId={book.id}
                   epubUrl={book.epubUrl}
                   epubPath={book.epubPath}
                   bundledAsset={book.bundledAsset}
@@ -133,13 +178,22 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
                 <TouchableOpacity
                   style={styles.detailsFab}
                   onPress={() => setContentMode('details')}
+                  accessibilityLabel="Book details"
                 >
-                  <MaterialIcons name="info-outline" size={24} color="#FFF" />
+                  <MaterialIcons
+                    name="info-outline"
+                    size={22}
+                    color={palette.textInverse}
+                  />
                 </TouchableOpacity>
               </View>
             ) : (
               <View style={styles.placeholder}>
-                <MaterialIcons name="menu-book" size={64} color="#CCC" />
+                <MaterialIcons
+                  name="auto-stories"
+                  size={48}
+                  color={palette.textTertiary}
+                />
                 <Text style={styles.placeholderText}>
                   Select a book to start reading
                 </Text>
@@ -148,7 +202,7 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
           </>
         ) : (
           <>
-            <EmptyBar onClose={handleClose} />
+            <EmptyBar onClose={handleClose} title="Details" />
             {book ? (
               <BookDetails
                 book={book}
@@ -166,23 +220,39 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
   );
 };
 
-const EmptyBar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+const EmptyBar: React.FC<{ onClose: () => void; title?: string }> = ({
+  onClose,
+  title,
+}) => {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.emptyBar, { paddingTop: insets.top + 8 }]}>
+    <View style={[styles.emptyBar, { paddingTop: insets.top + space.xs }]}>
       <TouchableOpacity
         style={styles.closeButton}
         onPress={onClose}
         accessibilityLabel="Close"
       >
-        <MaterialIcons name="keyboard-arrow-down" size={28} color="#333" />
+        <MaterialIcons
+          name="keyboard-arrow-down"
+          size={26}
+          color={palette.textPrimary}
+        />
       </TouchableOpacity>
+      {title ? (
+        <Text style={styles.emptyBarTitle} numberOfLines={1}>
+          {title}
+        </Text>
+      ) : null}
+      <View style={styles.closeButton} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  sheetBackground: {
+    backgroundColor: palette.bg,
+  },
   content: {
     flex: 1,
   },
@@ -193,21 +263,30 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 16,
+    gap: space.md,
+    paddingHorizontal: space.xxl,
   },
   placeholderText: {
-    fontSize: 17,
-    color: '#999',
+    ...typography.body,
+    color: palette.textTertiary,
+    textAlign: 'center',
   },
   emptyBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F5F5F5',
+    justifyContent: 'space-between',
+    backgroundColor: palette.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#DDD',
-    paddingVertical: 8,
-    paddingHorizontal: 4,
+    borderBottomColor: palette.border,
+    paddingHorizontal: space.xs,
+    paddingBottom: space.xs,
     minHeight: 48,
+  },
+  emptyBarTitle: {
+    ...typography.bodyStrong,
+    fontSize: 14,
+    flex: 1,
+    textAlign: 'center',
   },
   closeButton: {
     width: 40,
@@ -219,65 +298,86 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 24,
     right: 24,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#333',
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: palette.accent,
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    ...shadow.md,
   },
   detailsContent: {
     flexGrow: 1,
     alignItems: 'center',
-    padding: 32,
-    gap: 12,
+    paddingHorizontal: space.xxl,
+    paddingTop: space.xxl,
+    paddingBottom: space.xxxl,
+    gap: space.sm,
   },
   detailsCover: {
-    width: 160,
+    width: 144,
     height: 200,
-    backgroundColor: '#E8E8E8',
-    borderRadius: 8,
+    backgroundColor: palette.surfaceMuted,
+    borderRadius: radii.md,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: space.lg,
+    overflow: 'hidden',
+    ...shadow.md,
+  },
+  detailsCoverSpine: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: 4,
+    opacity: 0.6,
+  },
+  detailsCoverInitials: {
+    fontSize: 40,
+    fontWeight: '700',
+    letterSpacing: 1,
+  },
+  detailsEyebrow: {
+    ...typography.caption,
+    color: palette.textTertiary,
+    marginBottom: space.xs,
   },
   detailsTitle: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#222',
+    ...typography.title,
     textAlign: 'center',
   },
   detailsAuthor: {
-    fontSize: 16,
-    color: '#666',
+    ...typography.body,
+    color: palette.textSecondary,
     textAlign: 'center',
   },
+  detailsCard: {
+    backgroundColor: palette.surface,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: palette.border,
+    padding: space.lg,
+    marginTop: space.xl,
+  },
   detailsDescription: {
-    fontSize: 15,
-    color: '#555',
+    ...typography.body,
+    color: palette.textSecondary,
     lineHeight: 22,
-    textAlign: 'center',
-    marginTop: 16,
-    paddingHorizontal: 16,
   },
   openReaderButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    backgroundColor: '#333',
-    paddingHorizontal: 24,
-    paddingVertical: 14,
-    borderRadius: 24,
-    marginTop: 24,
+    gap: space.sm,
+    backgroundColor: palette.accent,
+    paddingHorizontal: space.xxl,
+    paddingVertical: space.md + 2,
+    borderRadius: radii.pill,
+    marginTop: space.xxl,
   },
   openReaderButtonText: {
-    color: '#FFF',
-    fontSize: 16,
+    color: palette.textInverse,
+    fontSize: 15,
     fontWeight: '600',
   },
 });

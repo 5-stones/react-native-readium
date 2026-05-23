@@ -7,6 +7,7 @@ import java.io.File
 import java.util.Locale
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
+import org.readium.r2.shared.publication.Publication.Profile
 import org.readium.r2.shared.util.FileExtension
 import org.readium.r2.shared.util.asset.AssetRetriever
 import org.readium.r2.shared.util.format.FormatHints
@@ -63,7 +64,7 @@ class ReaderService(
       return
     }
     val publicationUrl = runCatching {
-      publicationFile.toUrl()
+      publicationFile.toUrl(isDirectory = publicationFile.isDirectory)
     }
       .onFailure {
         RNLog.e(
@@ -95,8 +96,13 @@ class ReaderService(
       )
       .onSuccess {
         val locator = locatorFromLinkOrLocator(initialLocation, it)
-        val readerFragment = EpubReaderFragment.newInstance()
-        readerFragment.initFactory(it, locator)
+        val readerFragment: BaseReaderFragment = if (it.conformsTo(Profile.AUDIOBOOK)
+          || it.readingOrder.all { link -> link.mediaType?.isAudio == true }
+        ) {
+          AudioReaderFragment.newInstance().apply { initFactory(it, locator) }
+        } else {
+          EpubReaderFragment.newInstance().apply { initFactory(it, locator) }
+        }
         callback.invoke(readerFragment)
       }
       .onFailure {

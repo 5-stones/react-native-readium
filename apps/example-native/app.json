@@ -1,4 +1,43 @@
 {
-  "name": "ReadiumExample",
-  "displayName": "Readium Example"
+  "expo": {
+    "name": "Readium Example",
+    "slug": "readium-example",
+    "scheme": "readiumexample",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "bundleIdentifier": "com.example.reactnativereadium",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.example.reactnativereadium"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "15.1",
+            "useFrameworks": "static"
+          },
+          "android": {
+            "minSdkVersion": 24,
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35
+          }
+        }
+      ],
+      "./plugins/with-readium-pods",
+      "expo-asset",
+      "expo-font"
+    ],
+    "experiments": {
+      "reactCompiler": true
+    }
+  }
 }

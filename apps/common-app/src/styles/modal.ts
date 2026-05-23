@@ -1,162 +1,161 @@
 import { StyleSheet } from 'react-native';
+import { palette, radii, space, typography } from './theme';
 
 /**
- * Shared styles for modal components
- * Used to maintain consistent styling across all modals
+ * Shared styles for modal components — built on the design tokens in `theme.ts`.
+ * The exported `colors` shape is kept stable for backward-compat across components.
  */
 export const modalStyles = StyleSheet.create({
-  // Card-style item container used in lists
   cardItem: {
-    backgroundColor: '#F9F9F9',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 12,
+    backgroundColor: palette.surface,
+    borderRadius: radii.md,
+    padding: space.lg,
+    marginBottom: space.md,
     borderWidth: 1,
-    borderColor: '#EEEEEE',
+    borderColor: palette.border,
   },
 
-  // Last item in a list (no bottom margin)
   cardItemLast: {
     marginBottom: 0,
   },
 
-  // Section title text
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333333',
-    marginBottom: 12,
+    ...typography.caption,
+    color: palette.textTertiary,
+    marginBottom: space.sm,
   },
 
-  // Empty state text
   emptyText: {
-    fontSize: 14,
-    color: '#999999',
-    fontStyle: 'italic',
+    ...typography.body,
+    color: palette.textTertiary,
     textAlign: 'center',
-    paddingVertical: 20,
+    paddingVertical: space.xxl,
   },
 
-  // Standard action button
   actionButton: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 4,
-    backgroundColor: '#007AFF',
+    paddingVertical: space.sm,
+    paddingHorizontal: space.md,
+    borderRadius: radii.sm,
+    backgroundColor: palette.surfaceMuted,
+    borderWidth: 1,
+    borderColor: palette.border,
   },
 
-  // Destructive action button (delete, etc)
   destructiveButton: {
-    backgroundColor: '#FF3B30',
+    backgroundColor: palette.destructiveSoft,
+    borderColor: palette.destructiveSoft,
   },
 
-  // Action button text
   actionButtonText: {
-    fontSize: 12,
-    color: '#FFFFFF',
+    fontSize: 13,
+    color: palette.textPrimary,
     fontWeight: '600',
   },
 
-  // Text input field
   textInput: {
     borderWidth: 1,
-    borderColor: '#DDDDDD',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 14,
-    color: '#333333',
-    backgroundColor: '#FAFAFA',
+    borderColor: palette.border,
+    borderRadius: radii.md,
+    padding: space.md,
+    fontSize: 15,
+    color: palette.textPrimary,
+    backgroundColor: palette.surface,
+    minHeight: 80,
+    textAlignVertical: 'top',
   },
 
-  // Section container
   section: {
-    marginBottom: 16,
+    marginBottom: space.xl,
   },
 
-  // Selected text display box
   selectedText: {
     fontSize: 14,
-    color: '#666666',
+    lineHeight: 20,
+    color: palette.textSecondary,
     fontStyle: 'italic',
-    padding: 8,
-    backgroundColor: '#FAFAFA',
-    borderRadius: 4,
+    padding: space.md,
+    backgroundColor: palette.surfaceMuted,
+    borderRadius: radii.sm,
+    borderLeftWidth: 3,
+    borderLeftColor: palette.borderStrong,
   },
 
-  // Button row container
   buttonRow: {
     flexDirection: 'row',
-    gap: 12,
-    marginTop: 8,
+    gap: space.sm,
+    marginTop: space.md,
   },
 
-  // Standard button
   button: {
     flex: 1,
-    paddingVertical: 12,
-    borderRadius: 6,
+    paddingVertical: space.sm + 2,
+    borderRadius: radii.md,
     alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 40,
   },
 
-  // Cancel button styling
   cancelButton: {
-    backgroundColor: '#999999',
+    backgroundColor: palette.surfaceMuted,
+    borderWidth: 1,
+    borderColor: palette.border,
+  },
+  cancelButtonText: {
+    color: palette.textPrimary,
+    fontSize: 15,
+    fontWeight: '600',
   },
 
-  // Confirm/Save button styling
   confirmButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: palette.accent,
   },
 
-  // Success button (e.g., Save)
   saveButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: palette.accent,
   },
 
-  // Destructive button (e.g., Delete) for button rows
   deleteButton: {
-    backgroundColor: '#FF3B30',
+    backgroundColor: palette.destructive,
   },
 
-  // Button text
   buttonText: {
-    color: '#FFFFFF',
-    fontSize: 14,
+    color: palette.textInverse,
+    fontSize: 15,
     fontWeight: '600',
   },
 });
 
 /**
- * Color constants used across the app
+ * Backward-compatible color shape — values now come from the central palette.
  */
 export const colors = {
-  primary: '#007AFF',
-  destructive: '#FF3B30',
-  success: '#34C759',
+  primary: palette.accent,
+  destructive: palette.destructive,
+  success: palette.success,
   text: {
-    primary: '#333333',
-    secondary: '#666666',
-    tertiary: '#999999',
+    primary: palette.textPrimary,
+    secondary: palette.textSecondary,
+    tertiary: palette.textTertiary,
   },
   background: {
-    card: '#F9F9F9',
-    input: '#FAFAFA',
+    card: palette.surface,
+    input: palette.surface,
   },
   border: {
-    primary: '#EEEEEE',
-    secondary: '#DDDDDD',
-    tertiary: '#CCCCCC',
+    primary: palette.border,
+    secondary: palette.border,
+    tertiary: palette.borderStrong,
   },
 };
 
 /**
- * Highlight color options
+ * Highlight color options — softer, paper-friendly tones.
  */
 export const HIGHLIGHT_COLORS = [
-  { name: 'Yellow', value: '#FFFF00' },
-  { name: 'Green', value: '#00FF00' },
-  { name: 'Blue', value: '#00BFFF' },
-  { name: 'Pink', value: '#FFB6C1' },
-  { name: 'Orange', value: '#FFA500' },
-  { name: 'Purple', value: '#DDA0DD' },
+  { name: 'Yellow', value: '#FFE58A' },
+  { name: 'Green', value: '#B7E4C7' },
+  { name: 'Blue', value: '#BBDEFB' },
+  { name: 'Pink', value: '#F8BBD0' },
+  { name: 'Orange', value: '#FFCC80' },
+  { name: 'Purple', value: '#D1C4E9' },
 ];

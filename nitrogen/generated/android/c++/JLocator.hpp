@@ -16,6 +16,7 @@
 #include "LocatorText.hpp"
 #include <optional>
 #include <string>
+#include <vector>
 
 namespace margelo::nitro::readium {
 
@@ -26,7 +27,7 @@ namespace margelo::nitro::readium {
    */
   struct JLocator final: public jni::JavaClass<JLocator> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Locator;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Locator;";
 
   public:
     /**

@@ -18,6 +18,7 @@
 #include "LocatorText.hpp"
 #include <optional>
 #include <string>
+#include <vector>
 
 namespace margelo::nitro::readium {
 
@@ -28,7 +29,7 @@ namespace margelo::nitro::readium {
    */
   struct JReadiumFile final: public jni::JavaClass<JReadiumFile> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/ReadiumFile;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/ReadiumFile;";
 
   public:
     /**
@@ -40,10 +41,16 @@ namespace margelo::nitro::readium {
       static const auto clazz = javaClassStatic();
       static const auto fieldUrl = clazz->getField<jni::JString>("url");
       jni::local_ref<jni::JString> url = this->getFieldValue(fieldUrl);
+      static const auto fieldMediaType = clazz->getField<jni::JString>("mediaType");
+      jni::local_ref<jni::JString> mediaType = this->getFieldValue(fieldMediaType);
+      static const auto fieldFormatHint = clazz->getField<jni::JString>("formatHint");
+      jni::local_ref<jni::JString> formatHint = this->getFieldValue(fieldFormatHint);
       static const auto fieldInitialLocation = clazz->getField<JLocator>("initialLocation");
       jni::local_ref<JLocator> initialLocation = this->getFieldValue(fieldInitialLocation);
       return ReadiumFile(
         url->toStdString(),
+        mediaType != nullptr ? std::make_optional(mediaType->toStdString()) : std::nullopt,
+        formatHint != nullptr ? std::make_optional(formatHint->toStdString()) : std::nullopt,
         initialLocation != nullptr ? std::make_optional(initialLocation->toCpp()) : std::nullopt
       );
     }
@@ -54,12 +61,14 @@ namespace margelo::nitro::readium {
      */
     [[maybe_unused]]
     static jni::local_ref<JReadiumFile::javaobject> fromCpp(const ReadiumFile& value) {
-      using JSignature = JReadiumFile(jni::alias_ref<jni::JString>, jni::alias_ref<JLocator>);
+      using JSignature = JReadiumFile(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<JLocator>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         jni::make_jstring(value.url),
+        value.mediaType.has_value() ? jni::make_jstring(value.mediaType.value()) : nullptr,
+        value.formatHint.has_value() ? jni::make_jstring(value.formatHint.value()) : nullptr,
         value.initialLocation.has_value() ? JLocator::fromCpp(value.initialLocation.value()) : nullptr
       );
     }

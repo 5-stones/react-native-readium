@@ -9,6 +9,7 @@ package com.margelo.nitro.reactnativereadium
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -25,9 +26,45 @@ data class PublicationReadyEvent(
   val positions: Array<Locator>,
   @DoNotStrip
   @Keep
-  val metadata: PublicationMetadata
+  val metadata: PublicationMetadata,
+  @DoNotStrip
+  @Keep
+  val format: String?,
+  @DoNotStrip
+  @Keep
+  val capabilities: PublicationCapabilities?,
+  @DoNotStrip
+  @Keep
+  val readingOrder: Array<Link>?,
+  @DoNotStrip
+  @Keep
+  val resources: Array<Link>?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is PublicationReadyEvent) return false
+    return Objects.deepEquals(this.tableOfContents, other.tableOfContents)
+      && Objects.deepEquals(this.positions, other.positions)
+      && Objects.deepEquals(this.metadata, other.metadata)
+      && Objects.deepEquals(this.format, other.format)
+      && Objects.deepEquals(this.capabilities, other.capabilities)
+      && Objects.deepEquals(this.readingOrder, other.readingOrder)
+      && Objects.deepEquals(this.resources, other.resources)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      tableOfContents,
+      positions,
+      metadata,
+      format,
+      capabilities,
+      readingOrder,
+      resources
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**
@@ -37,8 +74,8 @@ data class PublicationReadyEvent(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(tableOfContents: Array<Link>, positions: Array<Locator>, metadata: PublicationMetadata): PublicationReadyEvent {
-      return PublicationReadyEvent(tableOfContents, positions, metadata)
+    private fun fromCpp(tableOfContents: Array<Link>, positions: Array<Locator>, metadata: PublicationMetadata, format: String?, capabilities: PublicationCapabilities?, readingOrder: Array<Link>?, resources: Array<Link>?): PublicationReadyEvent {
+      return PublicationReadyEvent(tableOfContents, positions, metadata, format, capabilities, readingOrder, resources)
     }
   }
 }

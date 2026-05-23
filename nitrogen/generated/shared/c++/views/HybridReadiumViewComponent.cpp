@@ -86,6 +86,46 @@ namespace margelo::nitro::readium::views {
         throw std::runtime_error(std::string("ReadiumView.onPublicationReady: ") + exc.what());
       }
     }()),
+    onReady([&]() -> CachedProp<std::optional<std::function<void(const PublicationInfo& /* event */)>>> {
+      try {
+        const react::RawValue* rawValue = rawProps.at("onReady", nullptr, nullptr);
+        if (rawValue == nullptr) return sourceProps.onReady;
+        const auto& [runtime, value] = (std::pair<jsi::Runtime*, jsi::Value>)*rawValue;
+        return CachedProp<std::optional<std::function<void(const PublicationInfo& /* event */)>>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.onReady);
+      } catch (const std::exception& exc) {
+        throw std::runtime_error(std::string("ReadiumView.onReady: ") + exc.what());
+      }
+    }()),
+    onError([&]() -> CachedProp<std::optional<std::function<void(const ReadiumError& /* error */)>>> {
+      try {
+        const react::RawValue* rawValue = rawProps.at("onError", nullptr, nullptr);
+        if (rawValue == nullptr) return sourceProps.onError;
+        const auto& [runtime, value] = (std::pair<jsi::Runtime*, jsi::Value>)*rawValue;
+        return CachedProp<std::optional<std::function<void(const ReadiumError& /* error */)>>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.onError);
+      } catch (const std::exception& exc) {
+        throw std::runtime_error(std::string("ReadiumView.onError: ") + exc.what());
+      }
+    }()),
+    onUnsupportedCapability([&]() -> CachedProp<std::optional<std::function<void(const UnsupportedCapabilityEvent& /* event */)>>> {
+      try {
+        const react::RawValue* rawValue = rawProps.at("onUnsupportedCapability", nullptr, nullptr);
+        if (rawValue == nullptr) return sourceProps.onUnsupportedCapability;
+        const auto& [runtime, value] = (std::pair<jsi::Runtime*, jsi::Value>)*rawValue;
+        return CachedProp<std::optional<std::function<void(const UnsupportedCapabilityEvent& /* event */)>>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.onUnsupportedCapability);
+      } catch (const std::exception& exc) {
+        throw std::runtime_error(std::string("ReadiumView.onUnsupportedCapability: ") + exc.what());
+      }
+    }()),
+    onSearchProgress([&]() -> CachedProp<std::optional<std::function<void(const SearchProgressEvent& /* event */)>>> {
+      try {
+        const react::RawValue* rawValue = rawProps.at("onSearchProgress", nullptr, nullptr);
+        if (rawValue == nullptr) return sourceProps.onSearchProgress;
+        const auto& [runtime, value] = (std::pair<jsi::Runtime*, jsi::Value>)*rawValue;
+        return CachedProp<std::optional<std::function<void(const SearchProgressEvent& /* event */)>>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.onSearchProgress);
+      } catch (const std::exception& exc) {
+        throw std::runtime_error(std::string("ReadiumView.onSearchProgress: ") + exc.what());
+      }
+    }()),
     onDecorationActivated([&]() -> CachedProp<std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>> {
       try {
         const react::RawValue* rawValue = rawProps.at("onDecorationActivated", nullptr, nullptr);
@@ -116,6 +156,26 @@ namespace margelo::nitro::readium::views {
         throw std::runtime_error(std::string("ReadiumView.onSelectionAction: ") + exc.what());
       }
     }()),
+    onMediaStateChange([&]() -> CachedProp<std::optional<std::function<void(const MediaState& /* state */)>>> {
+      try {
+        const react::RawValue* rawValue = rawProps.at("onMediaStateChange", nullptr, nullptr);
+        if (rawValue == nullptr) return sourceProps.onMediaStateChange;
+        const auto& [runtime, value] = (std::pair<jsi::Runtime*, jsi::Value>)*rawValue;
+        return CachedProp<std::optional<std::function<void(const MediaState& /* state */)>>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.onMediaStateChange);
+      } catch (const std::exception& exc) {
+        throw std::runtime_error(std::string("ReadiumView.onMediaStateChange: ") + exc.what());
+      }
+    }()),
+    onMediaError([&]() -> CachedProp<std::optional<std::function<void(const ReadiumError& /* error */)>>> {
+      try {
+        const react::RawValue* rawValue = rawProps.at("onMediaError", nullptr, nullptr);
+        if (rawValue == nullptr) return sourceProps.onMediaError;
+        const auto& [runtime, value] = (std::pair<jsi::Runtime*, jsi::Value>)*rawValue;
+        return CachedProp<std::optional<std::function<void(const ReadiumError& /* error */)>>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.onMediaError);
+      } catch (const std::exception& exc) {
+        throw std::runtime_error(std::string("ReadiumView.onMediaError: ") + exc.what());
+      }
+    }()),
     hybridRef([&]() -> CachedProp<std::optional<std::function<void(const std::shared_ptr<HybridReadiumViewSpec>& /* ref */)>>> {
       try {
         const react::RawValue* rawValue = rawProps.at("hybridRef", nullptr, nullptr);
@@ -135,9 +195,15 @@ namespace margelo::nitro::readium::views {
       case hashString("selectionActions"): return true;
       case hashString("onLocationChange"): return true;
       case hashString("onPublicationReady"): return true;
+      case hashString("onReady"): return true;
+      case hashString("onError"): return true;
+      case hashString("onUnsupportedCapability"): return true;
+      case hashString("onSearchProgress"): return true;
       case hashString("onDecorationActivated"): return true;
       case hashString("onSelectionChange"): return true;
       case hashString("onSelectionAction"): return true;
+      case hashString("onMediaStateChange"): return true;
+      case hashString("onMediaError"): return true;
       case hashString("hybridRef"): return true;
       default: return false;
     }

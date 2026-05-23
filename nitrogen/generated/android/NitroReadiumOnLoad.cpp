@@ -18,9 +18,14 @@
 #include "JHybridReadiumViewSpec.hpp"
 #include "JFunc_void_Locator.hpp"
 #include "JFunc_void_PublicationReadyEvent.hpp"
+#include "JFunc_void_PublicationInfo.hpp"
+#include "JFunc_void_ReadiumError.hpp"
+#include "JFunc_void_UnsupportedCapabilityEvent.hpp"
+#include "JFunc_void_SearchProgressEvent.hpp"
 #include "JFunc_void_DecorationActivatedEvent.hpp"
 #include "JFunc_void_SelectionEvent.hpp"
 #include "JFunc_void_SelectionActionEvent.hpp"
+#include "JFunc_void_MediaState.hpp"
 #include "views/JHybridReadiumViewStateUpdater.hpp"
 #include <NitroModules/DefaultConstructableObject.hpp>
 
@@ -33,9 +38,9 @@ int initialize(JavaVM* vm) {
 }
 
 struct JHybridReadiumViewSpecImpl: public jni::JavaClass<JHybridReadiumViewSpecImpl, JHybridReadiumViewSpec::JavaPart> {
-  static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/HybridReadiumView;";
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/HybridReadiumView;";
   static std::shared_ptr<JHybridReadiumViewSpec> create() {
-    static auto constructorFn = javaClassStatic()->getConstructor<JHybridReadiumViewSpecImpl::javaobject()>();
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridReadiumViewSpecImpl::javaobject()>();
     jni::local_ref<JHybridReadiumViewSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
     return javaPart->getJHybridReadiumViewSpec();
   }
@@ -49,9 +54,14 @@ void registerAllNatives() {
   margelo::nitro::readium::JHybridReadiumViewSpec::CxxPart::registerNatives();
   margelo::nitro::readium::JFunc_void_Locator_cxx::registerNatives();
   margelo::nitro::readium::JFunc_void_PublicationReadyEvent_cxx::registerNatives();
+  margelo::nitro::readium::JFunc_void_PublicationInfo_cxx::registerNatives();
+  margelo::nitro::readium::JFunc_void_ReadiumError_cxx::registerNatives();
+  margelo::nitro::readium::JFunc_void_UnsupportedCapabilityEvent_cxx::registerNatives();
+  margelo::nitro::readium::JFunc_void_SearchProgressEvent_cxx::registerNatives();
   margelo::nitro::readium::JFunc_void_DecorationActivatedEvent_cxx::registerNatives();
   margelo::nitro::readium::JFunc_void_SelectionEvent_cxx::registerNatives();
   margelo::nitro::readium::JFunc_void_SelectionActionEvent_cxx::registerNatives();
+  margelo::nitro::readium::JFunc_void_MediaState_cxx::registerNatives();
   margelo::nitro::readium::views::JHybridReadiumViewStateUpdater::registerNatives();
 
   // Register Nitro Hybrid Objects

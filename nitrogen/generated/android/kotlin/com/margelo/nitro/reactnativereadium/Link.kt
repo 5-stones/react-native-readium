@@ -9,6 +9,7 @@ package com.margelo.nitro.reactnativereadium
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -23,6 +24,9 @@ data class Link(
   @DoNotStrip
   @Keep
   val title: String?,
+  @DoNotStrip
+  @Keep
+  val type: String?,
   @DoNotStrip
   @Keep
   val rels: Array<String>?,
@@ -40,9 +44,42 @@ data class Link(
   val parentHref: String?,
   @DoNotStrip
   @Keep
-  val position: Double?
+  val position: Double?,
+  @DoNotStrip
+  @Keep
+  val duration: Double?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is Link) return false
+    return Objects.deepEquals(this.href, other.href)
+      && Objects.deepEquals(this.title, other.title)
+      && Objects.deepEquals(this.type, other.type)
+      && Objects.deepEquals(this.rels, other.rels)
+      && Objects.deepEquals(this.languages, other.languages)
+      && Objects.deepEquals(this.depth, other.depth)
+      && Objects.deepEquals(this.hasChildren, other.hasChildren)
+      && Objects.deepEquals(this.parentHref, other.parentHref)
+      && Objects.deepEquals(this.position, other.position)
+      && Objects.deepEquals(this.duration, other.duration)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      href,
+      title,
+      type,
+      rels,
+      languages,
+      depth,
+      hasChildren,
+      parentHref,
+      position,
+      duration
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**
@@ -52,8 +89,8 @@ data class Link(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(href: String, title: String?, rels: Array<String>?, languages: Array<String>?, depth: Double?, hasChildren: Boolean?, parentHref: String?, position: Double?): Link {
-      return Link(href, title, rels, languages, depth, hasChildren, parentHref, position)
+    private fun fromCpp(href: String, title: String?, type: String?, rels: Array<String>?, languages: Array<String>?, depth: Double?, hasChildren: Boolean?, parentHref: String?, position: Double?, duration: Double?): Link {
+      return Link(href, title, type, rels, languages, depth, hasChildren, parentHref, position, duration)
     }
   }
 }

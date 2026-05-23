@@ -1,26 +1,18 @@
-const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+const { getDefaultConfig } = require('expo/metro-config');
 const path = require('path');
 
-const root = path.resolve(__dirname, '../..');
+const projectRoot = __dirname;
+const workspaceRoot = path.resolve(projectRoot, '../..');
 
-/**
- * Metro configuration for monorepo
- * https://reactnative.dev/docs/metro
- *
- * @type {import('@react-native/metro-config').MetroConfig}
- */
-const config = {
-  projectRoot: __dirname,
-  watchFolders: [root],
+const config = getDefaultConfig(projectRoot);
 
-  transformer: {
-    getTransformOptions: async () => ({
-      transform: {
-        experimentalImportSupport: false,
-        inlineRequires: true,
-      },
-    }),
-  },
-};
+config.projectRoot = projectRoot;
+config.watchFolders = [projectRoot, workspaceRoot];
+config.resolver.nodeModulesPaths = [
+  path.join(projectRoot, 'node_modules'),
+  path.join(workspaceRoot, 'node_modules'),
+];
+config.resolver.disableHierarchicalLookup = true;
+config.resolver.assetExts = [...config.resolver.assetExts, 'epub'];
 
-module.exports = mergeConfig(getDefaultConfig(__dirname), config);
+module.exports = config;

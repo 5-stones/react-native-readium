@@ -10,6 +10,7 @@ package com.margelo.nitro.reactnativereadium
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
+import com.margelo.nitro.core.Promise
 import com.margelo.nitro.core.HybridObject
 import com.margelo.nitro.views.HybridView
 
@@ -78,6 +79,62 @@ abstract class HybridReadiumViewSpec: HybridView() {
       onPublicationReady = value?.let { it }
     }
   
+  abstract var onReady: ((event: PublicationInfo) -> Unit)?
+  
+  private var onReady_cxx: Func_void_PublicationInfo?
+    @Keep
+    @DoNotStrip
+    get() {
+      return onReady?.let { Func_void_PublicationInfo_java(it) }
+    }
+    @Keep
+    @DoNotStrip
+    set(value) {
+      onReady = value?.let { it }
+    }
+  
+  abstract var onError: ((error: ReadiumError) -> Unit)?
+  
+  private var onError_cxx: Func_void_ReadiumError?
+    @Keep
+    @DoNotStrip
+    get() {
+      return onError?.let { Func_void_ReadiumError_java(it) }
+    }
+    @Keep
+    @DoNotStrip
+    set(value) {
+      onError = value?.let { it }
+    }
+  
+  abstract var onUnsupportedCapability: ((event: UnsupportedCapabilityEvent) -> Unit)?
+  
+  private var onUnsupportedCapability_cxx: Func_void_UnsupportedCapabilityEvent?
+    @Keep
+    @DoNotStrip
+    get() {
+      return onUnsupportedCapability?.let { Func_void_UnsupportedCapabilityEvent_java(it) }
+    }
+    @Keep
+    @DoNotStrip
+    set(value) {
+      onUnsupportedCapability = value?.let { it }
+    }
+  
+  abstract var onSearchProgress: ((event: SearchProgressEvent) -> Unit)?
+  
+  private var onSearchProgress_cxx: Func_void_SearchProgressEvent?
+    @Keep
+    @DoNotStrip
+    get() {
+      return onSearchProgress?.let { Func_void_SearchProgressEvent_java(it) }
+    }
+    @Keep
+    @DoNotStrip
+    set(value) {
+      onSearchProgress = value?.let { it }
+    }
+  
   abstract var onDecorationActivated: ((event: DecorationActivatedEvent) -> Unit)?
   
   private var onDecorationActivated_cxx: Func_void_DecorationActivatedEvent?
@@ -119,6 +176,34 @@ abstract class HybridReadiumViewSpec: HybridView() {
     set(value) {
       onSelectionAction = value?.let { it }
     }
+  
+  abstract var onMediaStateChange: ((state: MediaState) -> Unit)?
+  
+  private var onMediaStateChange_cxx: Func_void_MediaState?
+    @Keep
+    @DoNotStrip
+    get() {
+      return onMediaStateChange?.let { Func_void_MediaState_java(it) }
+    }
+    @Keep
+    @DoNotStrip
+    set(value) {
+      onMediaStateChange = value?.let { it }
+    }
+  
+  abstract var onMediaError: ((error: ReadiumError) -> Unit)?
+  
+  private var onMediaError_cxx: Func_void_ReadiumError?
+    @Keep
+    @DoNotStrip
+    get() {
+      return onMediaError?.let { Func_void_ReadiumError_java(it) }
+    }
+    @Keep
+    @DoNotStrip
+    set(value) {
+      onMediaError = value?.let { it }
+    }
 
   // Methods
   @DoNotStrip
@@ -136,6 +221,94 @@ abstract class HybridReadiumViewSpec: HybridView() {
   @DoNotStrip
   @Keep
   abstract fun destroy(): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun getPublication(): Promise<PublicationInfo>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun getCurrentLocation(): Promise<Locator>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun getCurrentSelection(): Promise<SelectionEvent>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun clearSelection(): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun setSelection(locator: Locator): Promise<Boolean>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun search(query: String, options: SearchOptions?): Promise<Array<SearchResult>>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun cancelSearch(): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun getResource(href: String): Promise<ResourceResponse>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun getPositions(): Promise<Array<Locator>>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun getTableOfContents(): Promise<Array<Link>>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun applyPreferences(preferences: Preferences): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun setPdfPreferences(preferences: PdfPreferences): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun setComicPreferences(preferences: ComicPreferences): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun setAudioPreferences(preferences: AudioPreferences): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun play(): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun pause(): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun stop(): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun seekTo(position: Double): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun skipToNext(): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun skipToPrevious(): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun setPlaybackRate(rate: Double): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun getMediaState(): Promise<MediaState>
 
   // Default implementation of `HybridObject.toString()`
   override fun toString(): String {

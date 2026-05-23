@@ -1,11 +1,13 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import type { ReadiumProps } from 'react-native-readium';
 import { RANGES } from 'react-native-readium';
 import { ReaderButton } from './ReaderButton';
 import { BaseModal } from './BaseModal';
-import { modalStyles, colors } from '../styles/modal';
+import { modalStyles } from '../styles/modal';
+import { palette, radii, space, typography } from '../styles/theme';
 
 interface Props {
   preferences: ReadiumProps['preferences'];
@@ -14,31 +16,21 @@ interface Props {
 
 type Theme = NonNullable<ReadiumProps['preferences']['theme']>;
 
-const THEME_LABELS: Record<Theme, string> = {
-  light: 'Light',
-  dark: 'Dark',
-  sepia: 'Sepia',
-};
+const THEMES: Array<{ value: Theme; label: string; icon: string }> = [
+  { value: 'light', label: 'Light', icon: 'wb-sunny' },
+  { value: 'sepia', label: 'Sepia', icon: 'local-cafe' },
+  { value: 'dark', label: 'Dark', icon: 'nights-stay' },
+];
 
 export const PreferencesEditor = ({ preferences, onChange }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const nextAppearance = useCallback((theme?: Theme) => {
-    if (theme === 'light') {
-      return 'dark';
-    } else if (theme === 'dark') {
-      return 'sepia';
-    } else {
-      return 'light';
-    }
-  }, []);
-
-  const handleThemeChange = () => {
-    onChange({
-      ...preferences,
-      theme: nextAppearance(preferences.theme),
-    });
-  };
+  const handleThemeChange = useCallback(
+    (theme: Theme) => {
+      onChange({ ...preferences, theme });
+    },
+    [preferences, onChange]
+  );
 
   const handleFontSizeChange = (fontSize: number) => {
     onChange({
@@ -55,41 +47,56 @@ export const PreferencesEditor = ({ preferences, onChange }: Props) => {
     });
   };
 
+  const activeTheme = preferences.theme || 'light';
+
   return (
     <>
-      <ReaderButton size={35} name="settings" onPress={() => setIsOpen(true)} />
+      <ReaderButton size={22} name="tune" onPress={() => setIsOpen(true)} />
 
       <BaseModal
         visible={isOpen}
-        title="Reader Settings"
+        title="Reading Settings"
         onClose={() => setIsOpen(false)}
       >
-        {/* Theme Setting */}
-        <View style={modalStyles.cardItem}>
-          <View style={styles.settingHeader}>
-            <Text style={styles.settingLabel}>Theme</Text>
-            <TouchableOpacity
-              style={styles.themeButton}
-              onPress={handleThemeChange}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.themeButtonText}>
-                {THEME_LABELS[preferences.theme || 'light']}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.settingDescription}>
-            Change the reading theme appearance
-          </Text>
+        <Text style={styles.sectionLabel}>Theme</Text>
+        <View style={styles.themeGroup}>
+          {THEMES.map((t) => {
+            const active = activeTheme === t.value;
+            return (
+              <TouchableOpacity
+                key={t.value}
+                style={[styles.themeOption, active && styles.themeOptionActive]}
+                onPress={() => handleThemeChange(t.value)}
+                activeOpacity={0.7}
+              >
+                <MaterialIcons
+                  name={t.icon}
+                  size={20}
+                  color={
+                    active ? palette.textInverse : palette.textSecondary
+                  }
+                />
+                <Text
+                  style={[
+                    styles.themeLabel,
+                    active && styles.themeLabelActive,
+                  ]}
+                >
+                  {t.label}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
 
-        {/* Font Size Setting */}
+        <Text style={styles.sectionLabel}>Font Size</Text>
         <View style={modalStyles.cardItem}>
           <View style={styles.settingHeader}>
-            <Text style={styles.settingLabel}>Font Size</Text>
-            <Text style={styles.settingValue}>
+            <Text style={styles.aA}>A</Text>
+            <Text style={styles.value}>
               {preferences.fontSize?.toFixed(1) || '1.0'}
             </Text>
+            <Text style={[styles.aA, styles.aALarge]}>A</Text>
           </View>
           <Slider
             style={styles.slider}
@@ -98,23 +105,26 @@ export const PreferencesEditor = ({ preferences, onChange }: Props) => {
             step={0.1}
             value={preferences.fontSize}
             onSlidingComplete={handleFontSizeChange}
-            minimumTrackTintColor={colors.primary}
-            maximumTrackTintColor={colors.border.secondary}
-            thumbTintColor={colors.primary}
+            minimumTrackTintColor={palette.accent}
+            maximumTrackTintColor={palette.border}
+            thumbTintColor={palette.accent}
           />
-          <View style={styles.rangeLabels}>
-            <Text style={styles.rangeLabel}>Small</Text>
-            <Text style={styles.rangeLabel}>Large</Text>
-          </View>
         </View>
 
-        {/* Page Margin Setting */}
-        <View style={[modalStyles.cardItem, modalStyles.cardItemLast]}>
+        <Text style={styles.sectionLabel}>Page Margins</Text>
+        <View style={modalStyles.cardItem}>
           <View style={styles.settingHeader}>
-            <Text style={styles.settingLabel}>Page Margin</Text>
-            <Text style={styles.settingValue}>
-              {preferences.pageMargins || 0}
-            </Text>
+            <MaterialIcons
+              name="format-indent-decrease"
+              size={18}
+              color={palette.textTertiary}
+            />
+            <Text style={styles.value}>{preferences.pageMargins || 0}</Text>
+            <MaterialIcons
+              name="format-indent-increase"
+              size={18}
+              color={palette.textTertiary}
+            />
           </View>
           <Slider
             style={styles.slider}
@@ -123,14 +133,10 @@ export const PreferencesEditor = ({ preferences, onChange }: Props) => {
             step={1}
             value={preferences.pageMargins}
             onSlidingComplete={handlePageMarginsChange}
-            minimumTrackTintColor={colors.primary}
-            maximumTrackTintColor={colors.border.secondary}
-            thumbTintColor={colors.primary}
+            minimumTrackTintColor={palette.accent}
+            maximumTrackTintColor={palette.border}
+            thumbTintColor={palette.accent}
           />
-          <View style={styles.rangeLabels}>
-            <Text style={styles.rangeLabel}>Narrow</Text>
-            <Text style={styles.rangeLabel}>Wide</Text>
-          </View>
         </View>
       </BaseModal>
     </>
@@ -138,52 +144,62 @@ export const PreferencesEditor = ({ preferences, onChange }: Props) => {
 };
 
 const styles = StyleSheet.create({
+  sectionLabel: {
+    ...typography.caption,
+    marginTop: space.sm,
+    marginBottom: space.sm,
+  },
+  themeGroup: {
+    flexDirection: 'row',
+    gap: space.sm,
+    marginBottom: space.lg,
+  },
+  themeOption: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: space.xs,
+    paddingVertical: space.md,
+    backgroundColor: palette.surface,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: palette.border,
+  },
+  themeOptionActive: {
+    backgroundColor: palette.accent,
+    borderColor: palette.accent,
+  },
+  themeLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: palette.textSecondary,
+  },
+  themeLabelActive: {
+    color: palette.textInverse,
+  },
   settingHeader: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: space.xs,
   },
-  settingLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.text.primary,
-  },
-  settingValue: {
-    fontSize: 15,
-    fontWeight: '500',
-    color: colors.primary,
-  },
-  settingDescription: {
+  aA: {
     fontSize: 13,
-    color: colors.text.secondary,
-    marginTop: 4,
+    fontWeight: '700',
+    color: palette.textTertiary,
   },
-  themeButton: {
-    backgroundColor: colors.primary,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 6,
-    minWidth: 80,
-    alignItems: 'center',
+  aALarge: {
+    fontSize: 20,
   },
-  themeButtonText: {
-    color: '#FFFFFF',
-    fontSize: 14,
+  value: {
+    fontSize: 13,
     fontWeight: '600',
+    color: palette.textPrimary,
+    fontVariant: ['tabular-nums'],
   },
   slider: {
     width: '100%',
-    height: 40,
-    marginVertical: 8,
-  },
-  rangeLabels: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 4,
-  },
-  rangeLabel: {
-    fontSize: 12,
-    color: colors.text.tertiary,
+    height: 36,
   },
 });

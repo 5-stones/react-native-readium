@@ -9,6 +9,7 @@ package com.margelo.nitro.reactnativereadium
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -37,6 +38,28 @@ data class Locator(
   val text: LocatorText?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is Locator) return false
+    return Objects.deepEquals(this.href, other.href)
+      && Objects.deepEquals(this.type, other.type)
+      && Objects.deepEquals(this.target, other.target)
+      && Objects.deepEquals(this.title, other.title)
+      && Objects.deepEquals(this.locations, other.locations)
+      && Objects.deepEquals(this.text, other.text)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      href,
+      type,
+      target,
+      title,
+      locations,
+      text
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

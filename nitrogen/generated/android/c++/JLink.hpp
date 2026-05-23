@@ -23,7 +23,7 @@ namespace margelo::nitro::readium {
    */
   struct JLink final: public jni::JavaClass<JLink> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Link;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Link;";
 
   public:
     /**
@@ -37,6 +37,8 @@ namespace margelo::nitro::readium {
       jni::local_ref<jni::JString> href = this->getFieldValue(fieldHref);
       static const auto fieldTitle = clazz->getField<jni::JString>("title");
       jni::local_ref<jni::JString> title = this->getFieldValue(fieldTitle);
+      static const auto fieldType = clazz->getField<jni::JString>("type");
+      jni::local_ref<jni::JString> type = this->getFieldValue(fieldType);
       static const auto fieldRels = clazz->getField<jni::JArrayClass<jni::JString>>("rels");
       jni::local_ref<jni::JArrayClass<jni::JString>> rels = this->getFieldValue(fieldRels);
       static const auto fieldLanguages = clazz->getField<jni::JArrayClass<jni::JString>>("languages");
@@ -49,33 +51,37 @@ namespace margelo::nitro::readium {
       jni::local_ref<jni::JString> parentHref = this->getFieldValue(fieldParentHref);
       static const auto fieldPosition = clazz->getField<jni::JDouble>("position");
       jni::local_ref<jni::JDouble> position = this->getFieldValue(fieldPosition);
+      static const auto fieldDuration = clazz->getField<jni::JDouble>("duration");
+      jni::local_ref<jni::JDouble> duration = this->getFieldValue(fieldDuration);
       return Link(
         href->toStdString(),
         title != nullptr ? std::make_optional(title->toStdString()) : std::nullopt,
-        rels != nullptr ? std::make_optional([&]() {
-          size_t __size = rels->size();
+        type != nullptr ? std::make_optional(type->toStdString()) : std::nullopt,
+        rels != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<std::string> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = rels->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toStdString());
           }
           return __vector;
-        }()) : std::nullopt,
-        languages != nullptr ? std::make_optional([&]() {
-          size_t __size = languages->size();
+        }(rels)) : std::nullopt,
+        languages != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<std::string> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = languages->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toStdString());
           }
           return __vector;
-        }()) : std::nullopt,
+        }(languages)) : std::nullopt,
         depth != nullptr ? std::make_optional(depth->value()) : std::nullopt,
         hasChildren != nullptr ? std::make_optional(static_cast<bool>(hasChildren->value())) : std::nullopt,
         parentHref != nullptr ? std::make_optional(parentHref->toStdString()) : std::nullopt,
-        position != nullptr ? std::make_optional(position->value()) : std::nullopt
+        position != nullptr ? std::make_optional(position->value()) : std::nullopt,
+        duration != nullptr ? std::make_optional(duration->value()) : std::nullopt
       );
     }
 
@@ -85,37 +91,39 @@ namespace margelo::nitro::readium {
      */
     [[maybe_unused]]
     static jni::local_ref<JLink::javaobject> fromCpp(const Link& value) {
-      using JSignature = JLink(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JArrayClass<jni::JString>>, jni::alias_ref<jni::JArrayClass<jni::JString>>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JDouble>);
+      using JSignature = JLink(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JArrayClass<jni::JString>>, jni::alias_ref<jni::JArrayClass<jni::JString>>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         jni::make_jstring(value.href),
         value.title.has_value() ? jni::make_jstring(value.title.value()) : nullptr,
-        value.rels.has_value() ? [&]() {
-          size_t __size = value.rels.value().size();
+        value.type.has_value() ? jni::make_jstring(value.type.value()) : nullptr,
+        value.rels.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.rels.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = jni::make_jstring(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.languages.has_value() ? [&]() {
-          size_t __size = value.languages.value().size();
+        }(value.rels.value()) : nullptr,
+        value.languages.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.languages.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = jni::make_jstring(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
+        }(value.languages.value()) : nullptr,
         value.depth.has_value() ? jni::JDouble::valueOf(value.depth.value()) : nullptr,
         value.hasChildren.has_value() ? jni::JBoolean::valueOf(value.hasChildren.value()) : nullptr,
         value.parentHref.has_value() ? jni::make_jstring(value.parentHref.value()) : nullptr,
-        value.position.has_value() ? jni::JDouble::valueOf(value.position.value()) : nullptr
+        value.position.has_value() ? jni::JDouble::valueOf(value.position.value()) : nullptr,
+        value.duration.has_value() ? jni::JDouble::valueOf(value.duration.value()) : nullptr
       );
     }
   };

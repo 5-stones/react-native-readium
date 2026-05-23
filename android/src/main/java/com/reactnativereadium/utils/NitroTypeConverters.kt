@@ -15,6 +15,7 @@ import org.readium.r2.shared.util.Language
 import org.readium.r2.shared.publication.Locator as ReadiumLocator
 import org.readium.r2.shared.publication.Link as ReadiumLink
 import org.readium.r2.shared.publication.Metadata as ReadiumMetadata
+import org.readium.r2.shared.publication.Publication as ReadiumPublication
 import org.readium.r2.shared.util.Url as ReadiumUrl
 import org.readium.r2.shared.util.mediatype.MediaType as ReadiumMediaType
 import org.readium.r2.navigator.Decoration as ReadiumDecoration
@@ -121,6 +122,7 @@ internal fun nitroLocatorToReadium(loc: Locator): ReadiumLocator? {
   // Merge any fragment from the href into locations.fragments
   val fragments = buildList {
     normalized.fragment?.let { add(it) }
+    loc.locations?.fragments?.let { addAll(it) }
   }
 
   return ReadiumLocator(
@@ -191,6 +193,7 @@ internal fun parseColorString(colorString: String?): Int {
 
 internal fun readiumLocatorToNitro(loc: ReadiumLocator): Locator {
   val locations = LocatorLocations(
+    fragments = loc.locations.fragments.toTypedArray(),
     progression = loc.locations.progression ?: 0.0,
     position = loc.locations.position?.toDouble(),
     totalProgression = loc.locations.totalProgression
@@ -218,12 +221,14 @@ internal fun readiumLinkToNitro(link: ReadiumLink, depth: Double = 0.0, parentHr
   return Link(
     href = link.href.toString(),
     title = link.title,
+    type = link.mediaType?.toString(),
     rels = link.rels.toTypedArray(),
     languages = link.languages.toTypedArray(),
     depth = depth,
     hasChildren = if (link.children.isNotEmpty()) true else null,
     parentHref = parentHref,
-    position = position
+    position = position,
+    duration = link.duration
   )
 }
 
@@ -321,3 +326,57 @@ internal fun readiumMetadataToNitro(meta: ReadiumMetadata): PublicationMetadata 
 }
 
 internal fun colorToHex(color: Int): String = String.format("#%08X", color)
+
+internal fun readiumPublicationFormat(publication: ReadiumPublication): String {
+  val profiles = publication.metadata.conformsTo.map { it.uri }.toSet()
+  return when {
+    profiles.any { it.endsWith("/epub") } -> "epub"
+    profiles.any { it.endsWith("/pdf") } -> "pdf"
+    profiles.any { it.endsWith("/divina") } -> "divina"
+    profiles.any { it.endsWith("/audiobook") } -> "audiobook"
+    publication.readingOrder.all { it.mediaType?.toString()?.startsWith("audio/") == true } -> "audio"
+    publication.readingOrder.all { it.mediaType?.toString()?.startsWith("image/") == true } -> "cbz"
+    else -> "unknown"
+  }
+}
+
+internal fun readiumCapabilitiesFor(format: String): PublicationCapabilities {
+  val isVisual = format != "audiobook" && format != "audio"
+  val isDecoratable = format == "epub"
+  val isSelectable = format == "epub" || format == "pdf"
+  val isSearchable = format == "epub" || format == "pdf"
+  val hasMedia = format == "audiobook" || format == "audio"
+  return PublicationCapabilities(
+    locations = true,
+    tableOfContents = true,
+    positions = true,
+    preferences = true,
+    decorations = isDecoratable,
+    selection = isSelectable,
+    search = isSearchable,
+    resources = true,
+    mediaPlayback = hasMedia,
+    mediaOverlays = false,
+    tts = false
+  )
+}
+
+internal fun readiumPublicationInfo(
+  publication: ReadiumPublication,
+  positions: List<ReadiumLocator>
+): PublicationInfo {
+  val format = readiumPublicationFormat(publication)
+  return PublicationInfo(
+    format = format,
+    capabilities = readiumCapabilitiesFor(format),
+    tableOfContents = flattenReadiumLinks(publication.tableOfContents).toTypedArray(),
+    readingOrder = publication.readingOrder.mapIndexed { index, link ->
+      readiumLinkToNitro(link, position = index.toDouble())
+    }.toTypedArray(),
+    resources = publication.resources.mapIndexed { index, link ->
+      readiumLinkToNitro(link, position = index.toDouble())
+    }.toTypedArray(),
+    positions = positions.map { readiumLocatorToNitro(it) }.toTypedArray(),
+    metadata = readiumMetadataToNitro(publication.metadata)
+  )
+}

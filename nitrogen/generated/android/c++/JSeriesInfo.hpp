@@ -22,7 +22,7 @@ namespace margelo::nitro::readium {
    */
   struct JSeriesInfo final: public jni::JavaClass<JSeriesInfo> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/SeriesInfo;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/SeriesInfo;";
 
   public:
     /**

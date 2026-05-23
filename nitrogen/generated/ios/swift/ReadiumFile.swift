@@ -18,8 +18,20 @@ public extension ReadiumFile {
   /**
    * Create a new instance of `ReadiumFile`.
    */
-  init(url: String, initialLocation: Locator?) {
-    self.init(std.string(url), { () -> bridge.std__optional_Locator_ in
+  init(url: String, mediaType: String?, formatHint: String?, initialLocation: Locator?) {
+    self.init(std.string(url), { () -> bridge.std__optional_std__string_ in
+      if let __unwrappedValue = mediaType {
+        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__string_ in
+      if let __unwrappedValue = formatHint {
+        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_Locator_ in
       if let __unwrappedValue = initialLocation {
         return bridge.create_std__optional_Locator_(__unwrappedValue)
       } else {
@@ -31,6 +43,30 @@ public extension ReadiumFile {
   @inline(__always)
   var url: String {
     return String(self.__url)
+  }
+  
+  @inline(__always)
+  var mediaType: String? {
+    return { () -> String? in
+      if bridge.has_value_std__optional_std__string_(self.__mediaType) {
+        let __unwrapped = bridge.get_std__optional_std__string_(self.__mediaType)
+        return String(__unwrapped)
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var formatHint: String? {
+    return { () -> String? in
+      if bridge.has_value_std__optional_std__string_(self.__formatHint) {
+        let __unwrapped = bridge.get_std__optional_std__string_(self.__formatHint)
+        return String(__unwrapped)
+      } else {
+        return nil
+      }
+    }()
   }
   
   @inline(__always)

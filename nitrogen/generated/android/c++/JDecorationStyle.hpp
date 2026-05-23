@@ -22,7 +22,7 @@ namespace margelo::nitro::readium {
    */
   struct JDecorationStyle final: public jni::JavaClass<JDecorationStyle> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/DecorationStyle;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/DecorationStyle;";
 
   public:
     /**

@@ -27,6 +27,7 @@
 #include <optional>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace margelo::nitro::readium {
 
@@ -37,7 +38,7 @@ namespace margelo::nitro::readium {
    */
   struct JDecorationActivatedEvent final: public jni::JavaClass<JDecorationActivatedEvent> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/DecorationActivatedEvent;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/DecorationActivatedEvent;";
 
   public:
     /**

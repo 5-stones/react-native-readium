@@ -9,6 +9,7 @@ package com.margelo.nitro.reactnativereadium
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -17,6 +18,9 @@ import com.facebook.proguard.annotations.DoNotStrip
 @DoNotStrip
 @Keep
 data class LocatorLocations(
+  @DoNotStrip
+  @Keep
+  val fragments: Array<String>?,
   @DoNotStrip
   @Keep
   val progression: Double,
@@ -29,6 +33,24 @@ data class LocatorLocations(
 ) {
   /* primary constructor */
 
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is LocatorLocations) return false
+    return Objects.deepEquals(this.fragments, other.fragments)
+      && Objects.deepEquals(this.progression, other.progression)
+      && Objects.deepEquals(this.position, other.position)
+      && Objects.deepEquals(this.totalProgression, other.totalProgression)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      fragments,
+      progression,
+      position,
+      totalProgression
+    ).contentDeepHashCode()
+  }
+
   companion object {
     /**
      * Constructor called from C++
@@ -37,8 +59,8 @@ data class LocatorLocations(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(progression: Double, position: Double?, totalProgression: Double?): LocatorLocations {
-      return LocatorLocations(progression, position, totalProgression)
+    private fun fromCpp(fragments: Array<String>?, progression: Double, position: Double?, totalProgression: Double?): LocatorLocations {
+      return LocatorLocations(fragments, progression, position, totalProgression)
     }
   }
 }

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import type { Locator } from 'react-native-readium';
 import { BaseModal } from '../BaseModal';
 import { ColorPicker } from './ColorPicker';
 import { modalStyles, HIGHLIGHT_COLORS } from '../../styles/modal';
+import { palette, space, typography } from '../../styles/theme';
 
 interface HighlightColorPickerProps {
   visible: boolean;
@@ -25,14 +26,12 @@ export const HighlightColorPicker: React.FC<HighlightColorPickerProps> = ({
 
   const handleConfirm = () => {
     onConfirm(selectedColor, note);
-    // Reset state
     setSelectedColor(HIGHLIGHT_COLORS[0].value);
     setNote('');
   };
 
   const handleCancel = () => {
     onCancel();
-    // Reset state
     setSelectedColor(HIGHLIGHT_COLORS[0].value);
     setNote('');
   };
@@ -44,50 +43,74 @@ export const HighlightColorPicker: React.FC<HighlightColorPickerProps> = ({
   return (
     <BaseModal
       visible={visible}
-      title="Create Highlight"
+      title="New Highlight"
       onClose={handleCancel}
+      footer={
+        <View style={modalStyles.buttonRow}>
+          <TouchableOpacity
+            style={[modalStyles.button, modalStyles.cancelButton]}
+            onPress={handleCancel}
+          >
+            <Text style={modalStyles.cancelButtonText}>Cancel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[modalStyles.button, modalStyles.confirmButton]}
+            onPress={handleConfirm}
+          >
+            <Text style={modalStyles.buttonText}>Save</Text>
+          </TouchableOpacity>
+        </View>
+      }
     >
-      <View style={modalStyles.section}>
-        <Text style={modalStyles.sectionTitle}>Selected Text:</Text>
-        <Text style={modalStyles.selectedText} numberOfLines={3}>
+      <Text style={modalStyles.sectionTitle}>Excerpt</Text>
+      <View
+        style={[
+          styles.excerpt,
+          { borderLeftColor: selectedColor },
+        ]}
+      >
+        <Text style={styles.excerptText} numberOfLines={4}>
           {selectedText}
         </Text>
       </View>
 
-      <View style={modalStyles.section}>
-        <Text style={modalStyles.sectionTitle}>Choose Color:</Text>
-        <ColorPicker
-          selectedColor={selectedColor}
-          onColorSelect={setSelectedColor}
-        />
-      </View>
+      <Text style={modalStyles.sectionTitle}>Color</Text>
+      <ColorPicker
+        selectedColor={selectedColor}
+        onColorSelect={setSelectedColor}
+      />
 
-      <View style={modalStyles.section}>
-        <Text style={modalStyles.sectionTitle}>Add Note (optional):</Text>
-        <TextInput
-          style={modalStyles.textInput}
-          value={note}
-          onChangeText={setNote}
-          placeholder="Enter your note here..."
-          multiline
-          numberOfLines={3}
-        />
-      </View>
+      <Text style={[modalStyles.sectionTitle, { marginTop: space.xl }]}>
+        Note
+      </Text>
+      <TextInput
+        style={modalStyles.textInput}
+        value={note}
+        onChangeText={setNote}
+        placeholder="Add a note (optional)…"
+        placeholderTextColor={palette.textTertiary}
+        multiline
+        numberOfLines={3}
+      />
 
-      <View style={modalStyles.buttonRow}>
-        <TouchableOpacity
-          style={[modalStyles.button, modalStyles.cancelButton]}
-          onPress={handleCancel}
-        >
-          <Text style={modalStyles.buttonText}>Cancel</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[modalStyles.button, modalStyles.confirmButton]}
-          onPress={handleConfirm}
-        >
-          <Text style={modalStyles.buttonText}>Create Highlight</Text>
-        </TouchableOpacity>
-      </View>
     </BaseModal>
   );
 };
+
+const styles = StyleSheet.create({
+  excerpt: {
+    backgroundColor: palette.surface,
+    borderRadius: 8,
+    borderLeftWidth: 4,
+    borderWidth: 1,
+    borderColor: palette.border,
+    padding: space.md,
+    marginBottom: space.xl,
+  },
+  excerptText: {
+    ...typography.body,
+    color: palette.textSecondary,
+    fontStyle: 'italic',
+    lineHeight: 22,
+  },
+});

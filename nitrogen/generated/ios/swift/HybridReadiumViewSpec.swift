@@ -16,15 +16,43 @@ public protocol HybridReadiumViewSpec_protocol: HybridObject, HybridView {
   var selectionActions: [SelectionAction]? { get set }
   var onLocationChange: ((_ locator: Locator) -> Void)? { get set }
   var onPublicationReady: ((_ event: PublicationReadyEvent) -> Void)? { get set }
+  var onReady: ((_ event: PublicationInfo) -> Void)? { get set }
+  var onError: ((_ error: ReadiumError) -> Void)? { get set }
+  var onUnsupportedCapability: ((_ event: UnsupportedCapabilityEvent) -> Void)? { get set }
+  var onSearchProgress: ((_ event: SearchProgressEvent) -> Void)? { get set }
   var onDecorationActivated: ((_ event: DecorationActivatedEvent) -> Void)? { get set }
   var onSelectionChange: ((_ event: SelectionEvent) -> Void)? { get set }
   var onSelectionAction: ((_ event: SelectionActionEvent) -> Void)? { get set }
+  var onMediaStateChange: ((_ state: MediaState) -> Void)? { get set }
+  var onMediaError: ((_ error: ReadiumError) -> Void)? { get set }
 
   // Methods
   func goTo(locator: Locator) throws -> Void
   func goForward() throws -> Void
   func goBackward() throws -> Void
   func destroy() throws -> Void
+  func getPublication() throws -> Promise<PublicationInfo>
+  func getCurrentLocation() throws -> Promise<Locator>
+  func getCurrentSelection() throws -> Promise<SelectionEvent>
+  func clearSelection() throws -> Void
+  func setSelection(locator: Locator) throws -> Promise<Bool>
+  func search(query: String, options: SearchOptions?) throws -> Promise<[SearchResult]>
+  func cancelSearch() throws -> Void
+  func getResource(href: String) throws -> Promise<ResourceResponse>
+  func getPositions() throws -> Promise<[Locator]>
+  func getTableOfContents() throws -> Promise<[Link]>
+  func applyPreferences(preferences: Preferences) throws -> Void
+  func setPdfPreferences(preferences: PdfPreferences) throws -> Void
+  func setComicPreferences(preferences: ComicPreferences) throws -> Void
+  func setAudioPreferences(preferences: AudioPreferences) throws -> Void
+  func play() throws -> Void
+  func pause() throws -> Void
+  func stop() throws -> Void
+  func seekTo(position: Double) throws -> Void
+  func skipToNext() throws -> Void
+  func skipToPrevious() throws -> Void
+  func setPlaybackRate(rate: Double) throws -> Void
+  func getMediaState() throws -> Promise<MediaState>
 }
 
 public extension HybridReadiumViewSpec_protocol {

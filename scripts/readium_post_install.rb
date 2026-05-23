@@ -51,13 +51,23 @@ def readium_post_install(installer)
   end
 
   # Suppress the remaining module-import-in-extern-c diagnostic for zlib imports.
+  append_flag = lambda do |settings, key, flag|
+    existing = settings[key]
+    case existing
+    when Array
+      settings[key] = existing + [flag]
+    when String
+      settings[key] = "#{existing} #{flag}"
+    else
+      settings[key] = ['$(inherited)', flag]
+    end
+  end
+
   installer.pods_project.targets.each do |target|
     if target.name == 'Minizip'
       target.build_configurations.each do |config|
-        config.build_settings['OTHER_CFLAGS'] ||= '$(inherited)'
-        config.build_settings['OTHER_CFLAGS'] += ' -Wno-module-import-in-extern-c'
-        config.build_settings['OTHER_CPLUSPLUSFLAGS'] ||= '$(inherited)'
-        config.build_settings['OTHER_CPLUSPLUSFLAGS'] += ' -Wno-module-import-in-extern-c'
+        append_flag.call(config.build_settings, 'OTHER_CFLAGS', '-Wno-module-import-in-extern-c')
+        append_flag.call(config.build_settings, 'OTHER_CPLUSPLUSFLAGS', '-Wno-module-import-in-extern-c')
       end
     end
   end

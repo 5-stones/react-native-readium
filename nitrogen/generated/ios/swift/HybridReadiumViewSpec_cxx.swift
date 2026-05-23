@@ -279,6 +279,134 @@ open class HybridReadiumViewSpec_cxx {
     }
   }
   
+  public final var onReady: bridge.std__optional_std__function_void_const_PublicationInfo_____event______ {
+    @inline(__always)
+    get {
+      return { () -> bridge.std__optional_std__function_void_const_PublicationInfo_____event______ in
+        if let __unwrappedValue = self.__implementation.onReady {
+          return bridge.create_std__optional_std__function_void_const_PublicationInfo_____event______({ () -> bridge.Func_void_PublicationInfo in
+            let __closureWrapper = Func_void_PublicationInfo(__unwrappedValue)
+            return bridge.create_Func_void_PublicationInfo(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__implementation.onReady = { () -> ((_ event: PublicationInfo) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_const_PublicationInfo_____event______(newValue) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_const_PublicationInfo_____event______(newValue)
+          return { () -> (PublicationInfo) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_PublicationInfo(__unwrapped)
+            return { (__event: PublicationInfo) -> Void in
+              __wrappedFunction.call(__event)
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
+    }
+  }
+  
+  public final var onError: bridge.std__optional_std__function_void_const_ReadiumError_____error______ {
+    @inline(__always)
+    get {
+      return { () -> bridge.std__optional_std__function_void_const_ReadiumError_____error______ in
+        if let __unwrappedValue = self.__implementation.onError {
+          return bridge.create_std__optional_std__function_void_const_ReadiumError_____error______({ () -> bridge.Func_void_ReadiumError in
+            let __closureWrapper = Func_void_ReadiumError(__unwrappedValue)
+            return bridge.create_Func_void_ReadiumError(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__implementation.onError = { () -> ((_ error: ReadiumError) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_const_ReadiumError_____error______(newValue) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_const_ReadiumError_____error______(newValue)
+          return { () -> (ReadiumError) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_ReadiumError(__unwrapped)
+            return { (__error: ReadiumError) -> Void in
+              __wrappedFunction.call(__error)
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
+    }
+  }
+  
+  public final var onUnsupportedCapability: bridge.std__optional_std__function_void_const_UnsupportedCapabilityEvent_____event______ {
+    @inline(__always)
+    get {
+      return { () -> bridge.std__optional_std__function_void_const_UnsupportedCapabilityEvent_____event______ in
+        if let __unwrappedValue = self.__implementation.onUnsupportedCapability {
+          return bridge.create_std__optional_std__function_void_const_UnsupportedCapabilityEvent_____event______({ () -> bridge.Func_void_UnsupportedCapabilityEvent in
+            let __closureWrapper = Func_void_UnsupportedCapabilityEvent(__unwrappedValue)
+            return bridge.create_Func_void_UnsupportedCapabilityEvent(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__implementation.onUnsupportedCapability = { () -> ((_ event: UnsupportedCapabilityEvent) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_const_UnsupportedCapabilityEvent_____event______(newValue) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_const_UnsupportedCapabilityEvent_____event______(newValue)
+          return { () -> (UnsupportedCapabilityEvent) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_UnsupportedCapabilityEvent(__unwrapped)
+            return { (__event: UnsupportedCapabilityEvent) -> Void in
+              __wrappedFunction.call(__event)
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
+    }
+  }
+  
+  public final var onSearchProgress: bridge.std__optional_std__function_void_const_SearchProgressEvent_____event______ {
+    @inline(__always)
+    get {
+      return { () -> bridge.std__optional_std__function_void_const_SearchProgressEvent_____event______ in
+        if let __unwrappedValue = self.__implementation.onSearchProgress {
+          return bridge.create_std__optional_std__function_void_const_SearchProgressEvent_____event______({ () -> bridge.Func_void_SearchProgressEvent in
+            let __closureWrapper = Func_void_SearchProgressEvent(__unwrappedValue)
+            return bridge.create_Func_void_SearchProgressEvent(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__implementation.onSearchProgress = { () -> ((_ event: SearchProgressEvent) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_const_SearchProgressEvent_____event______(newValue) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_const_SearchProgressEvent_____event______(newValue)
+          return { () -> (SearchProgressEvent) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_SearchProgressEvent(__unwrapped)
+            return { (__event: SearchProgressEvent) -> Void in
+              __wrappedFunction.call(__event)
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
+    }
+  }
+  
   public final var onDecorationActivated: bridge.std__optional_std__function_void_const_DecorationActivatedEvent_____event______ {
     @inline(__always)
     get {
@@ -374,6 +502,70 @@ open class HybridReadiumViewSpec_cxx {
       }()
     }
   }
+  
+  public final var onMediaStateChange: bridge.std__optional_std__function_void_const_MediaState_____state______ {
+    @inline(__always)
+    get {
+      return { () -> bridge.std__optional_std__function_void_const_MediaState_____state______ in
+        if let __unwrappedValue = self.__implementation.onMediaStateChange {
+          return bridge.create_std__optional_std__function_void_const_MediaState_____state______({ () -> bridge.Func_void_MediaState in
+            let __closureWrapper = Func_void_MediaState(__unwrappedValue)
+            return bridge.create_Func_void_MediaState(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__implementation.onMediaStateChange = { () -> ((_ state: MediaState) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_const_MediaState_____state______(newValue) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_const_MediaState_____state______(newValue)
+          return { () -> (MediaState) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_MediaState(__unwrapped)
+            return { (__state: MediaState) -> Void in
+              __wrappedFunction.call(__state)
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
+    }
+  }
+  
+  public final var onMediaError: bridge.std__optional_std__function_void_const_ReadiumError_____error______ {
+    @inline(__always)
+    get {
+      return { () -> bridge.std__optional_std__function_void_const_ReadiumError_____error______ in
+        if let __unwrappedValue = self.__implementation.onMediaError {
+          return bridge.create_std__optional_std__function_void_const_ReadiumError_____error______({ () -> bridge.Func_void_ReadiumError in
+            let __closureWrapper = Func_void_ReadiumError(__unwrappedValue)
+            return bridge.create_Func_void_ReadiumError(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__implementation.onMediaError = { () -> ((_ error: ReadiumError) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_const_ReadiumError_____error______(newValue) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_const_ReadiumError_____error______(newValue)
+          return { () -> (ReadiumError) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_ReadiumError(__unwrapped)
+            return { (__error: ReadiumError) -> Void in
+              __wrappedFunction.call(__error)
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
+    }
+  }
 
   // Methods
   @inline(__always)
@@ -420,6 +612,338 @@ open class HybridReadiumViewSpec_cxx {
     }
   }
   
+  @inline(__always)
+  public final func getPublication() -> bridge.Result_std__shared_ptr_Promise_PublicationInfo___ {
+    do {
+      let __result = try self.__implementation.getPublication()
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_PublicationInfo__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_PublicationInfo__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_PublicationInfo__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve(__result) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_PublicationInfo___(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_PublicationInfo___(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func getCurrentLocation() -> bridge.Result_std__shared_ptr_Promise_Locator___ {
+    do {
+      let __result = try self.__implementation.getCurrentLocation()
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_Locator__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_Locator__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_Locator__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve(__result) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_Locator___(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_Locator___(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func getCurrentSelection() -> bridge.Result_std__shared_ptr_Promise_SelectionEvent___ {
+    do {
+      let __result = try self.__implementation.getCurrentSelection()
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_SelectionEvent__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_SelectionEvent__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_SelectionEvent__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve(__result) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_SelectionEvent___(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_SelectionEvent___(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func clearSelection() -> bridge.Result_void_ {
+    do {
+      try self.__implementation.clearSelection()
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func setSelection(locator: Locator) -> bridge.Result_std__shared_ptr_Promise_bool___ {
+    do {
+      let __result = try self.__implementation.setSelection(locator: locator)
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_bool__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_bool__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_bool__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve(__result) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_bool___(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_bool___(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func search(query: std.string, options: bridge.std__optional_SearchOptions_) -> bridge.Result_std__shared_ptr_Promise_std__vector_SearchResult____ {
+    do {
+      let __result = try self.__implementation.search(query: String(query), options: options.value)
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_std__vector_SearchResult___ in
+        let __promise = bridge.create_std__shared_ptr_Promise_std__vector_SearchResult___()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_std__vector_SearchResult___(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve({ () -> bridge.std__vector_SearchResult_ in
+              var __vector = bridge.create_std__vector_SearchResult_(__result.count)
+              for __item in __result {
+                __vector.push_back(__item)
+              }
+              return __vector
+            }()) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_std__vector_SearchResult____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_std__vector_SearchResult____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func cancelSearch() -> bridge.Result_void_ {
+    do {
+      try self.__implementation.cancelSearch()
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func getResource(href: std.string) -> bridge.Result_std__shared_ptr_Promise_ResourceResponse___ {
+    do {
+      let __result = try self.__implementation.getResource(href: String(href))
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_ResourceResponse__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_ResourceResponse__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_ResourceResponse__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve(__result) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_ResourceResponse___(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_ResourceResponse___(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func getPositions() -> bridge.Result_std__shared_ptr_Promise_std__vector_Locator____ {
+    do {
+      let __result = try self.__implementation.getPositions()
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_std__vector_Locator___ in
+        let __promise = bridge.create_std__shared_ptr_Promise_std__vector_Locator___()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_std__vector_Locator___(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve({ () -> bridge.std__vector_Locator_ in
+              var __vector = bridge.create_std__vector_Locator_(__result.count)
+              for __item in __result {
+                __vector.push_back(__item)
+              }
+              return __vector
+            }()) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_std__vector_Locator____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_std__vector_Locator____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func getTableOfContents() -> bridge.Result_std__shared_ptr_Promise_std__vector_Link____ {
+    do {
+      let __result = try self.__implementation.getTableOfContents()
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_std__vector_Link___ in
+        let __promise = bridge.create_std__shared_ptr_Promise_std__vector_Link___()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_std__vector_Link___(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve({ () -> bridge.std__vector_Link_ in
+              var __vector = bridge.create_std__vector_Link_(__result.count)
+              for __item in __result {
+                __vector.push_back(__item)
+              }
+              return __vector
+            }()) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_std__vector_Link____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_std__vector_Link____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func applyPreferences(preferences: Preferences) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.applyPreferences(preferences: preferences)
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func setPdfPreferences(preferences: PdfPreferences) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.setPdfPreferences(preferences: preferences)
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func setComicPreferences(preferences: ComicPreferences) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.setComicPreferences(preferences: preferences)
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func setAudioPreferences(preferences: AudioPreferences) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.setAudioPreferences(preferences: preferences)
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func play() -> bridge.Result_void_ {
+    do {
+      try self.__implementation.play()
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func pause() -> bridge.Result_void_ {
+    do {
+      try self.__implementation.pause()
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func stop() -> bridge.Result_void_ {
+    do {
+      try self.__implementation.stop()
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func seekTo(position: Double) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.seekTo(position: position)
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func skipToNext() -> bridge.Result_void_ {
+    do {
+      try self.__implementation.skipToNext()
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func skipToPrevious() -> bridge.Result_void_ {
+    do {
+      try self.__implementation.skipToPrevious()
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func setPlaybackRate(rate: Double) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.setPlaybackRate(rate: rate)
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func getMediaState() -> bridge.Result_std__shared_ptr_Promise_MediaState___ {
+    do {
+      let __result = try self.__implementation.getMediaState()
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_MediaState__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_MediaState__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_MediaState__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve(__result) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_MediaState___(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_MediaState___(__exceptionPtr)
+    }
+  }
+  
   public final func getView() -> UnsafeMutableRawPointer {
     return Unmanaged.passRetained(__implementation.view).toOpaque()
   }
@@ -435,5 +959,9 @@ open class HybridReadiumViewSpec_cxx {
   public final func maybePrepareForRecycle() {
     guard let recyclable = __implementation as? any RecyclableView else { return }
     recyclable.prepareForRecycle()
+  }
+  
+  public final func onDropView() {
+    __implementation.onDropView()
   }
 }

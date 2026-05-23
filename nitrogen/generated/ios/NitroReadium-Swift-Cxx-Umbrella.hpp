@@ -12,8 +12,12 @@
 namespace margelo::nitro::readium { struct AccessibilityCertification; }
 // Forward declaration of `Accessibility` to properly resolve imports.
 namespace margelo::nitro::readium { struct Accessibility; }
+// Forward declaration of `AudioPreferences` to properly resolve imports.
+namespace margelo::nitro::readium { struct AudioPreferences; }
 // Forward declaration of `BelongsTo` to properly resolve imports.
 namespace margelo::nitro::readium { struct BelongsTo; }
+// Forward declaration of `ComicPreferences` to properly resolve imports.
+namespace margelo::nitro::readium { struct ComicPreferences; }
 // Forward declaration of `Contributor` to properly resolve imports.
 namespace margelo::nitro::readium { struct Contributor; }
 // Forward declaration of `DecorationActivatedEvent` to properly resolve imports.
@@ -34,18 +38,38 @@ namespace margelo::nitro::readium { struct LocatorLocations; }
 namespace margelo::nitro::readium { struct LocatorText; }
 // Forward declaration of `Locator` to properly resolve imports.
 namespace margelo::nitro::readium { struct Locator; }
+// Forward declaration of `MediaState` to properly resolve imports.
+namespace margelo::nitro::readium { struct MediaState; }
+// Forward declaration of `MediaTrack` to properly resolve imports.
+namespace margelo::nitro::readium { struct MediaTrack; }
+// Forward declaration of `PdfPreferences` to properly resolve imports.
+namespace margelo::nitro::readium { struct PdfPreferences; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::readium { struct Point; }
 // Forward declaration of `Preferences` to properly resolve imports.
 namespace margelo::nitro::readium { struct Preferences; }
+// Forward declaration of `PublicationCapabilities` to properly resolve imports.
+namespace margelo::nitro::readium { struct PublicationCapabilities; }
+// Forward declaration of `PublicationInfo` to properly resolve imports.
+namespace margelo::nitro::readium { struct PublicationInfo; }
 // Forward declaration of `PublicationMetadata` to properly resolve imports.
 namespace margelo::nitro::readium { struct PublicationMetadata; }
 // Forward declaration of `PublicationReadyEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct PublicationReadyEvent; }
+// Forward declaration of `ReadiumError` to properly resolve imports.
+namespace margelo::nitro::readium { struct ReadiumError; }
 // Forward declaration of `ReadiumFile` to properly resolve imports.
 namespace margelo::nitro::readium { struct ReadiumFile; }
 // Forward declaration of `Rect` to properly resolve imports.
 namespace margelo::nitro::readium { struct Rect; }
+// Forward declaration of `ResourceResponse` to properly resolve imports.
+namespace margelo::nitro::readium { struct ResourceResponse; }
+// Forward declaration of `SearchOptions` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchOptions; }
+// Forward declaration of `SearchProgressEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchProgressEvent; }
+// Forward declaration of `SearchResult` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchResult; }
 // Forward declaration of `SelectionActionEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct SelectionActionEvent; }
 // Forward declaration of `SelectionAction` to properly resolve imports.
@@ -56,11 +80,15 @@ namespace margelo::nitro::readium { struct SelectionEvent; }
 namespace margelo::nitro::readium { struct SeriesInfo; }
 // Forward declaration of `Subject` to properly resolve imports.
 namespace margelo::nitro::readium { struct Subject; }
+// Forward declaration of `UnsupportedCapabilityEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct UnsupportedCapabilityEvent; }
 
 // Include C++ defined types
 #include "Accessibility.hpp"
 #include "AccessibilityCertification.hpp"
+#include "AudioPreferences.hpp"
 #include "BelongsTo.hpp"
+#include "ComicPreferences.hpp"
 #include "Contributor.hpp"
 #include "Decoration.hpp"
 #include "DecorationActivatedEvent.hpp"
@@ -71,17 +99,29 @@ namespace margelo::nitro::readium { struct Subject; }
 #include "Locator.hpp"
 #include "LocatorLocations.hpp"
 #include "LocatorText.hpp"
+#include "MediaState.hpp"
+#include "MediaTrack.hpp"
+#include "PdfPreferences.hpp"
 #include "Point.hpp"
 #include "Preferences.hpp"
+#include "PublicationCapabilities.hpp"
+#include "PublicationInfo.hpp"
 #include "PublicationMetadata.hpp"
 #include "PublicationReadyEvent.hpp"
+#include "ReadiumError.hpp"
 #include "ReadiumFile.hpp"
 #include "Rect.hpp"
+#include "ResourceResponse.hpp"
+#include "SearchOptions.hpp"
+#include "SearchProgressEvent.hpp"
+#include "SearchResult.hpp"
 #include "SelectionAction.hpp"
 #include "SelectionActionEvent.hpp"
 #include "SelectionEvent.hpp"
 #include "SeriesInfo.hpp"
 #include "Subject.hpp"
+#include "UnsupportedCapabilityEvent.hpp"
+#include <NitroModules/Promise.hpp>
 #include <NitroModules/Result.hpp>
 #include <exception>
 #include <functional>

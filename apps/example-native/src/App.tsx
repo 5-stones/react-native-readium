@@ -24,8 +24,15 @@ const books: BookOption[] = [
     id: 'brothers-karamazov',
     title: 'The Brothers Karamazov',
     author: 'Fyodor Dostoevsky',
-    bundledAsset: 'the-brothers-karamazov.epub',
+    bundledAsset: require('../resources/the-brothers-karamazov.epub'),
     epubPath: `${RNFS.DocumentDirectoryPath}/the-brothers-karamazov.epub`,
+  },
+  {
+    id: 'audio-sample',
+    title: 'Audio Sample (15s)',
+    author: 'Audiobook test fixture',
+    epubUrl: 'https://samplelib.com/lib/preview/mp3/sample-15s.mp3',
+    epubPath: `${RNFS.DocumentDirectoryPath}/audio-sample.mp3`,
   },
 ];
 

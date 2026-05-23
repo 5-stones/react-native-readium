@@ -10,9 +10,15 @@
     "selectionActions": true,
     "onLocationChange": true,
     "onPublicationReady": true,
+    "onReady": true,
+    "onError": true,
+    "onUnsupportedCapability": true,
+    "onSearchProgress": true,
     "onDecorationActivated": true,
     "onSelectionChange": true,
     "onSelectionAction": true,
+    "onMediaStateChange": true,
+    "onMediaError": true,
     "hybridRef": true
   }
 }

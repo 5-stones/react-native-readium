@@ -8,7 +8,11 @@ import {
   useDecorationsObserver,
 } from '../../web/hooks';
 import { convertToNavigatorLocator } from '../../web/utils/locationNormalizer';
+import { createUnsupportedCapabilityError } from '../utils/readerParity';
 import type { ReadiumProps as BaseReadiumProps, ReadiumViewRef as BaseReadiumViewRef } from './ReadiumView.types';
+
+const unsupported = (capability: string) =>
+  Promise.reject(createUnsupportedCapabilityError(capability, 'web'));
 
 export type ReadiumProps = BaseReadiumProps & {
   height?: number;
@@ -70,6 +74,39 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
         goBackward: () => {
           navigator?.goBackward(true, () => {});
         },
+        getPublication: () =>
+          unsupported('publicationInfo'),
+        getCurrentLocation: () =>
+          unsupported('currentLocation'),
+        getCurrentSelection: () =>
+          Promise.resolve({ selectedText: undefined }),
+        clearSelection: () => {
+          globalThis.getSelection?.()?.removeAllRanges();
+        },
+        setSelection: () => unsupported('setSelection'),
+        search: () => unsupported('search'),
+        cancelSearch: () => {},
+        getResource: () => unsupported('resources'),
+        getPositions: () => Promise.resolve(positions as any),
+        getTableOfContents: () => unsupported('tableOfContents'),
+        setPreferences: () => {},
+        setPdfPreferences: () => {},
+        setComicPreferences: () => {},
+        setAudioPreferences: () => {},
+        play: () => {},
+        pause: () => {},
+        stop: () => {},
+        seekTo: () => {},
+        skipToNext: () => {},
+        skipToPrevious: () => {},
+        setPlaybackRate: () => {},
+        getMediaState: () =>
+          Promise.resolve({
+            state: 'unsupported',
+            resourceIndex: 0,
+            position: 0,
+            playbackRate: 1,
+          }),
         /** @deprecated Use goForward() */
         nextPage: () => {
           navigator?.goForward(true, () => {});

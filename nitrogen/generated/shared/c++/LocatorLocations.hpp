@@ -30,6 +30,8 @@
 
 
 
+#include <string>
+#include <vector>
 #include <optional>
 
 namespace margelo::nitro::readium {
@@ -39,13 +41,14 @@ namespace margelo::nitro::readium {
    */
   struct LocatorLocations final {
   public:
+    std::optional<std::vector<std::string>> fragments     SWIFT_PRIVATE;
     double progression     SWIFT_PRIVATE;
     std::optional<double> position     SWIFT_PRIVATE;
     std::optional<double> totalProgression     SWIFT_PRIVATE;
 
   public:
     LocatorLocations() = default;
-    explicit LocatorLocations(double progression, std::optional<double> position, std::optional<double> totalProgression): progression(progression), position(position), totalProgression(totalProgression) {}
+    explicit LocatorLocations(std::optional<std::vector<std::string>> fragments, double progression, std::optional<double> position, std::optional<double> totalProgression): fragments(fragments), progression(progression), position(position), totalProgression(totalProgression) {}
 
   public:
     friend bool operator==(const LocatorLocations& lhs, const LocatorLocations& rhs) = default;
@@ -61,6 +64,7 @@ namespace margelo::nitro {
     static inline margelo::nitro::readium::LocatorLocations fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::readium::LocatorLocations(
+        JSIConverter<std::optional<std::vector<std::string>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "fragments"))),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "progression"))),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "position"))),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "totalProgression")))
@@ -68,6 +72,7 @@ namespace margelo::nitro {
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::readium::LocatorLocations& arg) {
       jsi::Object obj(runtime);
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "fragments"), JSIConverter<std::optional<std::vector<std::string>>>::toJSI(runtime, arg.fragments));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "progression"), JSIConverter<double>::toJSI(runtime, arg.progression));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "position"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.position));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "totalProgression"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.totalProgression));
@@ -81,6 +86,7 @@ namespace margelo::nitro {
       if (!nitro::isPlainObject(runtime, obj)) {
         return false;
       }
+      if (!JSIConverter<std::optional<std::vector<std::string>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "fragments")))) return false;
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "progression")))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "position")))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "totalProgression")))) return false;

@@ -22,6 +22,7 @@
 #include "JLocator.hpp"
 #include "JLocatorLocations.hpp"
 #include "JLocatorText.hpp"
+#include "JPublicationCapabilities.hpp"
 #include "JPublicationMetadata.hpp"
 #include "JSeriesInfo.hpp"
 #include "JSubject.hpp"
@@ -29,6 +30,7 @@
 #include "Locator.hpp"
 #include "LocatorLocations.hpp"
 #include "LocatorText.hpp"
+#include "PublicationCapabilities.hpp"
 #include "PublicationMetadata.hpp"
 #include "SeriesInfo.hpp"
 #include "Subject.hpp"
@@ -45,7 +47,7 @@ namespace margelo::nitro::readium {
    */
   struct JPublicationReadyEvent final: public jni::JavaClass<JPublicationReadyEvent> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/PublicationReadyEvent;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/PublicationReadyEvent;";
 
   public:
     /**
@@ -61,28 +63,58 @@ namespace margelo::nitro::readium {
       jni::local_ref<jni::JArrayClass<JLocator>> positions = this->getFieldValue(fieldPositions);
       static const auto fieldMetadata = clazz->getField<JPublicationMetadata>("metadata");
       jni::local_ref<JPublicationMetadata> metadata = this->getFieldValue(fieldMetadata);
+      static const auto fieldFormat = clazz->getField<jni::JString>("format");
+      jni::local_ref<jni::JString> format = this->getFieldValue(fieldFormat);
+      static const auto fieldCapabilities = clazz->getField<JPublicationCapabilities>("capabilities");
+      jni::local_ref<JPublicationCapabilities> capabilities = this->getFieldValue(fieldCapabilities);
+      static const auto fieldReadingOrder = clazz->getField<jni::JArrayClass<JLink>>("readingOrder");
+      jni::local_ref<jni::JArrayClass<JLink>> readingOrder = this->getFieldValue(fieldReadingOrder);
+      static const auto fieldResources = clazz->getField<jni::JArrayClass<JLink>>("resources");
+      jni::local_ref<jni::JArrayClass<JLink>> resources = this->getFieldValue(fieldResources);
       return PublicationReadyEvent(
-        [&]() {
-          size_t __size = tableOfContents->size();
+        [&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<Link> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = tableOfContents->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }(),
-        [&]() {
-          size_t __size = positions->size();
+        }(tableOfContents),
+        [&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<Locator> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = positions->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }(),
-        metadata->toCpp()
+        }(positions),
+        metadata->toCpp(),
+        format != nullptr ? std::make_optional(format->toStdString()) : std::nullopt,
+        capabilities != nullptr ? std::make_optional(capabilities->toCpp()) : std::nullopt,
+        readingOrder != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
+          std::vector<Link> __vector;
+          __vector.reserve(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            auto __element = __input->getElement(__i);
+            __vector.push_back(__element->toCpp());
+          }
+          return __vector;
+        }(readingOrder)) : std::nullopt,
+        resources != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
+          std::vector<Link> __vector;
+          __vector.reserve(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            auto __element = __input->getElement(__i);
+            __vector.push_back(__element->toCpp());
+          }
+          return __vector;
+        }(resources)) : std::nullopt
       );
     }
 
@@ -92,32 +124,54 @@ namespace margelo::nitro::readium {
      */
     [[maybe_unused]]
     static jni::local_ref<JPublicationReadyEvent::javaobject> fromCpp(const PublicationReadyEvent& value) {
-      using JSignature = JPublicationReadyEvent(jni::alias_ref<jni::JArrayClass<JLink>>, jni::alias_ref<jni::JArrayClass<JLocator>>, jni::alias_ref<JPublicationMetadata>);
+      using JSignature = JPublicationReadyEvent(jni::alias_ref<jni::JArrayClass<JLink>>, jni::alias_ref<jni::JArrayClass<JLocator>>, jni::alias_ref<JPublicationMetadata>, jni::alias_ref<jni::JString>, jni::alias_ref<JPublicationCapabilities>, jni::alias_ref<jni::JArrayClass<JLink>>, jni::alias_ref<jni::JArrayClass<JLink>>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
-        [&]() {
-          size_t __size = value.tableOfContents.size();
+        [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JLink>> __array = jni::JArrayClass<JLink>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.tableOfContents[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JLink::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }(),
-        [&]() {
-          size_t __size = value.positions.size();
+        }(value.tableOfContents),
+        [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JLocator>> __array = jni::JArrayClass<JLocator>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.positions[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JLocator::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }(),
-        JPublicationMetadata::fromCpp(value.metadata)
+        }(value.positions),
+        JPublicationMetadata::fromCpp(value.metadata),
+        value.format.has_value() ? jni::make_jstring(value.format.value()) : nullptr,
+        value.capabilities.has_value() ? JPublicationCapabilities::fromCpp(value.capabilities.value()) : nullptr,
+        value.readingOrder.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
+          jni::local_ref<jni::JArrayClass<JLink>> __array = jni::JArrayClass<JLink>::newArray(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            const auto& __element = __input[__i];
+            auto __elementJni = JLink::fromCpp(__element);
+            __array->setElement(__i, *__elementJni);
+          }
+          return __array;
+        }(value.readingOrder.value()) : nullptr,
+        value.resources.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
+          jni::local_ref<jni::JArrayClass<JLink>> __array = jni::JArrayClass<JLink>::newArray(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            const auto& __element = __input[__i];
+            auto __elementJni = JLink::fromCpp(__element);
+            __array->setElement(__i, *__elementJni);
+          }
+          return __array;
+        }(value.resources.value()) : nullptr
       );
     }
   };

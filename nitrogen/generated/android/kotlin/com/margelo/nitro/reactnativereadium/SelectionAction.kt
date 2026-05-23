@@ -9,6 +9,7 @@ package com.margelo.nitro.reactnativereadium
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -25,6 +26,20 @@ data class SelectionAction(
   val label: String
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is SelectionAction) return false
+    return Objects.deepEquals(this.id, other.id)
+      && Objects.deepEquals(this.label, other.label)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      id,
+      label
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

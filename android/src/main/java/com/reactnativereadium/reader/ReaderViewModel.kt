@@ -38,7 +38,10 @@ class ReaderViewModel(
     sealed class Event {
         class LocatorUpdate(val locator: Locator) : Event()
         class PublicationReady(
+            val publication: Publication,
             val tableOfContents: List<Link>,
+            val readingOrder: List<Link>,
+            val resources: List<Link>,
             val positions: List<Locator>,
             val metadata: Metadata
         ) : Event()

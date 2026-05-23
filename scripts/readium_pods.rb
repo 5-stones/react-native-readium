@@ -9,6 +9,5 @@
 #   end
 #
 def readium_pods
-  pod 'ReadiumGCDWebServer', :modular_headers => true
   pod 'Minizip', :modular_headers => true
 end

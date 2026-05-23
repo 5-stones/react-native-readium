@@ -50,10 +50,10 @@ allows you to do things like:
 
 #### Prerequisites
 
-1. **iOS**: Requires an iOS target >= `13.0` (see the iOS section for more details).
-2. **Android**: Requires `compileSdkVersion` >= `31` (see the Android section for more details).
+1. **iOS**: Requires an iOS target >= `15.1` (see the iOS section for more details).
+2. **Android**: Requires `compileSdkVersion` >= `35` and Kotlin >= `2.3.0` (see the Android section for more details).
 
-This library uses [Nitro Modules](https://nitro.margelo.com/) and supports both the old and new React Native architectures.
+This library uses [Nitro Modules](https://nitro.margelo.com/) and supports both the old and new React Native architectures. The native bridge is generated with Nitro/Nitrogen `0.35.7`.
 
 #### Install Module
 
@@ -73,9 +73,10 @@ yarn add react-native-readium react-native-nitro-modules
 
 Requirements:
 
-- Minimum iOS deployment target: iOS 13.4
-- Swift compiler: Swift 6.0
-- Xcode: Xcode 16.2 (or newer)
+- Minimum iOS deployment target: iOS 15.1
+- Swift compiler: Swift 5.10 or newer
+- Xcode: Xcode 16.2 or newer
+- Native Readium Swift Toolkit: 3.9.x
 
 The Readium pods live in a custom spec repo, so you need to add the Readium
 source to your `Podfile` ([see more on that here](https://github.com/readium/swift-toolkit/issues/38)).
@@ -84,7 +85,8 @@ source to your `Podfile` ([see more on that here](https://github.com/readium/swi
 
 If you are migrating from v4 to v5, please note that you must update your iOS
 Podfile to add the Readium spec repo `source` and the `readium_pods` /
-`readium_post_install` helpers shown below.
+`readium_post_install` helpers shown below. In v5, `readium_pods` only keeps
+Readium's `Minizip` dependency using modular headers.
 
 ```rb
 # ./ios/Podfile
@@ -93,7 +95,7 @@ source 'https://cdn.cocoapods.org/'
 
 ...
 
-platform :ios, '13.4'
+platform :ios, '15.1'
 
 ...
 
@@ -117,15 +119,17 @@ Finally, install the pods:
 
 ##### Breaking change when upgrading from v4 to v5!
 
-This release upgrades the Android native implementation to a newer Readium Kotlin Toolkit.
+This release upgrades the Android native implementation to Readium Kotlin Toolkit 3.2.x.
 Most apps won’t need code changes, but your **Android build configuration** might.
 
 Requirements:
 
 - **JDK 17** is required to build the Android app (the library targets Java/Kotlin 17).
-- **compileSdkVersion** must be >= `31`.
+- **compileSdkVersion** must be >= `35`.
+- **Kotlin** must be >= `2.3.0` because Readium Kotlin Toolkit 3.2.x is compiled with Kotlin 2.3 metadata.
+- **NDK** `27.1.12297006` is the default used by this package.
 
-If you're not using `compileSdkVersion` >= 31 you'll need to update that:
+If you're not using `compileSdkVersion` >= 35 or Kotlin >= 2.3.0, update your Android build configuration:
 
 ```groovy
 // android/build.gradle
@@ -134,7 +138,8 @@ buildscript {
     ...
     ext {
         ...
-        compileSdkVersion = 31
+        compileSdkVersion = 35
+        kotlinVersion = '2.3.0'
 ...
 ```
 

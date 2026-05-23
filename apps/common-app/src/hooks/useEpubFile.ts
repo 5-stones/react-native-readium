@@ -1,25 +1,25 @@
 import { useState, useEffect } from 'react';
-import { Platform } from 'react-native';
+import { Asset } from 'expo-asset';
 import type { File, Locator } from 'react-native-readium';
 import RNFS from '../utils/RNFS';
 
 interface UseEpubFileOptions {
   epubUrl?: string;
   epubPath?: string;
-  bundledAsset?: string;
+  bundledAsset?: number;
   initialLocation?: Locator;
 }
 
 async function copyBundledAsset(
-  assetName: string,
+  assetModule: number,
   destPath: string
 ): Promise<void> {
-  if (Platform.OS === 'android') {
-    await RNFS.copyFileAssets(assetName, destPath);
-  } else {
-    const sourcePath = `${RNFS.MainBundlePath}/${assetName}`;
-    await RNFS.copyFile(sourcePath, destPath);
+  const asset = Asset.fromModule(assetModule);
+  await asset.downloadAsync();
+  if (!asset.localUri) {
+    throw new Error('Failed to resolve bundled epub asset');
   }
+  await RNFS.copyFile(asset.localUri, destPath);
 }
 
 export const useEpubFile = ({
@@ -48,9 +48,7 @@ export const useEpubFile = ({
 
           if (!exists) {
             if (bundledAsset) {
-              console.log(
-                `Copying bundled asset: '${bundledAsset}' to '${localPath}'`
-              );
+              console.log(`Copying bundled asset to '${localPath}'`);
               await copyBundledAsset(bundledAsset, localPath);
             } else if (epubUrl) {
               console.log(`Downloading file: '${epubUrl}'`);

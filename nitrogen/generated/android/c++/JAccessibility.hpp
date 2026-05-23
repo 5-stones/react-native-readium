@@ -25,7 +25,7 @@ namespace margelo::nitro::readium {
    */
   struct JAccessibility final: public jni::JavaClass<JAccessibility> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Accessibility;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Accessibility;";
 
   public:
     /**
@@ -50,57 +50,57 @@ namespace margelo::nitro::readium {
       static const auto fieldSummary = clazz->getField<jni::JString>("summary");
       jni::local_ref<jni::JString> summary = this->getFieldValue(fieldSummary);
       return Accessibility(
-        conformsTo != nullptr ? std::make_optional([&]() {
-          size_t __size = conformsTo->size();
+        conformsTo != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<std::string> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = conformsTo->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toStdString());
           }
           return __vector;
-        }()) : std::nullopt,
+        }(conformsTo)) : std::nullopt,
         certification != nullptr ? std::make_optional(certification->toCpp()) : std::nullopt,
-        accessMode != nullptr ? std::make_optional([&]() {
-          size_t __size = accessMode->size();
+        accessMode != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<std::string> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = accessMode->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toStdString());
           }
           return __vector;
-        }()) : std::nullopt,
-        accessModeSufficient != nullptr ? std::make_optional([&]() {
-          size_t __size = accessModeSufficient->size();
+        }(accessMode)) : std::nullopt,
+        accessModeSufficient != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<std::string> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = accessModeSufficient->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toStdString());
           }
           return __vector;
-        }()) : std::nullopt,
-        feature != nullptr ? std::make_optional([&]() {
-          size_t __size = feature->size();
+        }(accessModeSufficient)) : std::nullopt,
+        feature != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<std::string> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = feature->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toStdString());
           }
           return __vector;
-        }()) : std::nullopt,
-        hazard != nullptr ? std::make_optional([&]() {
-          size_t __size = hazard->size();
+        }(feature)) : std::nullopt,
+        hazard != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<std::string> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = hazard->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toStdString());
           }
           return __vector;
-        }()) : std::nullopt,
+        }(hazard)) : std::nullopt,
         summary != nullptr ? std::make_optional(summary->toStdString()) : std::nullopt
       );
     }
@@ -116,57 +116,57 @@ namespace margelo::nitro::readium {
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
-        value.conformsTo.has_value() ? [&]() {
-          size_t __size = value.conformsTo.value().size();
+        value.conformsTo.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.conformsTo.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = jni::make_jstring(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
+        }(value.conformsTo.value()) : nullptr,
         value.certification.has_value() ? JAccessibilityCertification::fromCpp(value.certification.value()) : nullptr,
-        value.accessMode.has_value() ? [&]() {
-          size_t __size = value.accessMode.value().size();
+        value.accessMode.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.accessMode.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = jni::make_jstring(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.accessModeSufficient.has_value() ? [&]() {
-          size_t __size = value.accessModeSufficient.value().size();
+        }(value.accessMode.value()) : nullptr,
+        value.accessModeSufficient.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.accessModeSufficient.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = jni::make_jstring(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.feature.has_value() ? [&]() {
-          size_t __size = value.feature.value().size();
+        }(value.accessModeSufficient.value()) : nullptr,
+        value.feature.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.feature.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = jni::make_jstring(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.hazard.has_value() ? [&]() {
-          size_t __size = value.hazard.value().size();
+        }(value.feature.value()) : nullptr,
+        value.hazard.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.hazard.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = jni::make_jstring(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
+        }(value.hazard.value()) : nullptr,
         value.summary.has_value() ? jni::make_jstring(value.summary.value()) : nullptr
       );
     }

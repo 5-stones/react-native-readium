@@ -11,6 +11,8 @@
 #include "LocatorLocations.hpp"
 
 #include <optional>
+#include <string>
+#include <vector>
 
 namespace margelo::nitro::readium {
 
@@ -21,7 +23,7 @@ namespace margelo::nitro::readium {
    */
   struct JLocatorLocations final: public jni::JavaClass<JLocatorLocations> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/LocatorLocations;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/LocatorLocations;";
 
   public:
     /**
@@ -31,6 +33,8 @@ namespace margelo::nitro::readium {
     [[nodiscard]]
     LocatorLocations toCpp() const {
       static const auto clazz = javaClassStatic();
+      static const auto fieldFragments = clazz->getField<jni::JArrayClass<jni::JString>>("fragments");
+      jni::local_ref<jni::JArrayClass<jni::JString>> fragments = this->getFieldValue(fieldFragments);
       static const auto fieldProgression = clazz->getField<double>("progression");
       double progression = this->getFieldValue(fieldProgression);
       static const auto fieldPosition = clazz->getField<jni::JDouble>("position");
@@ -38,6 +42,16 @@ namespace margelo::nitro::readium {
       static const auto fieldTotalProgression = clazz->getField<jni::JDouble>("totalProgression");
       jni::local_ref<jni::JDouble> totalProgression = this->getFieldValue(fieldTotalProgression);
       return LocatorLocations(
+        fragments != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
+          std::vector<std::string> __vector;
+          __vector.reserve(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            auto __element = __input->getElement(__i);
+            __vector.push_back(__element->toStdString());
+          }
+          return __vector;
+        }(fragments)) : std::nullopt,
         progression,
         position != nullptr ? std::make_optional(position->value()) : std::nullopt,
         totalProgression != nullptr ? std::make_optional(totalProgression->value()) : std::nullopt
@@ -50,11 +64,21 @@ namespace margelo::nitro::readium {
      */
     [[maybe_unused]]
     static jni::local_ref<JLocatorLocations::javaobject> fromCpp(const LocatorLocations& value) {
-      using JSignature = JLocatorLocations(double, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>);
+      using JSignature = JLocatorLocations(jni::alias_ref<jni::JArrayClass<jni::JString>>, double, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
+        value.fragments.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
+          jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            const auto& __element = __input[__i];
+            auto __elementJni = jni::make_jstring(__element);
+            __array->setElement(__i, *__elementJni);
+          }
+          return __array;
+        }(value.fragments.value()) : nullptr,
         value.progression,
         value.position.has_value() ? jni::JDouble::valueOf(value.position.value()) : nullptr,
         value.totalProgression.has_value() ? jni::JDouble::valueOf(value.totalProgression.value()) : nullptr
