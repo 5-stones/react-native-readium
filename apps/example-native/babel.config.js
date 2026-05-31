@@ -15,7 +15,9 @@ module.exports = function (api) {
           },
         },
       ],
-      'react-native-worklets/plugin',
+      // NOTE: babel-preset-expo (SDK 54+) auto-adds 'react-native-worklets/plugin'
+      // when react-native-worklets is installed. Adding it manually here would
+      // apply the worklets transform twice and break Reanimated animations.
     ],
   };
 };

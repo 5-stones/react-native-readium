@@ -38,7 +38,7 @@ interface ControlBarProps {
   onAddBookmark: (locator: Locator) => void;
   onDeleteBookmark: (id: string) => void;
   onNavigateToBookmark: (locator: Locator) => void;
-  onClearBook: () => void;
+  onClearBook?: () => void;
   onClose: () => void;
   title?: string;
   onSearch: (query: string, options?: SearchOptions) => Promise<SearchResult[]>;
@@ -88,11 +88,11 @@ export const ControlBar: React.FC<ControlBarProps> = ({
         <TouchableOpacity
           style={styles.iconSlot}
           onPress={onClose}
-          accessibilityLabel="Close reader"
+          accessibilityLabel="Back to library"
         >
           <MaterialIcons
-            name="keyboard-arrow-down"
-            size={26}
+            name="arrow-back"
+            size={24}
             color={palette.textPrimary}
           />
         </TouchableOpacity>
@@ -157,17 +157,19 @@ export const ControlBar: React.FC<ControlBarProps> = ({
             <DebugModal handle={readerHandle} />
           </View>
 
-          <TouchableOpacity
-            style={styles.iconSlot}
-            onPress={onClearBook}
-            accessibilityLabel="Clear book"
-          >
-            <MaterialIcons
-              name="close"
-              size={20}
-              color={palette.textTertiary}
-            />
-          </TouchableOpacity>
+          {onClearBook ? (
+            <TouchableOpacity
+              style={styles.iconSlot}
+              onPress={onClearBook}
+              accessibilityLabel="Clear book"
+            >
+              <MaterialIcons
+                name="close"
+                size={20}
+                color={palette.textTertiary}
+              />
+            </TouchableOpacity>
+          ) : null}
         </View>
       </View>
 

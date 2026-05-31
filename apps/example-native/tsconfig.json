@@ -3,20 +3,10 @@
   "compilerOptions": {
     "strict": true,
     "jsx": "react-native",
-    "baseUrl": ".",
     "paths": {
-      "react-native-readium": [
-        "../../src/index.tsx"
-      ]
+      "react-native-readium": ["../../src/index.tsx"]
     }
   },
-  "include": [
-    "src",
-    "index.js"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/__tests__/*",
-    "**/Pods"
-  ]
+  "include": ["src", "index.js"],
+  "exclude": ["node_modules", "**/__tests__/*", "**/Pods"]
 }

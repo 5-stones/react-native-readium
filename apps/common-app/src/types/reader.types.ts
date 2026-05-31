@@ -1,11 +1,28 @@
 import type { Locator } from 'react-native-readium';
 
+/**
+ * What kind of publication this is — drives the reader layout:
+ * - `epub`      → paginated text (default)
+ * - `audiobook` → audio only, rendered with a full-screen audio player
+ * - `readalong` → EPUB text + synchronized audio (Media Overlays): text + audio bar
+ */
+export type BookKind = 'epub' | 'audiobook' | 'readalong';
+
 export interface BookOption {
   id: string;
   title: string;
   author: string;
+  /** Narrator, shown for audiobooks / read-along publications. */
+  narrator?: string;
+  kind?: BookKind;
   epubUrl?: string;
   epubPath?: string;
+  /**
+   * For `readalong` books: a separate narration audio track played alongside the
+   * EPUB text (react-native-readium has no Media Overlays support, so the audio
+   * is driven independently via expo-audio).
+   */
+  audioUrl?: string;
   /** Bundled epub asset reference: `require('./resources/book.epub')` */
   bundledAsset?: number;
 }

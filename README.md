@@ -38,6 +38,7 @@ allows you to do things like:
 - [Usage](#usage)
 - [Supported Formats & DRM](#supported-formats--drm)
 - [API](#api)
+- [AI Assistant Skill](#ai-assistant-skill-claude-code)
 - [Contributing](#contributing)
 - [Release](#release)
 - [License](#license)
@@ -382,6 +383,38 @@ local filepath to the epub file itself on disk. If you're not sure how to
 serve epub books [take a look at this example](https://github.com/d-i-t-a/R2D2BC/blob/production/examples/server.ts)
 which is based on the `dita-streamer-js` project (which is built on all the
 readium [r2-\*-js](https://github.com/readium?q=js) libraries)
+
+## AI Assistant Skill (Claude Code)
+
+This package ships a [Claude Code](https://code.claude.com) plugin — an
+[Agent Skill](https://agentskills.io) that teaches AI coding agents how to install and use
+`react-native-readium` (setup, `<ReadiumView>`, locators, preferences, highlights, navigation,
+and the format/DRM/media limitations). Because Agent Skills are an open standard, the same skill
+also works in other compatible tools (Codex CLI, Cursor, Gemini CLI, GitHub Copilot, etc.).
+
+> Installing the npm package does **not** auto-enable the skill — agents don't scan
+> `node_modules`. Add it once with one of the options below.
+
+**From the marketplace (recommended)**
+
+```text
+/plugin marketplace add 5-stones/react-native-readium
+/plugin install react-native-readium@react-native-readium
+```
+
+**From the installed package (version-locked to the library)**
+
+The skill ships inside the npm package, so it matches your installed version. From your app's
+project root, register the bundled marketplace and install it (in the Claude Code prompt):
+
+```text
+/plugin marketplace add ./node_modules/react-native-readium
+/plugin install react-native-readium@react-native-readium
+```
+
+Or load it for one session without installing: `claude --plugin-dir node_modules/react-native-readium/plugins/react-native-readium`.
+
+See [`plugins/react-native-readium`](plugins/react-native-readium/README.md) for details.
 
 ## Contributing
 

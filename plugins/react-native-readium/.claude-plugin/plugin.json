@@ -1,0 +1,20 @@
+{
+  "name": "react-native-readium",
+  "description": "Teaches AI coding agents how to integrate and use the react-native-readium EPUB reader: installation (Nitro + Readium pods/Gradle), <ReadiumView> usage, locators & preferences, highlights/decorations, navigation, search, and format/DRM/media limitations.",
+  "version": "0.1.0",
+  "author": {
+    "name": "5 Stones",
+    "url": "https://github.com/5-stones/react-native-readium"
+  },
+  "homepage": "https://github.com/5-stones/react-native-readium",
+  "repository": "https://github.com/5-stones/react-native-readium",
+  "license": "MIT",
+  "keywords": [
+    "react-native",
+    "expo",
+    "epub",
+    "readium",
+    "ebook",
+    "reader"
+  ]
+}

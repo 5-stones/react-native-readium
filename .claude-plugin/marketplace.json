@@ -1,0 +1,34 @@
+{
+  "name": "react-native-readium",
+  "owner": {
+    "name": "5 Stones",
+    "url": "https://github.com/5-stones/react-native-readium"
+  },
+  "metadata": {
+    "description": "Official marketplace for the react-native-readium Claude Code plugin — an Agent Skill that helps AI agents integrate and use the react-native-readium EPUB reader."
+  },
+  "plugins": [
+    {
+      "name": "react-native-readium",
+      "source": "./plugins/react-native-readium",
+      "description": "Teaches AI coding agents how to integrate and use the react-native-readium EPUB reader (install, <ReadiumView>, locators, preferences, highlights, navigation, search, limitations).",
+      "version": "0.1.0",
+      "author": {
+        "name": "5 Stones",
+        "url": "https://github.com/5-stones/react-native-readium"
+      },
+      "license": "MIT",
+      "category": "development",
+      "tags": [
+        "react-native",
+        "expo",
+        "epub",
+        "readium",
+        "ebook",
+        "reader",
+        "ios",
+        "android"
+      ]
+    }
+  ]
+}
