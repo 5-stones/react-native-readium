@@ -51,7 +51,7 @@ class EPUBViewController: ReaderViewController, SelectionActionHandlerDelegate {
         config: EPUBNavigatorViewController.Configuration(
           editingActions: editingActions
         ),
-        httpServer: EPUBHTTPServer.shared
+        httpServer: HTTPServer.shared
       )
 
       super.init(

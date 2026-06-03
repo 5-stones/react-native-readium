@@ -3,7 +3,8 @@ import type { CSSProperties } from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import {
-  useNavigator,
+  useEpubNavigator,
+  usePdfNavigator,
   usePreferencesObserver,
   useDecorationsObserver,
 } from '../../web/hooks';
@@ -40,18 +41,33 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
     const [container, setContainer] = useState<HTMLElement | null>(null);
     const [currentPosition, setCurrentPosition] = useState<number | null>(null);
 
+    const [renderPdfInIFrame, setRenderPdfInIFrame] = useState<boolean>(false);
+
     // Convert DecorationGroup[] to DecorationGroups record for web hooks
     const decorationsRecord = decorations
       ? Object.fromEntries(decorations.map((g) => [g.name, g.decorations]))
       : undefined;
 
-    const { navigator, positions } = useNavigator({
+    const { navigator: epubNavigator, positions } = useEpubNavigator({
       file,
       onLocationChange,
       onPublicationReady,
       container,
       onPositionChange: setCurrentPosition,
     });
+
+    const pdfNavigator = usePdfNavigator({
+      file,
+      container,
+      onLocationChange,
+      onPublicationReady,
+      initialPage: 1,
+      onError: () => {
+        setRenderPdfInIFrame(true);
+      }
+    });
+
+    const navigator = pdfNavigator ? pdfNavigator : epubNavigator;
 
     useImperativeHandle(
       ref,
@@ -82,8 +98,8 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
       [navigator]
     );
 
-    usePreferencesObserver(navigator, preferences);
-    useDecorationsObserver(navigator, decorationsRecord, onDecorationActivated);
+    usePreferencesObserver(epubNavigator, preferences);
+    useDecorationsObserver(epubNavigator, decorationsRecord, onDecorationActivated);
 
     // Generate position label text
     const positionLabel =
@@ -144,6 +160,41 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
 
     const themeColors = getThemeColors();
 
+    useEffect(() => {
+      if(pdfNavigator && !pdfNavigator.isReady) {
+        const timeout = setTimeout(() => {
+          setRenderPdfInIFrame(true);
+        }, 3000);
+        return () => clearTimeout(timeout);
+      }
+    }, [pdfNavigator]);
+
+    if (pdfNavigator) {
+      if (renderPdfInIFrame) {
+        return (<View style={styles.container} id="wrapper">
+        <iframe
+          src={file.url}
+          style={{ width: '100%', height: '100%', border: 'none' }} />
+        </View>)
+      }
+      return (
+        <View style={styles.container} id="wrapper">
+          {!pdfNavigator.isReady && <div style={loaderStyle}>Loading reader...</div>}
+          <main
+            ref={setContainer}
+            style={styles.readiumContainer}
+            id="readium-container"
+            aria-label="Publication"
+          />
+          {pdfNavigator.isReady && pdfNavigator.pageCount > 0 && (
+            <div style={pdfPositionLabelStyle} aria-live="polite">
+              {pdfNavigator.pageNumber} / {pdfNavigator.pageCount}
+            </div>
+          )}
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container} id="wrapper">
         <style type="text/css">
@@ -194,6 +245,19 @@ const loaderStyle: React.CSSProperties = {
   textAlign: 'center',
   position: 'relative',
   top: 'calc(50% - 10px)',
+};
+
+const pdfPositionLabelStyle: React.CSSProperties = {
+  position: 'absolute',
+  bottom: 10,
+  left: '50%',
+  transform: 'translateX(-50%)',
+  fontSize: 14,
+  background: 'transparent',
+  padding: '5px 10px',
+  zIndex: 1000,
+  pointerEvents: 'none',
+  userSelect: 'none',
 };
 
 const styles = StyleSheet.create({

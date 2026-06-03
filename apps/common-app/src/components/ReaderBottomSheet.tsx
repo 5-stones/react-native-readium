@@ -114,6 +114,7 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
                 onEditHighlight={readerHandle.editHighlight}
                 onClearBook={onClearBook}
                 onClose={handleClose}
+                file={readerHandle.file}
               />
             ) : (
               <EmptyBar onClose={handleClose} />
@@ -129,6 +130,7 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
                   onReaderReady={handleReaderReady}
                   initialPreferences={initialPreferences}
                   onPreferencesChange={onPreferencesChange}
+                  pdfUrl={book.pdfUrl}
                 />
                 <TouchableOpacity
                   style={styles.detailsFab}

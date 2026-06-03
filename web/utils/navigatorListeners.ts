@@ -6,7 +6,7 @@ import {
   SuspiciousActivityEvent,
 } from '@readium/navigator-html-injectables';
 import { EpubNavigatorListeners } from '@readium/navigator';
-import { Locator } from '@readium/shared';
+import { Locator, TimelineItem } from '@readium/shared';
 
 /**
  * Creates navigator listeners for handling navigation events
@@ -66,6 +66,9 @@ export function createNavigatorListeners(
       // noop
     },
     peripheral: function (_data: KeyboardEventData): void {
+      // noop
+    },
+    timelineItemChanged: function(item: TimelineItem | undefined): void {
       // noop
     },
   };

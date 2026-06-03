@@ -10,7 +10,7 @@ import { useDeepCompareEffect } from 'use-deep-compare';
  * Hook to observe and apply decorations to the navigator
  */
 export const useDecorationsObserver = (
-  navigator: EpubNavigator | null,
+  navigator: EpubNavigator | null | undefined,
   decorations: DecorationGroups | undefined,
   onDecorationActivated?: (event: DecorationActivatedEvent) => void
 ) => {

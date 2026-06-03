@@ -1,7 +1,7 @@
 buildscript {
   // Buildscript is evaluated before everything else so we can't use getExtOrDefault
   def kotlin_version = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : project.properties['Readium_kotlinVersion']
-  ext.readium_version = '3.1.0'
+  ext.readium_version = '3.3.0'
 
   repositories {
     google()
@@ -150,7 +150,13 @@ repositories {
 
 def kotlin_version = getExtOrDefault('kotlinVersion')
 
+configurations.all {
+    exclude group: "com.github.marain87", module: "AndroidPdfViewer"
+    exclude group: "com.github.marain87", module: "PdfiumAndroid"
+}
+
 dependencies {
+  implementation("com.github.mhiew:android-pdf-viewer:3.2.0-beta.3")
   // noinspection GradleDynamicVersion
   api "com.facebook.react:react-native:+"
   implementation project(':react-native-nitro-modules')
@@ -164,6 +170,12 @@ dependencies {
     // transitive deps to avoid potential collisions with other projects.
     exclude group: "com.google.android.exoplayer"
   }
+
+  implementation("org.readium.kotlin-toolkit:readium-adapter-pdfium-navigator:$readium_version") {
+    exclude group: "com.github.barteksc", module: "android-pdf-viewer"
+  }
+  implementation("com.github.mhiew:android-pdf-viewer:3.2.0-beta.3")
+  implementation "org.readium.kotlin-toolkit:readium-adapter-pdfium-document:$readium_version"
 
   // other deps
   implementation "androidx.core:core-ktx:1.13.1"

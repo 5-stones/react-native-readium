@@ -34,6 +34,12 @@ const books: BookOption[] = [
     epubUrl:
       'https://ott-5stones-staging-assets.b-cdn.net/assets/public/moby-dick_epub/none/manifest.json',
   },
+  {
+    id: 'sense-and-sensibility',
+    title: 'Sense and Sensibility',
+    author: 'Jane Austen',
+    pdfUrl: 'https://www.gutenberg.org/files/161/old/2008-05-25-161-pdf.pdf',
+  },
 ];
 
 const styles = StyleSheet.create({

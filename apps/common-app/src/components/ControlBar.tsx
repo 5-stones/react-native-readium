@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import type { ReadiumProps, Link, Decoration, Locator } from 'react-native-readium';
+import type { ReadiumProps, ReadiumFile, Link, Decoration, Locator } from 'react-native-readium';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -19,6 +19,7 @@ interface ControlBarProps {
   onEditHighlight: (highlight: Decoration) => void;
   onClearBook: () => void;
   onClose: () => void;
+  file: ReadiumFile | undefined;
 }
 
 export const ControlBar: React.FC<ControlBarProps> = ({
@@ -32,7 +33,10 @@ export const ControlBar: React.FC<ControlBarProps> = ({
   onEditHighlight,
   onClearBook,
   onClose,
+  file,
 }) => {
+
+  const isPdf = file?.url?.toLowerCase().split('?')[0].endsWith('.pdf');
   const insets = useSafeAreaInsets();
 
   return (
@@ -46,12 +50,12 @@ export const ControlBar: React.FC<ControlBarProps> = ({
       </TouchableOpacity>
 
       <View style={styles.controls}>
-        <View style={styles.iconButton}>
+        {!isPdf && <View style={styles.iconButton}>
           <PreferencesEditor
             preferences={preferences}
             onChange={onPreferencesChange}
           />
-        </View>
+        </View>}
 
         <View style={styles.iconButton}>
           <TableOfContents items={toc} onPress={onNavigateToTocItem} />
