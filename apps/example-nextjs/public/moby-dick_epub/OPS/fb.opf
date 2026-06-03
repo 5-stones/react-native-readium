@@ -1,0 +1,1227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<package version="2.0" unique-identifier="PrimaryID" xmlns="http://www.idpf.org/2007/opf">
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dcterms="http://purl.org/dc/terms/">
+    <dc:title>Moby-Dick</dc:title>
+    <dc:identifier id="PrimaryID" opf:scheme="URN">urn:uuid:8a5c1522-197b-11e7-8b0a-4c72b9252ec6</dc:identifier>
+      <dc:identifier opf:scheme="URI">http://www.feedbooks.com/book/54</dc:identifier>
+
+    <dc:language xsi:type="dcterms:RFC4646">en</dc:language>
+
+    <dc:creator opf:role="aut" opf:file-as="Melville, Herman">Herman Melville</dc:creator>
+
+    <dc:publisher>Feedbooks</dc:publisher>
+    <dc:description>Moby-Dick is an 1851 novel by Herman Melville. The story tells the adventures of the wandering sailor Ishmael and his voyage on the whaling ship Pequod, commanded by Captain Ahab. Ishmael soon learns that Ahab seeks one specific whale, Moby-Dick, a white whale of tremendous size and ferocity. Comparatively few whaling ships know of Moby-Dick, and fewer yet have encountered him. In a previous encounter, the whale destroyed Ahab&#39;s boat and bit off his leg. Ahab intends to exact revenge.</dc:description>
+    <dc:coverage></dc:coverage>
+    <dc:source>Wikisource</dc:source>
+    <dc:date opf:event="original-publication">1851</dc:date>
+    <dc:date opf:event="ops-publication">2006-12-28</dc:date>
+<dc:rights></dc:rights>
+          <dc:subject>Fiction</dc:subject>
+          <dc:subject>Action &amp; Adventure</dc:subject>
+
+	    <meta name="cover" content="book-cover"/>
+  </metadata>
+
+  <manifest>
+    <!-- Content Documents -->
+    <item id="cover"
+      href="cover.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="titlepage"
+      href="title.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="about"
+      href="about.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main0"
+      href="main0.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main1"
+      href="main1.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main2"
+      href="main2.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main3"
+      href="main3.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main4"
+      href="main4.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main5"
+      href="main5.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main6"
+      href="main6.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main7"
+      href="main7.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main8"
+      href="main8.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main9"
+      href="main9.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main10"
+      href="main10.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main11"
+      href="main11.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main12"
+      href="main12.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main13"
+      href="main13.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main14"
+      href="main14.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main15"
+      href="main15.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main16"
+      href="main16.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main17"
+      href="main17.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main18"
+      href="main18.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main19"
+      href="main19.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main20"
+      href="main20.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main21"
+      href="main21.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main22"
+      href="main22.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main23"
+      href="main23.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main24"
+      href="main24.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main25"
+      href="main25.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main26"
+      href="main26.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main27"
+      href="main27.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main28"
+      href="main28.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main29"
+      href="main29.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main30"
+      href="main30.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main31"
+      href="main31.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main32"
+      href="main32.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main33"
+      href="main33.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main34"
+      href="main34.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main35"
+      href="main35.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main36"
+      href="main36.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main37"
+      href="main37.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main38"
+      href="main38.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main39"
+      href="main39.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main40"
+      href="main40.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main41"
+      href="main41.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main42"
+      href="main42.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main43"
+      href="main43.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main44"
+      href="main44.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main45"
+      href="main45.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main46"
+      href="main46.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main47"
+      href="main47.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main48"
+      href="main48.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main49"
+      href="main49.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main50"
+      href="main50.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main51"
+      href="main51.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main52"
+      href="main52.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main53"
+      href="main53.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main54"
+      href="main54.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main55"
+      href="main55.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main56"
+      href="main56.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main57"
+      href="main57.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main58"
+      href="main58.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main59"
+      href="main59.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main60"
+      href="main60.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main61"
+      href="main61.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main62"
+      href="main62.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main63"
+      href="main63.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main64"
+      href="main64.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main65"
+      href="main65.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main66"
+      href="main66.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main67"
+      href="main67.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main68"
+      href="main68.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main69"
+      href="main69.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main70"
+      href="main70.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main71"
+      href="main71.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main72"
+      href="main72.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main73"
+      href="main73.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main74"
+      href="main74.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main75"
+      href="main75.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main76"
+      href="main76.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main77"
+      href="main77.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main78"
+      href="main78.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main79"
+      href="main79.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main80"
+      href="main80.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main81"
+      href="main81.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main82"
+      href="main82.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main83"
+      href="main83.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main84"
+      href="main84.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main85"
+      href="main85.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main86"
+      href="main86.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main87"
+      href="main87.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main88"
+      href="main88.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main89"
+      href="main89.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main90"
+      href="main90.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main91"
+      href="main91.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main92"
+      href="main92.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main93"
+      href="main93.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main94"
+      href="main94.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main95"
+      href="main95.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main96"
+      href="main96.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main97"
+      href="main97.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main98"
+      href="main98.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main99"
+      href="main99.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main100"
+      href="main100.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main101"
+      href="main101.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main102"
+      href="main102.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main103"
+      href="main103.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main104"
+      href="main104.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main105"
+      href="main105.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main106"
+      href="main106.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main107"
+      href="main107.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main108"
+      href="main108.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main109"
+      href="main109.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main110"
+      href="main110.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main111"
+      href="main111.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main112"
+      href="main112.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main113"
+      href="main113.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main114"
+      href="main114.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main115"
+      href="main115.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main116"
+      href="main116.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main117"
+      href="main117.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main118"
+      href="main118.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main119"
+      href="main119.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main120"
+      href="main120.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main121"
+      href="main121.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main122"
+      href="main122.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main123"
+      href="main123.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main124"
+      href="main124.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main125"
+      href="main125.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main126"
+      href="main126.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main127"
+      href="main127.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main128"
+      href="main128.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main129"
+      href="main129.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main130"
+      href="main130.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main131"
+      href="main131.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main132"
+      href="main132.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main133"
+      href="main133.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main134"
+      href="main134.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main135"
+      href="main135.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main136"
+      href="main136.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="main137"
+      href="main137.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="feedbooks"
+      href="feedbooks.xml"
+      media-type="application/xhtml+xml"/>
+
+    <item id="footnotes"
+      href="footnotes.xml"
+      media-type="application/xhtml+xml"/>
+
+    <!-- CSS Style Sheets -->
+
+    <item id="page-css"
+      href="css/page.css"
+      media-type="text/css"/>
+
+    <item id="feedbooks-css"
+      href="css/feedbooks.css"
+      media-type="text/css"/>
+
+    <item id="titlepage-css"
+      href="css/title.css"
+      media-type="text/css"/>
+
+    <item id="about-css"
+      href="css/about.css"
+      media-type="text/css"/>
+
+    <item id="main-css"
+      href="css/main.css"
+      media-type="text/css"/>
+
+    <item id="footnotes-css"
+      href="css/footnotes.css"
+      media-type="text/css"/>
+
+    <!-- Images -->
+
+    <item id="logo-feedbooks-tiny"
+      href="images/logo-feedbooks-tiny.png"
+      media-type="image/png"/>
+
+    <item id="logo-feedbooks"
+      href="images/logo-feedbooks.png"
+      media-type="image/png"/>
+
+    <item id="book-cover"
+      href="images/cover.png"
+      media-type="image/png"/>
+
+    <!-- NCX -->
+
+    <item id="ncx"
+      href="fb.ncx"
+      media-type="application/x-dtbncx+xml"/>
+
+  </manifest>
+
+  <spine toc="ncx">
+
+  <itemref idref="cover" linear="yes"/>
+
+
+  <itemref idref="titlepage" linear="yes"/>
+
+  <itemref idref="about" linear="yes"/>
+
+  <itemref idref="main0" linear="yes"/>
+
+  <itemref idref="main1" linear="yes"/>
+
+  <itemref idref="main2" linear="yes"/>
+
+  <itemref idref="main3" linear="yes"/>
+
+  <itemref idref="main4" linear="yes"/>
+
+  <itemref idref="main5" linear="yes"/>
+
+  <itemref idref="main6" linear="yes"/>
+
+  <itemref idref="main7" linear="yes"/>
+
+  <itemref idref="main8" linear="yes"/>
+
+  <itemref idref="main9" linear="yes"/>
+
+  <itemref idref="main10" linear="yes"/>
+
+  <itemref idref="main11" linear="yes"/>
+
+  <itemref idref="main12" linear="yes"/>
+
+  <itemref idref="main13" linear="yes"/>
+
+  <itemref idref="main14" linear="yes"/>
+
+  <itemref idref="main15" linear="yes"/>
+
+  <itemref idref="main16" linear="yes"/>
+
+  <itemref idref="main17" linear="yes"/>
+
+  <itemref idref="main18" linear="yes"/>
+
+  <itemref idref="main19" linear="yes"/>
+
+  <itemref idref="main20" linear="yes"/>
+
+  <itemref idref="main21" linear="yes"/>
+
+  <itemref idref="main22" linear="yes"/>
+
+  <itemref idref="main23" linear="yes"/>
+
+  <itemref idref="main24" linear="yes"/>
+
+  <itemref idref="main25" linear="yes"/>
+
+  <itemref idref="main26" linear="yes"/>
+
+  <itemref idref="main27" linear="yes"/>
+
+  <itemref idref="main28" linear="yes"/>
+
+  <itemref idref="main29" linear="yes"/>
+
+  <itemref idref="main30" linear="yes"/>
+
+  <itemref idref="main31" linear="yes"/>
+
+  <itemref idref="main32" linear="yes"/>
+
+  <itemref idref="main33" linear="yes"/>
+
+  <itemref idref="main34" linear="yes"/>
+
+  <itemref idref="main35" linear="yes"/>
+
+  <itemref idref="main36" linear="yes"/>
+
+  <itemref idref="main37" linear="yes"/>
+
+  <itemref idref="main38" linear="yes"/>
+
+  <itemref idref="main39" linear="yes"/>
+
+  <itemref idref="main40" linear="yes"/>
+
+  <itemref idref="main41" linear="yes"/>
+
+  <itemref idref="main42" linear="yes"/>
+
+  <itemref idref="main43" linear="yes"/>
+
+  <itemref idref="main44" linear="yes"/>
+
+  <itemref idref="main45" linear="yes"/>
+
+  <itemref idref="main46" linear="yes"/>
+
+  <itemref idref="main47" linear="yes"/>
+
+  <itemref idref="main48" linear="yes"/>
+
+  <itemref idref="main49" linear="yes"/>
+
+  <itemref idref="main50" linear="yes"/>
+
+  <itemref idref="main51" linear="yes"/>
+
+  <itemref idref="main52" linear="yes"/>
+
+  <itemref idref="main53" linear="yes"/>
+
+  <itemref idref="main54" linear="yes"/>
+
+  <itemref idref="main55" linear="yes"/>
+
+  <itemref idref="main56" linear="yes"/>
+
+  <itemref idref="main57" linear="yes"/>
+
+  <itemref idref="main58" linear="yes"/>
+
+  <itemref idref="main59" linear="yes"/>
+
+  <itemref idref="main60" linear="yes"/>
+
+  <itemref idref="main61" linear="yes"/>
+
+  <itemref idref="main62" linear="yes"/>
+
+  <itemref idref="main63" linear="yes"/>
+
+  <itemref idref="main64" linear="yes"/>
+
+  <itemref idref="main65" linear="yes"/>
+
+  <itemref idref="main66" linear="yes"/>
+
+  <itemref idref="main67" linear="yes"/>
+
+  <itemref idref="main68" linear="yes"/>
+
+  <itemref idref="main69" linear="yes"/>
+
+  <itemref idref="main70" linear="yes"/>
+
+  <itemref idref="main71" linear="yes"/>
+
+  <itemref idref="main72" linear="yes"/>
+
+  <itemref idref="main73" linear="yes"/>
+
+  <itemref idref="main74" linear="yes"/>
+
+  <itemref idref="main75" linear="yes"/>
+
+  <itemref idref="main76" linear="yes"/>
+
+  <itemref idref="main77" linear="yes"/>
+
+  <itemref idref="main78" linear="yes"/>
+
+  <itemref idref="main79" linear="yes"/>
+
+  <itemref idref="main80" linear="yes"/>
+
+  <itemref idref="main81" linear="yes"/>
+
+  <itemref idref="main82" linear="yes"/>
+
+  <itemref idref="main83" linear="yes"/>
+
+  <itemref idref="main84" linear="yes"/>
+
+  <itemref idref="main85" linear="yes"/>
+
+  <itemref idref="main86" linear="yes"/>
+
+  <itemref idref="main87" linear="yes"/>
+
+  <itemref idref="main88" linear="yes"/>
+
+  <itemref idref="main89" linear="yes"/>
+
+  <itemref idref="main90" linear="yes"/>
+
+  <itemref idref="main91" linear="yes"/>
+
+  <itemref idref="main92" linear="yes"/>
+
+  <itemref idref="main93" linear="yes"/>
+
+  <itemref idref="main94" linear="yes"/>
+
+  <itemref idref="main95" linear="yes"/>
+
+  <itemref idref="main96" linear="yes"/>
+
+  <itemref idref="main97" linear="yes"/>
+
+  <itemref idref="main98" linear="yes"/>
+
+  <itemref idref="main99" linear="yes"/>
+
+  <itemref idref="main100" linear="yes"/>
+
+  <itemref idref="main101" linear="yes"/>
+
+  <itemref idref="main102" linear="yes"/>
+
+  <itemref idref="main103" linear="yes"/>
+
+  <itemref idref="main104" linear="yes"/>
+
+  <itemref idref="main105" linear="yes"/>
+
+  <itemref idref="main106" linear="yes"/>
+
+  <itemref idref="main107" linear="yes"/>
+
+  <itemref idref="main108" linear="yes"/>
+
+  <itemref idref="main109" linear="yes"/>
+
+  <itemref idref="main110" linear="yes"/>
+
+  <itemref idref="main111" linear="yes"/>
+
+  <itemref idref="main112" linear="yes"/>
+
+  <itemref idref="main113" linear="yes"/>
+
+  <itemref idref="main114" linear="yes"/>
+
+  <itemref idref="main115" linear="yes"/>
+
+  <itemref idref="main116" linear="yes"/>
+
+  <itemref idref="main117" linear="yes"/>
+
+  <itemref idref="main118" linear="yes"/>
+
+  <itemref idref="main119" linear="yes"/>
+
+  <itemref idref="main120" linear="yes"/>
+
+  <itemref idref="main121" linear="yes"/>
+
+  <itemref idref="main122" linear="yes"/>
+
+  <itemref idref="main123" linear="yes"/>
+
+  <itemref idref="main124" linear="yes"/>
+
+  <itemref idref="main125" linear="yes"/>
+
+  <itemref idref="main126" linear="yes"/>
+
+  <itemref idref="main127" linear="yes"/>
+
+  <itemref idref="main128" linear="yes"/>
+
+  <itemref idref="main129" linear="yes"/>
+
+  <itemref idref="main130" linear="yes"/>
+
+  <itemref idref="main131" linear="yes"/>
+
+  <itemref idref="main132" linear="yes"/>
+
+  <itemref idref="main133" linear="yes"/>
+
+  <itemref idref="main134" linear="yes"/>
+
+  <itemref idref="main135" linear="yes"/>
+
+  <itemref idref="main136" linear="yes"/>
+
+  <itemref idref="main137" linear="yes"/>
+
+
+  <itemref idref="footnotes" linear="no"/>
+
+  <itemref idref="feedbooks" linear="yes"/>
+
+  </spine>
+
+  <guide>
+
+  <reference type="cover" title="Cover" href="cover.xml"/>
+
+  <reference type="title-page" title="Title Page" href="title.xml"/>
+
+  <reference type="bibliography" title="About" href="about.xml"/>
+
+  <reference type="text" title="Main0" href="main0.xml"/>
+
+  <reference type="text" title="Main1" href="main1.xml"/>
+
+  <reference type="text" title="Main2" href="main2.xml"/>
+
+  <reference type="text" title="Main3" href="main3.xml"/>
+
+  <reference type="text" title="Main4" href="main4.xml"/>
+
+  <reference type="text" title="Main5" href="main5.xml"/>
+
+  <reference type="text" title="Main6" href="main6.xml"/>
+
+  <reference type="text" title="Main7" href="main7.xml"/>
+
+  <reference type="text" title="Main8" href="main8.xml"/>
+
+  <reference type="text" title="Main9" href="main9.xml"/>
+
+  <reference type="text" title="Main10" href="main10.xml"/>
+
+  <reference type="text" title="Main11" href="main11.xml"/>
+
+  <reference type="text" title="Main12" href="main12.xml"/>
+
+  <reference type="text" title="Main13" href="main13.xml"/>
+
+  <reference type="text" title="Main14" href="main14.xml"/>
+
+  <reference type="text" title="Main15" href="main15.xml"/>
+
+  <reference type="text" title="Main16" href="main16.xml"/>
+
+  <reference type="text" title="Main17" href="main17.xml"/>
+
+  <reference type="text" title="Main18" href="main18.xml"/>
+
+  <reference type="text" title="Main19" href="main19.xml"/>
+
+  <reference type="text" title="Main20" href="main20.xml"/>
+
+  <reference type="text" title="Main21" href="main21.xml"/>
+
+  <reference type="text" title="Main22" href="main22.xml"/>
+
+  <reference type="text" title="Main23" href="main23.xml"/>
+
+  <reference type="text" title="Main24" href="main24.xml"/>
+
+  <reference type="text" title="Main25" href="main25.xml"/>
+
+  <reference type="text" title="Main26" href="main26.xml"/>
+
+  <reference type="text" title="Main27" href="main27.xml"/>
+
+  <reference type="text" title="Main28" href="main28.xml"/>
+
+  <reference type="text" title="Main29" href="main29.xml"/>
+
+  <reference type="text" title="Main30" href="main30.xml"/>
+
+  <reference type="text" title="Main31" href="main31.xml"/>
+
+  <reference type="text" title="Main32" href="main32.xml"/>
+
+  <reference type="text" title="Main33" href="main33.xml"/>
+
+  <reference type="text" title="Main34" href="main34.xml"/>
+
+  <reference type="text" title="Main35" href="main35.xml"/>
+
+  <reference type="text" title="Main36" href="main36.xml"/>
+
+  <reference type="text" title="Main37" href="main37.xml"/>
+
+  <reference type="text" title="Main38" href="main38.xml"/>
+
+  <reference type="text" title="Main39" href="main39.xml"/>
+
+  <reference type="text" title="Main40" href="main40.xml"/>
+
+  <reference type="text" title="Main41" href="main41.xml"/>
+
+  <reference type="text" title="Main42" href="main42.xml"/>
+
+  <reference type="text" title="Main43" href="main43.xml"/>
+
+  <reference type="text" title="Main44" href="main44.xml"/>
+
+  <reference type="text" title="Main45" href="main45.xml"/>
+
+  <reference type="text" title="Main46" href="main46.xml"/>
+
+  <reference type="text" title="Main47" href="main47.xml"/>
+
+  <reference type="text" title="Main48" href="main48.xml"/>
+
+  <reference type="text" title="Main49" href="main49.xml"/>
+
+  <reference type="text" title="Main50" href="main50.xml"/>
+
+  <reference type="text" title="Main51" href="main51.xml"/>
+
+  <reference type="text" title="Main52" href="main52.xml"/>
+
+  <reference type="text" title="Main53" href="main53.xml"/>
+
+  <reference type="text" title="Main54" href="main54.xml"/>
+
+  <reference type="text" title="Main55" href="main55.xml"/>
+
+  <reference type="text" title="Main56" href="main56.xml"/>
+
+  <reference type="text" title="Main57" href="main57.xml"/>
+
+  <reference type="text" title="Main58" href="main58.xml"/>
+
+  <reference type="text" title="Main59" href="main59.xml"/>
+
+  <reference type="text" title="Main60" href="main60.xml"/>
+
+  <reference type="text" title="Main61" href="main61.xml"/>
+
+  <reference type="text" title="Main62" href="main62.xml"/>
+
+  <reference type="text" title="Main63" href="main63.xml"/>
+
+  <reference type="text" title="Main64" href="main64.xml"/>
+
+  <reference type="text" title="Main65" href="main65.xml"/>
+
+  <reference type="text" title="Main66" href="main66.xml"/>
+
+  <reference type="text" title="Main67" href="main67.xml"/>
+
+  <reference type="text" title="Main68" href="main68.xml"/>
+
+  <reference type="text" title="Main69" href="main69.xml"/>
+
+  <reference type="text" title="Main70" href="main70.xml"/>
+
+  <reference type="text" title="Main71" href="main71.xml"/>
+
+  <reference type="text" title="Main72" href="main72.xml"/>
+
+  <reference type="text" title="Main73" href="main73.xml"/>
+
+  <reference type="text" title="Main74" href="main74.xml"/>
+
+  <reference type="text" title="Main75" href="main75.xml"/>
+
+  <reference type="text" title="Main76" href="main76.xml"/>
+
+  <reference type="text" title="Main77" href="main77.xml"/>
+
+  <reference type="text" title="Main78" href="main78.xml"/>
+
+  <reference type="text" title="Main79" href="main79.xml"/>
+
+  <reference type="text" title="Main80" href="main80.xml"/>
+
+  <reference type="text" title="Main81" href="main81.xml"/>
+
+  <reference type="text" title="Main82" href="main82.xml"/>
+
+  <reference type="text" title="Main83" href="main83.xml"/>
+
+  <reference type="text" title="Main84" href="main84.xml"/>
+
+  <reference type="text" title="Main85" href="main85.xml"/>
+
+  <reference type="text" title="Main86" href="main86.xml"/>
+
+  <reference type="text" title="Main87" href="main87.xml"/>
+
+  <reference type="text" title="Main88" href="main88.xml"/>
+
+  <reference type="text" title="Main89" href="main89.xml"/>
+
+  <reference type="text" title="Main90" href="main90.xml"/>
+
+  <reference type="text" title="Main91" href="main91.xml"/>
+
+  <reference type="text" title="Main92" href="main92.xml"/>
+
+  <reference type="text" title="Main93" href="main93.xml"/>
+
+  <reference type="text" title="Main94" href="main94.xml"/>
+
+  <reference type="text" title="Main95" href="main95.xml"/>
+
+  <reference type="text" title="Main96" href="main96.xml"/>
+
+  <reference type="text" title="Main97" href="main97.xml"/>
+
+  <reference type="text" title="Main98" href="main98.xml"/>
+
+  <reference type="text" title="Main99" href="main99.xml"/>
+
+  <reference type="text" title="Main100" href="main100.xml"/>
+
+  <reference type="text" title="Main101" href="main101.xml"/>
+
+  <reference type="text" title="Main102" href="main102.xml"/>
+
+  <reference type="text" title="Main103" href="main103.xml"/>
+
+  <reference type="text" title="Main104" href="main104.xml"/>
+
+  <reference type="text" title="Main105" href="main105.xml"/>
+
+  <reference type="text" title="Main106" href="main106.xml"/>
+
+  <reference type="text" title="Main107" href="main107.xml"/>
+
+  <reference type="text" title="Main108" href="main108.xml"/>
+
+  <reference type="text" title="Main109" href="main109.xml"/>
+
+  <reference type="text" title="Main110" href="main110.xml"/>
+
+  <reference type="text" title="Main111" href="main111.xml"/>
+
+  <reference type="text" title="Main112" href="main112.xml"/>
+
+  <reference type="text" title="Main113" href="main113.xml"/>
+
+  <reference type="text" title="Main114" href="main114.xml"/>
+
+  <reference type="text" title="Main115" href="main115.xml"/>
+
+  <reference type="text" title="Main116" href="main116.xml"/>
+
+  <reference type="text" title="Main117" href="main117.xml"/>
+
+  <reference type="text" title="Main118" href="main118.xml"/>
+
+  <reference type="text" title="Main119" href="main119.xml"/>
+
+  <reference type="text" title="Main120" href="main120.xml"/>
+
+  <reference type="text" title="Main121" href="main121.xml"/>
+
+  <reference type="text" title="Main122" href="main122.xml"/>
+
+  <reference type="text" title="Main123" href="main123.xml"/>
+
+  <reference type="text" title="Main124" href="main124.xml"/>
+
+  <reference type="text" title="Main125" href="main125.xml"/>
+
+  <reference type="text" title="Main126" href="main126.xml"/>
+
+  <reference type="text" title="Main127" href="main127.xml"/>
+
+  <reference type="text" title="Main128" href="main128.xml"/>
+
+  <reference type="text" title="Main129" href="main129.xml"/>
+
+  <reference type="text" title="Main130" href="main130.xml"/>
+
+  <reference type="text" title="Main131" href="main131.xml"/>
+
+  <reference type="text" title="Main132" href="main132.xml"/>
+
+  <reference type="text" title="Main133" href="main133.xml"/>
+
+  <reference type="text" title="Main134" href="main134.xml"/>
+
+  <reference type="text" title="Main135" href="main135.xml"/>
+
+  <reference type="text" title="Main136" href="main136.xml"/>
+
+  <reference type="text" title="Main137" href="main137.xml"/>
+
+
+  <reference type="copyright-page" title="Feedbooks" href="feedbooks.xml"/>
+
+  </guide>
+</package>

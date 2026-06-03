@@ -11,6 +11,7 @@ import type {
   PublicationReadyEvent,
   SearchResult,
   SearchOptions,
+  ReadiumFile,
 } from 'react-native-readium';
 
 import { ReaderButton } from './ReaderButton';
@@ -19,7 +20,7 @@ import {
   HighlightEditDialog,
 } from './highlights';
 
-import { useEpubFile } from '../hooks/useEpubFile';
+import { useBook } from '../hooks/useBook';
 import { useReaderState } from '../hooks/useReaderState';
 import { useHighlights } from '../hooks/useHighlights';
 
@@ -49,6 +50,7 @@ export interface ReaderHandle {
   isLoadingMoreResults: boolean;
   isSearchSupported: boolean;
   hasMoreSearchResults: boolean;
+  file: ReadiumFile | undefined;
 }
 
 interface ReaderProps extends BaseReaderProps {
@@ -58,9 +60,7 @@ interface ReaderProps extends BaseReaderProps {
 }
 
 export const Reader: React.FC<ReaderProps> = ({
-  epubUrl,
-  epubPath,
-  bundledAsset,
+  asset: bookAsset,
   initialLocation,
   onReaderReady,
   initialPreferences,
@@ -68,12 +68,17 @@ export const Reader: React.FC<ReaderProps> = ({
 }) => {
   const ref = useRef<ReadiumViewRef>(null);
 
-  const { file, isLoading, error } = useEpubFile({
-    epubUrl,
-    epubPath,
-    bundledAsset,
+  const { file, isLoading, error } = useBook({
+    asset: bookAsset,
     initialLocation,
   });
+
+  // Only for presentation: PDFs scroll, EPUBs paginate, so the page chevrons
+  // are meaningless for a PDF. Loading and opening the publication does not
+  // depend on knowing the format.
+  const isPdf = !!bookAsset?.toLowerCase().split('?')[0].endsWith('.pdf');
+  const fileTypeLabel = isPdf ? 'PDF' : 'EPUB';
+  const showChevrons = Platform.OS === 'web' && !isPdf;
 
   const {
     toc,
@@ -157,6 +162,7 @@ export const Reader: React.FC<ReaderProps> = ({
         isLoadingMoreResults,
         isSearchSupported,
         hasMoreSearchResults,
+        file,
       });
     }
   }, [
@@ -183,7 +189,7 @@ export const Reader: React.FC<ReaderProps> = ({
   if (isLoading || !file) {
     return (
       <View style={styles.loadingContainer}>
-        <Text>Loading EPUB...</Text>
+        <Text>Loading {fileTypeLabel}...</Text>
       </View>
     );
   }
@@ -191,7 +197,7 @@ export const Reader: React.FC<ReaderProps> = ({
   if (error) {
     return (
       <View style={styles.loadingContainer}>
-        <Text>Error loading EPUB: {error.message}</Text>
+        <Text>Error loading {fileTypeLabel}: {error.message}</Text>
       </View>
     );
   }
@@ -199,7 +205,7 @@ export const Reader: React.FC<ReaderProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.reader}>
-        {Platform.OS === 'web' ? (
+        {showChevrons ? (
           <ReaderButton
             name="chevron-left"
             style={{ width: '10%' }}
@@ -222,7 +228,7 @@ export const Reader: React.FC<ReaderProps> = ({
           />
         </View>
 
-        {Platform.OS === 'web' ? (
+        {showChevrons ? (
           <ReaderButton
             name="chevron-right"
             style={{ width: '10%' }}

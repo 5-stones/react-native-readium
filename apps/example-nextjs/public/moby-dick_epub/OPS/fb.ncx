@@ -1,0 +1,3080 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE ncx PUBLIC
+     "-//NISO//DTD ncx 2005-1//EN"
+     "http://www.daisy.org/z3986/2005/ncx-2005-1.dtd">
+
+<ncx version="2005-1"
+     xml:lang="en"
+     xmlns="http://www.daisy.org/z3986/2005/ncx/">
+
+  <head>
+    <!-- The following four metadata items are required for all
+        NCX documents, including those conforming to the relaxed
+        constraints of OPS 2.0 -->
+
+    <meta name="dtb:uid" content="8a5c1522-197b-11e7-8b0a-4c72b9252ec6"/>
+
+    <meta name="dtb:depth" content="1"/>
+
+    <meta name="dtb:totalPageCount" content="0"/>
+
+    <meta name="dtb:maxPageNumber" content="0"/>
+  </head>
+
+ <docTitle>
+   <text>Moby-Dick</text>
+ </docTitle>
+
+ <docAuthor>
+   <text>Melville, Herman</text>
+ </docAuthor>
+
+    <navMap>
+
+    <navPoint class="titlepage" id="level1-titlepage" playOrder="1">
+      <navLabel><text>Title</text></navLabel>
+      <content src="title.xml"/>
+    </navPoint>
+
+    <navPoint class="about" id="level1-about" playOrder="2">
+      <navLabel><text>About</text></navLabel>
+      <content src="about.xml"/>
+    </navPoint>
+        
+
+
+
+
+
+
+
+<navPoint class="section" id="sec2064" playOrder="3">
+  <navLabel><text>ETYMOLOGY (Supplied by a Late Consumptive Usher to a Grammar School)</text></navLabel>
+  
+    <content src="main0.xml"/>
+  
+    
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+<navPoint class="section" id="sec321856" playOrder="4">
+  <navLabel><text>EXTRACTS (Supplied by a Sub-Sub-Librarian).</text></navLabel>
+  
+    <content src="main1.xml"/>
+  
+    
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1792" playOrder="5">
+  <navLabel><text>Chapter 1 - Loomings</text></navLabel> 
+  <content src="main2.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1794" playOrder="6">
+  <navLabel><text>Chapter 2 - The Carpet-Bag</text></navLabel> 
+  <content src="main3.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1796" playOrder="7">
+  <navLabel><text>Chapter 3 - The Spouter-Inn</text></navLabel> 
+  <content src="main4.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1798" playOrder="8">
+  <navLabel><text>Chapter 4 - The Counterpane</text></navLabel> 
+  <content src="main5.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1800" playOrder="9">
+  <navLabel><text>Chapter 5 - Breakfast</text></navLabel> 
+  <content src="main6.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1802" playOrder="10">
+  <navLabel><text>Chapter 6 - The Street</text></navLabel> 
+  <content src="main7.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1804" playOrder="11">
+  <navLabel><text>Chapter 7 - The Chapel</text></navLabel> 
+  <content src="main8.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1806" playOrder="12">
+  <navLabel><text>Chapter 8 - The Pulpit</text></navLabel> 
+  <content src="main9.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1808" playOrder="13">
+  <navLabel><text>Chapter 9 - The Sermon</text></navLabel> 
+  <content src="main10.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1810" playOrder="14">
+  <navLabel><text>Chapter 10 - A Bosom Friend</text></navLabel> 
+  <content src="main11.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1812" playOrder="15">
+  <navLabel><text>Chapter 11 - Nightgown</text></navLabel> 
+  <content src="main12.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1814" playOrder="16">
+  <navLabel><text>Chapter 12 - Biographical</text></navLabel> 
+  <content src="main13.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1816" playOrder="17">
+  <navLabel><text>Chapter 13 - Wheelbarrow</text></navLabel> 
+  <content src="main14.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1818" playOrder="18">
+  <navLabel><text>Chapter 14 - Nantucket</text></navLabel> 
+  <content src="main15.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1820" playOrder="19">
+  <navLabel><text>Chapter 15 - Chowder</text></navLabel> 
+  <content src="main16.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1822" playOrder="20">
+  <navLabel><text>Chapter 16 - The Ship</text></navLabel> 
+  <content src="main17.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1824" playOrder="21">
+  <navLabel><text>Chapter 17 - The Ramadan</text></navLabel> 
+  <content src="main18.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1826" playOrder="22">
+  <navLabel><text>Chapter 18 - His Mark</text></navLabel> 
+  <content src="main19.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1828" playOrder="23">
+  <navLabel><text>Chapter 19 - The Prophet</text></navLabel> 
+  <content src="main20.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1830" playOrder="24">
+  <navLabel><text>Chapter 20 - All Astir</text></navLabel> 
+  <content src="main21.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1832" playOrder="25">
+  <navLabel><text>Chapter 21 - Going Aboard</text></navLabel> 
+  <content src="main22.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1834" playOrder="26">
+  <navLabel><text>Chapter 22 - Merry Christmas</text></navLabel> 
+  <content src="main23.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1836" playOrder="27">
+  <navLabel><text>Chapter 23 - The Lee Shore</text></navLabel> 
+  <content src="main24.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1838" playOrder="28">
+  <navLabel><text>Chapter 24 - The Advocate</text></navLabel> 
+  <content src="main25.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1840" playOrder="29">
+  <navLabel><text>Chapter 25 -  Postscript</text></navLabel> 
+  <content src="main26.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1842" playOrder="30">
+  <navLabel><text>Chapter 26 - Knights and Squires</text></navLabel> 
+  <content src="main27.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1844" playOrder="31">
+  <navLabel><text>Chapter 27 - Knights and Squires</text></navLabel> 
+  <content src="main28.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1846" playOrder="32">
+  <navLabel><text>Chapter 28 - Ahab</text></navLabel> 
+  <content src="main29.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1848" playOrder="33">
+  <navLabel><text>Chapter 29 - Enter Ahab; to Him, Stubb</text></navLabel> 
+  <content src="main30.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1850" playOrder="34">
+  <navLabel><text>Chapter 30 - The Pipe</text></navLabel> 
+  <content src="main31.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1852" playOrder="35">
+  <navLabel><text>Chapter 31 - Queen Mab</text></navLabel> 
+  <content src="main32.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1854" playOrder="36">
+  <navLabel><text>Chapter 32 - Cetology</text></navLabel> 
+  <content src="main33.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1856" playOrder="37">
+  <navLabel><text>Chapter 33 - The Specksynder</text></navLabel> 
+  <content src="main34.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1858" playOrder="38">
+  <navLabel><text>Chapter 34 - The Cabin-Table</text></navLabel> 
+  <content src="main35.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1860" playOrder="39">
+  <navLabel><text>Chapter 35 - The Mast-Head</text></navLabel> 
+  <content src="main36.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1862" playOrder="40">
+  <navLabel><text>Chapter 36 - The Quarter-Deck</text></navLabel> 
+  <content src="main37.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1864" playOrder="41">
+  <navLabel><text>Chapter 37 - Sunset</text></navLabel> 
+  <content src="main38.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1866" playOrder="42">
+  <navLabel><text>Chapter 38 - Dusk</text></navLabel> 
+  <content src="main39.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1868" playOrder="43">
+  <navLabel><text>Chapter 39 - First Night Watch</text></navLabel> 
+  <content src="main40.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1870" playOrder="44">
+  <navLabel><text>Chapter 40 - Midnight, Forecastle</text></navLabel> 
+  <content src="main41.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1872" playOrder="45">
+  <navLabel><text>Chapter 41 - Moby Dick</text></navLabel> 
+  <content src="main42.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1874" playOrder="46">
+  <navLabel><text>Chapter 42 - The Whiteness of The Whale</text></navLabel> 
+  <content src="main43.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1876" playOrder="47">
+  <navLabel><text>Chapter 43 - Hark!</text></navLabel> 
+  <content src="main44.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1878" playOrder="48">
+  <navLabel><text>Chapter 44 - The Chart</text></navLabel> 
+  <content src="main45.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1880" playOrder="49">
+  <navLabel><text>Chapter 45 - The Affidavit</text></navLabel> 
+  <content src="main46.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1882" playOrder="50">
+  <navLabel><text>Chapter 46 - Surmises</text></navLabel> 
+  <content src="main47.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1884" playOrder="51">
+  <navLabel><text>Chapter 47 - The Mat-Maker</text></navLabel> 
+  <content src="main48.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1886" playOrder="52">
+  <navLabel><text>Chapter 48 - The First Lowering</text></navLabel> 
+  <content src="main49.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1888" playOrder="53">
+  <navLabel><text>Chapter 49 - The Hyena</text></navLabel> 
+  <content src="main50.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1890" playOrder="54">
+  <navLabel><text>Chapter 50 - Ahab’s Boat and Crew.  Fedallah</text></navLabel> 
+  <content src="main51.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1892" playOrder="55">
+  <navLabel><text>Chapter 51 - The Spirit-Spout</text></navLabel> 
+  <content src="main52.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1894" playOrder="56">
+  <navLabel><text>Chapter 52 - The Albatross</text></navLabel> 
+  <content src="main53.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1896" playOrder="57">
+  <navLabel><text>Chapter 53 - The Gam</text></navLabel> 
+  <content src="main54.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1898" playOrder="58">
+  <navLabel><text>Chapter 54 - The Town-Ho’s Story</text></navLabel> 
+  <content src="main55.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1900" playOrder="59">
+  <navLabel><text>Chapter 55 - Of the Monstrous Pictures of Whales</text></navLabel> 
+  <content src="main56.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1902" playOrder="60">
+  <navLabel><text>Chapter 56 - Of the Less Erroneous Pictures of Whales and the True Pictures of Whaling Scenes</text></navLabel> 
+  <content src="main57.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1904" playOrder="61">
+  <navLabel><text>Chapter 57 - Of Whales in Paint; in Teeth; in Wood; in Sheet-Iron; in Stone; in Mountains; in Stars</text></navLabel> 
+  <content src="main58.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1906" playOrder="62">
+  <navLabel><text>Chapter 58 - Brit</text></navLabel> 
+  <content src="main59.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1908" playOrder="63">
+  <navLabel><text>Chapter 59 - Squid</text></navLabel> 
+  <content src="main60.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1910" playOrder="64">
+  <navLabel><text>Chapter 60 - The Line</text></navLabel> 
+  <content src="main61.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1912" playOrder="65">
+  <navLabel><text>Chapter 61 - Stubb Kills a Whale</text></navLabel> 
+  <content src="main62.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1914" playOrder="66">
+  <navLabel><text>Chapter 62 - The Dart</text></navLabel> 
+  <content src="main63.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1916" playOrder="67">
+  <navLabel><text>Chapter 63 - The Crotch</text></navLabel> 
+  <content src="main64.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1918" playOrder="68">
+  <navLabel><text>Chapter 64 - Stubb’s Supper</text></navLabel> 
+  <content src="main65.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1920" playOrder="69">
+  <navLabel><text>Chapter 65 - The Whale as a Dish</text></navLabel> 
+  <content src="main66.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1922" playOrder="70">
+  <navLabel><text>Chapter 66 - The Shark Massacre</text></navLabel> 
+  <content src="main67.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1924" playOrder="71">
+  <navLabel><text>Chapter 67 - Cutting In</text></navLabel> 
+  <content src="main68.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1926" playOrder="72">
+  <navLabel><text>Chapter 68 - The Blanket</text></navLabel> 
+  <content src="main69.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1928" playOrder="73">
+  <navLabel><text>Chapter 69 - The Funeral</text></navLabel> 
+  <content src="main70.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1930" playOrder="74">
+  <navLabel><text>Chapter 70 - The Sphynx</text></navLabel> 
+  <content src="main71.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1932" playOrder="75">
+  <navLabel><text>Chapter 71 - The Jeroboam’s Story</text></navLabel> 
+  <content src="main72.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1934" playOrder="76">
+  <navLabel><text>Chapter 72 - The Monkey-Rope</text></navLabel> 
+  <content src="main73.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1936" playOrder="77">
+  <navLabel><text>Chapter 73 - Stubb and Flask Kill a Right Whale; and Then Have a Talk Over Him</text></navLabel> 
+  <content src="main74.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1938" playOrder="78">
+  <navLabel><text>Chapter 74 - The Sperm Whale’s Head — Contrasted View</text></navLabel> 
+  <content src="main75.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1940" playOrder="79">
+  <navLabel><text>Chapter 75 - The Right Whale’s Head — Contrasted View</text></navLabel> 
+  <content src="main76.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1942" playOrder="80">
+  <navLabel><text>Chapter 76 - The Battering-Ram</text></navLabel> 
+  <content src="main77.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1944" playOrder="81">
+  <navLabel><text>Chapter 77 - The Great Heidelburgh Tun</text></navLabel> 
+  <content src="main78.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1946" playOrder="82">
+  <navLabel><text>Chapter 78 - Cistern and Buckets</text></navLabel> 
+  <content src="main79.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1948" playOrder="83">
+  <navLabel><text>Chapter 79 - The Prairie</text></navLabel> 
+  <content src="main80.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1950" playOrder="84">
+  <navLabel><text>Chapter 80 - The Nut</text></navLabel> 
+  <content src="main81.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1952" playOrder="85">
+  <navLabel><text>Chapter 81 - The Pequod Meets The Virgin</text></navLabel> 
+  <content src="main82.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1954" playOrder="86">
+  <navLabel><text>Chapter 82 - The Honor and Glory of Whaling</text></navLabel> 
+  <content src="main83.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1956" playOrder="87">
+  <navLabel><text>Chapter 83 - Jonah Historically Regarded</text></navLabel> 
+  <content src="main84.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1958" playOrder="88">
+  <navLabel><text>Chapter 84 - Pitchpoling</text></navLabel> 
+  <content src="main85.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1960" playOrder="89">
+  <navLabel><text>Chapter 85 - The Fountain</text></navLabel> 
+  <content src="main86.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1962" playOrder="90">
+  <navLabel><text>Chapter 86 - The Tail</text></navLabel> 
+  <content src="main87.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1964" playOrder="91">
+  <navLabel><text>Chapter 87 - The Great Armada</text></navLabel> 
+  <content src="main88.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1966" playOrder="92">
+  <navLabel><text>Chapter 88 - Schools and Schoolmasters</text></navLabel> 
+  <content src="main89.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1968" playOrder="93">
+  <navLabel><text>Chapter 89 -  Fast-Fish and Loose-Fish</text></navLabel> 
+  <content src="main90.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1970" playOrder="94">
+  <navLabel><text>Chapter 90 - Heads or Tails</text></navLabel> 
+  <content src="main91.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1972" playOrder="95">
+  <navLabel><text>Chapter 91 - The Pequod Meets the Rose-Bud</text></navLabel> 
+  <content src="main92.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1974" playOrder="96">
+  <navLabel><text>Chapter 92 - Ambergris</text></navLabel> 
+  <content src="main93.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1976" playOrder="97">
+  <navLabel><text>Chapter 93 - The Castaway</text></navLabel> 
+  <content src="main94.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1978" playOrder="98">
+  <navLabel><text>Chapter 94 - A Squeeze of the Hand</text></navLabel> 
+  <content src="main95.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1980" playOrder="99">
+  <navLabel><text>Chapter 95 - The Cassock</text></navLabel> 
+  <content src="main96.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1982" playOrder="100">
+  <navLabel><text>Chapter 96 - The Try-Works</text></navLabel> 
+  <content src="main97.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1984" playOrder="101">
+  <navLabel><text>Chapter 97 - The Lamp</text></navLabel> 
+  <content src="main98.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1986" playOrder="102">
+  <navLabel><text>Chapter 98 - Stowing Down and Clearing Up</text></navLabel> 
+  <content src="main99.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1988" playOrder="103">
+  <navLabel><text>Chapter 99 - The Doubloon</text></navLabel> 
+  <content src="main100.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1990" playOrder="104">
+  <navLabel><text>Chapter 100 - Leg and Arm</text></navLabel> 
+  <content src="main101.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1992" playOrder="105">
+  <navLabel><text>Chapter 101 - The Decanter</text></navLabel> 
+  <content src="main102.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1994" playOrder="106">
+  <navLabel><text>Chapter 102 - A Bower in the Arsacides</text></navLabel> 
+  <content src="main103.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1996" playOrder="107">
+  <navLabel><text>Chapter 103 -  Measurement of The Whale’s Skeleton</text></navLabel> 
+  <content src="main104.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap1998" playOrder="108">
+  <navLabel><text>Chapter 104 - The Fossil Whale</text></navLabel> 
+  <content src="main105.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2000" playOrder="109">
+  <navLabel><text>Chapter 105 - Does the Whale’s Magnitude Diminish? — Will He Perish?</text></navLabel> 
+  <content src="main106.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2002" playOrder="110">
+  <navLabel><text>Chapter 106 - Ahab&#39;s Leg</text></navLabel> 
+  <content src="main107.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2004" playOrder="111">
+  <navLabel><text>Chapter 107 - The Carpenter</text></navLabel> 
+  <content src="main108.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2006" playOrder="112">
+  <navLabel><text>Chapter 108 - Ahab and the Carpenter</text></navLabel> 
+  <content src="main109.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2008" playOrder="113">
+  <navLabel><text>Chapter 109 - Ahab and Starbuck in the Cabin</text></navLabel> 
+  <content src="main110.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2010" playOrder="114">
+  <navLabel><text>Chapter 110 - Queequeg in His Coffin</text></navLabel> 
+  <content src="main111.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2012" playOrder="115">
+  <navLabel><text>Chapter 111 - The Pacific</text></navLabel> 
+  <content src="main112.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2014" playOrder="116">
+  <navLabel><text>Chapter 112 - The Blacksmith</text></navLabel> 
+  <content src="main113.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2016" playOrder="117">
+  <navLabel><text>Chapter 113 - The Forge</text></navLabel> 
+  <content src="main114.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2018" playOrder="118">
+  <navLabel><text>Chapter 114 - The Gilder</text></navLabel> 
+  <content src="main115.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2020" playOrder="119">
+  <navLabel><text>Chapter 115 - The Pequod Meets The Bachelor</text></navLabel> 
+  <content src="main116.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2022" playOrder="120">
+  <navLabel><text>Chapter 116 - The Dying Whale</text></navLabel> 
+  <content src="main117.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2024" playOrder="121">
+  <navLabel><text>Chapter 117 -  The Whale Watch</text></navLabel> 
+  <content src="main118.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2026" playOrder="122">
+  <navLabel><text>Chapter 118 - The Quadrant</text></navLabel> 
+  <content src="main119.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2028" playOrder="123">
+  <navLabel><text>Chapter 119 - The Candles</text></navLabel> 
+  <content src="main120.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2030" playOrder="124">
+  <navLabel><text>Chapter 120 - The Deck Toward the End of the First Night Watch</text></navLabel> 
+  <content src="main121.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2032" playOrder="125">
+  <navLabel><text>Chapter 121 - Midnight — The Forecastle Bulwarks</text></navLabel> 
+  <content src="main122.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2034" playOrder="126">
+  <navLabel><text>Chapter 122 - Midnight Aloft.—Thunder and Lightning</text></navLabel> 
+  <content src="main123.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2036" playOrder="127">
+  <navLabel><text>Chapter 123 - The Musket</text></navLabel> 
+  <content src="main124.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2038" playOrder="128">
+  <navLabel><text>Chapter 124 - The Needle</text></navLabel> 
+  <content src="main125.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2040" playOrder="129">
+  <navLabel><text>Chapter 125 - The Log and Line</text></navLabel> 
+  <content src="main126.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2042" playOrder="130">
+  <navLabel><text>Chapter 126 - The Life-Buoy</text></navLabel> 
+  <content src="main127.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2044" playOrder="131">
+  <navLabel><text>Chapter 127 - The Deck</text></navLabel> 
+  <content src="main128.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2046" playOrder="132">
+  <navLabel><text>Chapter 128 - The Pequod Meets the Rachel</text></navLabel> 
+  <content src="main129.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2048" playOrder="133">
+  <navLabel><text>Chapter 129 -  The Cabin</text></navLabel> 
+  <content src="main130.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2050" playOrder="134">
+  <navLabel><text>Chapter 130 - The Hat</text></navLabel> 
+  <content src="main131.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2052" playOrder="135">
+  <navLabel><text>Chapter 131 - The Pequod Meets The Delight</text></navLabel> 
+  <content src="main132.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2054" playOrder="136">
+  <navLabel><text>Chapter 132 - The Symphony</text></navLabel> 
+  <content src="main133.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2056" playOrder="137">
+  <navLabel><text>Chapter 133 - The Chase — First Day</text></navLabel> 
+  <content src="main134.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2058" playOrder="138">
+  <navLabel><text>Chapter 134 - The Chase — Second Day</text></navLabel> 
+  <content src="main135.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<navPoint class="chapter" id="chap2060" playOrder="139">
+  <navLabel><text>Chapter 135 - The Chase — Third Day</text></navLabel> 
+  <content src="main136.xml"/>
+    
+  
+    
+    
+  
+</navPoint>
+
+        
+
+
+
+
+
+
+
+<navPoint class="section" id="sec2062" playOrder="140">
+  <navLabel><text>Epilogue</text></navLabel>
+  
+    <content src="main137.xml"/>
+  
+    
+    
+    
+  
+</navPoint>
+
+
+    <navPoint class="similar" id="level1-footnotes" playOrder="141">
+      <navLabel><text>Footnotes</text></navLabel>
+      <content src="footnotes.xml"/>
+    </navPoint>
+
+  </navMap>
+
+
+</ncx>

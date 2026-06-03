@@ -18,21 +18,28 @@ const books: BookOption[] = [
     id: 'brothers-karamazov',
     title: 'The Brothers Karamazov',
     author: 'Fyodor Dostoevsky',
-    epubUrl:
-      'https://ott-5stones-staging-assets.b-cdn.net/assets/public/fyodor-dostoevsky-the-brothers-karamazov-constance-garnett_epub/none/manifest.json',
+    asset: '/the-brothers-karamazov_epub/manifest.json',
   },
   {
     id: 'alice-in-wonderland',
     title: "Alice's Adventures in Wonderland",
     author: 'Lewis Carroll',
-    epubUrl: 'https://alice.dita.digital/manifest.json',
+    asset: 'https://alice.dita.digital/manifest.json',
   },
   {
     id: 'moby-dick',
     title: 'Moby Dick',
     author: 'Herman Melville',
-    epubUrl:
-      'https://ott-5stones-staging-assets.b-cdn.net/assets/public/moby-dick_epub/none/manifest.json',
+    asset: '/moby-dick_epub/manifest.json',
+  },
+  {
+    id: 'sense-and-sensibility',
+    title: 'Sense and Sensibility (PDF)',
+    author: 'Jane Austen',
+    // Served from this app's public/ dir so it is same-origin. pdf.js fetches
+    // the bytes over XHR, so a cross-origin PDF without CORS headers (as
+    // gutenberg.org serves) cannot be read on web at all.
+    asset: '/sense-and-sensibility.pdf',
   },
 ];
 

@@ -28,7 +28,7 @@ final class ReaderService: Loggable {
       log(.error, "Failed to instantiate AppModule: \(error)")
     }
   }
-  
+
   func buildViewController(
     url: String,
     bookId: String,

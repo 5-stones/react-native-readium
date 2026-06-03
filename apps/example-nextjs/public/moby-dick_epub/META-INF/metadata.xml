@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:dcterms="http://purl.org/dc/terms/" xmlns:schema="http://schema.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:thr="http://purl.org/syndication/thread/1.0">
+<title>Moby-Dick</title>
+<id>http://www.feedbooks.com/book/54</id>
+<author>
+  <name>Herman Melville</name>
+  <uri>http://www.feedbooks.com/author/20</uri>
+</author>
+<published>2006-12-28T23:18:04Z</published>
+<updated>2017-04-04T12:05:57Z</updated>
+<dcterms:language>en</dcterms:language>
+<dcterms:issued>1851</dcterms:issued>
+<category term="FBFIC000000" label="Fiction" scheme="http://www.feedbooks.com/categories"/>
+<category term="FBFIC002000" label="Action &amp; Adventure" scheme="http://www.feedbooks.com/categories"/>
+<summary>Moby-Dick is an 1851 novel by Herman Melville. The story tells the adventures of the wandering sailor Ishmael and his voyage on the whaling ship Pequod, commanded by Captain Ahab. Ishmael soon learns that Ahab seeks one specific whale, Moby-Dick, ...</summary>
+<dcterms:extent>211,735 words</dcterms:extent>
+<dcterms:source>Wikisource</dcterms:source>
+<link type="text/html" title="View on Feedbooks" rel="alternate" href="http://generation.feedbooks.com/book/54"/>
+<link type="application/epub+zip" rel="http://opds-spec.org/acquisition" href="http://generation.feedbooks.com/book/54.epub"/>
+<link type="application/x-mobipocket-ebook" rel="http://opds-spec.org/acquisition" href="http://generation.feedbooks.com/book/54.mobi"/>
+<link type="application/pdf" rel="http://opds-spec.org/acquisition" href="http://generation.feedbooks.com/book/54.pdf"/>
+<link type="image/jpeg" rel="http://opds-spec.org/image" href="http://covers.feedbooks.net/book/54.jpg?size=large&amp;t=1491307557"/>
+<link type="image/jpeg" rel="http://opds-spec.org/image/thumbnail" href="http://covers.feedbooks.net/book/54.jpg?t=1491307557"/>
+<link type="application/atom+xml;profile=opds-catalog;kind=acquisition" title="From the same author" rel="http://www.feedbooks.com/opds/same_author" href="http://generation.feedbooks.com/author/20/books/top.atom?lang=en"/>
+<link type="application/atom+xml;profile=opds-catalog;kind=navigation" title="Categories for this book" rel="related" href="http://generation.feedbooks.com/book/54/categories.atom"/>
+<link type="application/atom+xml;profile=opds-catalog;kind=navigation" title="Reading lists for this book" rel="related" href="http://generation.feedbooks.com/book/54/lists.atom"/>
+<link type="application/atom+xml" thr:count="6" title="Comments for this book (6)" thr:updated="2016-11-07T05:40:38Z" rel="replies" href="http://generation.feedbooks.com/book/54/comments.atom"/>
+<link type="text/html" thr:count="6" title="Comments for this book (6)" thr:updated="2016-11-07T05:40:38Z" rel="replies" href="http://generation.feedbooks.com/book/54/comments"/>
+<content type="html">&lt;p&gt;Moby-Dick is an 1851 novel by Herman Melville. The story tells the adventures of the wandering sailor Ishmael and his voyage on the whaling ship Pequod, commanded by Captain Ahab. Ishmael soon learns that Ahab seeks one specific whale, Moby-Dick, a white whale of tremendous size and ferocity. Comparatively few whaling ships know of Moby-Dick, and fewer yet have encountered him. In a previous encounter, the whale destroyed Ahab's boat and bit off his leg. Ahab intends to exact revenge.&lt;/p&gt;</content>
+<link type="application/atom+xml;type=entry;profile=opds-catalog" rel="self" href="http://generation.feedbooks.com/book/54.atom"/>
+  <link type="application/atom+xml" rel="contents" href="http://generation.feedbooks.com/book/54/contents.atom"/>
+</entry>

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentActivity
+import com.reactnativereadium.ReaderHostView
 import com.reactnativereadium.reader.BaseReaderFragment
 import com.reactnativereadium.reader.EpubReaderFragment
 import com.reactnativereadium.reader.ReaderService
@@ -32,6 +33,7 @@ import kotlinx.coroutines.launch
 
 class HybridReadiumView(private val context: android.content.Context) : HybridReadiumViewSpec() {
   companion object {
+    private const val CONTAINER_ID_ATTEMPTS = 20
     private const val TAG = "HybridReadiumView"
     private var nextInstanceId = 0
     // Fabric creates the new native view before removing the old one when React
@@ -45,7 +47,7 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
   }
 
   private val instanceId = nextInstanceId++
-  private val hostView = FrameLayout(context)
+  private val hostView = ReaderHostView(context)
   private var scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
   private var svc: ReaderService? = null
   private var fragment: BaseReaderFragment? = null
@@ -304,7 +306,7 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
       return
     }
 
-    hostView.id = View.generateViewId()
+    val containerId = assignContainerId(activity)
 
     // Apply selection actions BEFORE committing so they're available
     // during onCreate when the callback is conditionally registered.
@@ -316,7 +318,7 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
 
     activity.supportFragmentManager
       .beginTransaction()
-      .replace(hostView.id, frag, hostView.id.toString())
+      .replace(containerId, frag, containerId.toString())
       .commitNow()
 
     // The FragmentManager may not find hostView via activity.findViewById()
@@ -390,6 +392,42 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
       }
     }
     frameCallback?.let { Choreographer.getInstance().postFrameCallback(it) }
+  }
+
+  /**
+   * Gives [hostView] an id that FragmentManager will resolve back to it, and
+   * returns that id.
+   *
+   * FragmentManager looks the container up with `activity.findViewById()`, so a
+   * colliding id silently attaches the reader somewhere else entirely.
+   * `View.generateViewId()` draws from a process-wide counter starting at 1, and
+   * React Native labels its root views with the surface tag - also a small
+   * integer - so the first id generated in a process is typically 1, the very id
+   * `ReactSurfaceView` carries. The fragment then lands on the React root, and
+   * the corrective re-parent in [addFragment] has to move an already-attached
+   * view. That is fatal for PDF: AndroidPdfViewer's `PDFView` nulls its rendering
+   * `HandlerThread` in `onDetachedFromWindow()` and never recreates it, so the
+   * next `load()` completes into a NullPointerException.
+   */
+  private fun assignContainerId(activity: FragmentActivity): Int {
+    repeat(CONTAINER_ID_ATTEMPTS) {
+      val candidate = View.generateViewId()
+      hostView.id = candidate
+
+      when (activity.findViewById<View>(candidate)) {
+        // Resolves to us: FragmentManager will attach the fragment to hostView.
+        hostView -> return candidate
+        // Unreachable from the activity, so nothing can collide with it either.
+        // FragmentManager resolves a null container and leaves the fragment view
+        // unparented, which addFragment then adopts without detaching anything.
+        null -> return candidate
+        // Collision with another view - try a different id.
+        else -> Unit
+      }
+    }
+
+    Log.w(TAG, "addFragment: could not find a non-colliding container id for hostView")
+    return hostView.id
   }
 
   private fun manuallyLayoutChildren() {

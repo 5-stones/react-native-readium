@@ -3490,6 +3490,129 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@napi-rs/canvas-android-arm64@npm:1.0.7":
+  version: 1.0.7
+  resolution: "@napi-rs/canvas-android-arm64@npm:1.0.7"
+  conditions: os=android & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@napi-rs/canvas-darwin-arm64@npm:1.0.7":
+  version: 1.0.7
+  resolution: "@napi-rs/canvas-darwin-arm64@npm:1.0.7"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@napi-rs/canvas-darwin-x64@npm:1.0.7":
+  version: 1.0.7
+  resolution: "@napi-rs/canvas-darwin-x64@npm:1.0.7"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@napi-rs/canvas-linux-arm-gnueabihf@npm:1.0.7":
+  version: 1.0.7
+  resolution: "@napi-rs/canvas-linux-arm-gnueabihf@npm:1.0.7"
+  conditions: os=linux & cpu=arm
+  languageName: node
+  linkType: hard
+
+"@napi-rs/canvas-linux-arm64-gnu@npm:1.0.7":
+  version: 1.0.7
+  resolution: "@napi-rs/canvas-linux-arm64-gnu@npm:1.0.7"
+  conditions: os=linux & cpu=arm64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@napi-rs/canvas-linux-arm64-musl@npm:1.0.7":
+  version: 1.0.7
+  resolution: "@napi-rs/canvas-linux-arm64-musl@npm:1.0.7"
+  conditions: os=linux & cpu=arm64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@napi-rs/canvas-linux-riscv64-gnu@npm:1.0.7":
+  version: 1.0.7
+  resolution: "@napi-rs/canvas-linux-riscv64-gnu@npm:1.0.7"
+  conditions: os=linux & cpu=riscv64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@napi-rs/canvas-linux-x64-gnu@npm:1.0.7":
+  version: 1.0.7
+  resolution: "@napi-rs/canvas-linux-x64-gnu@npm:1.0.7"
+  conditions: os=linux & cpu=x64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@napi-rs/canvas-linux-x64-musl@npm:1.0.7":
+  version: 1.0.7
+  resolution: "@napi-rs/canvas-linux-x64-musl@npm:1.0.7"
+  conditions: os=linux & cpu=x64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@napi-rs/canvas-win32-arm64-msvc@npm:1.0.7":
+  version: 1.0.7
+  resolution: "@napi-rs/canvas-win32-arm64-msvc@npm:1.0.7"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@napi-rs/canvas-win32-x64-msvc@npm:1.0.7":
+  version: 1.0.7
+  resolution: "@napi-rs/canvas-win32-x64-msvc@npm:1.0.7"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@napi-rs/canvas@npm:^1.0.0":
+  version: 1.0.7
+  resolution: "@napi-rs/canvas@npm:1.0.7"
+  dependencies:
+    "@napi-rs/canvas-android-arm64": 1.0.7
+    "@napi-rs/canvas-darwin-arm64": 1.0.7
+    "@napi-rs/canvas-darwin-x64": 1.0.7
+    "@napi-rs/canvas-linux-arm-gnueabihf": 1.0.7
+    "@napi-rs/canvas-linux-arm64-gnu": 1.0.7
+    "@napi-rs/canvas-linux-arm64-musl": 1.0.7
+    "@napi-rs/canvas-linux-riscv64-gnu": 1.0.7
+    "@napi-rs/canvas-linux-x64-gnu": 1.0.7
+    "@napi-rs/canvas-linux-x64-musl": 1.0.7
+    "@napi-rs/canvas-win32-arm64-msvc": 1.0.7
+    "@napi-rs/canvas-win32-x64-msvc": 1.0.7
+  dependenciesMeta:
+    "@napi-rs/canvas-android-arm64":
+      optional: true
+    "@napi-rs/canvas-darwin-arm64":
+      optional: true
+    "@napi-rs/canvas-darwin-x64":
+      optional: true
+    "@napi-rs/canvas-linux-arm-gnueabihf":
+      optional: true
+    "@napi-rs/canvas-linux-arm64-gnu":
+      optional: true
+    "@napi-rs/canvas-linux-arm64-musl":
+      optional: true
+    "@napi-rs/canvas-linux-riscv64-gnu":
+      optional: true
+    "@napi-rs/canvas-linux-x64-gnu":
+      optional: true
+    "@napi-rs/canvas-linux-x64-musl":
+      optional: true
+    "@napi-rs/canvas-win32-arm64-msvc":
+      optional: true
+    "@napi-rs/canvas-win32-x64-msvc":
+      optional: true
+    canvas:
+      built: true
+    skia-canvas:
+      built: true
+  checksum: 309a36c0e0a7699eb54715b436a300cde3c9fa9b4c1eda33392e923ec4653565856dc41a51096b82790237710edaa3e53a992e9eb07bad9fd2825347b52c6381
+  languageName: node
+  linkType: hard
+
 "@next/bundle-analyzer@npm:15.5.4":
   version: 15.5.4
   resolution: "@next/bundle-analyzer@npm:15.5.4"
@@ -8568,11 +8691,11 @@ __metadata:
     react-native-gesture-handler: ^2.32.0
     react-native-nitro-modules: ^0.35.0
     react-native-readium: "workspace:*"
-    react-native-reanimated: ^4.5.3
+    react-native-reanimated: 4.6.0-nightly-20260818-2a121ea78
     react-native-safe-area-context: ^5.6.2
     react-native-screens: ^4.19.0
     react-native-vector-icons: ^9.1.0
-    react-native-worklets: ^0.11.4
+    react-native-worklets: 0.13.0-nightly-20260818-2a121ea78
     react-test-renderer: 19.2.3
     typescript: ^5.8.3
   languageName: unknown
@@ -8604,12 +8727,12 @@ __metadata:
     react-native-fs: ^2.20.0
     react-native-gesture-handler: ^2.32.0
     react-native-readium: "workspace:*"
-    react-native-reanimated: ^4.5.3
+    react-native-reanimated: 4.6.0-nightly-20260818-2a121ea78
     react-native-safe-area-context: ^5.6.2
     react-native-screens: ^4.19.0
     react-native-vector-icons: ^9.1.0
     react-native-web: 0.21.1
-    react-native-worklets: ^0.11.4
+    react-native-worklets: 0.13.0-nightly-20260818-2a121ea78
     typescript: 5.8.3
     webpack: 5.102.1
   languageName: unknown
@@ -14108,6 +14231,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pdfjs-dist@npm:^6.0.227":
+  version: 6.2.108
+  resolution: "pdfjs-dist@npm:6.2.108"
+  dependencies:
+    "@napi-rs/canvas": ^1.0.0
+  dependenciesMeta:
+    "@napi-rs/canvas":
+      optional: true
+  checksum: 7730968c6f252b5f88df7c67ef4e5caa799e7e0687c3ada3c01164f53846b7e19214b538076b7195537a681748efcecd44738c5923081ddac5b88a57c6abe989
+  languageName: node
+  linkType: hard
+
 "performance-now@npm:^2.1.0":
   version: 2.1.0
   resolution: "performance-now@npm:2.1.0"
@@ -14754,6 +14889,7 @@ __metadata:
     husky: ^6.0.0
     jest: ^29.6.3
     nitrogen: ^0.35.0
+    pdfjs-dist: ^6.0.227
     pod-install: ^0.1.0
     prettier: 2.8.8
     react: 19.2.3
@@ -14772,17 +14908,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"react-native-reanimated@npm:^4.5.3":
-  version: 4.5.3
-  resolution: "react-native-reanimated@npm:4.5.3"
+"react-native-reanimated@npm:4.6.0-nightly-20260818-2a121ea78":
+  version: 4.6.0-nightly-20260818-2a121ea78
+  resolution: "react-native-reanimated@npm:4.6.0-nightly-20260818-2a121ea78"
   dependencies:
     react-native-is-edge-to-edge: ^1.3.1
     semver: ^7.7.3
   peerDependencies:
     react: "*"
-    react-native: 0.83 - 0.86
-    react-native-worklets: 0.10.x - 0.11.x
-  checksum: 79d680b194761d949c12569d3475dc3a0c1261bf6d3bbb052e54554e3af6f6f1d407df92c95016f66e106807bf6b79368d50f12d74f9138bd614960971a82ac4
+    react-native: 0.83 - 0.87
+    react-native-worklets: "*"
+  checksum: 966df35588f50178b11ae6ac70ebea4c34fa40f1c583e8ccf269134e28565117fe1a3fe5295f01b7dc86f717d2eef8fda2d3fc16f40b5e88a39d7bf37f7f9c8b
   languageName: node
   linkType: hard
 
@@ -14850,9 +14986,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-worklets@npm:^0.11.4":
-  version: 0.11.4
-  resolution: "react-native-worklets@npm:0.11.4"
+"react-native-worklets@npm:0.13.0-nightly-20260818-2a121ea78":
+  version: 0.13.0-nightly-20260818-2a121ea78
+  resolution: "react-native-worklets@npm:0.13.0-nightly-20260818-2a121ea78"
   dependencies:
     "@babel/generator": ^7.27.1
     "@babel/plugin-transform-arrow-functions": ^7.27.1
@@ -14872,8 +15008,8 @@ __metadata:
     "@babel/core": "*"
     "@react-native/metro-config": "*"
     react: "*"
-    react-native: 0.83 - 0.86
-  checksum: 311a9030991cc97280269c63c03be474d39a047f7229fc47fd61c322d1b5ea469c385fc34d5f30ce371daeca3bbd01a9406b97c4b6f8e2be8ed787937177c3a3
+    react-native: 0.83 - 0.87
+  checksum: 9fe9dd80eec2c9df8e445f51ce6c4723c3717c6953d1a8fd42b256e02e5a1dc27edb7c88a5e8756763d24f99966288c43c4ed66f930a332799289b1669b44cb4
   languageName: node
   linkType: hard
 

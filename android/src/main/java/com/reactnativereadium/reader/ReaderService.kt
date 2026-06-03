@@ -11,9 +11,9 @@ import org.readium.r2.shared.util.FileExtension
 import org.readium.r2.shared.util.asset.AssetRetriever
 import org.readium.r2.shared.util.format.FormatHints
 import org.readium.r2.shared.util.http.DefaultHttpClient
-import org.readium.r2.shared.util.toUrl
 import org.readium.r2.streamer.PublicationOpener
 import org.readium.r2.streamer.parser.DefaultPublicationParser
+import org.readium.adapter.pdfium.document.PdfiumDocumentFactory
 
 
 class ReaderService(
@@ -29,7 +29,7 @@ class ReaderService(
       context = reactContext,
       assetRetriever = assetRetriever,
       httpClient = httpClient,
-      pdfFactory = null,
+      pdfFactory = PdfiumDocumentFactory(reactContext),
     )
   )
 
@@ -44,6 +44,7 @@ class ReaderService(
       is LinkOrLocator.Link -> {
         return publication.locatorFromLink(location.link)
       }
+
       is LinkOrLocator.Locator -> {
         return location.locator
       }
@@ -57,25 +58,34 @@ class ReaderService(
     initialLocation: LinkOrLocator?,
     callback: suspend (fragment: BaseReaderFragment) -> Unit
   ) {
-    val publicationFile = File(fileName).absoluteFile
-    if (!publicationFile.exists()) {
-      RNLog.e(reactContext, "Failed to open publication: File does not exist: $fileName")
+    val publicationUrl = if (fileName.startsWith("http://") || fileName.startsWith("https://")) {
+      runCatching { org.readium.r2.shared.util.AbsoluteUrl(fileName) }.getOrNull()
+    } else {
+      val targetFile = File(fileName).absoluteFile
+      if (!targetFile.exists()) {
+        RNLog.e(reactContext, "Failed to open publication: File does not exist: $fileName")
+        return
+      }
+      runCatching {
+        org.readium.r2.shared.util.AbsoluteUrl(
+          targetFile.toURI().toString()
+        )
+      }.getOrNull()
+    }
+
+    if (publicationUrl == null) {
+      RNLog.e(
+        reactContext,
+        "Invalid publication layout. AbsoluteUrl creation aborted for path: $fileName"
+      )
       return
     }
-    val publicationUrl = runCatching {
-      publicationFile.toUrl(false)
-    }
-      .onFailure {
-        RNLog.e(
-          reactContext,
-          "Invalid publication path: $fileName - ${it.message}"
-        )
-      }
-      .getOrNull()
-      ?: return
 
-    val fileExtension = publicationFile.extension
-      .takeIf { it.isNotEmpty() }?.lowercase(Locale.ROOT)
+    val fileExtension = if (fileName.startsWith("http://") || fileName.startsWith("https://")) {
+      fileName.substringBefore("?").substringAfterLast(".", "")
+    } else {
+      File(fileName).extension
+    }.takeIf { it.isNotEmpty() }?.lowercase(Locale.ROOT)
 
     val asset = assetRetriever
       .retrieve(
@@ -93,10 +103,21 @@ class ReaderService(
         asset = asset,
         allowUserInteraction = false
       )
-      .onSuccess {
-        val locator = locatorFromLinkOrLocator(initialLocation, it)
-        val readerFragment = EpubReaderFragment.newInstance()
-        readerFragment.initFactory(it, locator)
+      .onSuccess { publication ->
+        val locator = locatorFromLinkOrLocator(initialLocation, publication)
+        val readerFragment: BaseReaderFragment = when {
+          publication.conformsTo(Publication.Profile.PDF) -> {
+            val frag = PdfReaderFragment.newInstance()
+            frag.initFactory(publication, locator)
+            frag
+          }
+
+          else -> {
+            val frag = EpubReaderFragment.newInstance()
+            frag.initFactory(publication, locator)
+            frag
+          }
+        }
         callback.invoke(readerFragment)
       }
       .onFailure {
