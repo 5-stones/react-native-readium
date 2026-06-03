@@ -3,7 +3,8 @@ import type { CSSProperties } from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import {
-  useNavigator,
+  useEpubNavigator,
+  usePdfNavigator,
   usePreferencesObserver,
   useDecorationsObserver,
 } from '../../web/hooks';
@@ -45,13 +46,23 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
       ? Object.fromEntries(decorations.map((g) => [g.name, g.decorations]))
       : undefined;
 
-    const { navigator, positions } = useNavigator({
+    const { navigator: epubNavigator, positions } = useEpubNavigator({
       file,
       onLocationChange,
       onPublicationReady,
       container,
       onPositionChange: setCurrentPosition,
     });
+
+    const pdfNavigator = usePdfNavigator({
+      file,
+      container,
+      onLocationChange,
+      onPublicationReady,
+      initialPage: 1,
+    });
+
+    const navigator = pdfNavigator ? pdfNavigator : epubNavigator;
 
     useImperativeHandle(
       ref,
@@ -98,8 +109,8 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
       [navigator]
     );
 
-    usePreferencesObserver(navigator, preferences);
-    useDecorationsObserver(navigator, decorationsRecord, onDecorationActivated);
+    usePreferencesObserver(epubNavigator, preferences);
+    useDecorationsObserver(epubNavigator, decorationsRecord, onDecorationActivated);
 
     // Generate position label text
     const positionLabel =
@@ -160,6 +171,25 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
 
     const themeColors = getThemeColors();
 
+    if (pdfNavigator) {
+      return (
+        <View style={styles.container} id="wrapper">
+          {!pdfNavigator.isReady && <div style={loaderStyle}>Loading reader...</div>}
+          <main
+            ref={setContainer}
+            style={styles.readiumContainer}
+            id="readium-container"
+            aria-label="Publication"
+          />
+          {pdfNavigator.isReady && pdfNavigator.pageCount > 0 && (
+            <div style={pdfPositionLabelStyle} aria-live="polite">
+              {pdfNavigator.pageNumber} / {pdfNavigator.pageCount}
+            </div>
+          )}
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container} id="wrapper">
         <style type="text/css">
@@ -210,6 +240,19 @@ const loaderStyle: React.CSSProperties = {
   textAlign: 'center',
   position: 'relative',
   top: 'calc(50% - 10px)',
+};
+
+const pdfPositionLabelStyle: React.CSSProperties = {
+  position: 'absolute',
+  bottom: 10,
+  left: '50%',
+  transform: 'translateX(-50%)',
+  fontSize: 14,
+  background: 'transparent',
+  padding: '5px 10px',
+  zIndex: 1000,
+  pointerEvents: 'none',
+  userSelect: 'none',
 };
 
 const styles = StyleSheet.create({

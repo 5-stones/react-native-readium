@@ -1,0 +1,106 @@
+@charset "utf-8";
+@namespace epub "http://www.idpf.org/2007/ops";
+
+var,
+q{
+	font-style: italic;
+}
+
+footer{
+	margin-top: 1em;
+	text-align: right;
+}
+
+header p + p{
+	text-indent: 0;
+}
+
+.epub-type-z3998-subchapter{
+	margin-top: 3em;
+}
+
+.epub-type-z3998-signature{
+	font-variant: small-caps;
+}
+
+.epub-type-z3998-postscript{
+	margin-top: 1em;
+	text-align: left;
+	text-indent: 0;
+}
+
+.epub-type-z3998-verse p,
+.epub-type-z3998-song p{
+	text-align: left;
+	text-indent: 0;
+}
+
+.epub-type-z3998-verse p + p{
+	margin-top: 1em;
+}
+
+.epub-type-z3998-verse p > span,
+.epub-type-z3998-song p > span{
+	display: block;
+	padding-left: 1em;
+	text-indent: -1em;
+}
+
+.epub-type-z3998-verse p > span + br,
+.epub-type-z3998-song p > span + br{
+	display: none;
+}
+
+/* All epigraphs */
+.epub-type-epigraph{
+	font-style: italic;
+	hyphens: none;
+	adobe-text-layout: optimizeSpeed; /* For Nook */
+	adobe-hyphenate: none;
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-epub-hyphens: none;
+}
+
+.epub-type-epigraph cite{
+	font-style: normal;
+	font-variant: small-caps;
+	margin-top: 1em;
+}
+/* End all epigraphs */
+
+/* Full-page epigraphs */
+section.epub-type-epigraph{
+	text-align: center;
+}
+
+section.epub-type-epigraph > *{
+	display: inline-block;
+	margin-top: auto;
+	margin-right: auto;
+	margin-bottom: auto;
+	margin-left: auto;
+	margin-top: 3em;
+	max-width: 80%;
+	text-align: left;
+}
+
+@supports(display: flex){
+	section.epub-type-epigraph{
+		align-items: center;
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		min-height: calc(98vh - 3em);
+		padding-top: 3em;
+	}
+
+	section.epub-type-epigraph > *{
+		margin-top: 0;
+	margin-right: 0;
+	margin-bottom: 0;
+	margin-left: 0;
+	}
+}
+/* End full-page epigraphs */

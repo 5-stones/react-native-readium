@@ -23,7 +23,7 @@ interface RefProps
   onPositionChange?: (position: number | null) => void;
 }
 
-export const useNavigator = ({
+export const useEpubNavigator = ({
   file,
   onLocationChange,
   onPublicationReady,
@@ -34,6 +34,9 @@ export const useNavigator = ({
   const navigatorRef = useRef<EpubNavigator | null>(null);
   const [positions, setPositions] = useState<Locator[]>([]);
   const readingOrder = useRef<Locator[]>([]);
+
+  const isEpubUrl = (url: string) => url.toLowerCase().endsWith('manifest.json');
+  const isEpub = !!file?.url && isEpubUrl(file.url);
 
   const onLocationChangeWithTotalProgression = useCallback(
     (newLocation: Locator) => {
@@ -83,11 +86,14 @@ export const useNavigator = ({
   );
 
   useEffect(() => {
+
+    if (!isEpub || !container) return;
+
+    const epubContainer = container;
+
     let cancelled = false;
 
     async function initializeNavigator() {
-      if (!container) return;
-
       // 1. Normalize the publication URL
       const publicationURL = normalizePublicationURL(file.url);
 
@@ -135,7 +141,7 @@ export const useNavigator = ({
       };
 
       const nav = new EpubNavigator(
-        container,
+        epubContainer,
         publication,
         listeners,
         positionsArray,
@@ -171,8 +177,11 @@ export const useNavigator = ({
       navigatorRef.current = null;
       setNavigator(null);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [file.url, container]);
+  }, [isEpub, file.url, container]);
+
+  if (!isEpub) {
+    return { navigator: undefined, positions: [] };
+  }
 
   return { navigator, positions };
 };

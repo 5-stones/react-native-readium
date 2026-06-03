@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { HomeScreen, ReaderBottomSheet, RNFS } from 'common-app';
+import { HomeScreen, ReaderBottomSheet } from 'common-app';
 import type { BookOption } from 'common-app';
 
 const books: BookOption[] = [
@@ -10,22 +10,25 @@ const books: BookOption[] = [
     id: 'moby-dick',
     title: 'Moby Dick',
     author: 'Herman Melville',
-    epubUrl: 'https://www.gutenberg.org/ebooks/2701.epub3.images',
-    epubPath: `${RNFS.DocumentDirectoryPath}/moby-dick.epub`,
+    asset: 'https://www.gutenberg.org/ebooks/2701.epub3.images',
   },
   {
     id: 'confessions',
     title: 'The Confessions of St. Augustine',
     author: 'Augustine of Hippo',
-    epubUrl: 'https://www.gutenberg.org/ebooks/3296.epub3.images',
-    epubPath: `${RNFS.DocumentDirectoryPath}/confessions.epub`,
+    asset: 'https://www.gutenberg.org/ebooks/3296.epub3.images',
   },
   {
     id: 'brothers-karamazov',
     title: 'The Brothers Karamazov',
     author: 'Fyodor Dostoevsky',
-    bundledAsset: 'the-brothers-karamazov.epub',
-    epubPath: `${RNFS.DocumentDirectoryPath}/the-brothers-karamazov.epub`,
+    asset: 'the-brothers-karamazov.epub',
+  },
+  {
+    id: 'sense-and-sensibility',
+    title: 'Sense and Sensibility (PDF)',
+    author: 'Jane Austen',
+    asset: 'sense-and-sensibility.pdf',
   },
 ];
 

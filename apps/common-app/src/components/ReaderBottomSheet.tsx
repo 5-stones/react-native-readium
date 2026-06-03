@@ -122,6 +122,7 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
                 isLoadingMoreResults={readerHandle.isLoadingMoreResults}
                 isSearchSupported={readerHandle.isSearchSupported}
                 hasMoreSearchResults={readerHandle.hasMoreSearchResults}
+                file={readerHandle.file}
               />
             ) : (
               <EmptyBar onClose={handleClose} />
@@ -131,9 +132,7 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
               <View style={styles.readerContainer}>
                 <Reader
                   key={book.id}
-                  epubUrl={book.epubUrl}
-                  epubPath={book.epubPath}
-                  bundledAsset={book.bundledAsset}
+                  asset={book.asset}
                   onReaderReady={handleReaderReady}
                   initialPreferences={initialPreferences}
                   onPreferencesChange={onPreferencesChange}

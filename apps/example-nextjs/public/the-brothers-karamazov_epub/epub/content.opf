@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" dir="ltr" prefix="se: https://standardebooks.org/vocab/1.0" unique-identifier="uid" version="3.0" xml:lang="en-US">
+	<metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+		<dc:identifier id="uid">https://standardebooks.org/ebooks/fyodor-dostoevsky/the-brothers-karamazov/constance-garnett</dc:identifier>
+		<dc:date>2019-02-05T23:11:47Z</dc:date>
+		<meta property="dcterms:modified">2025-09-08T02:34:08Z</meta>
+		<dc:rights>The source text and artwork in this ebook are believed to be in the United States public domain; that is, they are believed to be free of copyright restrictions in the United States. They may still be copyrighted in other countries, so users located outside of the United States must check their local laws before using this ebook. The creators of, and contributors to, this ebook dedicate their contributions to the worldwide public domain via the terms in the [CC0 1.0 Universal Public Domain Dedication](https://creativecommons.org/publicdomain/zero/1.0/).</dc:rights>
+		<dc:publisher id="publisher">Standard Ebooks</dc:publisher>
+		<meta property="file-as" refines="#publisher">Standard Ebooks</meta>
+		<meta property="se:url.homepage" refines="#publisher">https://standardebooks.org/</meta>
+		<meta property="role" refines="#publisher" scheme="marc:relators">bkd</meta>
+		<meta property="role" refines="#publisher" scheme="marc:relators">mdc</meta>
+		<meta property="role" refines="#publisher" scheme="marc:relators">pbl</meta>
+		<dc:contributor id="type-designer">The League of Moveable Type</dc:contributor>
+		<meta property="file-as" refines="#type-designer">League of Moveable Type, The</meta>
+		<meta property="se:url.homepage" refines="#type-designer">https://www.theleagueofmoveabletype.com/</meta>
+		<meta property="role" refines="#type-designer" scheme="marc:relators">tyd</meta>
+		<meta id="conformance-statement" property="dcterms:conformsTo">EPUB Accessibility 1.1 - WCAG 2.2 Level AA</meta>
+		<meta property="a11y:certifiedBy" refines="#conformance-statement">Standard Ebooks</meta>
+		<meta property="schema:accessMode">textual</meta>
+		<meta property="schema:accessModeSufficient">textual</meta>
+		<meta property="schema:accessibilityFeature">alternativeText</meta>
+		<meta property="schema:accessibilityFeature">displayTransformability</meta>
+		<meta property="schema:accessibilityFeature">readingOrder</meta>
+		<meta property="schema:accessibilityFeature">structuralNavigation</meta>
+		<meta property="schema:accessibilityFeature">tableOfContents</meta>
+		<meta property="schema:accessibilityFeature">unlocked</meta>
+		<meta property="schema:accessibilityHazard">none</meta>
+		<meta property="schema:accessibilitySummary">This publication conforms to WCAG 2.2 Level AA.</meta>
+		<link href="onix.xml" media-type="application/xml" properties="onix" rel="record"/>
+		<dc:title id="title">The Brothers Karamazov</dc:title>
+		<meta property="file-as" refines="#title">Brothers Karamazov, The</meta>
+		<dc:subject id="subject-1">Didactic fiction</dc:subject>
+		<dc:subject id="subject-2">Fathers and sons -- Fiction</dc:subject>
+		<dc:subject id="subject-3">Russia -- Social life and customs -- 1533-1917 -- Fiction</dc:subject>
+		<dc:subject id="subject-4">Brothers -- Fiction</dc:subject>
+		<meta property="authority" refines="#subject-1">LCSH</meta>
+		<meta property="term" refines="#subject-1">sh85037714</meta>
+		<meta property="authority" refines="#subject-2">LCSH</meta>
+		<meta property="term" refines="#subject-2">sh2008103511</meta>
+		<meta property="authority" refines="#subject-3">LCSH</meta>
+		<meta property="term" refines="#subject-3">sh2008116777</meta>
+		<meta property="authority" refines="#subject-4">LCSH</meta>
+		<meta property="term" refines="#subject-4">sh2007101952</meta>
+		<meta property="se:subject">Fiction</meta>
+		<meta id="collection-1" property="belongs-to-collection">Encyclopædia Britannica’s Great Books of the Western World</meta>
+		<meta property="collection-type" refines="#collection-1">set</meta>
+		<dc:description id="description">A dispute over inheritance between father and son escalates into a family feud.</dc:description>
+		<meta id="long-description" property="se:long-description" refines="#description">
+			&lt;p&gt;Dmitri Karamazov and his father Fyodor are at war over both Dmitri’s inheritance and the affections of the beautiful Grushenka. Into this feud arrive the middle brother Ivan, recently returned from Moscow, and the youngest sibling Alyosha, who has been released into the wider world from the local monastery by the elder monk Zossima. Through a series of accidents of fate and wilful misunderstandings the Karamazovs edge closer to tragedy, while the local townspeople watch on.&lt;/p&gt;
+			&lt;p&gt;&lt;i&gt;The Brothers Karamazov&lt;/i&gt; was &lt;a href="https://standardebooks.org/ebooks/fyodor-dostoevsky"&gt;Fyodor Dostoevsky’s&lt;/a&gt; final novel, and was originally serialised in &lt;i&gt;The Russian Messenger&lt;/i&gt; before being published as a complete novel in 1880. This edition is the well-received 1912 English translation by Constance Garnett. As well as earning wide-spread critical acclaim, the novel has been widely influential in literary and philosophical circles; Franz Kafka and &lt;a href="https://standardebooks.org/ebooks/james-joyce"&gt;James Joyce&lt;/a&gt; admired the emotions that verge on madness in the Karamazovs, while Sigmund Freud and Jean-Paul Satre found inspiration in the themes of patricide and existentialism.&lt;/p&gt;
+		</meta>
+		<dc:language>en-US</dc:language>
+		<dc:source>https://www.gutenberg.org/ebooks/28054</dc:source>
+		<dc:source>https://archive.org/details/B-001-002-434</dc:source>
+		<meta property="se:word-count">357413</meta>
+		<meta property="se:reading-ease.flesch">73.27</meta>
+		<meta property="se:url.encyclopedia.wikipedia">https://en.wikipedia.org/wiki/The_Brothers_Karamazov</meta>
+		<meta property="se:url.vcs.github">https://github.com/standardebooks/fyodor-dostoevsky_the-brothers-karamazov_constance-garnett</meta>
+		<dc:creator id="author">Fyodor Dostoevsky</dc:creator>
+		<meta property="file-as" refines="#author">Dostoevsky, Fyodor</meta>
+		<meta property="alternate-script" refines="#author" xml:lang="ru">Фёдор Миха́йлович Достое́вский</meta>
+		<meta property="se:name.person.full-name" refines="#author">Fyodor Mikhailovich Dostoevsky</meta>
+		<meta property="se:url.encyclopedia.wikipedia" refines="#author">https://en.wikipedia.org/wiki/Fyodor_Dostoevsky</meta>
+		<meta property="se:url.authority.nacoaf" refines="#author">http://id.loc.gov/authorities/names/n79029930</meta>
+		<meta property="role" refines="#author" scheme="marc:relators">aut</meta>
+		<dc:contributor id="translator">Constance Garnett</dc:contributor>
+		<meta property="file-as" refines="#translator">Garnett, Constance</meta>
+		<meta property="se:url.encyclopedia.wikipedia" refines="#translator">https://en.wikipedia.org/wiki/Constance_Garnett</meta>
+		<meta property="se:url.authority.nacoaf" refines="#translator">http://id.loc.gov/authorities/names/n50015174</meta>
+		<meta property="role" refines="#translator" scheme="marc:relators">ann</meta>
+		<meta property="role" refines="#translator" scheme="marc:relators">trl</meta>
+		<dc:contributor id="artist">Francisco de Zurbarán</dc:contributor>
+		<meta property="file-as" refines="#artist">de Zurbarán, Francisco</meta>
+		<meta property="se:url.encyclopedia.wikipedia" refines="#artist">https://en.wikipedia.org/wiki/Francisco_de_Zurbar%C3%A1n</meta>
+		<meta property="se:url.authority.nacoaf" refines="#artist">http://id.loc.gov/authorities/names/n50015926</meta>
+		<meta property="role" refines="#artist" scheme="marc:relators">art</meta>
+		<dc:contributor id="transcriber-1">David Edwards</dc:contributor>
+		<meta property="file-as" refines="#transcriber-1">Edwards, David</meta>
+		<meta property="role" refines="#transcriber-1" scheme="marc:relators">trc</meta>
+		<dc:contributor id="transcriber-2">David King</dc:contributor>
+		<meta property="file-as" refines="#transcriber-2">King, David</meta>
+		<meta property="role" refines="#transcriber-2" scheme="marc:relators">trc</meta>
+		<dc:contributor id="transcriber-3">Distributed Proofreaders</dc:contributor>
+		<meta property="file-as" refines="#transcriber-3">Distributed Proofreaders</meta>
+		<meta property="se:url.homepage" refines="#transcriber-3">https://www.pgdp.net/</meta>
+		<meta property="role" refines="#transcriber-3" scheme="marc:relators">trc</meta>
+		<dc:contributor id="producer-1">Robin Whittleton</dc:contributor>
+		<meta property="file-as" refines="#producer-1">Whittleton, Robin</meta>
+		<meta property="se:url.homepage" refines="#producer-1">https://www.robinwhittleton.com/</meta>
+		<meta property="role" refines="#producer-1" scheme="marc:relators">bkp</meta>
+		<meta property="role" refines="#producer-1" scheme="marc:relators">blw</meta>
+		<meta property="role" refines="#producer-1" scheme="marc:relators">cov</meta>
+		<meta property="role" refines="#producer-1" scheme="marc:relators">mrk</meta>
+		<meta property="role" refines="#producer-1" scheme="marc:relators">pfr</meta>
+		<meta property="role" refines="#producer-1" scheme="marc:relators">tyg</meta>
+		<dc:contributor id="producer-2">Alex Cabal</dc:contributor>
+		<meta property="file-as" refines="#producer-2">Cabal, Alex</meta>
+		<meta property="se:url.homepage" refines="#producer-2">https://alexcabal.com/</meta>
+		<meta property="role" refines="#producer-2" scheme="marc:relators">pfr</meta>
+		<meta property="se:built-with">2.9.3</meta>
+		<meta name="cover" content="cover.jpg"/>
+		<meta property="se:transform">compatibility</meta>
+	</metadata>
+	<manifest>
+		<item href="css/core.css" id="core.css" media-type="text/css"/>
+		<item href="css/local.css" id="local.css" media-type="text/css"/>
+		<item href="css/se.css" id="se.css" media-type="text/css"/>
+		<item href="images/cover.jpg" id="cover.jpg" media-type="image/jpeg" properties="cover-image"/>
+		<item href="images/logo.png" id="logo.png" media-type="image/png"/>
+		<item href="images/titlepage.png" id="titlepage.png" media-type="image/png"/>
+		<item href="text/book-1.xhtml" id="book-1.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/book-2.xhtml" id="book-2.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/book-3.xhtml" id="book-3.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/book-4.xhtml" id="book-4.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/book-5.xhtml" id="book-5.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/book-6.xhtml" id="book-6.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/book-7.xhtml" id="book-7.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/book-8.xhtml" id="book-8.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/book-9.xhtml" id="book-9.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/book-10.xhtml" id="book-10.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/book-11.xhtml" id="book-11.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/book-12.xhtml" id="book-12.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-1-1.xhtml" id="chapter-1-1-1.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-1-2.xhtml" id="chapter-1-1-2.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-1-3.xhtml" id="chapter-1-1-3.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-1-4.xhtml" id="chapter-1-1-4.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-1-5.xhtml" id="chapter-1-1-5.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-2-1.xhtml" id="chapter-1-2-1.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-2-2.xhtml" id="chapter-1-2-2.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-2-3.xhtml" id="chapter-1-2-3.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-2-4.xhtml" id="chapter-1-2-4.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-2-5.xhtml" id="chapter-1-2-5.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-2-6.xhtml" id="chapter-1-2-6.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-2-7.xhtml" id="chapter-1-2-7.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-2-8.xhtml" id="chapter-1-2-8.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-3-1.xhtml" id="chapter-1-3-1.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-3-2.xhtml" id="chapter-1-3-2.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-3-3.xhtml" id="chapter-1-3-3.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-3-4.xhtml" id="chapter-1-3-4.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-3-5.xhtml" id="chapter-1-3-5.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-3-6.xhtml" id="chapter-1-3-6.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-3-7.xhtml" id="chapter-1-3-7.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-3-8.xhtml" id="chapter-1-3-8.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-3-9.xhtml" id="chapter-1-3-9.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-3-10.xhtml" id="chapter-1-3-10.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-1-3-11.xhtml" id="chapter-1-3-11.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-2-4-1.xhtml" id="chapter-2-4-1.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-2-4-2.xhtml" id="chapter-2-4-2.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-2-4-3.xhtml" id="chapter-2-4-3.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-2-4-4.xhtml" id="chapter-2-4-4.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-2-4-5.xhtml" id="chapter-2-4-5.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-2-4-6.xhtml" id="chapter-2-4-6.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-2-4-7.xhtml" id="chapter-2-4-7.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-2-5-1.xhtml" id="chapter-2-5-1.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-2-5-2.xhtml" id="chapter-2-5-2.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-2-5-3.xhtml" id="chapter-2-5-3.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-2-5-4.xhtml" id="chapter-2-5-4.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-2-5-5.xhtml" id="chapter-2-5-5.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-2-5-6.xhtml" id="chapter-2-5-6.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-2-5-7.xhtml" id="chapter-2-5-7.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-2-6-1.xhtml" id="chapter-2-6-1.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-2-6-2.xhtml" id="chapter-2-6-2.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-2-6-3.xhtml" id="chapter-2-6-3.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-7-1.xhtml" id="chapter-3-7-1.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-7-2.xhtml" id="chapter-3-7-2.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-7-3.xhtml" id="chapter-3-7-3.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-7-4.xhtml" id="chapter-3-7-4.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-8-1.xhtml" id="chapter-3-8-1.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-8-2.xhtml" id="chapter-3-8-2.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-8-3.xhtml" id="chapter-3-8-3.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-8-4.xhtml" id="chapter-3-8-4.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-8-5.xhtml" id="chapter-3-8-5.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-8-6.xhtml" id="chapter-3-8-6.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-8-7.xhtml" id="chapter-3-8-7.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-8-8.xhtml" id="chapter-3-8-8.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-9-1.xhtml" id="chapter-3-9-1.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-9-2.xhtml" id="chapter-3-9-2.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-9-3.xhtml" id="chapter-3-9-3.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-9-4.xhtml" id="chapter-3-9-4.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-9-5.xhtml" id="chapter-3-9-5.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-9-6.xhtml" id="chapter-3-9-6.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-9-7.xhtml" id="chapter-3-9-7.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-9-8.xhtml" id="chapter-3-9-8.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3-9-9.xhtml" id="chapter-3-9-9.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-10-1.xhtml" id="chapter-4-10-1.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-10-2.xhtml" id="chapter-4-10-2.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-10-3.xhtml" id="chapter-4-10-3.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-10-4.xhtml" id="chapter-4-10-4.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-10-5.xhtml" id="chapter-4-10-5.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-10-6.xhtml" id="chapter-4-10-6.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-10-7.xhtml" id="chapter-4-10-7.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-11-1.xhtml" id="chapter-4-11-1.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-11-2.xhtml" id="chapter-4-11-2.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-11-3.xhtml" id="chapter-4-11-3.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-11-4.xhtml" id="chapter-4-11-4.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-11-5.xhtml" id="chapter-4-11-5.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-11-6.xhtml" id="chapter-4-11-6.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-11-7.xhtml" id="chapter-4-11-7.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-11-8.xhtml" id="chapter-4-11-8.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-11-9.xhtml" id="chapter-4-11-9.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-11-10.xhtml" id="chapter-4-11-10.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-12-1.xhtml" id="chapter-4-12-1.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-12-2.xhtml" id="chapter-4-12-2.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-12-3.xhtml" id="chapter-4-12-3.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-12-4.xhtml" id="chapter-4-12-4.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-12-5.xhtml" id="chapter-4-12-5.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-12-6.xhtml" id="chapter-4-12-6.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-12-7.xhtml" id="chapter-4-12-7.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-12-8.xhtml" id="chapter-4-12-8.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-12-9.xhtml" id="chapter-4-12-9.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-12-10.xhtml" id="chapter-4-12-10.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-12-11.xhtml" id="chapter-4-12-11.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-12-12.xhtml" id="chapter-4-12-12.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-12-13.xhtml" id="chapter-4-12-13.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4-12-14.xhtml" id="chapter-4-12-14.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-5-1.xhtml" id="chapter-5-1.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-5-2.xhtml" id="chapter-5-2.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-5-3.xhtml" id="chapter-5-3.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/colophon.xhtml" id="colophon.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/endnotes.xhtml" id="endnotes.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/epigraph.xhtml" id="epigraph.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/epilogue.xhtml" id="epilogue.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/halftitlepage.xhtml" id="halftitlepage.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/imprint.xhtml" id="imprint.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/part-1.xhtml" id="part-1.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/part-2.xhtml" id="part-2.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/part-3.xhtml" id="part-3.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/part-4.xhtml" id="part-4.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/titlepage.xhtml" id="titlepage.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/uncopyright.xhtml" id="uncopyright.xhtml" media-type="application/xhtml+xml"/>
+		<item href="toc.xhtml" id="toc.xhtml" media-type="application/xhtml+xml" properties="nav"/>
+		<item href="toc.ncx" id="ncx" media-type="application/x-dtbncx+xml"/>
+	</manifest>
+	<spine toc="ncx">
+		<itemref idref="titlepage.xhtml"/>
+		<itemref idref="imprint.xhtml"/>
+		<itemref idref="epigraph.xhtml"/>
+		<itemref idref="halftitlepage.xhtml"/>
+		<itemref idref="part-1.xhtml"/>
+		<itemref idref="book-1.xhtml"/>
+		<itemref idref="chapter-1-1-1.xhtml"/>
+		<itemref idref="chapter-1-1-2.xhtml"/>
+		<itemref idref="chapter-1-1-3.xhtml"/>
+		<itemref idref="chapter-1-1-4.xhtml"/>
+		<itemref idref="chapter-1-1-5.xhtml"/>
+		<itemref idref="book-2.xhtml"/>
+		<itemref idref="chapter-1-2-1.xhtml"/>
+		<itemref idref="chapter-1-2-2.xhtml"/>
+		<itemref idref="chapter-1-2-3.xhtml"/>
+		<itemref idref="chapter-1-2-4.xhtml"/>
+		<itemref idref="chapter-1-2-5.xhtml"/>
+		<itemref idref="chapter-1-2-6.xhtml"/>
+		<itemref idref="chapter-1-2-7.xhtml"/>
+		<itemref idref="chapter-1-2-8.xhtml"/>
+		<itemref idref="book-3.xhtml"/>
+		<itemref idref="chapter-1-3-1.xhtml"/>
+		<itemref idref="chapter-1-3-2.xhtml"/>
+		<itemref idref="chapter-1-3-3.xhtml"/>
+		<itemref idref="chapter-1-3-4.xhtml"/>
+		<itemref idref="chapter-1-3-5.xhtml"/>
+		<itemref idref="chapter-1-3-6.xhtml"/>
+		<itemref idref="chapter-1-3-7.xhtml"/>
+		<itemref idref="chapter-1-3-8.xhtml"/>
+		<itemref idref="chapter-1-3-9.xhtml"/>
+		<itemref idref="chapter-1-3-10.xhtml"/>
+		<itemref idref="chapter-1-3-11.xhtml"/>
+		<itemref idref="part-2.xhtml"/>
+		<itemref idref="book-4.xhtml"/>
+		<itemref idref="chapter-2-4-1.xhtml"/>
+		<itemref idref="chapter-2-4-2.xhtml"/>
+		<itemref idref="chapter-2-4-3.xhtml"/>
+		<itemref idref="chapter-2-4-4.xhtml"/>
+		<itemref idref="chapter-2-4-5.xhtml"/>
+		<itemref idref="chapter-2-4-6.xhtml"/>
+		<itemref idref="chapter-2-4-7.xhtml"/>
+		<itemref idref="book-5.xhtml"/>
+		<itemref idref="chapter-2-5-1.xhtml"/>
+		<itemref idref="chapter-2-5-2.xhtml"/>
+		<itemref idref="chapter-2-5-3.xhtml"/>
+		<itemref idref="chapter-2-5-4.xhtml"/>
+		<itemref idref="chapter-2-5-5.xhtml"/>
+		<itemref idref="chapter-2-5-6.xhtml"/>
+		<itemref idref="chapter-2-5-7.xhtml"/>
+		<itemref idref="book-6.xhtml"/>
+		<itemref idref="chapter-2-6-1.xhtml"/>
+		<itemref idref="chapter-2-6-2.xhtml"/>
+		<itemref idref="chapter-2-6-3.xhtml"/>
+		<itemref idref="part-3.xhtml"/>
+		<itemref idref="book-7.xhtml"/>
+		<itemref idref="chapter-3-7-1.xhtml"/>
+		<itemref idref="chapter-3-7-2.xhtml"/>
+		<itemref idref="chapter-3-7-3.xhtml"/>
+		<itemref idref="chapter-3-7-4.xhtml"/>
+		<itemref idref="book-8.xhtml"/>
+		<itemref idref="chapter-3-8-1.xhtml"/>
+		<itemref idref="chapter-3-8-2.xhtml"/>
+		<itemref idref="chapter-3-8-3.xhtml"/>
+		<itemref idref="chapter-3-8-4.xhtml"/>
+		<itemref idref="chapter-3-8-5.xhtml"/>
+		<itemref idref="chapter-3-8-6.xhtml"/>
+		<itemref idref="chapter-3-8-7.xhtml"/>
+		<itemref idref="chapter-3-8-8.xhtml"/>
+		<itemref idref="book-9.xhtml"/>
+		<itemref idref="chapter-3-9-1.xhtml"/>
+		<itemref idref="chapter-3-9-2.xhtml"/>
+		<itemref idref="chapter-3-9-3.xhtml"/>
+		<itemref idref="chapter-3-9-4.xhtml"/>
+		<itemref idref="chapter-3-9-5.xhtml"/>
+		<itemref idref="chapter-3-9-6.xhtml"/>
+		<itemref idref="chapter-3-9-7.xhtml"/>
+		<itemref idref="chapter-3-9-8.xhtml"/>
+		<itemref idref="chapter-3-9-9.xhtml"/>
+		<itemref idref="part-4.xhtml"/>
+		<itemref idref="book-10.xhtml"/>
+		<itemref idref="chapter-4-10-1.xhtml"/>
+		<itemref idref="chapter-4-10-2.xhtml"/>
+		<itemref idref="chapter-4-10-3.xhtml"/>
+		<itemref idref="chapter-4-10-4.xhtml"/>
+		<itemref idref="chapter-4-10-5.xhtml"/>
+		<itemref idref="chapter-4-10-6.xhtml"/>
+		<itemref idref="chapter-4-10-7.xhtml"/>
+		<itemref idref="book-11.xhtml"/>
+		<itemref idref="chapter-4-11-1.xhtml"/>
+		<itemref idref="chapter-4-11-2.xhtml"/>
+		<itemref idref="chapter-4-11-3.xhtml"/>
+		<itemref idref="chapter-4-11-4.xhtml"/>
+		<itemref idref="chapter-4-11-5.xhtml"/>
+		<itemref idref="chapter-4-11-6.xhtml"/>
+		<itemref idref="chapter-4-11-7.xhtml"/>
+		<itemref idref="chapter-4-11-8.xhtml"/>
+		<itemref idref="chapter-4-11-9.xhtml"/>
+		<itemref idref="chapter-4-11-10.xhtml"/>
+		<itemref idref="book-12.xhtml"/>
+		<itemref idref="chapter-4-12-1.xhtml"/>
+		<itemref idref="chapter-4-12-2.xhtml"/>
+		<itemref idref="chapter-4-12-3.xhtml"/>
+		<itemref idref="chapter-4-12-4.xhtml"/>
+		<itemref idref="chapter-4-12-5.xhtml"/>
+		<itemref idref="chapter-4-12-6.xhtml"/>
+		<itemref idref="chapter-4-12-7.xhtml"/>
+		<itemref idref="chapter-4-12-8.xhtml"/>
+		<itemref idref="chapter-4-12-9.xhtml"/>
+		<itemref idref="chapter-4-12-10.xhtml"/>
+		<itemref idref="chapter-4-12-11.xhtml"/>
+		<itemref idref="chapter-4-12-12.xhtml"/>
+		<itemref idref="chapter-4-12-13.xhtml"/>
+		<itemref idref="chapter-4-12-14.xhtml"/>
+		<itemref idref="epilogue.xhtml"/>
+		<itemref idref="chapter-5-1.xhtml"/>
+		<itemref idref="chapter-5-2.xhtml"/>
+		<itemref idref="chapter-5-3.xhtml"/>
+		<itemref idref="endnotes.xhtml"/>
+		<itemref idref="colophon.xhtml"/>
+		<itemref idref="uncopyright.xhtml"/>
+	</spine>
+	<guide>
+		<reference href="text/titlepage.xhtml" title="Titlepage" type="title-page"/>
+		<reference href="text/endnotes.xhtml" title="Endnotes" type="notes"/>
+	</guide>
+</package>

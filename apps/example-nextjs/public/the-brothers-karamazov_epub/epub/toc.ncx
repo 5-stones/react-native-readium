@@ -1,0 +1,731 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="en-US">
+	<head>
+		<meta content="https://standardebooks.org/ebooks/fyodor-dostoevsky/the-brothers-karamazov/constance-garnett" name="dtb:uid"/>
+	</head>
+	<docTitle>
+		<text>Table of Contents</text>
+	</docTitle>
+	<navMap id="navmap">
+		<navPoint id="navpoint-1" playOrder="1">
+			<navLabel>
+				<text>Titlepage</text>
+			</navLabel>
+			<content src="text/titlepage.xhtml"/>
+		</navPoint>
+		<navPoint id="navpoint-2" playOrder="2">
+			<navLabel>
+				<text>Imprint</text>
+			</navLabel>
+			<content src="text/imprint.xhtml"/>
+		</navPoint>
+		<navPoint id="navpoint-3" playOrder="3">
+			<navLabel>
+				<text>Epigraph</text>
+			</navLabel>
+			<content src="text/epigraph.xhtml"/>
+		</navPoint>
+		<navPoint id="navpoint-4" playOrder="4">
+			<navLabel>
+				<text>The Brothers Karamazov</text>
+			</navLabel>
+			<content src="text/halftitlepage.xhtml"/>
+			<navPoint id="navpoint-5" playOrder="5">
+				<navLabel>
+					<text>Part I</text>
+				</navLabel>
+				<content src="text/part-1.xhtml"/>
+				<navPoint id="navpoint-6" playOrder="6">
+					<navLabel>
+						<text>Book I: The History of a Family</text>
+					</navLabel>
+					<content src="text/book-1.xhtml"/>
+					<navPoint id="navpoint-7" playOrder="7">
+						<navLabel>
+							<text>I: Fyodor Pavlovitch Karamazov</text>
+						</navLabel>
+						<content src="text/chapter-1-1-1.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-8" playOrder="8">
+						<navLabel>
+							<text>II: He Gets Rid of His Eldest Son</text>
+						</navLabel>
+						<content src="text/chapter-1-1-2.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-9" playOrder="9">
+						<navLabel>
+							<text>III: The Second Marriage and the Second Family</text>
+						</navLabel>
+						<content src="text/chapter-1-1-3.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-10" playOrder="10">
+						<navLabel>
+							<text>IV: The Third Son, Alyosha</text>
+						</navLabel>
+						<content src="text/chapter-1-1-4.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-11" playOrder="11">
+						<navLabel>
+							<text>V: Elders</text>
+						</navLabel>
+						<content src="text/chapter-1-1-5.xhtml"/>
+					</navPoint>
+				</navPoint>
+				<navPoint id="navpoint-12" playOrder="12">
+					<navLabel>
+						<text>Book II: An Unfortunate Gathering</text>
+					</navLabel>
+					<content src="text/book-2.xhtml"/>
+					<navPoint id="navpoint-13" playOrder="13">
+						<navLabel>
+							<text>I: They Arrive at the Monastery</text>
+						</navLabel>
+						<content src="text/chapter-1-2-1.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-14" playOrder="14">
+						<navLabel>
+							<text>II: The Old Buffoon</text>
+						</navLabel>
+						<content src="text/chapter-1-2-2.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-15" playOrder="15">
+						<navLabel>
+							<text>III: Peasant Women Who Have Faith</text>
+						</navLabel>
+						<content src="text/chapter-1-2-3.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-16" playOrder="16">
+						<navLabel>
+							<text>IV: A Lady of Little Faith</text>
+						</navLabel>
+						<content src="text/chapter-1-2-4.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-17" playOrder="17">
+						<navLabel>
+							<text>V: So Be It! So Be It!</text>
+						</navLabel>
+						<content src="text/chapter-1-2-5.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-18" playOrder="18">
+						<navLabel>
+							<text>VI: Why Is Such a Man Alive?</text>
+						</navLabel>
+						<content src="text/chapter-1-2-6.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-19" playOrder="19">
+						<navLabel>
+							<text>VII: A Young Man Bent on a Career</text>
+						</navLabel>
+						<content src="text/chapter-1-2-7.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-20" playOrder="20">
+						<navLabel>
+							<text>VIII: The Scandalous Scene</text>
+						</navLabel>
+						<content src="text/chapter-1-2-8.xhtml"/>
+					</navPoint>
+				</navPoint>
+				<navPoint id="navpoint-21" playOrder="21">
+					<navLabel>
+						<text>Book III: The Sensualists</text>
+					</navLabel>
+					<content src="text/book-3.xhtml"/>
+					<navPoint id="navpoint-22" playOrder="22">
+						<navLabel>
+							<text>I: In the Servants’ Quarters</text>
+						</navLabel>
+						<content src="text/chapter-1-3-1.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-23" playOrder="23">
+						<navLabel>
+							<text>II: Lizaveta</text>
+						</navLabel>
+						<content src="text/chapter-1-3-2.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-24" playOrder="24">
+						<navLabel>
+							<text>III: The Confession of a Passionate Heart—In Verse</text>
+						</navLabel>
+						<content src="text/chapter-1-3-3.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-25" playOrder="25">
+						<navLabel>
+							<text>IV: The Confession of a Passionate Heart—In Anecdote</text>
+						</navLabel>
+						<content src="text/chapter-1-3-4.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-26" playOrder="26">
+						<navLabel>
+							<text>V: The Confession of a Passionate Heart—“Heels Up”</text>
+						</navLabel>
+						<content src="text/chapter-1-3-5.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-27" playOrder="27">
+						<navLabel>
+							<text>VI: Smerdyakov</text>
+						</navLabel>
+						<content src="text/chapter-1-3-6.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-28" playOrder="28">
+						<navLabel>
+							<text>VII: The Controversy</text>
+						</navLabel>
+						<content src="text/chapter-1-3-7.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-29" playOrder="29">
+						<navLabel>
+							<text>VIII: Over the Brandy</text>
+						</navLabel>
+						<content src="text/chapter-1-3-8.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-30" playOrder="30">
+						<navLabel>
+							<text>IX: The Sensualists</text>
+						</navLabel>
+						<content src="text/chapter-1-3-9.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-31" playOrder="31">
+						<navLabel>
+							<text>X: Both Together</text>
+						</navLabel>
+						<content src="text/chapter-1-3-10.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-32" playOrder="32">
+						<navLabel>
+							<text>XI: Another Reputation Ruined</text>
+						</navLabel>
+						<content src="text/chapter-1-3-11.xhtml"/>
+					</navPoint>
+				</navPoint>
+			</navPoint>
+			<navPoint id="navpoint-33" playOrder="33">
+				<navLabel>
+					<text>Part II</text>
+				</navLabel>
+				<content src="text/part-2.xhtml"/>
+				<navPoint id="navpoint-34" playOrder="34">
+					<navLabel>
+						<text>Book IV: Lacerations</text>
+					</navLabel>
+					<content src="text/book-4.xhtml"/>
+					<navPoint id="navpoint-35" playOrder="35">
+						<navLabel>
+							<text>I: Father Ferapont</text>
+						</navLabel>
+						<content src="text/chapter-2-4-1.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-36" playOrder="36">
+						<navLabel>
+							<text>II: At His Father’s</text>
+						</navLabel>
+						<content src="text/chapter-2-4-2.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-37" playOrder="37">
+						<navLabel>
+							<text>III: A Meeting with the Schoolboys</text>
+						</navLabel>
+						<content src="text/chapter-2-4-3.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-38" playOrder="38">
+						<navLabel>
+							<text>IV: At the Hohlakovs’</text>
+						</navLabel>
+						<content src="text/chapter-2-4-4.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-39" playOrder="39">
+						<navLabel>
+							<text>V: A Laceration in the Drawing-Room</text>
+						</navLabel>
+						<content src="text/chapter-2-4-5.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-40" playOrder="40">
+						<navLabel>
+							<text>VI: A Laceration in the Cottage</text>
+						</navLabel>
+						<content src="text/chapter-2-4-6.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-41" playOrder="41">
+						<navLabel>
+							<text>VII: And in the Open Air</text>
+						</navLabel>
+						<content src="text/chapter-2-4-7.xhtml"/>
+					</navPoint>
+				</navPoint>
+				<navPoint id="navpoint-42" playOrder="42">
+					<navLabel>
+						<text>Book V: Pro and Contra</text>
+					</navLabel>
+					<content src="text/book-5.xhtml"/>
+					<navPoint id="navpoint-43" playOrder="43">
+						<navLabel>
+							<text>I: The Engagement</text>
+						</navLabel>
+						<content src="text/chapter-2-5-1.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-44" playOrder="44">
+						<navLabel>
+							<text>II: Smerdyakov with a Guitar</text>
+						</navLabel>
+						<content src="text/chapter-2-5-2.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-45" playOrder="45">
+						<navLabel>
+							<text>III: The Brothers Make Friends</text>
+						</navLabel>
+						<content src="text/chapter-2-5-3.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-46" playOrder="46">
+						<navLabel>
+							<text>IV: Rebellion</text>
+						</navLabel>
+						<content src="text/chapter-2-5-4.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-47" playOrder="47">
+						<navLabel>
+							<text>V: The Grand Inquisitor</text>
+						</navLabel>
+						<content src="text/chapter-2-5-5.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-48" playOrder="48">
+						<navLabel>
+							<text>VI: For Awhile a Very Obscure One</text>
+						</navLabel>
+						<content src="text/chapter-2-5-6.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-49" playOrder="49">
+						<navLabel>
+							<text>VII: “It’s Always Worth While Speaking to a Clever Man”</text>
+						</navLabel>
+						<content src="text/chapter-2-5-7.xhtml"/>
+					</navPoint>
+				</navPoint>
+				<navPoint id="navpoint-50" playOrder="50">
+					<navLabel>
+						<text>Book VI: The Russian Monk</text>
+					</navLabel>
+					<content src="text/book-6.xhtml"/>
+					<navPoint id="navpoint-51" playOrder="51">
+						<navLabel>
+							<text>I: Father Zossima and His Visitors</text>
+						</navLabel>
+						<content src="text/chapter-2-6-1.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-52" playOrder="52">
+						<navLabel>
+							<text>II: The Duel</text>
+						</navLabel>
+						<content src="text/chapter-2-6-2.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-53" playOrder="53">
+						<navLabel>
+							<text>III: Conversations and Exhortations of Father Zossima</text>
+						</navLabel>
+						<content src="text/chapter-2-6-3.xhtml"/>
+					</navPoint>
+				</navPoint>
+			</navPoint>
+			<navPoint id="navpoint-54" playOrder="54">
+				<navLabel>
+					<text>Part III</text>
+				</navLabel>
+				<content src="text/part-3.xhtml"/>
+				<navPoint id="navpoint-55" playOrder="55">
+					<navLabel>
+						<text>Book VII: Alyosha</text>
+					</navLabel>
+					<content src="text/book-7.xhtml"/>
+					<navPoint id="navpoint-56" playOrder="56">
+						<navLabel>
+							<text>I: The Breath of Corruption</text>
+						</navLabel>
+						<content src="text/chapter-3-7-1.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-57" playOrder="57">
+						<navLabel>
+							<text>II: A Critical Moment</text>
+						</navLabel>
+						<content src="text/chapter-3-7-2.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-58" playOrder="58">
+						<navLabel>
+							<text>III: An Onion</text>
+						</navLabel>
+						<content src="text/chapter-3-7-3.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-59" playOrder="59">
+						<navLabel>
+							<text>IV: Cana of Galilee</text>
+						</navLabel>
+						<content src="text/chapter-3-7-4.xhtml"/>
+					</navPoint>
+				</navPoint>
+				<navPoint id="navpoint-60" playOrder="60">
+					<navLabel>
+						<text>Book VIII: Mitya</text>
+					</navLabel>
+					<content src="text/book-8.xhtml"/>
+					<navPoint id="navpoint-61" playOrder="61">
+						<navLabel>
+							<text>I: Kuzma Samsonov</text>
+						</navLabel>
+						<content src="text/chapter-3-8-1.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-62" playOrder="62">
+						<navLabel>
+							<text>II: Lyagavy</text>
+						</navLabel>
+						<content src="text/chapter-3-8-2.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-63" playOrder="63">
+						<navLabel>
+							<text>III: Goldmines</text>
+						</navLabel>
+						<content src="text/chapter-3-8-3.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-64" playOrder="64">
+						<navLabel>
+							<text>IV: In the Dark</text>
+						</navLabel>
+						<content src="text/chapter-3-8-4.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-65" playOrder="65">
+						<navLabel>
+							<text>V: A Sudden Resolution</text>
+						</navLabel>
+						<content src="text/chapter-3-8-5.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-66" playOrder="66">
+						<navLabel>
+							<text>VI: “I Am Coming, Too!”</text>
+						</navLabel>
+						<content src="text/chapter-3-8-6.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-67" playOrder="67">
+						<navLabel>
+							<text>VII: The First and Rightful Lover</text>
+						</navLabel>
+						<content src="text/chapter-3-8-7.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-68" playOrder="68">
+						<navLabel>
+							<text>VIII: Delirium</text>
+						</navLabel>
+						<content src="text/chapter-3-8-8.xhtml"/>
+					</navPoint>
+				</navPoint>
+				<navPoint id="navpoint-69" playOrder="69">
+					<navLabel>
+						<text>Book IX: The Preliminary Investigation</text>
+					</navLabel>
+					<content src="text/book-9.xhtml"/>
+					<navPoint id="navpoint-70" playOrder="70">
+						<navLabel>
+							<text>I: The Beginning of Perhotin’s Official Career</text>
+						</navLabel>
+						<content src="text/chapter-3-9-1.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-71" playOrder="71">
+						<navLabel>
+							<text>II: The Alarm</text>
+						</navLabel>
+						<content src="text/chapter-3-9-2.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-72" playOrder="72">
+						<navLabel>
+							<text>III: The Sufferings of a Soul, the First Ordeal</text>
+						</navLabel>
+						<content src="text/chapter-3-9-3.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-73" playOrder="73">
+						<navLabel>
+							<text>IV: The Second Ordeal</text>
+						</navLabel>
+						<content src="text/chapter-3-9-4.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-74" playOrder="74">
+						<navLabel>
+							<text>V: The Third Ordeal</text>
+						</navLabel>
+						<content src="text/chapter-3-9-5.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-75" playOrder="75">
+						<navLabel>
+							<text>VI: The Prosecutor Catches Mitya</text>
+						</navLabel>
+						<content src="text/chapter-3-9-6.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-76" playOrder="76">
+						<navLabel>
+							<text>VII: Mitya’s Great Secret. Received with Hisses</text>
+						</navLabel>
+						<content src="text/chapter-3-9-7.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-77" playOrder="77">
+						<navLabel>
+							<text>VIII: The Evidence of the Witnesses. The Babe</text>
+						</navLabel>
+						<content src="text/chapter-3-9-8.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-78" playOrder="78">
+						<navLabel>
+							<text>IX: They Carry Mitya Away</text>
+						</navLabel>
+						<content src="text/chapter-3-9-9.xhtml"/>
+					</navPoint>
+				</navPoint>
+			</navPoint>
+			<navPoint id="navpoint-79" playOrder="79">
+				<navLabel>
+					<text>Part IV</text>
+				</navLabel>
+				<content src="text/part-4.xhtml"/>
+				<navPoint id="navpoint-80" playOrder="80">
+					<navLabel>
+						<text>Book X: The Boys</text>
+					</navLabel>
+					<content src="text/book-10.xhtml"/>
+					<navPoint id="navpoint-81" playOrder="81">
+						<navLabel>
+							<text>I: Kolya Krassotkin</text>
+						</navLabel>
+						<content src="text/chapter-4-10-1.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-82" playOrder="82">
+						<navLabel>
+							<text>II: Children</text>
+						</navLabel>
+						<content src="text/chapter-4-10-2.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-83" playOrder="83">
+						<navLabel>
+							<text>III: The Schoolboy</text>
+						</navLabel>
+						<content src="text/chapter-4-10-3.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-84" playOrder="84">
+						<navLabel>
+							<text>IV: The Lost Dog</text>
+						</navLabel>
+						<content src="text/chapter-4-10-4.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-85" playOrder="85">
+						<navLabel>
+							<text>V: By Ilusha’s Bedside</text>
+						</navLabel>
+						<content src="text/chapter-4-10-5.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-86" playOrder="86">
+						<navLabel>
+							<text>VI: Precocity</text>
+						</navLabel>
+						<content src="text/chapter-4-10-6.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-87" playOrder="87">
+						<navLabel>
+							<text>VII: Ilusha</text>
+						</navLabel>
+						<content src="text/chapter-4-10-7.xhtml"/>
+					</navPoint>
+				</navPoint>
+				<navPoint id="navpoint-88" playOrder="88">
+					<navLabel>
+						<text>Book XI: Ivan</text>
+					</navLabel>
+					<content src="text/book-11.xhtml"/>
+					<navPoint id="navpoint-89" playOrder="89">
+						<navLabel>
+							<text>I: At Grushenka’s</text>
+						</navLabel>
+						<content src="text/chapter-4-11-1.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-90" playOrder="90">
+						<navLabel>
+							<text>II: The Injured Foot</text>
+						</navLabel>
+						<content src="text/chapter-4-11-2.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-91" playOrder="91">
+						<navLabel>
+							<text>III: A Little Demon</text>
+						</navLabel>
+						<content src="text/chapter-4-11-3.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-92" playOrder="92">
+						<navLabel>
+							<text>IV: A Hymn and a Secret</text>
+						</navLabel>
+						<content src="text/chapter-4-11-4.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-93" playOrder="93">
+						<navLabel>
+							<text>V: Not You, Not You!</text>
+						</navLabel>
+						<content src="text/chapter-4-11-5.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-94" playOrder="94">
+						<navLabel>
+							<text>VI: The First Interview with Smerdyakov</text>
+						</navLabel>
+						<content src="text/chapter-4-11-6.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-95" playOrder="95">
+						<navLabel>
+							<text>VII: The Second Visit to Smerdyakov</text>
+						</navLabel>
+						<content src="text/chapter-4-11-7.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-96" playOrder="96">
+						<navLabel>
+							<text>VIII: The Third and Last Interview with Smerdyakov</text>
+						</navLabel>
+						<content src="text/chapter-4-11-8.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-97" playOrder="97">
+						<navLabel>
+							<text>IX: The Devil. Ivan’s Nightmare</text>
+						</navLabel>
+						<content src="text/chapter-4-11-9.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-98" playOrder="98">
+						<navLabel>
+							<text>X: “It Was He Who Said That”</text>
+						</navLabel>
+						<content src="text/chapter-4-11-10.xhtml"/>
+					</navPoint>
+				</navPoint>
+				<navPoint id="navpoint-99" playOrder="99">
+					<navLabel>
+						<text>Book XII: A Judicial Error</text>
+					</navLabel>
+					<content src="text/book-12.xhtml"/>
+					<navPoint id="navpoint-100" playOrder="100">
+						<navLabel>
+							<text>I: The Fatal Day</text>
+						</navLabel>
+						<content src="text/chapter-4-12-1.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-101" playOrder="101">
+						<navLabel>
+							<text>II: Dangerous Witnesses</text>
+						</navLabel>
+						<content src="text/chapter-4-12-2.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-102" playOrder="102">
+						<navLabel>
+							<text>III: The Medical Experts and a Pound of Nuts</text>
+						</navLabel>
+						<content src="text/chapter-4-12-3.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-103" playOrder="103">
+						<navLabel>
+							<text>IV: Fortune Smiles on Mitya</text>
+						</navLabel>
+						<content src="text/chapter-4-12-4.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-104" playOrder="104">
+						<navLabel>
+							<text>V: A Sudden Catastrophe</text>
+						</navLabel>
+						<content src="text/chapter-4-12-5.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-105" playOrder="105">
+						<navLabel>
+							<text>VI: The Prosecutor’s Speech. Sketches of Character</text>
+						</navLabel>
+						<content src="text/chapter-4-12-6.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-106" playOrder="106">
+						<navLabel>
+							<text>VII: An Historical Survey</text>
+						</navLabel>
+						<content src="text/chapter-4-12-7.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-107" playOrder="107">
+						<navLabel>
+							<text>VIII: A Treatise on Smerdyakov</text>
+						</navLabel>
+						<content src="text/chapter-4-12-8.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-108" playOrder="108">
+						<navLabel>
+							<text>IX: The Galloping Troika. The End of the Prosecutor’s Speech</text>
+						</navLabel>
+						<content src="text/chapter-4-12-9.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-109" playOrder="109">
+						<navLabel>
+							<text>X: The Speech for the Defense. An Argument That Cuts Both Ways</text>
+						</navLabel>
+						<content src="text/chapter-4-12-10.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-110" playOrder="110">
+						<navLabel>
+							<text>XI: There Was No Money. There Was No Robbery</text>
+						</navLabel>
+						<content src="text/chapter-4-12-11.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-111" playOrder="111">
+						<navLabel>
+							<text>XII: And There Was No Murder Either</text>
+						</navLabel>
+						<content src="text/chapter-4-12-12.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-112" playOrder="112">
+						<navLabel>
+							<text>XIII: A Corrupter of Thought</text>
+						</navLabel>
+						<content src="text/chapter-4-12-13.xhtml"/>
+					</navPoint>
+					<navPoint id="navpoint-113" playOrder="113">
+						<navLabel>
+							<text>XIV: The Peasants Stand Firm</text>
+						</navLabel>
+						<content src="text/chapter-4-12-14.xhtml"/>
+					</navPoint>
+				</navPoint>
+			</navPoint>
+			<navPoint id="navpoint-114" playOrder="114">
+				<navLabel>
+					<text>Epilogue</text>
+				</navLabel>
+				<content src="text/epilogue.xhtml"/>
+				<navPoint id="navpoint-115" playOrder="115">
+					<navLabel>
+						<text>I: Plans for Mitya’s Escape</text>
+					</navLabel>
+					<content src="text/chapter-5-1.xhtml"/>
+				</navPoint>
+				<navPoint id="navpoint-116" playOrder="116">
+					<navLabel>
+						<text>II: For a Moment the Lie Becomes Truth</text>
+					</navLabel>
+					<content src="text/chapter-5-2.xhtml"/>
+				</navPoint>
+				<navPoint id="navpoint-117" playOrder="117">
+					<navLabel>
+						<text>III: Ilusha’s Funeral. The Speech at the Stone</text>
+					</navLabel>
+					<content src="text/chapter-5-3.xhtml"/>
+				</navPoint>
+			</navPoint>
+		</navPoint>
+		<navPoint id="navpoint-118" playOrder="118">
+			<navLabel>
+				<text>Endnotes</text>
+			</navLabel>
+			<content src="text/endnotes.xhtml"/>
+		</navPoint>
+		<navPoint id="navpoint-119" playOrder="119">
+			<navLabel>
+				<text>Colophon</text>
+			</navLabel>
+			<content src="text/colophon.xhtml"/>
+		</navPoint>
+		<navPoint id="navpoint-120" playOrder="120">
+			<navLabel>
+				<text>Uncopyright</text>
+			</navLabel>
+			<content src="text/uncopyright.xhtml"/>
+		</navPoint>
+	</navMap>
+</ncx>
