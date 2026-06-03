@@ -40,6 +40,11 @@ export const useEpubFile = ({
         setIsLoading(true);
         setError(null);
 
+        if(!epubUrl && !epubPath) {
+          setIsLoading(false);
+          return;
+        }
+
         let url = epubUrl || '';
 
         if (epubPath) {

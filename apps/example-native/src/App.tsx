@@ -27,6 +27,12 @@ const books: BookOption[] = [
     bundledAsset: 'the-brothers-karamazov.epub',
     epubPath: `${RNFS.DocumentDirectoryPath}/the-brothers-karamazov.epub`,
   },
+  {
+    id: 'sense-and-sensibility',
+    title: 'Sense and Sensibility',
+    author: 'Jane Austen',
+    pdfUrl: 'https://www.gutenberg.org/files/161/old/2008-05-25-161-pdf.pdf',
+  },
 ];
 
 export default function App() {

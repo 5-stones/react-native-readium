@@ -8,6 +8,7 @@ export interface BookOption {
   epubPath?: string;
   /** Filename of an epub bundled in the app assets (e.g. 'book.epub') */
   bundledAsset?: string;
+  pdfUrl?: string;
 }
 
 export interface ReaderProps {
@@ -19,6 +20,7 @@ export interface ReaderProps {
   bundledAsset?: string;
   /** Initial location to open the book at */
   initialLocation?: Locator;
+  pdfUrl?: string;
 }
 
 export interface CurrentSelection {
