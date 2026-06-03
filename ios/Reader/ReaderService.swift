@@ -28,7 +28,7 @@ final class ReaderService: Loggable {
       log(.error, "Failed to instantiate AppModule: \(error)")
     }
   }
-  
+
   func buildViewController(
     url: String,
     bookId: String,
@@ -38,27 +38,50 @@ final class ReaderService: Loggable {
     completion: @escaping (ReaderViewController) -> Void
   ) {
     guard let reader = self.app?.reader else { return }
-    self.url(path: url)
-      .flatMap { self.openPublication(at: $0, allowUserInteraction: true, sender: sender ) }
+    if let remoteURL = URL(string: url), remoteURL.scheme != nil, remoteURL.scheme != "file", 
+       remoteURL.pathExtension.lowercased() == "pdf" || url.contains(".pdf") {
+      let fileManager = FileManager.default
+      let cacheDir = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
+      var components = URLComponents(url: remoteURL, resolvingAgainstBaseURL: false)
+      components?.query = nil
+      let cleanURLString = components?.url?.absoluteString ?? remoteURL.absoluteString
+      let urlHash = abs(cleanURLString.hashValue)
+      let localURL = cacheDir.appendingPathComponent("\(urlHash).pdf")
+      if fileManager.fileExists(atPath: localURL.path) {
+        self.runOpenPipeline(url: localURL, bookId: bookId, locator: locator, selectionActions: selectionActions, sender: sender, completion: completion)
+        return
+      }
+      URLSession.shared.downloadTask(with: remoteURL) { tempURL, _, error in
+        guard let tempURL = tempURL, error == nil else { return }
+        try? fileManager.moveItem(at: tempURL, to: localURL)
+        DispatchQueue.main.async {
+          self.runOpenPipeline(url: localURL, bookId: bookId, locator: locator, selectionActions: selectionActions, sender: sender, completion: completion)
+        }
+      }.resume()
+      return
+    }
+    self.url(path: url).sink(
+      receiveCompletion: { _ in },
+      receiveValue: { self.runOpenPipeline(url: $0, bookId: bookId, locator: locator, selectionActions: selectionActions, sender: sender, completion: completion) }
+    ).store(in: &subscriptions)
+  }
+
+  private func runOpenPipeline(
+    url: URL,
+    bookId: String,
+    locator: ReadiumShared.Locator?,
+    selectionActions: [SelectionActionData]?,
+    sender: UIViewController?,
+    completion: @escaping (ReaderViewController) -> Void
+  ) {
+    self.openPublication(at: url, allowUserInteraction: true, sender: sender)
       .flatMap { (pub, _) in self.checkIsReadable(publication: pub) }
       .sink(
-        receiveCompletion: { [weak self] completion in
-          if case .failure(let error) = completion {
-            self?.log(.error, "Failed to open publication: \(error)")
-          }
-        },
+        receiveCompletion: { _ in },
         receiveValue: { pub in
           Task { @MainActor in
-            guard let viewController = reader.getViewController(
-              for: pub,
-              bookId: bookId,
-              locator: locator,
-              selectionActions: selectionActions
-            ) else {
-              return
-            }
-
-            completion(viewController)
+            guard let vc = (self.app?.reader)?.getViewController(for: pub, bookId: bookId, locator: locator, selectionActions: selectionActions) else { return }
+            completion(vc)
           }
         }
       )
