@@ -4,6 +4,7 @@ import { View, StyleSheet } from 'react-native';
 
 import {
   useNavigator,
+  usePdfNavigator,
   usePreferencesObserver,
   useDecorationsObserver,
 } from '../../web/hooks';
@@ -40,23 +41,42 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
     const [container, setContainer] = useState<HTMLElement | null>(null);
     const [currentPosition, setCurrentPosition] = useState<number | null>(null);
 
+    const isPdfUrl = (url: string) => url.toLowerCase().split('?')[0].endsWith('.pdf');
+    const isPdf = !!file?.url && isPdfUrl(file.url);
+    const [renderPdfInIFrame, setRenderPdfInIFrame] = useState<boolean>(false);
+
     // Convert DecorationGroup[] to DecorationGroups record for web hooks
     const decorationsRecord = decorations
       ? Object.fromEntries(decorations.map((g) => [g.name, g.decorations]))
       : undefined;
 
     const { navigator, positions } = useNavigator({
-      file,
+      file: isPdf ? { url: '', initialLocation: undefined } : file,
       onLocationChange,
       onPublicationReady,
-      container,
+      container: isPdf ? null : container,
       onPositionChange: setCurrentPosition,
+    });
+
+    const pdfNavigator = usePdfNavigator({
+      url: isPdf ? file.url : '',
+      container: isPdf ? container : null,
+      onLocationChange,
+      onPublicationReady,
+      initialPage: 1,
+      onError: () => {
+        setRenderPdfInIFrame(true);
+      }
     });
 
     useImperativeHandle(
       ref,
       () => ({
         goTo: (locator) => {
+          if (isPdf) {
+            pdfNavigator.goToLocator(locator);
+            return;
+          }
           if (!navigator) return;
           const navLocator = convertToNavigatorLocator(locator);
           if (navLocator) {
@@ -65,9 +85,17 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
           }
         },
         goForward: () => {
+          if (isPdf) {
+            pdfNavigator.goForward();
+            return;
+          }
           navigator?.goForward(true, () => {});
         },
         goBackward: () => {
+          if (isPdf) {
+            pdfNavigator.goBackward();
+            return;
+          }
           navigator?.goBackward(true, () => {});
         },
         /** @deprecated Use goForward() */
@@ -79,7 +107,7 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
           navigator?.goBackward(true, () => {});
         },
       }),
-      [navigator]
+      [navigator, isPdf, pdfNavigator]
     );
 
     usePreferencesObserver(navigator, preferences);
@@ -144,6 +172,41 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
 
     const themeColors = getThemeColors();
 
+    useEffect(() => {
+      if(isPdf && !pdfNavigator.isReady) {
+        const timeout = setTimeout(() => {
+          setRenderPdfInIFrame(true);
+        }, 3000);
+        return () => clearTimeout(timeout);
+      }
+    }, [isPdf, pdfNavigator.isReady]);
+
+    if (isPdf) {
+      if (renderPdfInIFrame) {
+        return (<View style={styles.container} id="wrapper">
+        <iframe
+          src={file.url}
+          style={{ width: '100%', height: '100%', border: 'none' }} />
+        </View>)
+      }
+      return (
+        <View style={styles.container} id="wrapper">
+          {!pdfNavigator.isReady && <div style={loaderStyle}>Loading reader...</div>}
+          <main
+            ref={setContainer}
+            style={styles.readiumContainer}
+            id="readium-container"
+            aria-label="Publication"
+          />
+          {pdfNavigator.isReady && pdfNavigator.pageCount > 0 && (
+            <div style={pdfPositionLabelStyle} aria-live="polite">
+              {pdfNavigator.pageNumber} / {pdfNavigator.pageCount}
+            </div>
+          )}
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container} id="wrapper">
         <style type="text/css">
@@ -194,6 +257,19 @@ const loaderStyle: React.CSSProperties = {
   textAlign: 'center',
   position: 'relative',
   top: 'calc(50% - 10px)',
+};
+
+const pdfPositionLabelStyle: React.CSSProperties = {
+  position: 'absolute',
+  bottom: 10,
+  left: '50%',
+  transform: 'translateX(-50%)',
+  fontSize: 14,
+  background: 'transparent',
+  padding: '5px 10px',
+  zIndex: 1000,
+  pointerEvents: 'none',
+  userSelect: 'none',
 };
 
 const styles = StyleSheet.create({

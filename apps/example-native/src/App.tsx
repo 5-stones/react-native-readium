@@ -27,6 +27,18 @@ const books: BookOption[] = [
     bundledAsset: 'the-brothers-karamazov.epub',
     epubPath: `${RNFS.DocumentDirectoryPath}/the-brothers-karamazov.epub`,
   },
+  {
+    id: 'mi-may-newsletter',
+    title: 'MI May Newsletter',
+    author: 'Militia Immaculatae',
+    epubUrl: 'https://militiaoftheimmaculata.com/wp-content/uploads/2020/06/2026-MAY-E-Pub-final-web.pdf',
+  },
+  {
+    id: 'mi-june-newsletter',
+    title: 'MI June Newsletter',
+    author: 'Militia Immaculatae',
+    epubUrl: 'https://militiaoftheimmaculata.com/wp-content/uploads/2020/06/2026-JUNE-E-Pub-final-pages-web.pdf',
+  },
 ];
 
 export default function App() {

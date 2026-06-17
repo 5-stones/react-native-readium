@@ -114,6 +114,7 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
                 onEditHighlight={readerHandle.editHighlight}
                 onClearBook={onClearBook}
                 onClose={handleClose}
+                file={readerHandle.file}
               />
             ) : (
               <EmptyBar onClose={handleClose} />

@@ -183,6 +183,7 @@
     "@readium/navigator": "^2.3.0",
     "@readium/navigator-html-injectables": "^2.3.0",
     "@readium/shared": "^2.1.5",
+    "pdfjs-dist": "^6.0.227",
     "use-deep-compare": "^1.1.0"
   },
   "engines": {

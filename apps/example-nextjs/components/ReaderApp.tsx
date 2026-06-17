@@ -34,6 +34,20 @@ const books: BookOption[] = [
     epubUrl:
       'https://ott-5stones-staging-assets.b-cdn.net/assets/public/moby-dick_epub/none/manifest.json',
   },
+  {
+    id: 'mi-may-newsletter',
+    title: 'MI May Newsletter',
+    author: 'Militia Immaculatae',
+    epubUrl:
+      'https://militiaoftheimmaculata.com/wp-content/uploads/2020/06/2026-MAY-E-Pub-final-web.pdf',
+  },
+  {
+    id: 'mi-june-newsletter',
+    title: 'MI June Newsletter',
+    author: 'Militia Immaculatae',
+    epubUrl:
+      'https://militiaoftheimmaculata.com/wp-content/uploads/2020/06/2026-JUNE-E-Pub-final-pages-web.pdf',
+  },
 ];
 
 const styles = StyleSheet.create({
