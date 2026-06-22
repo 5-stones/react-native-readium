@@ -420,6 +420,55 @@ open class HybridReadiumViewSpec_cxx {
     }
   }
   
+  @inline(__always)
+  public final func search(query: std.string, options: bridge.std__optional_SearchOptions_) -> bridge.Result_std__shared_ptr_Promise_SearchPage___ {
+    do {
+      let __result = try self.__implementation.search(query: String(query), options: options.value)
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_SearchPage__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_SearchPage__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_SearchPage__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve(__result) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_SearchPage___(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_SearchPage___(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func loadMoreSearchResults() -> bridge.Result_std__shared_ptr_Promise_SearchPage___ {
+    do {
+      let __result = try self.__implementation.loadMoreSearchResults()
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_SearchPage__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_SearchPage__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_SearchPage__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve(__result) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_SearchPage___(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_SearchPage___(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func cancelSearch() -> bridge.Result_void_ {
+    do {
+      try self.__implementation.cancelSearch()
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
   public final func getView() -> UnsafeMutableRawPointer {
     return Unmanaged.passRetained(__implementation.view).toOpaque()
   }

@@ -53,6 +53,12 @@ namespace margelo::nitro::readium { struct Point; }
 namespace margelo::nitro::readium { struct SelectionEvent; }
 // Forward declaration of `SelectionActionEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct SelectionActionEvent; }
+// Forward declaration of `SearchPage` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchPage; }
+// Forward declaration of `SearchResult` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchResult; }
+// Forward declaration of `SearchOptions` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchOptions; }
 
 #include "ReadiumFile.hpp"
 #include <optional>
@@ -111,6 +117,14 @@ namespace margelo::nitro::readium { struct SelectionActionEvent; }
 #include "SelectionActionEvent.hpp"
 #include "JFunc_void_SelectionActionEvent.hpp"
 #include "JSelectionActionEvent.hpp"
+#include "SearchPage.hpp"
+#include <NitroModules/Promise.hpp>
+#include <NitroModules/JPromise.hpp>
+#include "JSearchPage.hpp"
+#include "SearchResult.hpp"
+#include "JSearchResult.hpp"
+#include "SearchOptions.hpp"
+#include "JSearchOptions.hpp"
 
 namespace margelo::nitro::readium {
 
@@ -315,6 +329,42 @@ namespace margelo::nitro::readium {
   }
   void JHybridReadiumViewSpec::destroy() {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void()>("destroy");
+    method(_javaPart);
+  }
+  std::shared_ptr<Promise<SearchPage>> JHybridReadiumViewSpec::search(const std::string& query, const std::optional<SearchOptions>& options) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* query */, jni::alias_ref<JSearchOptions> /* options */)>("search");
+    auto __result = method(_javaPart, jni::make_jstring(query), options.has_value() ? JSearchOptions::fromCpp(options.value()) : nullptr);
+    return [&]() {
+      auto __promise = Promise<SearchPage>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<JSearchPage>(__boxedResult);
+        __promise->resolve(__result->toCpp());
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<SearchPage>> JHybridReadiumViewSpec::loadMoreSearchResults() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("loadMoreSearchResults");
+    auto __result = method(_javaPart);
+    return [&]() {
+      auto __promise = Promise<SearchPage>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<JSearchPage>(__boxedResult);
+        __promise->resolve(__result->toCpp());
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  void JHybridReadiumViewSpec::cancelSearch() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void()>("cancelSearch");
     method(_javaPart);
   }
 

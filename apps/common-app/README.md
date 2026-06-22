@@ -1,6 +1,6 @@
 # Common App - React Native Readium Example
 
-A comprehensive example application demonstrating all features of the react-native-readium library, including reading EPUB publications, preferences management, table of contents navigation, and highlights/annotations.
+A comprehensive example application demonstrating all features of the react-native-readium library, including reading EPUB publications, preferences management, table of contents navigation, highlights/annotations, and full-text search.
 
 ## Features
 
@@ -35,6 +35,14 @@ A comprehensive example application demonstrating all features of the react-nati
 - Tap highlights to view notes
 - 5 built-in highlight colors
 
+### 🔍 **Full-Text Search** (NEW!)
+
+- Search across the entire publication
+- Context snippets (before/after) with the matched term highlighted
+- Page number or progression percentage shown per result
+- Case sensitivity, diacritic sensitivity, whole-word, and regex options exposed via `SearchOptions`
+- Platform-aware: shows "Search not available" immediately on web (not yet supported) and for formats that don't support text search
+
 ## Getting Started
 
 This app is shared between the example-native and example-nextjs apps, providing a common reader experience across platforms.
@@ -49,6 +57,7 @@ common-app/
 │   │   ├── HighlightManager.tsx    # Highlights UI and management
 │   │   ├── PreferencesEditor.tsx   # Reader settings
 │   │   ├── TableOfContents.tsx     # TOC navigation
+│   │   ├── SearchPanel.tsx         # Full-text search UI
 │   │   └── ReaderButton.tsx        # UI button component
 │   └── utils/
 │       └── RNFS.ts                 # File system utilities
@@ -152,6 +161,26 @@ Modal for navigating the book's structure.
 - Hierarchical TOC display
 - Quick chapter navigation
 - Chapter titles and page numbers
+
+### SearchPanel
+
+Self-contained search modal triggered by a toolbar button. Manages its own visibility and query state internally.
+
+**Props:**
+
+- `searchResults`: Array of `SearchResult` objects from the library
+- `isSearching`: Whether a search is in progress
+- `isSearchSupported`: Whether the current publication/platform supports search
+- `onSearch`: Called with the query string when the user submits
+- `onClearSearch`: Called when the user clears the search input
+- `onNavigateToResult`: Called with a `Locator` when a result row is tapped
+
+**Features:**
+
+- Slide-up modal sheet for search results
+- Matched term shown in bold with a yellow background
+- Position label (`p. N` or `X%`) below each result
+- Empty states for: unsupported, searching, no results, initial prompt
 
 ## Customization
 

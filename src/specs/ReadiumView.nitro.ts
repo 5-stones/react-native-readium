@@ -191,6 +191,39 @@ export interface PublicationMetadata {
   belongsTo?: BelongsTo;
 }
 
+// ── Search ────────────────────────────────────────────────────────────────────
+
+export interface SearchOptions {
+  caseSensitive?: boolean;
+  diacriticSensitive?: boolean;
+  wholeWord?: boolean;
+  regularExpression?: boolean;
+  language?: string;
+}
+
+export interface SearchResult {
+  locator: Locator;
+  before?: string;
+  highlight?: string;
+  after?: string;
+}
+
+/**
+ * A single page of search results, returned by `search()` and
+ * `loadMoreSearchResults()`. Results are paginated lazily: keep calling
+ * `loadMoreSearchResults()` while `hasMore` is true.
+ */
+export interface SearchPage {
+  /** The matches in this page (may be empty on the terminal page). */
+  results: SearchResult[];
+  /** True while more pages remain to be fetched via `loadMoreSearchResults()`. */
+  hasMore: boolean;
+  /** Total number of matches across the whole search, when the service knows it. */
+  totalCount?: number;
+  /** False when the publication has no search service (e.g. not searchable). */
+  isSupported: boolean;
+}
+
 // ── Events ───────────────────────────────────────────────────────────────────
 
 export interface PublicationReadyEvent {
@@ -243,6 +276,12 @@ export interface ReadiumViewMethods extends HybridViewMethods {
   goForward(): void;
   goBackward(): void;
   destroy(): void;
+  /** Starts a new full-text search and resolves with the first page of results. */
+  search(query: string, options?: SearchOptions): Promise<SearchPage>;
+  /** Resolves with the next page of results for the in-flight search. */
+  loadMoreSearchResults(): Promise<SearchPage>;
+  /** Cancels the in-flight search and releases the iterator. */
+  cancelSearch(): void;
 }
 
 export type ReadiumView = HybridView<ReadiumViewProps, ReadiumViewMethods>;

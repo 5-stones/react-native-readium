@@ -303,6 +303,54 @@ Key concepts:
 
 [Take a look at the Example App](https://github.com/5-stones/react-native-readium/blob/main/apps/example-native/src/App.tsx) for a full implementation with color picking, note editing, and highlight management.
 
+### Full-Text Search
+
+EPUB publications support full-text search via the [ref methods](#ref-methods).
+Results are **paginated lazily** — `search` resolves with the first
+[`SearchPage`](https://github.com/5-stones/react-native-readium/blob/main/src/specs/ReadiumView.nitro.ts),
+and you call `loadMoreSearchResults` to fetch each subsequent page while
+`page.hasMore` is `true`:
+
+```tsx
+const ref = useRef<ReadiumViewRef>(null);
+
+// Start a search and read the first page.
+const first = await ref.current?.search('whale', { caseSensitive: false });
+// first.results, first.hasMore, first.totalCount, first.isSupported
+
+// Fetch the next page (e.g. when the user nears the end of the list).
+if (first?.hasMore) {
+  const next = await ref.current?.loadMoreSearchResults();
+}
+
+// Cancel and release the underlying iterator.
+ref.current?.cancelSearch();
+```
+
+Do not call `loadMoreSearchResults` concurrently — a single Readium search
+iterator must not be advanced in parallel. Await each page before requesting the
+next.
+
+#### `useSearch` hook
+
+For the common case, the exported `useSearch(ref)` hook wraps these methods and
+manages the accumulated results plus `isSearching` / `isLoadingMore` /
+`isSupported` / `hasMore` state for you (and serialises page requests so you
+can't advance the iterator concurrently):
+
+```tsx
+import { ReadiumView, useSearch } from 'react-native-readium';
+
+const ref = useRef<ReadiumViewRef>(null);
+const { results, hasMore, isSearching, search, loadMore, clear } =
+  useSearch(ref);
+
+// search('whale')   loadMore()   clear()
+```
+
+See the [example app](https://github.com/5-stones/react-native-readium/blob/main/apps/common-app/src/components/SearchPanel.tsx)
+for a full search UI with infinite scroll.
+
 ## Supported Formats & DRM
 
 #### Format Support
@@ -324,18 +372,18 @@ DRM is not supported at this time. However, there is a clear path to [support it
 
 #### View Props
 
-| Name                     | Type                                                                                                                                                                                             | Optional           | Description                                                                                                                                                                                                                                                                                                                                                                        |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `file`                   | [`File`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/File.ts)                                                                                                      | :x:                | A file object containing the path to the eBook file on disk. Use `File.initialLocation` to set the reader's position on mount.                                                                                                                                                                                                                                                     |
-| `preferences`            | [`Partial<Preferences>`](https://github.com/readium/swift-toolkit/blob/main/docs/Guides/Navigator%20Preferences.md#appendix-preference-constraints)                                              | :white_check_mark: | An object that allows you to control various aspects of the reader's UI (epub only)                                                                                                                                                                                                                                                                                                |
-| `decorations`            | [`DecorationGroup[]`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/Decoration.ts)                                                                                   | :white_check_mark: | An array of decoration groups to render in the publication (e.g. highlights, underlines).                                                                                                                                                                                                                                                                                           |
-| `selectionActions`       | [`SelectionAction[]`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/SelectionAction.ts)                                                                              | :white_check_mark: | Custom actions to show in the context menu when the user selects text.                                                                                                                                                                                                                                                                                                             |
-| `style`                  | `ViewStyle`                                                                                                                                                                                      | :white_check_mark: | A traditional style object.                                                                                                                                                                                                                                                                                                                                                        |
-| `onLocationChange`       | `(locator: Locator) => void`                                                                                                                                                                     | :white_check_mark: | A callback that fires whenever the location is changed (e.g. the user transitions to a new page).                                                                                                                                                                                                                                                                                  |
-| `onPublicationReady`     | `(event: PublicationReadyEvent) => void`                                                                                                                                                         | :white_check_mark: | A callback that fires once the publication is loaded and provides access to the table of contents, positions, and metadata. See the [`PublicationReadyEvent`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/PublicationReady.ts) interface for details.                                                                                                |
-| `onDecorationActivated`  | `(event: DecorationActivatedEvent) => void`                                                                                                                                                      | :white_check_mark: | A callback that fires when a user taps on a decoration (e.g. a highlight).                                                                                                                                                                                                                                                                                                         |
-| `onSelectionChange`      | `(event: SelectionEvent) => void`                                                                                                                                                                | :white_check_mark: | A callback that fires when the user's text selection changes.                                                                                                                                                                                                                                                                                                                      |
-| `onSelectionAction`      | `(event: SelectionActionEvent) => void`                                                                                                                                                          | :white_check_mark: | A callback that fires when the user taps a custom selection action from the context menu.                                                                                                                                                                                                                                                                                          |
+| Name                    | Type                                                                                                                                                | Optional           | Description                                                                                                                                                                                                                                                                         |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `file`                  | [`File`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/File.ts)                                                         | :x:                | A file object containing the path to the eBook file on disk. Use `File.initialLocation` to set the reader's position on mount.                                                                                                                                                      |
+| `preferences`           | [`Partial<Preferences>`](https://github.com/readium/swift-toolkit/blob/main/docs/Guides/Navigator%20Preferences.md#appendix-preference-constraints) | :white_check_mark: | An object that allows you to control various aspects of the reader's UI (epub only)                                                                                                                                                                                                 |
+| `decorations`           | [`DecorationGroup[]`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/Decoration.ts)                                      | :white_check_mark: | An array of decoration groups to render in the publication (e.g. highlights, underlines).                                                                                                                                                                                           |
+| `selectionActions`      | [`SelectionAction[]`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/SelectionAction.ts)                                 | :white_check_mark: | Custom actions to show in the context menu when the user selects text.                                                                                                                                                                                                              |
+| `style`                 | `ViewStyle`                                                                                                                                         | :white_check_mark: | A traditional style object.                                                                                                                                                                                                                                                         |
+| `onLocationChange`      | `(locator: Locator) => void`                                                                                                                        | :white_check_mark: | A callback that fires whenever the location is changed (e.g. the user transitions to a new page).                                                                                                                                                                                   |
+| `onPublicationReady`    | `(event: PublicationReadyEvent) => void`                                                                                                            | :white_check_mark: | A callback that fires once the publication is loaded and provides access to the table of contents, positions, and metadata. See the [`PublicationReadyEvent`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/PublicationReady.ts) interface for details. |
+| `onDecorationActivated` | `(event: DecorationActivatedEvent) => void`                                                                                                         | :white_check_mark: | A callback that fires when a user taps on a decoration (e.g. a highlight).                                                                                                                                                                                                          |
+| `onSelectionChange`     | `(event: SelectionEvent) => void`                                                                                                                   | :white_check_mark: | A callback that fires when the user's text selection changes.                                                                                                                                                                                                                       |
+| `onSelectionAction`     | `(event: SelectionActionEvent) => void`                                                                                                             | :white_check_mark: | A callback that fires when the user taps a custom selection action from the context menu.                                                                                                                                                                                           |
 
 #### Ref Methods
 
@@ -363,11 +411,14 @@ const MyComponent: React.FC = () => {
 };
 ```
 
-| Method             | Description                                                                      |
-| ------------------ | -------------------------------------------------------------------------------- |
-| `goTo(locator)`    | Navigate to a specific location in the publication (e.g. a chapter or bookmark). |
-| `goForward()`      | Navigate forward in the publication (e.g. next page).                            |
-| `goBackward()`     | Navigate backward in the publication (e.g. previous page).                       |
+| Method                    | Description                                                                                                                                                                                                                                     |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `goTo(locator)`           | Navigate to a specific location in the publication (e.g. a chapter or bookmark).                                                                                                                                                                |
+| `goForward()`             | Navigate forward in the publication (e.g. next page).                                                                                                                                                                                           |
+| `goBackward()`            | Navigate backward in the publication (e.g. previous page).                                                                                                                                                                                      |
+| `search(query, options?)` | Start a full-text search; resolves with the first [`SearchPage`](https://github.com/5-stones/react-native-readium/blob/main/src/specs/ReadiumView.nitro.ts) of results. Most consumers should prefer the [`useSearch`](#full-text-search) hook. |
+| `loadMoreSearchResults()` | Resolves with the next `SearchPage` for the in-flight search (empty terminal page when exhausted).                                                                                                                                              |
+| `cancelSearch()`          | Cancel the in-flight search and release its iterator.                                                                                                                                                                                           |
 
 #### :warning: Web vs Native File URLs
 

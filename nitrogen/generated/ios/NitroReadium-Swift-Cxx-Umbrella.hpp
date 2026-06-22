@@ -46,6 +46,12 @@ namespace margelo::nitro::readium { struct PublicationReadyEvent; }
 namespace margelo::nitro::readium { struct ReadiumFile; }
 // Forward declaration of `Rect` to properly resolve imports.
 namespace margelo::nitro::readium { struct Rect; }
+// Forward declaration of `SearchOptions` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchOptions; }
+// Forward declaration of `SearchPage` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchPage; }
+// Forward declaration of `SearchResult` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchResult; }
 // Forward declaration of `SelectionActionEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct SelectionActionEvent; }
 // Forward declaration of `SelectionAction` to properly resolve imports.
@@ -77,11 +83,15 @@ namespace margelo::nitro::readium { struct Subject; }
 #include "PublicationReadyEvent.hpp"
 #include "ReadiumFile.hpp"
 #include "Rect.hpp"
+#include "SearchOptions.hpp"
+#include "SearchPage.hpp"
+#include "SearchResult.hpp"
 #include "SelectionAction.hpp"
 #include "SelectionActionEvent.hpp"
 #include "SelectionEvent.hpp"
 #include "SeriesInfo.hpp"
 #include "Subject.hpp"
+#include <NitroModules/Promise.hpp>
 #include <NitroModules/Result.hpp>
 #include <exception>
 #include <functional>

@@ -36,6 +36,9 @@ namespace margelo::nitro::readium {
       prototype.registerHybridMethod("goForward", &HybridReadiumViewSpec::goForward);
       prototype.registerHybridMethod("goBackward", &HybridReadiumViewSpec::goBackward);
       prototype.registerHybridMethod("destroy", &HybridReadiumViewSpec::destroy);
+      prototype.registerHybridMethod("search", &HybridReadiumViewSpec::search);
+      prototype.registerHybridMethod("loadMoreSearchResults", &HybridReadiumViewSpec::loadMoreSearchResults);
+      prototype.registerHybridMethod("cancelSearch", &HybridReadiumViewSpec::cancelSearch);
     });
   }
 

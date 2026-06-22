@@ -46,6 +46,12 @@ namespace margelo::nitro::readium { struct PublicationReadyEvent; }
 namespace margelo::nitro::readium { struct ReadiumFile; }
 // Forward declaration of `Rect` to properly resolve imports.
 namespace margelo::nitro::readium { struct Rect; }
+// Forward declaration of `SearchOptions` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchOptions; }
+// Forward declaration of `SearchPage` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchPage; }
+// Forward declaration of `SearchResult` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchResult; }
 // Forward declaration of `SelectionActionEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct SelectionActionEvent; }
 // Forward declaration of `SelectionAction` to properly resolve imports.
@@ -81,11 +87,16 @@ namespace NitroReadium { class HybridReadiumViewSpec_cxx; }
 #include "PublicationReadyEvent.hpp"
 #include "ReadiumFile.hpp"
 #include "Rect.hpp"
+#include "SearchOptions.hpp"
+#include "SearchPage.hpp"
+#include "SearchResult.hpp"
 #include "SelectionAction.hpp"
 #include "SelectionActionEvent.hpp"
 #include "SelectionEvent.hpp"
 #include "SeriesInfo.hpp"
 #include "Subject.hpp"
+#include <NitroModules/Promise.hpp>
+#include <NitroModules/PromiseHolder.hpp>
 #include <NitroModules/Result.hpp>
 #include <exception>
 #include <functional>
@@ -710,6 +721,88 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.value();
   }
   
+  // pragma MARK: std::vector<SearchResult>
+  /**
+   * Specialized version of `std::vector<SearchResult>`.
+   */
+  using std__vector_SearchResult_ = std::vector<SearchResult>;
+  inline std::vector<SearchResult> create_std__vector_SearchResult_(size_t size) noexcept {
+    std::vector<SearchResult> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::shared_ptr<Promise<SearchPage>>
+  /**
+   * Specialized version of `std::shared_ptr<Promise<SearchPage>>`.
+   */
+  using std__shared_ptr_Promise_SearchPage__ = std::shared_ptr<Promise<SearchPage>>;
+  inline std::shared_ptr<Promise<SearchPage>> create_std__shared_ptr_Promise_SearchPage__() noexcept {
+    return Promise<SearchPage>::create();
+  }
+  inline PromiseHolder<SearchPage> wrap_std__shared_ptr_Promise_SearchPage__(std::shared_ptr<Promise<SearchPage>> promise) noexcept {
+    return PromiseHolder<SearchPage>(std::move(promise));
+  }
+  
+  // pragma MARK: std::function<void(const SearchPage& /* result */)>
+  /**
+   * Specialized version of `std::function<void(const SearchPage&)>`.
+   */
+  using Func_void_SearchPage = std::function<void(const SearchPage& /* result */)>;
+  /**
+   * Wrapper class for a `std::function<void(const SearchPage& / * result * /)>`, this can be used from Swift.
+   */
+  class Func_void_SearchPage_Wrapper final {
+  public:
+    explicit Func_void_SearchPage_Wrapper(std::function<void(const SearchPage& /* result */)>&& func): _function(std::make_unique<std::function<void(const SearchPage& /* result */)>>(std::move(func))) {}
+    inline void call(SearchPage result) const noexcept {
+      _function->operator()(result);
+    }
+  private:
+    std::unique_ptr<std::function<void(const SearchPage& /* result */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_SearchPage create_Func_void_SearchPage(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_SearchPage_Wrapper wrap_Func_void_SearchPage(Func_void_SearchPage value) noexcept {
+    return Func_void_SearchPage_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::function<void(const std::exception_ptr& /* error */)>
+  /**
+   * Specialized version of `std::function<void(const std::exception_ptr&)>`.
+   */
+  using Func_void_std__exception_ptr = std::function<void(const std::exception_ptr& /* error */)>;
+  /**
+   * Wrapper class for a `std::function<void(const std::exception_ptr& / * error * /)>`, this can be used from Swift.
+   */
+  class Func_void_std__exception_ptr_Wrapper final {
+  public:
+    explicit Func_void_std__exception_ptr_Wrapper(std::function<void(const std::exception_ptr& /* error */)>&& func): _function(std::make_unique<std::function<void(const std::exception_ptr& /* error */)>>(std::move(func))) {}
+    inline void call(std::exception_ptr error) const noexcept {
+      _function->operator()(error);
+    }
+  private:
+    std::unique_ptr<std::function<void(const std::exception_ptr& /* error */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_std__exception_ptr create_Func_void_std__exception_ptr(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_std__exception_ptr_Wrapper wrap_Func_void_std__exception_ptr(Func_void_std__exception_ptr value) noexcept {
+    return Func_void_std__exception_ptr_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<SearchOptions>
+  /**
+   * Specialized version of `std::optional<SearchOptions>`.
+   */
+  using std__optional_SearchOptions_ = std::optional<SearchOptions>;
+  inline std::optional<SearchOptions> create_std__optional_SearchOptions_(const SearchOptions& value) noexcept {
+    return std::optional<SearchOptions>(value);
+  }
+  inline bool has_value_std__optional_SearchOptions_(const std::optional<SearchOptions>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline SearchOptions get_std__optional_SearchOptions_(const std::optional<SearchOptions>& optional) noexcept {
+    return optional.value();
+  }
+  
   // pragma MARK: std::shared_ptr<HybridReadiumViewSpec>
   /**
    * Specialized version of `std::shared_ptr<HybridReadiumViewSpec>`.
@@ -729,6 +822,15 @@ namespace margelo::nitro::readium::bridge::swift {
   }
   inline Result_void_ create_Result_void_(const std::exception_ptr& error) noexcept {
     return Result<void>::withError(error);
+  }
+  
+  // pragma MARK: Result<std::shared_ptr<Promise<SearchPage>>>
+  using Result_std__shared_ptr_Promise_SearchPage___ = Result<std::shared_ptr<Promise<SearchPage>>>;
+  inline Result_std__shared_ptr_Promise_SearchPage___ create_Result_std__shared_ptr_Promise_SearchPage___(const std::shared_ptr<Promise<SearchPage>>& value) noexcept {
+    return Result<std::shared_ptr<Promise<SearchPage>>>::withValue(value);
+  }
+  inline Result_std__shared_ptr_Promise_SearchPage___ create_Result_std__shared_ptr_Promise_SearchPage___(const std::exception_ptr& error) noexcept {
+    return Result<std::shared_ptr<Promise<SearchPage>>>::withError(error);
   }
 
 } // namespace margelo::nitro::readium::bridge::swift

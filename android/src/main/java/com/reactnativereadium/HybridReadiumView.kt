@@ -10,6 +10,7 @@ import com.reactnativereadium.reader.BaseReaderFragment
 import com.reactnativereadium.reader.EpubReaderFragment
 import com.reactnativereadium.reader.ReaderService
 import com.reactnativereadium.reader.ReaderViewModel
+import com.reactnativereadium.reader.SearchPageData
 import com.reactnativereadium.reader.SelectionAction as FragmentSelectionAction
 import com.reactnativereadium.utils.nitroPreferencesToEpub
 import com.reactnativereadium.utils.nitroLocatorToReadium
@@ -19,6 +20,10 @@ import com.reactnativereadium.utils.readiumLinkToNitro
 import com.reactnativereadium.utils.flattenReadiumLinks
 import com.reactnativereadium.utils.readiumDecorationToNitro
 import com.reactnativereadium.utils.readiumMetadataToNitro
+import com.reactnativereadium.utils.nitroSearchOptionsToReadium
+import com.reactnativereadium.utils.nitroSearchResultFromReadium
+import com.margelo.nitro.core.Promise
+import org.readium.r2.shared.publication.services.search.SearchService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -165,6 +170,40 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
       hostView.post { cleanup() }
     }
   }
+
+  override fun search(query: String, options: SearchOptions?): Promise<SearchPage> {
+    val frag = fragment as? EpubReaderFragment
+      ?: return Promise.resolved(unsupportedSearchPage())
+    val readiumOptions = options?.let { nitroSearchOptionsToReadium(it) } ?: SearchService.Options()
+    // Run on the view's lifecycle scope so an in-flight search is cancelled when
+    // the view is torn down (see [scope], cancelled in teardown).
+    return Promise.async(scope) {
+      frag.startSearch(query, readiumOptions).toNitro()
+    }
+  }
+
+  override fun loadMoreSearchResults(): Promise<SearchPage> {
+    val frag = fragment as? EpubReaderFragment
+      ?: return Promise.resolved(unsupportedSearchPage())
+    return Promise.async(scope) {
+      frag.loadMoreSearchResults().toNitro()
+    }
+  }
+
+  override fun cancelSearch() {
+    (fragment as? EpubReaderFragment)?.let { frag -> hostView.post { frag.cancelSearch() } }
+  }
+
+  private fun unsupportedSearchPage(): SearchPage =
+    SearchPage(results = emptyArray(), hasMore = false, totalCount = null, isSupported = false)
+
+  private fun SearchPageData.toNitro(): SearchPage =
+    SearchPage(
+      results = results.map { nitroSearchResultFromReadium(it) }.toTypedArray(),
+      hasMore = hasMore,
+      totalCount = totalCount?.toDouble(),
+      isSupported = isSupported
+    )
 
   // MARK: - Fragment management
 

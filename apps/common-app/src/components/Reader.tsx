@@ -1,6 +1,6 @@
 import React, { useRef, useCallback } from 'react';
 import { View, Text, Platform } from 'react-native';
-import { ReadiumView } from 'react-native-readium';
+import { ReadiumView, useSearch } from 'react-native-readium';
 import type {
   ReadiumViewRef,
   ReadiumProps,
@@ -9,6 +9,8 @@ import type {
   Decoration,
   SelectionAction,
   PublicationReadyEvent,
+  SearchResult,
+  SearchOptions,
 } from 'react-native-readium';
 
 import { ReaderButton } from './ReaderButton';
@@ -39,6 +41,14 @@ export interface ReaderHandle {
   highlights: Decoration[];
   deleteHighlight: (id: string) => void;
   editHighlight: (highlight: Decoration) => void;
+  search: (query: string, options?: SearchOptions) => void;
+  loadMoreSearchResults: () => void;
+  clearSearch: () => void;
+  searchResults: SearchResult[];
+  isSearching: boolean;
+  isLoadingMoreResults: boolean;
+  isSearchSupported: boolean;
+  hasMoreSearchResults: boolean;
 }
 
 interface ReaderProps extends BaseReaderProps {
@@ -73,6 +83,17 @@ export const Reader: React.FC<ReaderProps> = ({
     handleLocationChange,
     handlePublicationReady: baseHandlePublicationReady,
   } = useReaderState({ initialPreferences, onPreferencesChange });
+
+  const {
+    results: searchResults,
+    isSearching,
+    isLoadingMore: isLoadingMoreResults,
+    isSupported: isSearchSupported,
+    hasMore: hasMoreSearchResults,
+    search,
+    loadMore: loadMoreSearchResults,
+    clear: clearSearch,
+  } = useSearch(ref);
 
   const navigateToLocator = useCallback((locator: Locator) => {
     ref.current?.goTo(locator);
@@ -128,6 +149,14 @@ export const Reader: React.FC<ReaderProps> = ({
         highlights,
         deleteHighlight: handleDeleteHighlight,
         editHighlight: handleEditHighlight,
+        search,
+        loadMoreSearchResults,
+        clearSearch,
+        searchResults,
+        isSearching,
+        isLoadingMoreResults,
+        isSearchSupported,
+        hasMoreSearchResults,
       });
     }
   }, [
@@ -135,12 +164,20 @@ export const Reader: React.FC<ReaderProps> = ({
     location,
     preferences,
     highlights,
+    searchResults,
+    isSearching,
+    isLoadingMoreResults,
+    isSearchSupported,
+    hasMoreSearchResults,
     onReaderReady,
     setPreferences,
     navigateToLocator,
     navigateToTocItem,
     handleDeleteHighlight,
     handleEditHighlight,
+    search,
+    loadMoreSearchResults,
+    clearSearch,
   ]);
 
   if (isLoading || !file) {

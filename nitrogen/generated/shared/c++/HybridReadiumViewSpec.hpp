@@ -31,6 +31,10 @@ namespace margelo::nitro::readium { struct DecorationActivatedEvent; }
 namespace margelo::nitro::readium { struct SelectionEvent; }
 // Forward declaration of `SelectionActionEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct SelectionActionEvent; }
+// Forward declaration of `SearchPage` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchPage; }
+// Forward declaration of `SearchOptions` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchOptions; }
 
 #include "ReadiumFile.hpp"
 #include <optional>
@@ -44,6 +48,10 @@ namespace margelo::nitro::readium { struct SelectionActionEvent; }
 #include "DecorationActivatedEvent.hpp"
 #include "SelectionEvent.hpp"
 #include "SelectionActionEvent.hpp"
+#include "SearchPage.hpp"
+#include <NitroModules/Promise.hpp>
+#include <string>
+#include "SearchOptions.hpp"
 
 namespace margelo::nitro::readium {
 
@@ -97,6 +105,9 @@ namespace margelo::nitro::readium {
       virtual void goForward() = 0;
       virtual void goBackward() = 0;
       virtual void destroy() = 0;
+      virtual std::shared_ptr<Promise<SearchPage>> search(const std::string& query, const std::optional<SearchOptions>& options) = 0;
+      virtual std::shared_ptr<Promise<SearchPage>> loadMoreSearchResults() = 0;
+      virtual void cancelSearch() = 0;
 
     protected:
       // Hybrid Setup

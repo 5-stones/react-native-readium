@@ -70,6 +70,23 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
         goTo: (locator) => hybridRef.current?.goTo(locator),
         goForward: () => hybridRef.current?.goForward(),
         goBackward: () => hybridRef.current?.goBackward(),
+        search: (query, options) =>
+          hybridRef.current?.search(query, options) ??
+          Promise.resolve({
+            results: [],
+            hasMore: false,
+            totalCount: undefined,
+            isSupported: false,
+          }),
+        loadMoreSearchResults: () =>
+          hybridRef.current?.loadMoreSearchResults() ??
+          Promise.resolve({
+            results: [],
+            hasMore: false,
+            totalCount: undefined,
+            isSupported: false,
+          }),
+        cancelSearch: () => hybridRef.current?.cancelSearch(),
       }),
       []
     );

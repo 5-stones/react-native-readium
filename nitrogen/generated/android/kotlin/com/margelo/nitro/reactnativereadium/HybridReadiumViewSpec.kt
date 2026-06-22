@@ -10,6 +10,7 @@ package com.margelo.nitro.reactnativereadium
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
+import com.margelo.nitro.core.Promise
 import com.margelo.nitro.core.HybridObject
 import com.margelo.nitro.views.HybridView
 
@@ -136,6 +137,18 @@ abstract class HybridReadiumViewSpec: HybridView() {
   @DoNotStrip
   @Keep
   abstract fun destroy(): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun search(query: String, options: SearchOptions?): Promise<SearchPage>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun loadMoreSearchResults(): Promise<SearchPage>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun cancelSearch(): Unit
 
   // Default implementation of `HybridObject.toString()`
   override fun toString(): String {

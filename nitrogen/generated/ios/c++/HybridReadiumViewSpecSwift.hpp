@@ -58,6 +58,12 @@ namespace margelo::nitro::readium { struct Point; }
 namespace margelo::nitro::readium { struct SelectionEvent; }
 // Forward declaration of `SelectionActionEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct SelectionActionEvent; }
+// Forward declaration of `SearchPage` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchPage; }
+// Forward declaration of `SearchResult` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchResult; }
+// Forward declaration of `SearchOptions` to properly resolve imports.
+namespace margelo::nitro::readium { struct SearchOptions; }
 
 #include "ReadiumFile.hpp"
 #include <optional>
@@ -87,6 +93,10 @@ namespace margelo::nitro::readium { struct SelectionActionEvent; }
 #include "Point.hpp"
 #include "SelectionEvent.hpp"
 #include "SelectionActionEvent.hpp"
+#include "SearchPage.hpp"
+#include <NitroModules/Promise.hpp>
+#include "SearchResult.hpp"
+#include "SearchOptions.hpp"
 
 #include "NitroReadium-Swift-Cxx-Umbrella.hpp"
 
@@ -220,6 +230,28 @@ namespace margelo::nitro::readium {
     }
     inline void destroy() override {
       auto __result = _swiftPart.destroy();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline std::shared_ptr<Promise<SearchPage>> search(const std::string& query, const std::optional<SearchOptions>& options) override {
+      auto __result = _swiftPart.search(query, options);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<SearchPage>> loadMoreSearchResults() override {
+      auto __result = _swiftPart.loadMoreSearchResults();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline void cancelSearch() override {
+      auto __result = _swiftPart.cancelSearch();
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

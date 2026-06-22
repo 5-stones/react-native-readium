@@ -54,6 +54,22 @@ namespace margelo::nitro::readium::bridge::swift {
     };
   }
   
+  // pragma MARK: std::function<void(const SearchPage& /* result */)>
+  Func_void_SearchPage create_Func_void_SearchPage(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroReadium::Func_void_SearchPage::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const SearchPage& result) mutable -> void {
+      swiftClosure.call(result);
+    };
+  }
+  
+  // pragma MARK: std::function<void(const std::exception_ptr& /* error */)>
+  Func_void_std__exception_ptr create_Func_void_std__exception_ptr(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroReadium::Func_void_std__exception_ptr::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const std::exception_ptr& error) mutable -> void {
+      swiftClosure.call(error);
+    };
+  }
+  
   // pragma MARK: std::shared_ptr<HybridReadiumViewSpec>
   std::shared_ptr<HybridReadiumViewSpec> create_std__shared_ptr_HybridReadiumViewSpec_(void* NON_NULL swiftUnsafePointer) noexcept {
     NitroReadium::HybridReadiumViewSpec_cxx swiftPart = NitroReadium::HybridReadiumViewSpec_cxx::fromUnsafe(swiftUnsafePointer);

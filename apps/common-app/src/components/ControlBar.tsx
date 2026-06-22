@@ -1,12 +1,13 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import type { ReadiumProps, Link, Decoration, Locator } from 'react-native-readium';
+import type { ReadiumProps, Link, Decoration, Locator, SearchResult, SearchOptions } from 'react-native-readium';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { TableOfContents } from './TableOfContents';
 import { PreferencesEditor } from './PreferencesEditor';
 import { HighlightManager } from './highlights';
+import { SearchPanel } from './SearchPanel';
 
 interface ControlBarProps {
   preferences: ReadiumProps['preferences'];
@@ -19,6 +20,14 @@ interface ControlBarProps {
   onEditHighlight: (highlight: Decoration) => void;
   onClearBook: () => void;
   onClose: () => void;
+  onSearch: (query: string, options?: SearchOptions) => void;
+  onLoadMoreSearchResults: () => void;
+  onClearSearch: () => void;
+  searchResults: SearchResult[];
+  isSearching: boolean;
+  isLoadingMoreResults: boolean;
+  isSearchSupported: boolean;
+  hasMoreSearchResults: boolean;
 }
 
 export const ControlBar: React.FC<ControlBarProps> = ({
@@ -32,6 +41,14 @@ export const ControlBar: React.FC<ControlBarProps> = ({
   onEditHighlight,
   onClearBook,
   onClose,
+  onSearch,
+  onLoadMoreSearchResults,
+  onClearSearch,
+  searchResults,
+  isSearching,
+  isLoadingMoreResults,
+  isSearchSupported,
+  hasMoreSearchResults,
 }) => {
   const insets = useSafeAreaInsets();
 
@@ -63,6 +80,20 @@ export const ControlBar: React.FC<ControlBarProps> = ({
             onDeleteHighlight={onDeleteHighlight}
             onNavigateToHighlight={onNavigateToHighlight}
             onEditHighlight={onEditHighlight}
+          />
+        </View>
+
+        <View style={styles.iconButton}>
+          <SearchPanel
+            searchResults={searchResults}
+            isSearching={isSearching}
+            isLoadingMore={isLoadingMoreResults}
+            isSearchSupported={isSearchSupported}
+            hasMore={hasMoreSearchResults}
+            onSearch={onSearch}
+            onLoadMore={onLoadMoreSearchResults}
+            onClearSearch={onClearSearch}
+            onNavigateToResult={onNavigateToHighlight}
           />
         </View>
 
