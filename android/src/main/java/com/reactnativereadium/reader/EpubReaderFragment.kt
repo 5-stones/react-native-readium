@@ -14,7 +14,6 @@ import androidx.fragment.app.commitNow
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.reactnativereadium.R
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.readium.r2.navigator.DecorableNavigator
 import org.readium.r2.navigator.SelectableNavigator
@@ -26,12 +25,24 @@ import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
 import org.readium.r2.navigator.preferences.Theme
 import org.readium.r2.shared.ExperimentalReadiumApi
+import org.readium.r2.shared.publication.services.search.SearchIterator
 import org.readium.r2.shared.publication.services.search.SearchService
 import org.readium.r2.shared.publication.services.search.search
 
 data class SelectionAction(
     val id: String,
     val label: String
+)
+
+/**
+ * A page of search results produced by [EpubReaderFragment]'s paginated search,
+ * converted to a Nitro `SearchPage` by the view layer.
+ */
+data class SearchPageData(
+    val results: List<Locator>,
+    val hasMore: Boolean,
+    val totalCount: Int?,
+    val isSupported: Boolean
 )
 
 class EpubReaderFragment : VisualReaderFragment() {
@@ -51,7 +62,13 @@ class EpubReaderFragment : VisualReaderFragment() {
 
     // Selection actions configuration
     private var selectionActions: List<SelectionAction> = emptyList()
-    private var currentSearchJob: Job? = null
+    private var searchIterator: SearchIterator? = null
+    // Assumed true until a search proves otherwise, so a loadMore with no active
+    // search doesn't masquerade as "search unsupported".
+    private var searchSupported = true
+    // Bumped on each new search / cancel so a coroutine whose next() was in flight
+    // when superseded can't close or clobber the iterator that replaced it.
+    private var searchGeneration = 0
 
     // Custom selection action mode callback for adding custom action buttons
     val customSelectionActionModeCallback: ActionMode.Callback by lazy {
@@ -108,44 +125,79 @@ class EpubReaderFragment : VisualReaderFragment() {
       selectionActions = actions
     }
 
+    /**
+     * Starts a new search, releasing any previous iterator, and returns the
+     * first page of results. Subsequent pages are fetched via [loadMoreSearchResults].
+     */
     @OptIn(ExperimentalReadiumApi::class)
-    fun search(query: String, options: SearchService.Options = SearchService.Options()) {
-      currentSearchJob?.cancel()
+    suspend fun startSearch(
+      query: String,
+      options: SearchService.Options = SearchService.Options()
+    ): SearchPageData {
+      // Supersede any prior search and release its iterator.
+      val generation = ++searchGeneration
+      searchIterator?.close()
+      searchIterator = null
 
-      currentSearchJob = viewLifecycleOwner.lifecycleScope.launch {
-        val iterator = model.publication.search(query, options)
-        if (iterator == null) {
-          channel.send(ReaderViewModel.Event.SearchResults(
-            query = query,
-            results = emptyList(),
-            totalCount = null,
-            isSupported = false
-          ))
-          return@launch
-        }
+      val iterator = model.publication.search(query, options)
+      if (iterator == null) {
+        searchSupported = false
+        return SearchPageData(emptyList(), hasMore = false, totalCount = null, isSupported = false)
+      }
+      searchSupported = true
 
-        val results = mutableListOf<org.readium.r2.shared.publication.Locator>()
-        var resultCount: Int? = null
-        try {
-          var page = iterator.next().getOrNull()
-          while (page != null) {
-            results.addAll(page.locators)
-            page = iterator.next().getOrNull()
-          }
-          resultCount = iterator.resultCount
-        } catch (e: kotlinx.coroutines.CancellationException) {
-          throw e
-        } catch (e: Exception) {
-          android.util.Log.w("EpubReaderFragment", "Search iteration error", e)
-        } finally {
+      // A newer search (or cancel) ran while we awaited; discard this iterator.
+      if (generation != searchGeneration) {
+        iterator.close()
+        return SearchPageData(emptyList(), hasMore = false, totalCount = null, isSupported = true)
+      }
+      searchIterator = iterator
+      return nextSearchPage(generation)
+    }
+
+    /**
+     * Returns the next page of results for the in-flight search, or a terminal
+     * page when the iterator is exhausted or no search is active.
+     */
+    suspend fun loadMoreSearchResults(): SearchPageData = nextSearchPage(searchGeneration)
+
+    /** Cancels the in-flight search and releases its iterator. */
+    fun cancelSearch() {
+      searchGeneration++
+      searchIterator?.close()
+      searchIterator = null
+    }
+
+    private suspend fun nextSearchPage(generation: Int): SearchPageData {
+      if (generation != searchGeneration) {
+        return SearchPageData(emptyList(), hasMore = false, totalCount = null, isSupported = searchSupported)
+      }
+      val iterator = searchIterator
+        ?: return SearchPageData(emptyList(), hasMore = false, totalCount = null, isSupported = searchSupported)
+
+      return try {
+        val page = iterator.next().getOrNull()
+        // Read before any close() below — the iterator is invalid once closed.
+        val total = iterator.resultCount
+        if (generation != searchGeneration) {
+          // Superseded while awaiting next(); the new search owns the iterator.
+          SearchPageData(emptyList(), hasMore = false, totalCount = null, isSupported = true)
+        } else if (page != null) {
+          SearchPageData(page.locators, hasMore = true, totalCount = total, isSupported = true)
+        } else {
           iterator.close()
+          searchIterator = null
+          SearchPageData(emptyList(), hasMore = false, totalCount = total, isSupported = true)
         }
-        channel.send(ReaderViewModel.Event.SearchResults(
-          query = query,
-          results = results,
-          totalCount = resultCount,
-          isSupported = true
-        ))
+      } catch (e: kotlinx.coroutines.CancellationException) {
+        throw e
+      } catch (e: Exception) {
+        android.util.Log.w("EpubReaderFragment", "Search iteration error", e)
+        if (generation == searchGeneration) {
+          iterator.close()
+          searchIterator = null
+        }
+        SearchPageData(emptyList(), hasMore = false, totalCount = null, isSupported = true)
       }
     }
 

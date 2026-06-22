@@ -117,11 +117,6 @@ using namespace margelo::nitro::readium::views;
     swiftPart.setOnSelectionAction(newViewProps.onSelectionAction.value);
     newViewProps.onSelectionAction.isDirty = false;
   }
-  // onSearchResults: optional
-  if (newViewProps.onSearchResults.isDirty) {
-    swiftPart.setOnSearchResults(newViewProps.onSearchResults.value);
-    newViewProps.onSearchResults.isDirty = false;
-  }
 
   swiftPart.afterUpdate();
 

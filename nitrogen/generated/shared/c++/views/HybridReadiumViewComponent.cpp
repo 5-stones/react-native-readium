@@ -116,16 +116,6 @@ namespace margelo::nitro::readium::views {
         throw std::runtime_error(std::string("ReadiumView.onSelectionAction: ") + exc.what());
       }
     }()),
-    onSearchResults([&]() -> CachedProp<std::optional<std::function<void(const SearchResultsEvent& /* event */)>>> {
-      try {
-        const react::RawValue* rawValue = rawProps.at("onSearchResults", nullptr, nullptr);
-        if (rawValue == nullptr) return sourceProps.onSearchResults;
-        const auto& [runtime, value] = (std::pair<jsi::Runtime*, jsi::Value>)*rawValue;
-        return CachedProp<std::optional<std::function<void(const SearchResultsEvent& /* event */)>>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.onSearchResults);
-      } catch (const std::exception& exc) {
-        throw std::runtime_error(std::string("ReadiumView.onSearchResults: ") + exc.what());
-      }
-    }()),
     hybridRef([&]() -> CachedProp<std::optional<std::function<void(const std::shared_ptr<HybridReadiumViewSpec>& /* ref */)>>> {
       try {
         const react::RawValue* rawValue = rawProps.at("hybridRef", nullptr, nullptr);
@@ -148,7 +138,6 @@ namespace margelo::nitro::readium::views {
       case hashString("onDecorationActivated"): return true;
       case hashString("onSelectionChange"): return true;
       case hashString("onSelectionAction"): return true;
-      case hashString("onSearchResults"): return true;
       case hashString("hybridRef"): return true;
       default: return false;
     }

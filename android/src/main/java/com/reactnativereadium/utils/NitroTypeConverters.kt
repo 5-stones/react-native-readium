@@ -333,3 +333,11 @@ internal fun nitroSearchOptionsToReadium(options: SearchOptions): SearchService.
   options.language?.let { result = result.copy(language = it) }
   return result
 }
+
+internal fun nitroSearchResultFromReadium(locator: ReadiumLocator): SearchResult =
+  SearchResult(
+    locator = readiumLocatorToNitro(locator),
+    before = locator.text.before,
+    highlight = locator.text.highlight,
+    after = locator.text.after
+  )

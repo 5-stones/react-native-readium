@@ -10,6 +10,7 @@ import com.reactnativereadium.reader.BaseReaderFragment
 import com.reactnativereadium.reader.EpubReaderFragment
 import com.reactnativereadium.reader.ReaderService
 import com.reactnativereadium.reader.ReaderViewModel
+import com.reactnativereadium.reader.SearchPageData
 import com.reactnativereadium.reader.SelectionAction as FragmentSelectionAction
 import com.reactnativereadium.utils.nitroPreferencesToEpub
 import com.reactnativereadium.utils.nitroLocatorToReadium
@@ -20,6 +21,8 @@ import com.reactnativereadium.utils.flattenReadiumLinks
 import com.reactnativereadium.utils.readiumDecorationToNitro
 import com.reactnativereadium.utils.readiumMetadataToNitro
 import com.reactnativereadium.utils.nitroSearchOptionsToReadium
+import com.reactnativereadium.utils.nitroSearchResultFromReadium
+import com.margelo.nitro.core.Promise
 import org.readium.r2.shared.publication.services.search.SearchService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -104,7 +107,6 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
   override var onDecorationActivated: ((event: DecorationActivatedEvent) -> Unit)? = null
   override var onSelectionChange: ((event: SelectionEvent) -> Unit)? = null
   override var onSelectionAction: ((event: SelectionActionEvent) -> Unit)? = null
-  override var onSearchResults: ((event: SearchResultsEvent) -> Unit)? = null
 
   private fun ensureService() {
     if (svc == null) {
@@ -169,19 +171,39 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
     }
   }
 
-  override fun search(query: String, options: SearchOptions?) {
-    val frag = fragment as? EpubReaderFragment ?: run {
-      onSearchResults?.invoke(SearchResultsEvent(
-        query = query,
-        results = emptyArray(),
-        totalCount = null,
-        isSupported = false
-      ))
-      return
-    }
+  override fun search(query: String, options: SearchOptions?): Promise<SearchPage> {
+    val frag = fragment as? EpubReaderFragment
+      ?: return Promise.resolved(unsupportedSearchPage())
     val readiumOptions = options?.let { nitroSearchOptionsToReadium(it) } ?: SearchService.Options()
-    hostView.post { frag.search(query, readiumOptions) }
+    // Run on the view's lifecycle scope so an in-flight search is cancelled when
+    // the view is torn down (see [scope], cancelled in teardown).
+    return Promise.async(scope) {
+      frag.startSearch(query, readiumOptions).toNitro()
+    }
   }
+
+  override fun loadMoreSearchResults(): Promise<SearchPage> {
+    val frag = fragment as? EpubReaderFragment
+      ?: return Promise.resolved(unsupportedSearchPage())
+    return Promise.async(scope) {
+      frag.loadMoreSearchResults().toNitro()
+    }
+  }
+
+  override fun cancelSearch() {
+    (fragment as? EpubReaderFragment)?.let { frag -> hostView.post { frag.cancelSearch() } }
+  }
+
+  private fun unsupportedSearchPage(): SearchPage =
+    SearchPage(results = emptyArray(), hasMore = false, totalCount = null, isSupported = false)
+
+  private fun SearchPageData.toNitro(): SearchPage =
+    SearchPage(
+      results = results.map { nitroSearchResultFromReadium(it) }.toTypedArray(),
+      hasMore = hasMore,
+      totalCount = totalCount?.toDouble(),
+      isSupported = isSupported
+    )
 
   // MARK: - Fragment management
 
@@ -353,21 +375,6 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
             locator = readiumLocatorToNitro(event.locator),
             selectedText = event.selectedText,
             actionId = event.actionId
-          ))
-        }
-        is ReaderViewModel.Event.SearchResults -> {
-          onSearchResults?.invoke(SearchResultsEvent(
-            query = event.query,
-            results = event.results.map { locator ->
-              SearchResult(
-                locator = readiumLocatorToNitro(locator),
-                before = locator.text.before,
-                highlight = locator.text.highlight,
-                after = locator.text.after
-              )
-            }.toTypedArray(),
-            totalCount = event.totalCount?.toDouble(),
-            isSupported = event.isSupported
           ))
         }
       }

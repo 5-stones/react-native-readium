@@ -9,14 +9,19 @@ import type {
   SelectionEvent,
   SelectionActionEvent,
   SearchOptions,
-  SearchResultsEvent,
+  SearchPage,
 } from '../interfaces';
 
 export type ReadiumViewRef = {
   goTo: (locator: Locator) => void;
   goForward: () => void;
   goBackward: () => void;
-  search: (query: string, options?: SearchOptions) => void;
+  /** Starts a new search and resolves with the first page of results. */
+  search: (query: string, options?: SearchOptions) => Promise<SearchPage>;
+  /** Resolves with the next page of results for the in-flight search. */
+  loadMoreSearchResults: () => Promise<SearchPage>;
+  /** Cancels the in-flight search and releases the iterator. */
+  cancelSearch: () => void;
 };
 
 export type ReadiumProps = {
@@ -30,5 +35,4 @@ export type ReadiumProps = {
   onDecorationActivated?: (event: DecorationActivatedEvent) => void;
   onSelectionChange?: (event: SelectionEvent) => void;
   onSelectionAction?: (event: SelectionActionEvent) => void;
-  onSearchResults?: (event: SearchResultsEvent) => void;
 };

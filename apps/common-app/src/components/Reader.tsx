@@ -1,6 +1,6 @@
 import React, { useRef, useCallback } from 'react';
 import { View, Text, Platform } from 'react-native';
-import { ReadiumView } from 'react-native-readium';
+import { ReadiumView, useSearch } from 'react-native-readium';
 import type {
   ReadiumViewRef,
   ReadiumProps,
@@ -22,7 +22,6 @@ import {
 import { useEpubFile } from '../hooks/useEpubFile';
 import { useReaderState } from '../hooks/useReaderState';
 import { useHighlights } from '../hooks/useHighlights';
-import { useSearch } from '../hooks/useSearch';
 
 import { styles } from '../styles/reader';
 import type { ReaderProps as BaseReaderProps } from '../types/reader.types';
@@ -43,10 +42,13 @@ export interface ReaderHandle {
   deleteHighlight: (id: string) => void;
   editHighlight: (highlight: Decoration) => void;
   search: (query: string, options?: SearchOptions) => void;
+  loadMoreSearchResults: () => void;
   clearSearch: () => void;
   searchResults: SearchResult[];
   isSearching: boolean;
+  isLoadingMoreResults: boolean;
   isSearchSupported: boolean;
+  hasMoreSearchResults: boolean;
 }
 
 interface ReaderProps extends BaseReaderProps {
@@ -85,20 +87,17 @@ export const Reader: React.FC<ReaderProps> = ({
   const {
     results: searchResults,
     isSearching,
+    isLoadingMore: isLoadingMoreResults,
     isSupported: isSearchSupported,
-    handleSearchResults,
-    markSearching,
+    hasMore: hasMoreSearchResults,
+    search,
+    loadMore: loadMoreSearchResults,
     clear: clearSearch,
-  } = useSearch();
+  } = useSearch(ref);
 
   const navigateToLocator = useCallback((locator: Locator) => {
     ref.current?.goTo(locator);
   }, []);
-
-  const search = useCallback((query: string, options?: SearchOptions) => {
-    markSearching();
-    ref.current?.search(query, options);
-  }, [markSearching]);
 
   const navigateToTocItem = useCallback((item: Link) => {
     ref.current?.goTo({
@@ -151,10 +150,13 @@ export const Reader: React.FC<ReaderProps> = ({
         deleteHighlight: handleDeleteHighlight,
         editHighlight: handleEditHighlight,
         search,
+        loadMoreSearchResults,
         clearSearch,
         searchResults,
         isSearching,
+        isLoadingMoreResults,
         isSearchSupported,
+        hasMoreSearchResults,
       });
     }
   }, [
@@ -164,7 +166,9 @@ export const Reader: React.FC<ReaderProps> = ({
     highlights,
     searchResults,
     isSearching,
+    isLoadingMoreResults,
     isSearchSupported,
+    hasMoreSearchResults,
     onReaderReady,
     setPreferences,
     navigateToLocator,
@@ -172,6 +176,7 @@ export const Reader: React.FC<ReaderProps> = ({
     handleDeleteHighlight,
     handleEditHighlight,
     search,
+    loadMoreSearchResults,
     clearSearch,
   ]);
 
@@ -214,7 +219,6 @@ export const Reader: React.FC<ReaderProps> = ({
             onDecorationActivated={handleDecorationActivated}
             onSelectionChange={handleSelectionChange}
             onSelectionAction={handleSelectionAction}
-            onSearchResults={handleSearchResults}
           />
         </View>
 

@@ -1,5 +1,5 @@
 export type {
   SearchOptions,
   SearchResult,
-  SearchResultsEvent,
+  SearchPage,
 } from '../specs/ReadiumView.nitro';

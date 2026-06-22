@@ -13,7 +13,6 @@
     "onDecorationActivated": true,
     "onSelectionChange": true,
     "onSelectionAction": true,
-    "onSearchResults": true,
     "hybridRef": true
   }
 }

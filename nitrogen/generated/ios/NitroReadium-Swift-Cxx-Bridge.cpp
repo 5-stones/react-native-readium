@@ -54,11 +54,19 @@ namespace margelo::nitro::readium::bridge::swift {
     };
   }
   
-  // pragma MARK: std::function<void(const SearchResultsEvent& /* event */)>
-  Func_void_SearchResultsEvent create_Func_void_SearchResultsEvent(void* NON_NULL swiftClosureWrapper) noexcept {
-    auto swiftClosure = NitroReadium::Func_void_SearchResultsEvent::fromUnsafe(swiftClosureWrapper);
-    return [swiftClosure = std::move(swiftClosure)](const SearchResultsEvent& event) mutable -> void {
-      swiftClosure.call(event);
+  // pragma MARK: std::function<void(const SearchPage& /* result */)>
+  Func_void_SearchPage create_Func_void_SearchPage(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroReadium::Func_void_SearchPage::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const SearchPage& result) mutable -> void {
+      swiftClosure.call(result);
+    };
+  }
+  
+  // pragma MARK: std::function<void(const std::exception_ptr& /* error */)>
+  Func_void_std__exception_ptr create_Func_void_std__exception_ptr(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroReadium::Func_void_std__exception_ptr::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const std::exception_ptr& error) mutable -> void {
+      swiftClosure.call(error);
     };
   }
   

@@ -21,10 +21,13 @@ interface ControlBarProps {
   onClearBook: () => void;
   onClose: () => void;
   onSearch: (query: string, options?: SearchOptions) => void;
+  onLoadMoreSearchResults: () => void;
   onClearSearch: () => void;
   searchResults: SearchResult[];
   isSearching: boolean;
+  isLoadingMoreResults: boolean;
   isSearchSupported: boolean;
+  hasMoreSearchResults: boolean;
 }
 
 export const ControlBar: React.FC<ControlBarProps> = ({
@@ -39,10 +42,13 @@ export const ControlBar: React.FC<ControlBarProps> = ({
   onClearBook,
   onClose,
   onSearch,
+  onLoadMoreSearchResults,
   onClearSearch,
   searchResults,
   isSearching,
+  isLoadingMoreResults,
   isSearchSupported,
+  hasMoreSearchResults,
 }) => {
   const insets = useSafeAreaInsets();
 
@@ -81,8 +87,11 @@ export const ControlBar: React.FC<ControlBarProps> = ({
           <SearchPanel
             searchResults={searchResults}
             isSearching={isSearching}
+            isLoadingMore={isLoadingMoreResults}
             isSearchSupported={isSearchSupported}
+            hasMore={hasMoreSearchResults}
             onSearch={onSearch}
+            onLoadMore={onLoadMoreSearchResults}
             onClearSearch={onClearSearch}
             onNavigateToResult={onNavigateToHighlight}
           />

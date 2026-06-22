@@ -45,14 +45,22 @@ class HybridReadiumView: HybridReadiumViewSpec {
   var onDecorationActivated: ((DecorationActivatedEvent) -> Void)? = nil
   var onSelectionChange: ((SelectionEvent) -> Void)? = nil
   var onSelectionAction: ((SelectionActionEvent) -> Void)? = nil
-  var onSearchResults: ((SearchResultsEvent) -> Void)? = nil
 
   // MARK: - Private state
 
   private let hostView = UIView()
   private var readerService = ReaderService()
   private var readerViewController: ReaderViewController?
-  private var currentSearchTask: Task<Void, Never>?
+  /// Iterator for the in-flight search, kept alive so results can be paged lazily.
+  private var searchIterator: SearchIterator?
+  /// Whether the current publication exposes a search service. Assumed `true`
+  /// until a search proves otherwise, so a `loadMore` with no active search
+  /// doesn't masquerade as "search unsupported".
+  private var searchSupported = true
+  /// Bumped on each new search / cancel. A task whose `next()` was in flight
+  /// when superseded checks this so it can't close or clobber the iterator that
+  /// replaced it.
+  private var searchGeneration = 0
   private var subscriptions = Set<AnyCancellable>()
   private var pendingFileUrl: String?
   private var pendingInitialLocation: Locator?
@@ -278,69 +286,112 @@ class HybridReadiumView: HybridReadiumViewSpec {
     }
   }
 
-  func search(query: String, options: SearchOptions?) {
-    currentSearchTask?.cancel()
-
-    guard let publication = readerViewController?.publication else {
-      onSearchResults?(SearchResultsEvent(
-        query: query, results: [], totalCount: nil, isSupported: false
-      ))
-      return
-    }
-
-    guard publication.findService(SearchService.self) != nil else {
-      onSearchResults?(SearchResultsEvent(
-        query: query, results: [], totalCount: nil, isSupported: false
-      ))
-      return
-    }
-
+  /// Starts a new search and resolves with the first page of results. Any
+  /// previously running search is cancelled and its iterator released.
+  func search(query: String, options: SearchOptions?) throws -> Promise<SearchPage> {
     let readiumOptions = options.map { nitroSearchOptionsToReadium($0) }
+    return Promise.async { @MainActor [weak self] in
+      guard let self else { return SearchPage.unsupported }
+      return await self.startSearch(query: query, options: readiumOptions)
+    }
+  }
 
-    currentSearchTask = Task { @MainActor [weak self] in
-      guard let self, !Task.isCancelled else { return }
+  /// Resolves with the next page of results for the in-flight search, or an
+  /// empty terminal page when the iterator is exhausted / no search is active.
+  func loadMoreSearchResults() throws -> Promise<SearchPage> {
+    Promise.async { @MainActor [weak self] in
+      guard let self else { return SearchPage.unsupported }
+      return await self.nextSearchPage(generation: self.searchGeneration)
+    }
+  }
 
-      let searchResult = await publication.search(query: query, options: readiumOptions)
+  /// Cancels the in-flight search and releases the iterator.
+  func cancelSearch() throws {
+    Task { @MainActor [weak self] in
+      guard let self else { return }
+      self.searchGeneration &+= 1
+      self.searchIterator?.close()
+      self.searchIterator = nil
+    }
+  }
 
-      switch searchResult {
-      case .failure:
-        self.onSearchResults?(SearchResultsEvent(
-          query: query, results: [], totalCount: nil, isSupported: true
-        ))
+  @MainActor
+  private func startSearch(
+    query: String,
+    options: ReadiumShared.SearchOptions?
+  ) async -> SearchPage {
+    // Supersede any prior search and release its iterator.
+    searchGeneration &+= 1
+    let generation = searchGeneration
+    searchIterator?.close()
+    searchIterator = nil
 
-      case .success(let iterator):
-        var allLocators: [RLocator] = []
-        var done = false
-        while !done && !Task.isCancelled {
-          let pageResult = await iterator.next()
-          switch pageResult {
-          case .success(let page):
-            if let page = page {
-              allLocators.append(contentsOf: page.locators)
-            } else {
-              done = true
-            }
-          case .failure(let error):
-            print("[Search] iteration error: \(error)")
-            done = true
-          }
-        }
-        let total = iterator.resultCount
+    guard
+      let publication = readerViewController?.publication,
+      publication.findService(SearchService.self) != nil
+    else {
+      searchSupported = false
+      return SearchPage.unsupported
+    }
+    searchSupported = true
+
+    switch await publication.search(query: query, options: options) {
+    case .failure(let error):
+      log(.error, "Search failed to start: \(error)")
+      return SearchPage(results: [], hasMore: false, totalCount: nil, isSupported: true)
+    case .success(let iterator):
+      // A newer search (or cancel) ran while we awaited; discard this iterator.
+      guard generation == searchGeneration else {
         iterator.close()
-
-        guard !Task.isCancelled else { return }
-        self.onSearchResults?(SearchResultsEvent(
-          query: query,
-          results: allLocators.map { nitroSearchResultFromReadium($0) },
-          totalCount: total.map { Double($0) },
-          isSupported: true
-        ))
+        return SearchPage(results: [], hasMore: false, totalCount: nil, isSupported: true)
       }
+      searchIterator = iterator
+      return await nextSearchPage(generation: generation)
+    }
+  }
+
+  @MainActor
+  private func nextSearchPage(generation: Int) async -> SearchPage {
+    guard generation == searchGeneration, let iterator = searchIterator else {
+      return SearchPage(results: [], hasMore: false, totalCount: nil, isSupported: searchSupported)
+    }
+
+    switch await iterator.next() {
+    case .success(let page):
+      // Bail if a newer search/cancel superseded us while awaiting `next()`; the
+      // superseding task owns (and has already closed) the replaced iterator.
+      guard generation == searchGeneration else {
+        return SearchPage(results: [], hasMore: false, totalCount: nil, isSupported: true)
+      }
+      let total = iterator.resultCount.map { Double($0) }
+      if let page = page {
+        return SearchPage(
+          results: page.locators.map { nitroSearchResultFromReadium($0) },
+          hasMore: true,
+          totalCount: total,
+          isSupported: true
+        )
+      }
+      // Exhausted: release the iterator and report the terminal page.
+      iterator.close()
+      searchIterator = nil
+      return SearchPage(results: [], hasMore: false, totalCount: total, isSupported: true)
+    case .failure(let error):
+      log(.error, "Search iteration error: \(error)")
+      guard generation == searchGeneration else {
+        return SearchPage(results: [], hasMore: false, totalCount: nil, isSupported: true)
+      }
+      iterator.close()
+      searchIterator = nil
+      return SearchPage(results: [], hasMore: false, totalCount: nil, isSupported: true)
     }
   }
 
   // Cleanup
   func cleanup() {
+    searchIterator?.close()
+    searchIterator = nil
+
     guard let vc = readerViewController else { return }
     readerViewController = nil
 
@@ -357,6 +408,10 @@ class HybridReadiumView: HybridReadiumViewSpec {
     activeDecorationGroups.removeAll()
   }
 }
+
+// MARK: - Loggable
+
+extension HybridReadiumView: Loggable {}
 
 // MARK: - SelectionActionDelegate
 

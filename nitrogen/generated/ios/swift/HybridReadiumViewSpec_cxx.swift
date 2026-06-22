@@ -374,38 +374,6 @@ open class HybridReadiumViewSpec_cxx {
       }()
     }
   }
-  
-  public final var onSearchResults: bridge.std__optional_std__function_void_const_SearchResultsEvent_____event______ {
-    @inline(__always)
-    get {
-      return { () -> bridge.std__optional_std__function_void_const_SearchResultsEvent_____event______ in
-        if let __unwrappedValue = self.__implementation.onSearchResults {
-          return bridge.create_std__optional_std__function_void_const_SearchResultsEvent_____event______({ () -> bridge.Func_void_SearchResultsEvent in
-            let __closureWrapper = Func_void_SearchResultsEvent(__unwrappedValue)
-            return bridge.create_Func_void_SearchResultsEvent(__closureWrapper.toUnsafe())
-          }())
-        } else {
-          return .init()
-        }
-      }()
-    }
-    @inline(__always)
-    set {
-      self.__implementation.onSearchResults = { () -> ((_ event: SearchResultsEvent) -> Void)? in
-        if bridge.has_value_std__optional_std__function_void_const_SearchResultsEvent_____event______(newValue) {
-          let __unwrapped = bridge.get_std__optional_std__function_void_const_SearchResultsEvent_____event______(newValue)
-          return { () -> (SearchResultsEvent) -> Void in
-            let __wrappedFunction = bridge.wrap_Func_void_SearchResultsEvent(__unwrapped)
-            return { (__event: SearchResultsEvent) -> Void in
-              __wrappedFunction.call(__event)
-            }
-          }()
-        } else {
-          return nil
-        }
-      }()
-    }
-  }
 
   // Methods
   @inline(__always)
@@ -453,9 +421,47 @@ open class HybridReadiumViewSpec_cxx {
   }
   
   @inline(__always)
-  public final func search(query: std.string, options: bridge.std__optional_SearchOptions_) -> bridge.Result_void_ {
+  public final func search(query: std.string, options: bridge.std__optional_SearchOptions_) -> bridge.Result_std__shared_ptr_Promise_SearchPage___ {
     do {
-      try self.__implementation.search(query: String(query), options: options.value)
+      let __result = try self.__implementation.search(query: String(query), options: options.value)
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_SearchPage__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_SearchPage__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_SearchPage__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve(__result) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_SearchPage___(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_SearchPage___(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func loadMoreSearchResults() -> bridge.Result_std__shared_ptr_Promise_SearchPage___ {
+    do {
+      let __result = try self.__implementation.loadMoreSearchResults()
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_SearchPage__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_SearchPage__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_SearchPage__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve(__result) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_SearchPage___(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_SearchPage___(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func cancelSearch() -> bridge.Result_void_ {
+    do {
+      try self.__implementation.cancelSearch()
       return bridge.create_Result_void_()
     } catch (let __error) {
       let __exceptionPtr = __error.toCpp()

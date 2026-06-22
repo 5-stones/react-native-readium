@@ -17,8 +17,11 @@ import { ReaderButton } from './ReaderButton';
 export interface SearchPanelProps {
   searchResults: SearchResult[];
   isSearching: boolean;
+  isLoadingMore: boolean;
   isSearchSupported: boolean;
+  hasMore: boolean;
   onSearch: (query: string, options?: SearchOptions) => void;
+  onLoadMore: () => void;
   onClearSearch: () => void;
   onNavigateToResult: (locator: Locator) => void;
 }
@@ -26,8 +29,11 @@ export interface SearchPanelProps {
 export const SearchPanel: React.FC<SearchPanelProps> = ({
   searchResults,
   isSearching,
+  isLoadingMore,
   isSearchSupported,
+  hasMore,
   onSearch,
+  onLoadMore,
   onClearSearch,
   onNavigateToResult,
 }) => {
@@ -165,15 +171,23 @@ export const SearchPanel: React.FC<SearchPanelProps> = ({
     if (searchResults.length > 0) {
       return (
         <>
-          <Text style={styles.resultCount}>
-            {searchResults.length} result{searchResults.length !== 1 ? 's' : ''}
-          </Text>
           <FlatList
             data={searchResults}
             renderItem={renderResult}
             keyExtractor={keyExtractor}
             contentContainerStyle={styles.list}
             keyboardShouldPersistTaps="handled"
+            onEndReached={hasMore ? onLoadMore : undefined}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={
+              isLoadingMore ? (
+                <ActivityIndicator
+                  style={styles.footerSpinner}
+                  size="small"
+                  color="#555"
+                />
+              ) : null
+            }
           />
         </>
       );
@@ -301,12 +315,6 @@ const styles = StyleSheet.create({
     color: '#007AFF',
     fontWeight: '500',
   },
-  resultCount: {
-    fontSize: 13,
-    color: '#888',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-  },
   list: {
     paddingBottom: 24,
   },
@@ -333,6 +341,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#999',
     marginTop: 4,
+  },
+  footerSpinner: {
+    paddingVertical: 16,
   },
   emptyState: {
     flex: 1,

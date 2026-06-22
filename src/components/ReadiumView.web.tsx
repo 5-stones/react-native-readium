@@ -31,7 +31,6 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
       onLocationChange,
       onPublicationReady,
       onDecorationActivated,
-      onSearchResults,
       style = {},
       height,
       width,
@@ -71,10 +70,22 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
         goBackward: () => {
           navigator?.goBackward(true, () => {});
         },
-        search: (query) => {
-          /* Search not yet supported on web */
-          onSearchResults?.({ query, results: [], totalCount: undefined, isSupported: false });
-        },
+        /* Search not yet supported on web */
+        search: () =>
+          Promise.resolve({
+            results: [],
+            hasMore: false,
+            totalCount: undefined,
+            isSupported: false,
+          }),
+        loadMoreSearchResults: () =>
+          Promise.resolve({
+            results: [],
+            hasMore: false,
+            totalCount: undefined,
+            isSupported: false,
+          }),
+        cancelSearch: () => {},
         /** @deprecated Use goForward() */
         nextPage: () => {
           navigator?.goForward(true, () => {});

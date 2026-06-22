@@ -32,13 +32,13 @@ namespace margelo::nitro::readium {
       prototype.registerHybridSetter("onSelectionChange", &HybridReadiumViewSpec::setOnSelectionChange);
       prototype.registerHybridGetter("onSelectionAction", &HybridReadiumViewSpec::getOnSelectionAction);
       prototype.registerHybridSetter("onSelectionAction", &HybridReadiumViewSpec::setOnSelectionAction);
-      prototype.registerHybridGetter("onSearchResults", &HybridReadiumViewSpec::getOnSearchResults);
-      prototype.registerHybridSetter("onSearchResults", &HybridReadiumViewSpec::setOnSearchResults);
       prototype.registerHybridMethod("goTo", &HybridReadiumViewSpec::goTo);
       prototype.registerHybridMethod("goForward", &HybridReadiumViewSpec::goForward);
       prototype.registerHybridMethod("goBackward", &HybridReadiumViewSpec::goBackward);
       prototype.registerHybridMethod("destroy", &HybridReadiumViewSpec::destroy);
       prototype.registerHybridMethod("search", &HybridReadiumViewSpec::search);
+      prototype.registerHybridMethod("loadMoreSearchResults", &HybridReadiumViewSpec::loadMoreSearchResults);
+      prototype.registerHybridMethod("cancelSearch", &HybridReadiumViewSpec::cancelSearch);
     });
   }
 

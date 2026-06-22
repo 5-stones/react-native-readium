@@ -57,11 +57,5 @@ class ReaderViewModel(
             val locator: Locator,
             val selectedText: String
         ) : Event()
-        class SearchResults(
-            val query: String,
-            val results: List<Locator>,
-            val totalCount: Int?,
-            val isSupported: Boolean
-        ) : Event()
     }
 }
