@@ -36,10 +36,12 @@ struct LocatorData: Codable {
 
     // Try to create Locator.Locations from JSON, fall back to empty if it fails
     let locatorLocations: ReadiumShared.Locator.Locations
-    do {
-      locatorLocations = try ReadiumShared.Locator.Locations(json: locationsDict.isEmpty ? nil : locationsDict)
-    } catch {
+    if locationsDict.isEmpty {
       locatorLocations = ReadiumShared.Locator.Locations()
+    } else {
+      let json = JSONValue(locationsDict)
+      let jsonLocations = try? ReadiumShared.Locator.Locations(json: json)
+      locatorLocations = jsonLocations ?? ReadiumShared.Locator.Locations()
     }
 
     // Convert text data to Locator.Text if present
