@@ -64,9 +64,10 @@ const config = {
       'react-native$': path.resolve(__dirname, 'react-native-shim.js'),
       'react-native': path.resolve(__dirname, 'react-native-shim.js'),
       // Ensure single instance of react-native-reanimated
-      'react-native-reanimated': path.resolve(
-        __dirname,
-        '../../node_modules/react-native-reanimated'
+      'react-native-reanimated': path.dirname(
+        require.resolve('react-native-reanimated/package.json', {
+          paths: [__dirname],
+        })
       ),
       // Ensure single instance of safe-area-context
       'react-native-safe-area-context': path.resolve(
