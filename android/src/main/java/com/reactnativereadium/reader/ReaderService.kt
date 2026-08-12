@@ -63,7 +63,7 @@ class ReaderService(
       return
     }
     val publicationUrl = runCatching {
-      publicationFile.toUrl()
+      publicationFile.toUrl(false)
     }
       .onFailure {
         RNLog.e(
