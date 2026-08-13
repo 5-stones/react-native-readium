@@ -54,10 +54,15 @@ def readium_post_install(installer)
   installer.pods_project.targets.each do |target|
     if target.name == 'Minizip'
       target.build_configurations.each do |config|
-        config.build_settings['OTHER_CFLAGS'] ||= '$(inherited)'
-        config.build_settings['OTHER_CFLAGS'] += ' -Wno-module-import-in-extern-c'
-        config.build_settings['OTHER_CPLUSPLUSFLAGS'] ||= '$(inherited)'
-        config.build_settings['OTHER_CPLUSPLUSFLAGS'] += ' -Wno-module-import-in-extern-c'
+        # CocoaPods hands these settings back as either a String or an Array
+        # depending on the pod, so normalize before appending.
+        ['OTHER_CFLAGS', 'OTHER_CPLUSPLUSFLAGS'].each do |setting|
+          flags = Array(config.build_settings[setting])
+          flags = ['$(inherited)'] if flags.empty?
+          unless flags.any? { |f| f.include?('-Wno-module-import-in-extern-c') }
+            config.build_settings[setting] = flags + ['-Wno-module-import-in-extern-c']
+          end
+        end
       end
     end
   end
