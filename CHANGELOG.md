@@ -1,3 +1,17 @@
+# [5.0.0-rc.18](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.17...v5.0.0-rc.18) (2026-08-13)
+
+
+### Bug Fixes
+
+* **ios:** fix an install issue with newer versions of react-native ([0e25237](https://github.com/5-stones/react-native-readium/commit/0e252375866753e32e18f80733b700abb4d0d992))
+
+
+### Features
+
+* **search:** implement search for epubs ([#120](https://github.com/5-stones/react-native-readium/issues/120)) ([409db38](https://github.com/5-stones/react-native-readium/commit/409db38512ace697f6b62ba5fa368173312f86f5))
+
+
+
 # [5.0.0-rc.17](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.16...v5.0.0-rc.17) (2026-03-05)
 
 
