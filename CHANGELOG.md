@@ -1,3 +1,12 @@
+# [5.0.0-rc.19](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.18...v5.0.0-rc.19) (2026-08-17)
+
+
+### Bug Fixes
+
+* **ios:** when the file url changes, clean up the old readerView and open the new file ([#123](https://github.com/5-stones/react-native-readium/issues/123)) ([c023450](https://github.com/5-stones/react-native-readium/commit/c023450580b23b554cc45bad98d64c409733d5ba))
+
+
+
 # [5.0.0-rc.18](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.17...v5.0.0-rc.18) (2026-08-13)
 
 

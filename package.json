@@ -1,6 +1,6 @@
 {
   "name": "react-native-readium",
-  "version": "5.0.0-rc.18",
+  "version": "5.0.0-rc.19",
   "description": "A react-native wrapper for https://readium.org/",
   "main": "lib/src/index",
   "types": "lib/src/index.d.ts",
