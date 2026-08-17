@@ -15,6 +15,7 @@ class HybridReadiumView: HybridReadiumViewSpec {
   var file: ReadiumFile? = nil {
     didSet {
       guard let file = file else { return }
+      guard file.url != (pendingFileUrl ?? loadedFileUrl) else { return }
       pendingFileUrl = file.url
       pendingInitialLocation = file.initialLocation
       tryLoadBook()
@@ -64,7 +65,7 @@ class HybridReadiumView: HybridReadiumViewSpec {
   private var subscriptions = Set<AnyCancellable>()
   private var pendingFileUrl: String?
   private var pendingInitialLocation: Locator?
-  private var hasLoadedBook = false
+  private var loadedFileUrl: String?
   private var selectionActionsReceived = false
   private var activeDecorationGroups = Set<String>()
 
@@ -77,15 +78,17 @@ class HybridReadiumView: HybridReadiumViewSpec {
 
   private func tryLoadBook() {
     guard let url = pendingFileUrl,
-          selectionActionsReceived,
-          !hasLoadedBook else {
+          selectionActionsReceived else {
       return
     }
 
-    hasLoadedBook = true
     let initialLoc = pendingInitialLocation
     pendingFileUrl = nil
     pendingInitialLocation = nil
+
+    cleanup()
+
+    loadedFileUrl = url
 
     loadBook(url: url, location: initialLoc)
   }
@@ -208,7 +211,6 @@ class HybridReadiumView: HybridReadiumViewSpec {
     viewController!.addChild(readerViewController!)
     let rootView = readerViewController!.view!
     hostView.addSubview(rootView)
-    viewController!.addChild(readerViewController!)
     readerViewController!.didMove(toParent: viewController!)
 
     rootView.translatesAutoresizingMaskIntoConstraints = false
@@ -389,6 +391,8 @@ class HybridReadiumView: HybridReadiumViewSpec {
 
   // Cleanup
   func cleanup() {
+    loadedFileUrl = nil
+
     searchIterator?.close()
     searchIterator = nil
 
