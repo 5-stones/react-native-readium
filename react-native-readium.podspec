@@ -33,7 +33,6 @@ Pod::Spec.new do |s|
   s.dependency 'ReadiumShared',   '~> 3.11.0'
   s.dependency 'ReadiumStreamer', '~> 3.11.0'
   s.dependency 'ReadiumNavigator','~> 3.11.0'
-  s.dependency 'ReadiumAdapterGCDWebServer', '~> 3.11.0'
   s.dependency 'ReadiumInternal'
 
   # Adds React Native dependencies, framework header search paths, and

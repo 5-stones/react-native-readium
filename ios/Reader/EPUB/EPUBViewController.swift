@@ -50,7 +50,7 @@ class EPUBViewController: ReaderViewController, SelectionActionHandlerDelegate {
         initialLocation: locator,
         config: EPUBNavigatorViewController.Configuration(
           editingActions: editingActions
-        ),
+        )
       )
 
       super.init(
