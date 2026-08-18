@@ -73,9 +73,9 @@ yarn add react-native-readium react-native-nitro-modules
 
 Requirements:
 
-- Minimum iOS deployment target: iOS 13.4
+- Minimum iOS deployment target: iOS 15.1
 - Swift compiler: Swift 6.0
-- Xcode: Xcode 16.2 (or newer)
+- Xcode: Xcode 16.4 (or newer)
 
 The Readium pods live in a custom spec repo, so you need to add the Readium
 source to your `Podfile` ([see more on that here](https://github.com/readium/swift-toolkit/issues/38)).
@@ -93,7 +93,7 @@ source 'https://cdn.cocoapods.org/'
 
 ...
 
-platform :ios, '13.4'
+platform :ios, '15.1'
 
 ...
 
@@ -123,6 +123,8 @@ Most apps won’t need code changes, but your **Android build configuration** mi
 Requirements:
 
 - **JDK 17** is required to build the Android app (the library targets Java/Kotlin 17).
+- **Kotlin** must be >= `2.3.20` (the Readium Kotlin Toolkit is compiled against that stdlib;
+  older compilers fail with "compiled with an incompatible version of Kotlin").
 - **compileSdkVersion** must be >= `31`.
 
 If you're not using `compileSdkVersion` >= 31 you'll need to update that:

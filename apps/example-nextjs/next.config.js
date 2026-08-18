@@ -69,6 +69,15 @@ const config = {
           paths: [__dirname],
         })
       ),
+      // Ensure single instance of react-native-worklets, matching the
+      // reanimated version pinned by this app. Reanimated's web entry calls
+      // assertWorkletsVersion() and throws on a mismatch, so a hoisted copy
+      // from another workspace would break the app at startup.
+      'react-native-worklets': path.dirname(
+        require.resolve('react-native-worklets/package.json', {
+          paths: [__dirname],
+        })
+      ),
       // Ensure single instance of safe-area-context
       'react-native-safe-area-context': path.resolve(
         __dirname,

@@ -59,7 +59,10 @@ export function createNavigatorListeners(
     textSelected: function (_selection: BasicTextSelection): void {
       // noop
     },
-    contentProtection: function (_type: string, _data: SuspiciousActivityEvent): void {
+    contentProtection: function (
+      _type: string,
+      _data: SuspiciousActivityEvent
+    ): void {
       // noop
     },
     contextMenu: function (_data: ContextMenuEvent): void {
@@ -68,8 +71,8 @@ export function createNavigatorListeners(
     peripheral: function (_data: KeyboardEventData): void {
       // noop
     },
-    timelineItemChanged: function(item: TimelineItem | undefined): void {
+    timelineItemChanged: function (_item: TimelineItem | undefined): void {
       // noop
-    }
+    },
   };
 }
