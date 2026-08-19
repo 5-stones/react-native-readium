@@ -15,7 +15,7 @@
     "format:check": "prettier --check components pages"
   },
   "dependencies": {
-    "@gorhom/bottom-sheet": "^5.1.8",
+    "@gorhom/bottom-sheet": "^5.2.14",
     "@react-native-community/slider": "^5.1.2",
     "@react-navigation/native": "^7.0.15",
     "@react-navigation/native-stack": "^7.2.1",
@@ -25,18 +25,18 @@
     "expo": "54.0.13",
     "next": "15.5.4",
     "raf": "^3.4.1",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "react-native": "0.83.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.2",
     "react-native-fs": "^2.20.0",
-    "react-native-gesture-handler": "^2.24.0",
+    "react-native-gesture-handler": "^2.32.0",
     "react-native-readium": "workspace:*",
-    "react-native-reanimated": "4.3.2",
+    "react-native-reanimated": "^4.5.3",
     "react-native-safe-area-context": "^5.6.2",
     "react-native-screens": "^4.19.0",
     "react-native-vector-icons": "^9.1.0",
     "react-native-web": "0.21.1",
-    "react-native-worklets": "0.8.3",
+    "react-native-worklets": "^0.11.4",
     "webpack": "5.102.1"
   },
   "devDependencies": {
