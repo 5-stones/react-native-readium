@@ -1,3 +1,14 @@
+# [5.0.0](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.19...v5.0.0) (2026-08-19)
+
+
+### Features
+
+* **android, ios, web:** implement support for pdf. ([ffcc554](https://github.com/5-stones/react-native-readium/commit/ffcc554018269df225254af211788e5e7a7b6610))
+* **android, ios, web:** upgrade readium sdk versions ([64bc70c](https://github.com/5-stones/react-native-readium/commit/64bc70cb71db28fdf892111997e447a9ddd72be2))
+* **ios, android, web:** upgrade readium for ios to 3.11.0, android to 3.3.0 and web to latest dependencies. ([e129b27](https://github.com/5-stones/react-native-readium/commit/e129b275538c9608eccab3b442f2ab67a23ba2f6))
+
+
+
 # [5.0.0-rc.19](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.18...v5.0.0-rc.19) (2026-08-17)
 
 
