@@ -123,7 +123,7 @@ func readiumDecorationToNitro(_ dec: RDecoration, group: String) -> Decoration {
 
 func readiumLocatorToNitro(_ loc: RLocator) -> Locator {
   let locations = LocatorLocations(
-    progression: loc.locations.progression ?? 0,
+    progression: loc.locations.progression,
     position: loc.locations.position.map { Double($0) },
     totalProgression: loc.locations.totalProgression
   )

@@ -52,7 +52,7 @@ final class ReaderService: Loggable {
             guard let viewController = reader.getViewController(
               for: pub,
               bookId: bookId,
-              locator: locator,
+              locator: Self.resolve(locator, in: pub),
               selectionActions: selectionActions
             ) else {
               return
@@ -145,5 +145,30 @@ final class ReaderService: Loggable {
       }
     }
     return .just(publication)
+  }
+
+  /// Realigns an initial locator against the publication that was actually opened.
+  ///
+  /// A stored locator can name a resource this publication doesn't have -- a PDF
+  /// locator persisted by an older web build carries no resource at all, and the
+  /// Readium toolkits name a standalone file `publication.<ext>` rather than using
+  /// its on-disk filename. In both cases the reading position itself is still good,
+  /// so rebase the locator onto the first reading-order resource instead of letting
+  /// the navigator discard it and reopen at the beginning.
+  static func resolve(
+    _ locator: ReadiumShared.Locator?,
+    in publication: Publication
+  ) -> ReadiumShared.Locator? {
+    guard let locator = locator else { return nil }
+    guard publication.readingOrder.firstWithHREF(locator.href) == nil else { return locator }
+    guard let first = publication.readingOrder.first else { return locator }
+
+    return ReadiumShared.Locator(
+      href: first.url(),
+      mediaType: first.mediaType ?? locator.mediaType,
+      title: locator.title,
+      locations: locator.locations,
+      text: locator.text
+    )
   }
 }

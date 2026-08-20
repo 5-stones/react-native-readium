@@ -7,7 +7,7 @@ import {
 // ── Locator ──────────────────────────────────────────────────────────────────
 
 export interface LocatorLocations {
-  progression: number;
+  progression?: number;
   position?: number;
   totalProgression?: number;
 }

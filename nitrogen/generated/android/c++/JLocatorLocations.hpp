@@ -17,11 +17,11 @@ namespace margelo::nitro::readium {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "LocatorLocations" and the the Kotlin data class "LocatorLocations".
+   * The C++ JNI bridge between the C++ struct "LocatorLocations" and the Kotlin data class "LocatorLocations".
    */
   struct JLocatorLocations final: public jni::JavaClass<JLocatorLocations> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/LocatorLocations;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/LocatorLocations;";
 
   public:
     /**
@@ -31,14 +31,14 @@ namespace margelo::nitro::readium {
     [[nodiscard]]
     LocatorLocations toCpp() const {
       static const auto clazz = javaClassStatic();
-      static const auto fieldProgression = clazz->getField<double>("progression");
-      double progression = this->getFieldValue(fieldProgression);
+      static const auto fieldProgression = clazz->getField<jni::JDouble>("progression");
+      jni::local_ref<jni::JDouble> progression = this->getFieldValue(fieldProgression);
       static const auto fieldPosition = clazz->getField<jni::JDouble>("position");
       jni::local_ref<jni::JDouble> position = this->getFieldValue(fieldPosition);
       static const auto fieldTotalProgression = clazz->getField<jni::JDouble>("totalProgression");
       jni::local_ref<jni::JDouble> totalProgression = this->getFieldValue(fieldTotalProgression);
       return LocatorLocations(
-        progression,
+        progression != nullptr ? std::make_optional(progression->value()) : std::nullopt,
         position != nullptr ? std::make_optional(position->value()) : std::nullopt,
         totalProgression != nullptr ? std::make_optional(totalProgression->value()) : std::nullopt
       );
@@ -50,12 +50,12 @@ namespace margelo::nitro::readium {
      */
     [[maybe_unused]]
     static jni::local_ref<JLocatorLocations::javaobject> fromCpp(const LocatorLocations& value) {
-      using JSignature = JLocatorLocations(double, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>);
+      using JSignature = JLocatorLocations(jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
-        value.progression,
+        value.progression.has_value() ? jni::JDouble::valueOf(value.progression.value()) : nullptr,
         value.position.has_value() ? jni::JDouble::valueOf(value.position.value()) : nullptr,
         value.totalProgression.has_value() ? jni::JDouble::valueOf(value.totalProgression.value()) : nullptr
       );

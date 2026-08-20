@@ -7,6 +7,7 @@ import java.io.File
 import java.util.Locale
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
+import org.readium.r2.shared.publication.firstWithHref
 import org.readium.r2.shared.util.FileExtension
 import org.readium.r2.shared.util.asset.AssetRetriever
 import org.readium.r2.shared.util.format.FormatHints
@@ -33,6 +34,26 @@ class ReaderService(
     )
   )
 
+  /**
+   * Realigns a stored locator against the publication that was actually opened.
+   *
+   * A locator can name a resource this publication doesn't have: one persisted by an
+   * older web build for a PDF carries no resource at all, and the Readium toolkits name
+   * a standalone file `publication.<ext>` rather than using its on-disk filename. The
+   * reading position itself is still good in both cases, so rebase the locator onto the
+   * first reading-order resource rather than letting the navigator discard it and reopen
+   * at the beginning.
+   */
+  private fun resolveAgainstPublication(
+    locator: Locator,
+    publication: Publication,
+  ): Locator {
+    if (publication.readingOrder.firstWithHref(locator.href) != null) return locator
+    val first = publication.readingOrder.firstOrNull() ?: return locator
+
+    return locator.copy(href = first.url(), mediaType = first.mediaType)
+  }
+
   fun locatorFromLinkOrLocator(
     location: LinkOrLocator?,
     publication: Publication,
@@ -46,7 +67,7 @@ class ReaderService(
       }
 
       is LinkOrLocator.Locator -> {
-        return location.locator
+        return resolveAgainstPublication(location.locator, publication)
       }
     }
 

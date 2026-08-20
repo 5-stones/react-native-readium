@@ -21,6 +21,16 @@ const RENDER_SCALE = 1.5;
 const RENDER_AHEAD = 1;
 /** Viewport margin at which a page starts rendering, in px. */
 const RENDER_MARGIN_PX = 600;
+/**
+ * HREF of the single reading-order resource for a standalone PDF.
+ *
+ * The Readium toolkits deliberately name a standalone file `publication.<ext>`
+ * rather than using its filename, so that a locator stays valid across devices
+ * where the file may be stored under a different name (see `SingleResourceContainer`
+ * in ReadiumStreamer). Emitting the same href here keeps locators produced on web
+ * resolvable by the iOS and Android navigators, and vice versa.
+ */
+const PDF_PUBLICATION_HREF = 'publication.pdf';
 
 interface OutlineNode {
   title: string;
@@ -74,7 +84,7 @@ export const usePdfNavigator = ({
       const result: Link[] = [];
       for (const node of nodes) {
         const pageNum = await resolveDestToPageNumber(node.dest);
-        const href = pageNum != null ? `#page=${pageNum}` : '';
+        const href = pageNum != null ? `${PDF_PUBLICATION_HREF}#page=${pageNum}` : '';
 
         const children = node.items?.length
           ? await flattenOutline(node.items, depth + 1)
@@ -275,11 +285,11 @@ export const usePdfNavigator = ({
   useEffect(() => {
     if (!isPdf || !isReady) return;
     onLocationChange?.({
-      href: `#page=${pageNumber}`,
+      href: PDF_PUBLICATION_HREF,
       type: 'application/pdf',
       title: '',
       locations: { position: pageNumber, totalProgression: pageCount ? (pageNumber - 1) / pageCount : 0 },
-    } as Locator);
+    });
   }, [isPdf, pageNumber, isReady]);
 
   const goToPage = useCallback((num: number) => {

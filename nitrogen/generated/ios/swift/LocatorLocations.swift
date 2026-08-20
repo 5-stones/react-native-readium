@@ -18,8 +18,14 @@ public extension LocatorLocations {
   /**
    * Create a new instance of `LocatorLocations`.
    */
-  init(progression: Double, position: Double?, totalProgression: Double?) {
-    self.init(progression, { () -> bridge.std__optional_double_ in
+  init(progression: Double?, position: Double?, totalProgression: Double?) {
+    self.init({ () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = progression {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
       if let __unwrappedValue = position {
         return bridge.create_std__optional_double_(__unwrappedValue)
       } else {
@@ -35,8 +41,15 @@ public extension LocatorLocations {
   }
 
   @inline(__always)
-  var progression: Double {
-    return self.__progression
+  var progression: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__progression) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__progression)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
   }
   
   @inline(__always)
