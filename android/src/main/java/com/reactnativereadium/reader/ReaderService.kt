@@ -51,7 +51,10 @@ class ReaderService(
     if (publication.readingOrder.firstWithHref(locator.href) != null) return locator
     val first = publication.readingOrder.firstOrNull() ?: return locator
 
-    return locator.copy(href = first.url(), mediaType = first.mediaType)
+    return locator.copy(
+      href = first.url(),
+      mediaType = first.mediaType ?: locator.mediaType,
+    )
   }
 
   fun locatorFromLinkOrLocator(

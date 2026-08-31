@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+} from 'react-native';
 import type {
   ReadiumProps,
   ReadiumFile,
@@ -8,6 +14,7 @@ import type {
   Locator,
   SearchResult,
   SearchOptions,
+  ZoomEvent,
 } from 'react-native-readium';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -37,6 +44,12 @@ interface ControlBarProps {
   isSearchSupported: boolean;
   hasMoreSearchResults: boolean;
   file: ReadiumFile | undefined;
+  zoom: ZoomEvent | undefined;
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onResetZoom: () => void;
+  onFitWidth: () => void;
+  onFitHeight: () => void;
 }
 
 export const ControlBar: React.FC<ControlBarProps> = ({
@@ -59,10 +72,18 @@ export const ControlBar: React.FC<ControlBarProps> = ({
   isSearchSupported,
   hasMoreSearchResults,
   file,
+  zoom,
+  onZoomIn,
+  onZoomOut,
+  onResetZoom,
+  onFitWidth,
+  onFitHeight,
 }) => {
-
   const isPdf = file?.url?.toLowerCase().split('?')[0].endsWith('.pdf');
   const insets = useSafeAreaInsets();
+  const showZoom = Platform.OS === 'web' && isPdf && !!zoom;
+  const canZoomIn = !!zoom && zoom.scale < zoom.max - 0.001;
+  const canZoomOut = !!zoom && zoom.scale > zoom.min + 0.001;
 
   return (
     <View style={[styles.container, { paddingTop: insets.top + 8 }]}>
@@ -75,12 +96,70 @@ export const ControlBar: React.FC<ControlBarProps> = ({
       </TouchableOpacity>
 
       <View style={styles.controls}>
-        {!isPdf && <View style={styles.iconButton}>
-          <PreferencesEditor
-            preferences={preferences}
-            onChange={onPreferencesChange}
-          />
-        </View>}
+        {showZoom && (
+          <View style={styles.zoomGroup}>
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={onZoomOut}
+              disabled={!canZoomOut}
+              accessibilityLabel="Zoom out"
+            >
+              <MaterialIcons
+                name="zoom-out"
+                size={22}
+                color={canZoomOut ? '#333' : '#CCC'}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={onResetZoom}
+              disabled={!canZoomOut}
+              accessibilityLabel="Reset zoom to fit"
+            >
+              <Text style={styles.zoomLabel}>
+                {Math.round((zoom?.scale ?? 1) * 100)}%
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={onZoomIn}
+              disabled={!canZoomIn}
+              accessibilityLabel="Zoom in"
+            >
+              <MaterialIcons
+                name="zoom-in"
+                size={22}
+                color={canZoomIn ? '#333' : '#CCC'}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={onFitWidth}
+              accessibilityLabel="Fit width"
+            >
+              <MaterialIcons name="swap-horiz" size={22} color="#333" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={onFitHeight}
+              accessibilityLabel="Fit height"
+            >
+              <MaterialIcons name="swap-vert" size={22} color="#333" />
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {!isPdf && (
+          <View style={styles.iconButton}>
+            <PreferencesEditor
+              preferences={preferences}
+              onChange={onPreferencesChange}
+            />
+          </View>
+        )}
 
         <View style={styles.iconButton}>
           <TableOfContents items={toc} onPress={onNavigateToTocItem} />
@@ -148,5 +227,16 @@ const styles = StyleSheet.create({
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  zoomGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  zoomLabel: {
+    fontSize: 13,
+    color: '#666',
+    width: 44,
+    textAlign: 'center',
+    fontVariant: ['tabular-nums'],
   },
 });

@@ -87,6 +87,12 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
             isSupported: false,
           }),
         cancelSearch: () => hybridRef.current?.cancelSearch(),
+        zoomIn: () => {},
+        zoomOut: () => {},
+        setZoom: () => {},
+        resetZoom: () => {},
+        fitWidth: () => {},
+        fitHeight: () => {},
       }),
       []
     );

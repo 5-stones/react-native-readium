@@ -114,6 +114,11 @@ android {
     compileOptions {
         coreLibraryDesugaringEnabled true
     }
+    sourceSets {
+        main {
+            assets.srcDirs += file("../../resources")
+        }
+    }
 }
 
 dependencies {

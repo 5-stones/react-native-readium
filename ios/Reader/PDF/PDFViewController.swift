@@ -21,7 +21,7 @@ class PDFViewController: ReaderViewController {
         preferences.scrollAxis = .vertical
         // One page at a time, scaled to fit - i.e. `.singlePageContinuous`.
         preferences.spread = .never
-        preferences.fit = .page
+        preferences.fit = .width
         preferences.offsetFirstPage = false
 
         let navigator = try PDFNavigatorViewController(
