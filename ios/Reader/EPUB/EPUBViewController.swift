@@ -237,7 +237,7 @@ extension EPUBViewController: EPUBNavigatorDelegate {
         let value = String(format: "%.3f", locale: Locale(identifier: "en_US_POSIX"), scale)
         for webView in self.inlineTranslationWebViews.allObjects {
           webView.evaluateJavaScript(
-            "document.documentElement.style.setProperty('--bookent-translation-scale', '\(value)');"
+            "document.documentElement.style.setProperty('--bookent-translation-scale', '\(value)'); window.__bookentRelayoutTranslations?.();"
           )
         }
       }
@@ -290,24 +290,54 @@ extension EPUBViewController: EPUBNavigatorDelegate {
           span.bookent-inline-translation {
             display: inline-block !important;
             position: relative !important;
+            box-sizing: content-box !important;
+            width: auto !important;
+            min-width: 0 !important;
+            max-width: none !important;
+            height: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
             vertical-align: baseline !important;
             line-height: 1.05 !important;
             text-decoration: none !important;
           }
           span.bookent-inline-translation > .bookent-word-base {
             display: inline-block !important;
+            box-sizing: content-box !important;
+            width: auto !important;
+            min-width: 0 !important;
+            max-width: none !important;
+            height: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            color: inherit !important;
+            font: inherit !important;
+            letter-spacing: inherit !important;
+            word-spacing: inherit !important;
             line-height: 1.05 !important;
             border-bottom: 1px dashed currentColor !important;
           }
           span.bookent-inline-translation > .bookent-translation-text {
             position: absolute !important;
+            box-sizing: content-box !important;
+            width: max-content !important;
+            min-width: 0 !important;
+            max-width: none !important;
+            height: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
             z-index: 1 !important;
-            top: calc(100% + 0.04rem) !important;
+            top: calc(100% + 0.08em) !important;
             left: 50% !important;
             transform: translateX(-50%) !important;
+            color: inherit !important;
             opacity: 0.62;
+            font-family: inherit !important;
             font-size: max(10px, calc(1rem * var(--bookent-translation-scale))) !important;
+            font-weight: 400 !important;
             font-style: italic;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
             line-height: 1 !important;
             text-align: center !important;
             white-space: nowrap !important;
@@ -317,15 +347,64 @@ extension EPUBViewController: EPUBNavigatorDelegate {
             user-select: none;
             pointer-events: none !important;
           }
+          span.bookent-inline-translation > .bookent-translation-text.bookent-translation-lane-2 {
+            top: calc(100% + 1.08em) !important;
+          }
         `;
         document.documentElement.appendChild(style);
         document.documentElement.style.setProperty(
           '--bookent-translation-scale',
           String(TRANSLATION_FONT_SCALE)
         );
-        // Kept as a compatibility hook for the host. The translation is
-        // anchored locally, so it follows its source without viewport math.
-        window.__bookentRelayoutTranslations = () => {};
+        let collisionFrame = null;
+        function translationsOverlap(left, right) {
+          const sameLine = Math.abs(left.baseRect.top - right.baseRect.top) < 4;
+          return sameLine && left.translationRect.right + 3 > right.translationRect.left;
+        }
+
+        function translationEntries() {
+          return Array.from(annotations.values())
+            .filter((annotation) => annotation.wrapper.isConnected)
+            .map((annotation) => ({
+              annotation,
+              baseRect: annotation.base.getBoundingClientRect(),
+              translationRect: annotation.translation.getBoundingClientRect(),
+            }))
+            .sort((left, right) =>
+              left.baseRect.top - right.baseRect.top ||
+              left.baseRect.left - right.baseRect.left
+            );
+        }
+
+        function resolveTranslationCollisions() {
+          collisionFrame = null;
+          const initial = translationEntries();
+          for (const entry of initial) {
+            entry.annotation.translation.classList.remove(
+              'bookent-translation-lane-2'
+            );
+          }
+
+          // Keep a consistent body-relative font size. When adjacent labels
+          // collide, move the later one onto a second local lane instead of
+          // shrinking it. Rectangles are used only for this one-time
+          // classification; no viewport coordinates are persisted.
+          const entries = translationEntries();
+          for (let index = 1; index < entries.length; index += 1) {
+            if (translationsOverlap(entries[index - 1], entries[index])) {
+              entries[index].annotation.translation.classList.add(
+                'bookent-translation-lane-2'
+              );
+            }
+          }
+        }
+
+        function scheduleTranslationLayout() {
+          if (collisionFrame !== null) cancelAnimationFrame(collisionFrame);
+          collisionFrame = requestAnimationFrame(resolveTranslationCollisions);
+        }
+
+        window.__bookentRelayoutTranslations = scheduleTranslationLayout;
 
         function clearHold() {
           if (holdTimer !== null) {
@@ -412,12 +491,14 @@ extension EPUBViewController: EPUBNavigatorDelegate {
             annotation.translatedSentence = translatedSentence || '';
             annotation.state = 'translated';
             annotation.error = '';
+            scheduleTranslationLayout();
             return;
           }
 
           translation.textContent = '重试';
           annotation.state = 'failed';
           annotation.error = error || 'Translation unavailable';
+          scheduleTranslationLayout();
         };
 
         function sentenceContext(text, wordStart, wordEnd) {
@@ -548,6 +629,7 @@ extension EPUBViewController: EPUBNavigatorDelegate {
             error: '',
           };
           annotations.set(requestId, annotation);
+          scheduleTranslationLayout();
 
           window.webkit?.messageHandlers?.bookentTranslation?.postMessage({
             id: requestId,

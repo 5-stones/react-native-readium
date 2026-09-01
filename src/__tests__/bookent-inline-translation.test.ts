@@ -39,7 +39,7 @@ describe('Bookent inline translation integration', () => {
     expect(source).toContain('line-height: 1.05 !important');
     expect(source).toContain('position: relative !important');
     expect(source).toContain('position: absolute !important');
-    expect(source).toContain('top: calc(100% + 0.04rem) !important');
+    expect(source).toContain('top: calc(100% + 0.08em) !important');
     expect(source).toContain('left: 50% !important');
     expect(source).toContain('transform: translateX(-50%) !important');
     expect(source).toContain(
@@ -58,10 +58,22 @@ describe('Bookent inline translation integration', () => {
     expect(source).not.toMatch(/Wordin|wordin/);
   });
 
-  it('lets the local inline anchor follow typography changes', () => {
+  it('isolates inline translation geometry from publisher span styles', () => {
+    expect(source).toContain('box-sizing: content-box !important');
+    expect(source).toContain('width: auto !important');
+    expect(source).toContain('margin: 0 !important');
+    expect(source).toContain('padding: 0 !important');
+    expect(source).toContain('font: inherit !important');
+  });
+
+  it('resolves adjacent translation collisions without a full-page layer', () => {
     expect(source).toContain(
-      'window.__bookentRelayoutTranslations = () => {}'
+      'window.__bookentRelayoutTranslations = scheduleTranslationLayout'
     );
+    expect(source).toContain('function resolveTranslationCollisions()');
+    expect(source).toContain('bookent-translation-lane-2');
+    expect(source).not.toContain('bookent-translation-compact');
+    expect(source).toContain('getBoundingClientRect()');
     expect(source).not.toContain('new ResizeObserver');
     expect(source).not.toContain('new MutationObserver');
     expect(source).not.toContain('scheduleAnnotationPositions');

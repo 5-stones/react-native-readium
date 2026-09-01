@@ -27,6 +27,13 @@ minimum line height.
 The wrapper uses a compact internal `1.05` line height so its dashed source
 underline stays close to the glyphs; the surrounding paragraph keeps the
 larger reader line height that reserves space for the translation.
+Translation sizing uses the EPUB body root `rem`, with an absolute `10px` floor,
+so headings, body text, and footnotes all present translations at one consistent
+reader-controlled size. Critical inline geometry, spacing, and font inheritance
+are explicitly isolated from publisher `span` rules. Adjacent translations are
+measured only after insertion or a reader appearance change and alternate onto a
+second local lane when necessary; their font size is never reduced to resolve a
+collision. These temporary rectangles are not stored as page positions.
 
 ## Host application contract
 
