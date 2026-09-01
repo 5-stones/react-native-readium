@@ -64,6 +64,22 @@ describe('Bookent inline translation integration', () => {
     expect(source).toContain('margin: 0 !important');
     expect(source).toContain('padding: 0 !important');
     expect(source).toContain('font: inherit !important');
+    expect(source.match(/text-indent: 0 !important/g)).toHaveLength(3);
+  });
+
+  it('does not inherit publisher paragraph indentation inside translated words', () => {
+    // An inline-block establishes a new formatting context. If text-indent is
+    // inherited from a publisher paragraph, WebKit inserts that indent before
+    // the translated source word inside the wrapper.
+    expect(source).toMatch(
+      /span\.bookent-inline-translation \{[\s\S]*?text-indent: 0 !important;/
+    );
+    expect(source).toMatch(
+      /> \.bookent-word-base \{[\s\S]*?text-indent: 0 !important;/
+    );
+    expect(source).toMatch(
+      /> \.bookent-translation-text \{[\s\S]*?text-indent: 0 !important;/
+    );
   });
 
   it('resolves adjacent translation collisions without a full-page layer', () => {

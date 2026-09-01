@@ -297,6 +297,7 @@ extension EPUBViewController: EPUBNavigatorDelegate {
             height: auto !important;
             margin: 0 !important;
             padding: 0 !important;
+            text-indent: 0 !important;
             vertical-align: baseline !important;
             line-height: 1.05 !important;
             text-decoration: none !important;
@@ -310,6 +311,7 @@ extension EPUBViewController: EPUBNavigatorDelegate {
             height: auto !important;
             margin: 0 !important;
             padding: 0 !important;
+            text-indent: 0 !important;
             color: inherit !important;
             font: inherit !important;
             letter-spacing: inherit !important;
@@ -326,6 +328,7 @@ extension EPUBViewController: EPUBNavigatorDelegate {
             height: auto !important;
             margin: 0 !important;
             padding: 0 !important;
+            text-indent: 0 !important;
             z-index: 1 !important;
             top: calc(100% + 0.08em) !important;
             left: 50% !important;
