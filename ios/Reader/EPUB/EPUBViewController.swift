@@ -233,7 +233,7 @@ extension EPUBViewController: EPUBNavigatorDelegate {
         else {
           return
         }
-        let scale = min(0.92, max(0.4, requestedScale))
+        let scale = min(0.92, max(0.6, requestedScale))
         let value = String(format: "%.3f", locale: Locale(identifier: "en_US_POSIX"), scale)
         for webView in self.inlineTranslationWebViews.allObjects {
           webView.evaluateJavaScript(
@@ -261,18 +261,17 @@ extension EPUBViewController: EPUBNavigatorDelegate {
     let storedScale = UserDefaults.standard.object(
       forKey: "BookentInlineTranslationFontScale"
     ) as? Double ?? 0.85
-    let initialScale = min(0.92, max(0.4, storedScale))
+    let initialScale = min(0.92, max(0.6, storedScale))
 
     let source = """
       (() => {
-        if (window.__bookentOverlayInstalled) return;
-        window.__bookentOverlayInstalled = true;
+        if (window.__bookentRubyInstalled) return;
+        window.__bookentRubyInstalled = true;
 
         const HOLD_MS = 500;
         const MAX_MOVE = 10;
         const TRANSLATION_FONT_SCALE = \(initialScale);
-        const STYLE_ID = 'bookent-overlay-style';
-        const LAYER_ID = 'bookent-translation-layer';
+        const STYLE_ID = 'bookent-ruby-style';
         const PRESSING_CLASS = 'bookent-translation-pressing';
         const annotations = new Map();
         let holdTimer = null;
@@ -288,23 +287,26 @@ extension EPUBViewController: EPUBNavigatorDelegate {
             -webkit-user-select: none !important;
             user-select: none !important;
           }
-          #${LAYER_ID} {
-            position: fixed !important;
-            inset: 0 !important;
-            z-index: 2147483646 !important;
-            pointer-events: none !important;
+          span.bookent-inline-translation {
+            display: inline-block !important;
+            position: relative !important;
+            vertical-align: baseline !important;
+            line-height: 1.05 !important;
+            text-decoration: none !important;
           }
-          .bookent-word-mark {
-            position: fixed !important;
-            box-sizing: border-box !important;
+          span.bookent-inline-translation > .bookent-word-base {
+            display: inline-block !important;
+            line-height: 1.05 !important;
             border-bottom: 1px dashed currentColor !important;
-            pointer-events: auto !important;
           }
-          .bookent-inline-translation {
-            position: fixed !important;
+          span.bookent-inline-translation > .bookent-translation-text {
+            position: absolute !important;
+            z-index: 1 !important;
+            top: calc(100% + 0.04rem) !important;
+            left: 50% !important;
             transform: translateX(-50%) !important;
             opacity: 0.62;
-            font-size: calc(1rem * var(--bookent-translation-scale)) !important;
+            font-size: max(10px, calc(1rem * var(--bookent-translation-scale))) !important;
             font-style: italic;
             line-height: 1 !important;
             text-align: center !important;
@@ -313,7 +315,7 @@ extension EPUBViewController: EPUBNavigatorDelegate {
             text-decoration: none !important;
             -webkit-user-select: none;
             user-select: none;
-            pointer-events: auto !important;
+            pointer-events: none !important;
           }
         `;
         document.documentElement.appendChild(style);
@@ -321,82 +323,9 @@ extension EPUBViewController: EPUBNavigatorDelegate {
           '--bookent-translation-scale',
           String(TRANSLATION_FONT_SCALE)
         );
-        const layer = document.createElement('div');
-        layer.id = LAYER_ID;
-        layer.setAttribute('aria-hidden', 'true');
-        document.documentElement.appendChild(layer);
-
-        function rectForAnnotation(annotation) {
-          const rects = Array.from(annotation.range.getClientRects()).filter(
-            (rect) => rect.width > 0 && rect.height > 0
-          );
-          return rects[annotation.rectIndex] ?? rects[0] ?? null;
-        }
-
-        function updateAnnotationPosition(annotation) {
-          const rect = rectForAnnotation(annotation);
-          const visible = rect && rect.bottom >= 0 && rect.top <= innerHeight;
-          annotation.mark.style.visibility = visible ? 'visible' : 'hidden';
-          annotation.translation.style.visibility = visible ? 'visible' : 'hidden';
-          if (!visible) return;
-
-          annotation.mark.style.left = `${rect.left}px`;
-          annotation.mark.style.top = `${rect.top}px`;
-          annotation.mark.style.width = `${rect.width}px`;
-          annotation.mark.style.height = `${rect.height}px`;
-          annotation.translation.style.left = `${rect.left + rect.width / 2}px`;
-          annotation.translation.style.top = `${rect.bottom + 2}px`;
-        }
-
-        let positionFrame = null;
-        function scheduleAnnotationPositions() {
-          if (positionFrame !== null) return;
-          positionFrame = requestAnimationFrame(() => {
-            positionFrame = null;
-            annotations.forEach(updateAnnotationPosition);
-          });
-        }
-
-        let stablePositionTimers = [];
-        function relayoutAllAnnotations() {
-          stablePositionTimers.forEach(clearTimeout);
-          stablePositionTimers = [];
-          scheduleAnnotationPositions();
-          requestAnimationFrame(scheduleAnnotationPositions);
-
-          // Readium pagination settles asynchronously after typography changes.
-          // Re-measure through that settling window so every existing Range is
-          // rendered against the final line boxes without translating again.
-          for (const delay of [50, 150, 300, 600]) {
-            stablePositionTimers.push(
-              setTimeout(scheduleAnnotationPositions, delay)
-            );
-          }
-        }
-        window.__bookentRelayoutTranslations = relayoutAllAnnotations;
-
-        addEventListener('scroll', scheduleAnnotationPositions, true);
-        addEventListener('resize', relayoutAllAnnotations, true);
-        addEventListener('pageshow', relayoutAllAnnotations, true);
-        visualViewport?.addEventListener('scroll', scheduleAnnotationPositions);
-        visualViewport?.addEventListener('resize', relayoutAllAnnotations);
-
-        const resizeObserver = new ResizeObserver(relayoutAllAnnotations);
-        resizeObserver.observe(document.documentElement);
-        if (document.body) resizeObserver.observe(document.body);
-
-        const typographyObserver = new MutationObserver(relayoutAllAnnotations);
-        typographyObserver.observe(document.documentElement, {
-          attributes: true,
-          attributeFilter: ['class', 'style'],
-        });
-        if (document.body) {
-          typographyObserver.observe(document.body, {
-            attributes: true,
-            attributeFilter: ['class', 'style'],
-          });
-        }
-        document.fonts?.ready.then(relayoutAllAnnotations);
+        // Kept as a compatibility hook for the host. The translation is
+        // anchored locally, so it follows its source without viewport math.
+        window.__bookentRelayoutTranslations = () => {};
 
         function clearHold() {
           if (holdTimer !== null) {
@@ -483,7 +412,6 @@ extension EPUBViewController: EPUBNavigatorDelegate {
             annotation.translatedSentence = translatedSentence || '';
             annotation.state = 'translated';
             annotation.error = '';
-            scheduleAnnotationPositions();
             return;
           }
 
@@ -526,7 +454,7 @@ extension EPUBViewController: EPUBNavigatorDelegate {
                   !candidate.data ||
                   !parent ||
                   parent.closest(
-                    '#bookent-translation-layer, ruby, rt, script, style, noscript, textarea'
+                    '.bookent-translation-text, script, style, noscript, textarea'
                   )
                 ) {
                   return NodeFilter.FILTER_REJECT;
@@ -565,58 +493,48 @@ extension EPUBViewController: EPUBNavigatorDelegate {
           return language.trim() || 'en';
         }
 
-        function createTranslationOverlay(x, y) {
+        function createInlineTranslation(x, y) {
           const caret = textRangeAtPoint(x, y);
           const node = caret?.startContainer;
           if (!(node instanceof Text) || !node.parentElement) return false;
 
           const blocked = node.parentElement.closest(
-            '#bookent-translation-layer, ruby, rt, a, button, input, textarea, select'
+            '.bookent-inline-translation, ruby, rt, a, button, input, textarea, select'
           );
           if (blocked) return false;
 
           const segment = wordSegmentAt(node.data, caret.startOffset);
           if (!segment || !segment.word.trim()) return false;
 
-          const range = document.createRange();
-          range.setStart(node, segment.start);
-          range.setEnd(node, segment.end);
-
           const requestId =
             globalThis.crypto?.randomUUID?.() ??
             `bookent-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-
-          const rects = Array.from(range.getClientRects());
-          const rectIndex = Math.max(
-            0,
-            rects.findIndex(
-              (rect) =>
-                x >= rect.left && x <= rect.right &&
-                y >= rect.top && y <= rect.bottom
-            )
-          );
-
-          const mark = document.createElement('span');
-          mark.className = 'bookent-word-mark';
-          mark.dataset.bookentRequest = requestId;
-          layer.appendChild(mark);
-
-          const translation = document.createElement('span');
-          translation.className = 'bookent-inline-translation';
-          translation.dataset.bookentRequest = requestId;
-          translation.textContent = '…';
-          layer.appendChild(translation);
 
           const context = sentenceContextForNode(
             node,
             segment.start,
             segment.end
           );
+          const selectedText = node.splitText(segment.start);
+          selectedText.splitText(segment.word.length);
+
+          const wrapper = document.createElement('span');
+          wrapper.className = 'bookent-inline-translation';
+          wrapper.dataset.bookentRequest = requestId;
+
+          const base = document.createElement('span');
+          base.className = 'bookent-word-base';
+          base.textContent = segment.word;
+          const translation = document.createElement('span');
+          translation.className = 'bookent-translation-text';
+          translation.textContent = '…';
+          wrapper.append(base, translation);
+          selectedText.replaceWith(wrapper);
+
           const annotation = {
             id: requestId,
-            range: range.cloneRange(),
-            rectIndex,
-            mark,
+            wrapper,
+            base,
             translation,
             word: segment.word,
             sentence: context.sentence,
@@ -630,7 +548,6 @@ extension EPUBViewController: EPUBNavigatorDelegate {
             error: '',
           };
           annotations.set(requestId, annotation);
-          updateAnnotationPosition(annotation);
 
           window.webkit?.messageHandlers?.bookentTranslation?.postMessage({
             id: requestId,
@@ -706,7 +623,7 @@ extension EPUBViewController: EPUBNavigatorDelegate {
               holdTimer = null;
               if (
                 startPoint &&
-                createTranslationOverlay(startPoint.x, startPoint.y)
+                createInlineTranslation(startPoint.x, startPoint.y)
               ) {
                 gestureConsumed = true;
                 suppressClickUntil = Date.now() + 800;

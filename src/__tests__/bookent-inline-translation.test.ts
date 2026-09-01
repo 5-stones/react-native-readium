@@ -25,23 +25,29 @@ describe('Bookent inline translation integration', () => {
     expect(source).toContain('const compoundPattern');
     expect(source).toContain('\\\\u2010\\\\u2011');
     expect(source).toContain(
-      '#bookent-translation-layer, ruby, rt, a, button, input, textarea, select'
+      'ruby, rt, a, button, input, textarea, select'
     );
   });
 
-  it('renders overlays without modifying the publication text DOM', () => {
-    expect(source).toContain("const LAYER_ID = 'bookent-translation-layer'");
-    expect(source).toContain('range: range.cloneRange()');
-    expect(source).toContain('annotation.range.getClientRects()');
-    expect(source).toContain('rect.left + rect.width / 2');
-    expect(source).toContain('position: fixed !important');
+  it('anchors translations to an exact-width local wrapper without increasing line height', () => {
+    expect(source).toContain("document.createElement('span')");
+    expect(source).toContain("base.className = 'bookent-word-base'");
+    expect(source).toContain("translation.className = 'bookent-translation-text'");
+    expect(source).toContain('selectedText.replaceWith(wrapper)');
+    expect(source).toContain('display: inline-block !important');
+    expect(source).toContain('vertical-align: baseline !important');
+    expect(source).toContain('line-height: 1.05 !important');
+    expect(source).toContain('position: relative !important');
+    expect(source).toContain('position: absolute !important');
+    expect(source).toContain('top: calc(100% + 0.04rem) !important');
+    expect(source).toContain('left: 50% !important');
     expect(source).toContain('transform: translateX(-50%) !important');
     expect(source).toContain(
-      'font-size: calc(1rem * var(--bookent-translation-scale)) !important'
+      'font-size: max(10px, calc(1rem * var(--bookent-translation-scale))) !important'
     );
-    expect(source).not.toContain('range.deleteContents()');
-    expect(source).not.toContain('range.insertNode(');
-    expect(source).not.toContain('span.bookent-ruby');
+    expect(source).not.toContain("const LAYER_ID = 'bookent-translation-layer'");
+    expect(source).not.toContain('position: fixed !important');
+    expect(source).not.toContain('getClientRects()');
   });
 
   it('uses the Bookent native translation and presentation channels', () => {
@@ -52,14 +58,13 @@ describe('Bookent inline translation integration', () => {
     expect(source).not.toMatch(/Wordin|wordin/);
   });
 
-  it('reflows every existing translation after typography changes settle', () => {
+  it('lets the local inline anchor follow typography changes', () => {
     expect(source).toContain(
-      'window.__bookentRelayoutTranslations = relayoutAllAnnotations'
+      'window.__bookentRelayoutTranslations = () => {}'
     );
-    expect(source).toContain('new ResizeObserver(relayoutAllAnnotations)');
-    expect(source).toContain('new MutationObserver(relayoutAllAnnotations)');
-    expect(source).toContain('for (const delay of [50, 150, 300, 600])');
-    expect(source).toContain('annotations.forEach(updateAnnotationPosition)');
+    expect(source).not.toContain('new ResizeObserver');
+    expect(source).not.toContain('new MutationObserver');
+    expect(source).not.toContain('scheduleAnnotationPositions');
   });
 
   it('consumes translated-word taps before page navigation', () => {

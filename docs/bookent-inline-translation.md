@@ -8,16 +8,25 @@ selection action with the ID `get-word`.
 
 1. A stationary 500 ms press resolves the word at the touch coordinates without
    creating a WebKit selection.
-2. The extension wraps the word in an inline container and renders the translated
-   text as an absolutely positioned overlay.
+2. The extension wraps the word in a local inline container and renders the
+   translation under the source text.
 3. The EPUB web view posts a `BookentTranslationRequest` notification to the host
    application.
 4. The host application posts `BookentTranslationResult` with the same request ID.
 5. Tapping the translated word posts `BookentTranslationPresentationRequest` so the
    host application can present its detailed translation UI.
 
-The overlay does not participate in text layout, so it does not change EPUB line
-breaking or pagination.
+The wrapper remains inline with its source text, while the translation is
+positioned relative to that local anchor. The wrapper's width is defined only by
+the underlined source span; the translation is centered at `left: 50%` with
+`translateX(-50%)`. This avoids Safari's separate ruby annotation coordinate
+system, keeps the translation out of the line box, and does not require a fixed
+full-page overlay or viewport measurements. Very tight line spacing can place a
+translation close to the next line, so the host keeps a translation-friendly
+minimum line height.
+The wrapper uses a compact internal `1.05` line height so its dashed source
+underline stays close to the glyphs; the surrounding paragraph keeps the
+larger reader line height that reserves space for the translation.
 
 ## Host application contract
 
@@ -33,13 +42,14 @@ notification payloads use these keys:
 The host can update the translation font scale by storing
 `BookentInlineTranslationFontScale` in `UserDefaults` and posting
 `BookentTranslationAppearanceChanged` with a `fontScale` value. The extension
-clamps the scale to `0.4...0.92`; the default is `0.85` of the EPUB root font
-size.
+clamps the scale to `0.6...0.92`; the default is `0.85` of the EPUB root font
+size. CSS also enforces an absolute `10px` floor for unusually small EPUB root
+font sizes.
 
 ## Maintenance boundaries
 
 - Keep translation and presentation business logic in the host application.
-- Keep this fork limited to EPUB interaction, positioning, and the WebKit bridge.
+- Keep this fork limited to EPUB interaction, inline presentation, and the WebKit bridge.
 - Rebase upstream releases in a dedicated branch and run the inline translation
   tests before updating the application dependency.
 - Do not add `patch-package` on top of this fork.
