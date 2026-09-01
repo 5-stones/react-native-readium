@@ -228,6 +228,29 @@ export const usePdfNavigator = ({
     }, NAVIGATION_SETTLE_MS);
   }, []);
 
+  const restyleInPlace = useCallback((restyle: () => void) => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+
+    const page = wrapper.querySelector<HTMLElement>(
+      `[data-page-number="${pageNumberRef.current}"]`
+    );
+    if (!page) {
+      restyle();
+      return;
+    }
+
+    const topOf = () => page.offsetTop - wrapper.offsetTop;
+    const height = page.offsetHeight;
+    const fraction = height > 0 ? (wrapper.scrollTop - topOf()) / height : 0;
+
+    restyle();
+
+    // Reading the geometry back forces the reflow the writes above queued, so
+    // the new offsets are already settled here.
+    wrapper.scrollTop = topOf() + fraction * page.offsetHeight;
+  }, []);
+
   const goToPage = useCallback(
     (num: number) => {
       const clamped = Math.min(Math.max(num, 1), pageCount || num);
@@ -379,6 +402,37 @@ export const usePdfNavigator = ({
           painted.delete(pageNumber);
         };
 
+        const visible = new Set<number>();
+
+        const span = (margin: number): [number, number] => {
+          if (!visible.size) {
+            const centre = pageNumberRef.current;
+            return [centre - margin, centre + margin];
+          }
+
+          let lowest = Infinity;
+          let highest = -Infinity;
+          visible.forEach((p) => {
+            if (p < lowest) lowest = p;
+            if (p > highest) highest = p;
+          });
+          return [lowest - margin, highest + margin];
+        };
+
+        const renderVisible = () => {
+          const [lowest, highest] = span(RENDER_AHEAD);
+          for (let p = lowest; p <= highest; p++) {
+            if (p >= 1 && p <= pdf.numPages) void renderPage(p);
+          }
+        };
+
+        const evictOffscreen = () => {
+          const [lowest, highest] = span(EVICT_AFTER_PAGES);
+          painted.forEach((p) => {
+            if (p < lowest || p > highest) evictPage(p);
+          });
+        };
+
         // Measured in parallel: `getPage` is a round trip to the worker, and
         // doing them one after another delays the strip by the whole document.
         for (let start = 1; start <= pdf.numPages; start += VIEWPORT_CONCURRENCY) {
@@ -452,28 +506,22 @@ export const usePdfNavigator = ({
               if (!pageStr) return;
               const page = parseInt(pageStr, 10);
 
-              if (!entry.isIntersecting) return;
-
-              // Paint the page and its neighbours so scrolling does not reveal
-              // blank canvases at the edges.
-              for (let p = page - RENDER_AHEAD; p <= page + RENDER_AHEAD; p++) {
-                if (p >= 1 && p <= pdf.numPages) void renderPage(p);
-              }
-
-              // Anything well behind or ahead of the reader gives its pixels
-              // back. Only pages that were actually painted are visited, so this
-              // stays proportional to what is on screen rather than to the
-              // length of the document.
-              painted.forEach((p) => {
-                if (Math.abs(p - page) > EVICT_AFTER_PAGES) evictPage(p);
-              });
+              if (entry.isIntersecting) visible.add(page);
+              else visible.delete(page);
 
               // Position reporting is suppressed while goToLocator is scrolling,
               // otherwise the pages passed on the way would each be reported.
-              if (!isNavigatingRef.current && entry.intersectionRatio >= 0.5) {
+              if (
+                entry.isIntersecting &&
+                !isNavigatingRef.current &&
+                entry.intersectionRatio >= 0.5
+              ) {
                 setPageNumber(page);
               }
             });
+
+            renderVisible();
+            evictOffscreen();
           },
           {
             root: scrollWrapper,
@@ -491,15 +539,8 @@ export const usePdfNavigator = ({
         // containers - so the pages around the reader are re-rasterised here at
         // whatever scale they are now being shown at.
         repaintRef.current = () => {
-          const centre = pageNumberRef.current;
           painted.forEach((p) => evictPage(p));
-          for (
-            let p = centre - RENDER_AHEAD;
-            p <= centre + RENDER_AHEAD;
-            p++
-          ) {
-            if (p >= 1 && p <= pdf.numPages) void renderPage(p);
-          }
+          renderVisible();
         };
 
         setIsReady(true);
@@ -613,15 +654,17 @@ export const usePdfNavigator = ({
     const wrapper = wrapperRef.current;
     if (!isPdf || !isReady || !wrapper) return;
 
-    wrapper.style.overflowX = zoom > 1 ? 'auto' : 'hidden';
-    wrapper
-      .querySelectorAll<HTMLElement>('[data-page-number]')
-      .forEach((page) => {
-        page.style.width = `${zoom * 100}%`;
-      });
+    restyleInPlace(() => {
+      wrapper.style.overflowX = zoom > 1 ? 'auto' : 'hidden';
+      wrapper
+        .querySelectorAll<HTMLElement>('[data-page-number]')
+        .forEach((page) => {
+          page.style.width = `${zoom * 100}%`;
+        });
+    });
 
     repaintRef.current?.();
-  }, [isPdf, isReady, zoom]);
+  }, [isPdf, isReady, zoom, restyleInPlace]);
 
   useEffect(() => {
     if (!isPdf || !isReady) return;
@@ -654,11 +697,15 @@ export const usePdfNavigator = ({
       if (!wrapper) return;
 
       preview = clampZoom(scale);
-      wrapper
-        .querySelectorAll<HTMLElement>('[data-page-number]')
-        .forEach((page) => {
-          page.style.width = `${preview! * 100}%`;
-        });
+      // Anchored the same way as a committed zoom, so the page does not slide
+      // out from under the fingers over the course of a pinch.
+      restyleInPlace(() => {
+        wrapper
+          .querySelectorAll<HTMLElement>('[data-page-number]')
+          .forEach((page) => {
+            page.style.width = `${preview! * 100}%`;
+          });
+      });
     };
 
     const commit = () => {
@@ -779,7 +826,7 @@ export const usePdfNavigator = ({
       container.removeEventListener('touchcancel', endPinch);
       container.removeEventListener('dblclick', onDoubleClick);
     };
-  }, [isPdf, isReady, container, setZoom]);
+  }, [isPdf, isReady, container, setZoom, restyleInPlace]);
 
   if (!isPdf) return undefined;
 
