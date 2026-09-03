@@ -34,11 +34,14 @@ namespace margelo::nitro::readium { struct Link; }
 namespace margelo::nitro::readium { struct Locator; }
 // Forward declaration of `PublicationMetadata` to properly resolve imports.
 namespace margelo::nitro::readium { struct PublicationMetadata; }
+// Forward declaration of `Capabilities` to properly resolve imports.
+namespace margelo::nitro::readium { struct Capabilities; }
 
 #include "Link.hpp"
 #include <vector>
 #include "Locator.hpp"
 #include "PublicationMetadata.hpp"
+#include "Capabilities.hpp"
 
 namespace margelo::nitro::readium {
 
@@ -50,10 +53,11 @@ namespace margelo::nitro::readium {
     std::vector<Link> tableOfContents     SWIFT_PRIVATE;
     std::vector<Locator> positions     SWIFT_PRIVATE;
     PublicationMetadata metadata     SWIFT_PRIVATE;
+    Capabilities capabilities     SWIFT_PRIVATE;
 
   public:
     PublicationReadyEvent() = default;
-    explicit PublicationReadyEvent(std::vector<Link> tableOfContents, std::vector<Locator> positions, PublicationMetadata metadata): tableOfContents(tableOfContents), positions(positions), metadata(metadata) {}
+    explicit PublicationReadyEvent(std::vector<Link> tableOfContents, std::vector<Locator> positions, PublicationMetadata metadata, Capabilities capabilities): tableOfContents(tableOfContents), positions(positions), metadata(metadata), capabilities(capabilities) {}
 
   public:
     friend bool operator==(const PublicationReadyEvent& lhs, const PublicationReadyEvent& rhs) = default;
@@ -71,7 +75,8 @@ namespace margelo::nitro {
       return margelo::nitro::readium::PublicationReadyEvent(
         JSIConverter<std::vector<margelo::nitro::readium::Link>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "tableOfContents"))),
         JSIConverter<std::vector<margelo::nitro::readium::Locator>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "positions"))),
-        JSIConverter<margelo::nitro::readium::PublicationMetadata>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "metadata")))
+        JSIConverter<margelo::nitro::readium::PublicationMetadata>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "metadata"))),
+        JSIConverter<margelo::nitro::readium::Capabilities>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "capabilities")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::readium::PublicationReadyEvent& arg) {
@@ -79,6 +84,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "tableOfContents"), JSIConverter<std::vector<margelo::nitro::readium::Link>>::toJSI(runtime, arg.tableOfContents));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "positions"), JSIConverter<std::vector<margelo::nitro::readium::Locator>>::toJSI(runtime, arg.positions));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "metadata"), JSIConverter<margelo::nitro::readium::PublicationMetadata>::toJSI(runtime, arg.metadata));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "capabilities"), JSIConverter<margelo::nitro::readium::Capabilities>::toJSI(runtime, arg.capabilities));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -92,6 +98,7 @@ namespace margelo::nitro {
       if (!JSIConverter<std::vector<margelo::nitro::readium::Link>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "tableOfContents")))) return false;
       if (!JSIConverter<std::vector<margelo::nitro::readium::Locator>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "positions")))) return false;
       if (!JSIConverter<margelo::nitro::readium::PublicationMetadata>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "metadata")))) return false;
+      if (!JSIConverter<margelo::nitro::readium::Capabilities>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "capabilities")))) return false;
       return true;
     }
   };

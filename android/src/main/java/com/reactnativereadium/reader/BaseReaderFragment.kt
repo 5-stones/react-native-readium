@@ -18,6 +18,7 @@ import org.readium.r2.navigator.OverflowableNavigator
 import org.readium.r2.navigator.SelectableNavigator
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.services.positions
+import org.readium.r2.shared.publication.Publication
 
 /*
  * Base reader fragment class
@@ -30,8 +31,10 @@ abstract class BaseReaderFragment : Fragment() {
     lifecycleScope
   )
 
+  abstract var publication: Publication
+
   protected abstract val model: ReaderViewModel
-  protected abstract val navigator: Navigator
+  abstract val navigator: Navigator
 
   // Track active decoration listeners to avoid duplicates
   private val activeDecorationGroups = mutableSetOf<String>()
@@ -74,7 +77,8 @@ abstract class BaseReaderFragment : Fragment() {
         ReaderViewModel.Event.PublicationReady(
           tableOfContents = model.publication.tableOfContents,
           positions = positions,
-          metadata = model.publication.metadata
+          metadata = model.publication.metadata,
+          publication = model.publication
         )
       )
     }

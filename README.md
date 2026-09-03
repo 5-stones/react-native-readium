@@ -214,6 +214,24 @@ const MyComponent: React.FC = () => {
 };
 ```
 
+### Knowing Which Settings Apply
+
+`onPublicationReady` and `onPreferencesChanged` report an object of valid `capabilites`. These are reported by the navigator's isEffective for the particular publication and set of preferences. Reflowable Epubs, fixed layout Epubs, and PDFs may have different capabilities and preferences available on different platforms and some preferences may render others effective or ineffective (eg. `scroll` and `scrollAxis`) so it is best to trust this list of capabilites to decide whether to render a given user control. 
+
+```tsx
+const [capabilities, setCapabilities] = useState<Capabilities>();
+
+<ReadiumView
+  file={file}
+  onPublicationReady={(event) => setCapabilities(event.capabilities)}
+  onPreferencesChanged={(event) => setCapabilities(event.capabilities)}
+/>;
+
+(capabilities.fontSize ? <FontSizeControl/> : null) // show the font size slider?
+(capabilities.zoom ? <ZoomControl/> : null) // show the zoom controls?
+```
+
+
 ### Highlights & Note Taking
 
 ![Decorators](https://github.com/5-stones/react-native-readium/blob/main/docs/demo-decorators.gif)
@@ -361,7 +379,7 @@ for a full search UI with infinite scroll.
 | ------ | ------------------ | -------------------------------------------------------------- |
 | Epub 2 | :white_check_mark: |                                                                |
 | Epub 3 | :white_check_mark: |                                                                |
-| PDF    | :x:                | On the roadmap, feel free to submit a PR or ask for direction. |
+| PDF    | :white_check_mark: | Scrolling, fitted to width. Ignores `preferences`; magnify with the zoom methods on the ref. |
 | CBZ    | :x:                | On the roadmap, feel free to submit a PR or ask for direction. |
 
 **Missing a format you need?** Reach out and see if it can be added to the roadmap.
@@ -382,7 +400,7 @@ DRM is not supported at this time. However, there is a clear path to [support it
 | `selectionActions`      | [`SelectionAction[]`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/SelectionAction.ts)                                 | :white_check_mark: | Custom actions to show in the context menu when the user selects text.                                                                                                                                                                                                              |
 | `style`                 | `ViewStyle`                                                                                                                                         | :white_check_mark: | A traditional style object.                                                                                                                                                                                                                                                         |
 | `onLocationChange`      | `(locator: Locator) => void`                                                                                                                        | :white_check_mark: | A callback that fires whenever the location is changed (e.g. the user transitions to a new page).                                                                                                                                                                                   |
-| `onPublicationReady`    | `(event: PublicationReadyEvent) => void`                                                                                                            | :white_check_mark: | A callback that fires once the publication is loaded and provides access to the table of contents, positions, and metadata. See the [`PublicationReadyEvent`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/PublicationReady.ts) interface for details. |
+| `onPublicationReady`    | `(event: PublicationReadyEvent) => void`                                                                                                            | :white_check_mark: | A callback that fires once the publication is loaded and provides access to the table of contents, positions, metadata, and the [capabilities](#knowing-which-settings-apply) of the opened publication. See the [`PublicationReadyEvent`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/PublicationReady.ts) interface for details. |
 | `onDecorationActivated` | `(event: DecorationActivatedEvent) => void`                                                                                                         | :white_check_mark: | A callback that fires when a user taps on a decoration (e.g. a highlight).                                                                                                                                                                                                          |
 | `onSelectionChange`     | `(event: SelectionEvent) => void`                                                                                                                   | :white_check_mark: | A callback that fires when the user's text selection changes.                                                                                                                                                                                                                       |
 | `onSelectionAction`     | `(event: SelectionActionEvent) => void`                                                                                                             | :white_check_mark: | A callback that fires when the user taps a custom selection action from the context menu.                                                                                                                                                                                           |

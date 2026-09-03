@@ -27,6 +27,12 @@ const books: BookOption[] = [
     asset: 'https://alice.dita.digital/manifest.json',
   },
   {
+    id: 'bella-the-dragon',
+    title: "Bella The Dragon (Fixed Layout)",
+    author: 'Barbara Nick',
+    asset: 'https://publication-server.readium.org/webpub/Z3M6Ly9yZWFkaXVtLXBsYXlncm91bmQtZmlsZXMvZGVtby9CZWxsYU9yaWdpbmFsMy5lcHVi/manifest.json',
+  },
+  {
     id: 'moby-dick',
     title: 'Moby Dick',
     author: 'Herman Melville',

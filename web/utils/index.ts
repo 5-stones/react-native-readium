@@ -5,3 +5,6 @@ export * from './metadataNormalizer';
 export * from './navigatorListeners';
 export * from './publicationUtils';
 export * from './sanitizeInitialLocation';
+export * from './mapEpubPreferences';
+export * from './mapPdfPreferences';
+export * from './capabilities';

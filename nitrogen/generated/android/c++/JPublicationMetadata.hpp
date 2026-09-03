@@ -53,6 +53,8 @@ namespace margelo::nitro::readium {
       jni::local_ref<jni::JString> subtitle = this->getFieldValue(fieldSubtitle);
       static const auto fieldIdentifier = clazz->getField<jni::JString>("identifier");
       jni::local_ref<jni::JString> identifier = this->getFieldValue(fieldIdentifier);
+      static const auto fieldConformsTo = clazz->getField<jni::JArrayClass<jni::JString>>("conformsTo");
+      jni::local_ref<jni::JArrayClass<jni::JString>> conformsTo = this->getFieldValue(fieldConformsTo);
       static const auto fieldAccessibility = clazz->getField<JAccessibility>("accessibility");
       jni::local_ref<JAccessibility> accessibility = this->getFieldValue(fieldAccessibility);
       static const auto fieldModified = clazz->getField<jni::JString>("modified");
@@ -106,6 +108,16 @@ namespace margelo::nitro::readium {
         sortAs != nullptr ? std::make_optional(sortAs->toStdString()) : std::nullopt,
         subtitle != nullptr ? std::make_optional(subtitle->toStdString()) : std::nullopt,
         identifier != nullptr ? std::make_optional(identifier->toStdString()) : std::nullopt,
+        conformsTo != nullptr ? std::make_optional([&]() {
+          size_t __size = conformsTo->size();
+          std::vector<std::string> __vector;
+          __vector.reserve(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            auto __element = conformsTo->getElement(__i);
+            __vector.push_back(__element->toStdString());
+          }
+          return __vector;
+        }()) : std::nullopt,
         accessibility != nullptr ? std::make_optional(accessibility->toCpp()) : std::nullopt,
         modified != nullptr ? std::make_optional(modified->toStdString()) : std::nullopt,
         published != nullptr ? std::make_optional(published->toStdString()) : std::nullopt,
@@ -274,7 +286,7 @@ namespace margelo::nitro::readium {
      */
     [[maybe_unused]]
     static jni::local_ref<JPublicationMetadata::javaobject> fromCpp(const PublicationMetadata& value) {
-      using JSignature = JPublicationMetadata(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<JAccessibility>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JArrayClass<jni::JString>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JSubject>>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JBelongsTo>);
+      using JSignature = JPublicationMetadata(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JArrayClass<jni::JString>>, jni::alias_ref<JAccessibility>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JArrayClass<jni::JString>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JContributor>>, jni::alias_ref<jni::JArrayClass<JSubject>>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JBelongsTo>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -283,6 +295,16 @@ namespace margelo::nitro::readium {
         value.sortAs.has_value() ? jni::make_jstring(value.sortAs.value()) : nullptr,
         value.subtitle.has_value() ? jni::make_jstring(value.subtitle.value()) : nullptr,
         value.identifier.has_value() ? jni::make_jstring(value.identifier.value()) : nullptr,
+        value.conformsTo.has_value() ? [&]() {
+          size_t __size = value.conformsTo.value().size();
+          jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            const auto& __element = value.conformsTo.value()[__i];
+            auto __elementJni = jni::make_jstring(__element);
+            __array->setElement(__i, *__elementJni);
+          }
+          return __array;
+        }() : nullptr,
         value.accessibility.has_value() ? JAccessibility::fromCpp(value.accessibility.value()) : nullptr,
         value.modified.has_value() ? jni::make_jstring(value.modified.value()) : nullptr,
         value.published.has_value() ? jni::make_jstring(value.published.value()) : nullptr,

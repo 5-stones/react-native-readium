@@ -14,6 +14,8 @@ namespace margelo::nitro::readium { struct AccessibilityCertification; }
 namespace margelo::nitro::readium { struct Accessibility; }
 // Forward declaration of `BelongsTo` to properly resolve imports.
 namespace margelo::nitro::readium { struct BelongsTo; }
+// Forward declaration of `Capabilities` to properly resolve imports.
+namespace margelo::nitro::readium { struct Capabilities; }
 // Forward declaration of `Contributor` to properly resolve imports.
 namespace margelo::nitro::readium { struct Contributor; }
 // Forward declaration of `DecorationActivatedEvent` to properly resolve imports.
@@ -36,6 +38,8 @@ namespace margelo::nitro::readium { struct LocatorText; }
 namespace margelo::nitro::readium { struct Locator; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::readium { struct Point; }
+// Forward declaration of `PreferencesChangedEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct PreferencesChangedEvent; }
 // Forward declaration of `Preferences` to properly resolve imports.
 namespace margelo::nitro::readium { struct Preferences; }
 // Forward declaration of `PublicationMetadata` to properly resolve imports.
@@ -71,6 +75,7 @@ namespace NitroReadium { class HybridReadiumViewSpec_cxx; }
 #include "Accessibility.hpp"
 #include "AccessibilityCertification.hpp"
 #include "BelongsTo.hpp"
+#include "Capabilities.hpp"
 #include "Contributor.hpp"
 #include "Decoration.hpp"
 #include "DecorationActivatedEvent.hpp"
@@ -83,6 +88,7 @@ namespace NitroReadium { class HybridReadiumViewSpec_cxx; }
 #include "LocatorText.hpp"
 #include "Point.hpp"
 #include "Preferences.hpp"
+#include "PreferencesChangedEvent.hpp"
 #include "PublicationMetadata.hpp"
 #include "PublicationReadyEvent.hpp"
 #include "ReadiumFile.hpp"
@@ -577,6 +583,43 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline std::function<void(const PublicationReadyEvent& /* event */)> get_std__optional_std__function_void_const_PublicationReadyEvent_____event______(const std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::function<void(const PreferencesChangedEvent& /* event */)>
+  /**
+   * Specialized version of `std::function<void(const PreferencesChangedEvent&)>`.
+   */
+  using Func_void_PreferencesChangedEvent = std::function<void(const PreferencesChangedEvent& /* event */)>;
+  /**
+   * Wrapper class for a `std::function<void(const PreferencesChangedEvent& / * event * /)>`, this can be used from Swift.
+   */
+  class Func_void_PreferencesChangedEvent_Wrapper final {
+  public:
+    explicit Func_void_PreferencesChangedEvent_Wrapper(std::function<void(const PreferencesChangedEvent& /* event */)>&& func): _function(std::make_unique<std::function<void(const PreferencesChangedEvent& /* event */)>>(std::move(func))) {}
+    inline void call(PreferencesChangedEvent event) const noexcept {
+      _function->operator()(event);
+    }
+  private:
+    std::unique_ptr<std::function<void(const PreferencesChangedEvent& /* event */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_PreferencesChangedEvent create_Func_void_PreferencesChangedEvent(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_PreferencesChangedEvent_Wrapper wrap_Func_void_PreferencesChangedEvent(Func_void_PreferencesChangedEvent value) noexcept {
+    return Func_void_PreferencesChangedEvent_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<std::function<void(const PreferencesChangedEvent& /* event */)>>
+  /**
+   * Specialized version of `std::optional<std::function<void(const PreferencesChangedEvent& / * event * /)>>`.
+   */
+  using std__optional_std__function_void_const_PreferencesChangedEvent_____event______ = std::optional<std::function<void(const PreferencesChangedEvent& /* event */)>>;
+  inline std::optional<std::function<void(const PreferencesChangedEvent& /* event */)>> create_std__optional_std__function_void_const_PreferencesChangedEvent_____event______(const std::function<void(const PreferencesChangedEvent& /* event */)>& value) noexcept {
+    return std::optional<std::function<void(const PreferencesChangedEvent& /* event */)>>(value);
+  }
+  inline bool has_value_std__optional_std__function_void_const_PreferencesChangedEvent_____event______(const std::optional<std::function<void(const PreferencesChangedEvent& /* event */)>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::function<void(const PreferencesChangedEvent& /* event */)> get_std__optional_std__function_void_const_PreferencesChangedEvent_____event______(const std::optional<std::function<void(const PreferencesChangedEvent& /* event */)>>& optional) noexcept {
     return optional.value();
   }
   

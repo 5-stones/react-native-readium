@@ -170,7 +170,12 @@ export function normalizeMetadata(metadata: any): any {
 
   // Direct copy fields
   if (metadata.identifier) normalized.identifier = metadata.identifier;
-  if (metadata.conformsTo) normalized.conformsTo = metadata.conformsTo;
+  // RWPM allows a single value or an array here, as Readium's own decoders do.
+  if (metadata.conformsTo) {
+    normalized.conformsTo = Array.isArray(metadata.conformsTo)
+      ? metadata.conformsTo
+      : [metadata.conformsTo];
+  }
   if (metadata.description) normalized.description = metadata.description;
   if (metadata.readingProgression)
     normalized.readingProgression = metadata.readingProgression;

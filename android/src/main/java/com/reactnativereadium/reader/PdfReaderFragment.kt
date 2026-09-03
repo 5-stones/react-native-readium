@@ -18,6 +18,7 @@ import org.readium.adapter.pdfium.navigator.PdfiumPreferencesEditor
 import org.readium.r2.navigator.Navigator
 import org.readium.r2.navigator.pdf.PdfNavigatorFactory
 import org.readium.r2.navigator.pdf.PdfNavigatorFragment
+import org.readium.r2.navigator.preferences.Configurable
 import org.readium.r2.navigator.preferences.Fit
 import org.readium.r2.shared.ExperimentalReadiumApi
 import org.readium.r2.shared.publication.Locator
@@ -28,11 +29,24 @@ class PdfReaderFragment : VisualReaderFragment() {
 
   override lateinit var model: ReaderViewModel
   override lateinit var navigator: Navigator
-  private lateinit var publication: Publication
+  override lateinit var publication: Publication
   private lateinit var factory: ReaderViewModel.Factory
+
+  private var pendingPreferences: PdfiumPreferences? = null
+  private lateinit var userPreferences: PdfiumPreferences
 
   @OptIn(ExperimentalReadiumApi::class)
   private lateinit var navigatorFactory: PdfNavigatorFactory<PdfiumSettings, PdfiumPreferences, PdfiumPreferencesEditor>
+
+  private fun ensureUserPreferencesInitialized() {
+    if (this::userPreferences.isInitialized) return
+    userPreferences = pendingPreferences ?: PdfiumPreferences()
+  }
+
+  private fun applyPendingPreferencesIfNeeded() {
+    if (!this::navigator.isInitialized) return
+    pendingPreferences?.let { updatePreferences(it) }
+  }
 
   fun initFactory(
     publication: Publication,
@@ -51,6 +65,8 @@ class PdfReaderFragment : VisualReaderFragment() {
         publication = it.publication
       }
 
+    ensureUserPreferencesInitialized()
+
     navigatorFactory = PdfNavigatorFactory(
       publication = publication,
       pdfEngineProvider = PdfiumEngineProvider()
@@ -59,7 +75,7 @@ class PdfReaderFragment : VisualReaderFragment() {
     childFragmentManager.fragmentFactory =
       navigatorFactory.createFragmentFactory(
         initialLocator = model.initialLocation,
-        initialPreferences = PdfiumPreferences(fit = Fit.WIDTH)
+        initialPreferences = PdfiumPreferences(fit = Fit.WIDTH) + userPreferences
       )
 
     setHasOptionsMenu(true)
@@ -87,8 +103,21 @@ class PdfReaderFragment : VisualReaderFragment() {
     }
 
     navigator = childFragmentManager.findFragmentByTag(navigatorFragmentTag) as Navigator
+    applyPendingPreferencesIfNeeded()
 
     return view
+  }
+
+  fun updatePreferences(pdfPreferences: PdfiumPreferences) {
+    userPreferences = pdfPreferences
+
+    if (this::navigator.isInitialized) {
+      @Suppress("UNCHECKED_CAST")
+      (navigator as? Configurable<*, PdfiumPreferences>)?.submitPreferences(userPreferences)
+      pendingPreferences = null
+    } else {
+      pendingPreferences = pdfPreferences
+    }
   }
 
   companion object {

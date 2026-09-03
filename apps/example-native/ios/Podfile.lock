@@ -1457,7 +1457,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-readium (5.0.0):
+  - react-native-readium (5.1.1):
     - hermes-engine
     - NitroModules
     - RCTRequired
@@ -2580,7 +2580,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 44dd007f917e2396afa0e70bbd70273237d93fde
   React-microtasksnativemodule: f413ee411341fb3c34d20e85e9f6f524921fab15
   React-mutationobservernativemodule: 58f6d2adf7d98e72b241608dfa2ddce414d2a4e7
-  react-native-readium: 3bc9da5979d271b7ab0c0c61df2007e476355930
+  react-native-readium: 021b2a04727ee2a643207773711fdda2c4e92e3b
   react-native-safe-area-context: 91a90d98c310adcc90a511e5aeb6046d7c19d885
   react-native-slider: f9910f69950b9953c46e091377c1265b71eb01f0
   React-NativeModulesApple: 167e532fb9bae30f3c66636b8ee0092bab263667

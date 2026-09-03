@@ -11,6 +11,7 @@ import type {
   SearchOptions,
   SearchPage,
   ZoomEvent,
+  PreferencesChangedEvent,
 } from '../interfaces';
 
 export type ReadiumViewRef = {
@@ -27,8 +28,6 @@ export type ReadiumViewRef = {
   zoomOut: () => void;
   setZoom: (scale: number) => void;
   resetZoom: () => void;
-  fitWidth: () => void;
-  fitHeight: () => void;
 };
 
 export type ReadiumProps = {
@@ -39,6 +38,7 @@ export type ReadiumProps = {
   style?: any;
   onLocationChange?: (locator: Locator) => void;
   onPublicationReady?: (event: PublicationReadyEvent) => void;
+  onPreferencesChanged?: (event: PreferencesChangedEvent) => void;
   onDecorationActivated?: (event: DecorationActivatedEvent) => void;
   onSelectionChange?: (event: SelectionEvent) => void;
   onSelectionAction?: (event: SelectionActionEvent) => void;

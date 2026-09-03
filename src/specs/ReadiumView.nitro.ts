@@ -42,7 +42,7 @@ export interface Link {
 
 // ── Preferences ──────────────────────────────────────────────────────────────
 
-export interface Preferences {
+export interface EpubPreferences {
   backgroundColor?: string;
   columnCount?: string;
   fontFamily?: string;
@@ -68,8 +68,77 @@ export interface Preferences {
   typeScale?: number;
   verticalText?: boolean;
   wordSpacing?: number;
-  merging?: boolean;
 }
+
+export interface PdfPreferences {
+  backgroundColor?: string;
+  fit?: string;
+  offsetFirstPage?: boolean;
+  pageSpacing?: number;
+  readingProgression?: string;
+  scroll?: boolean;
+  scrollAxis?: string;
+  spread?: string;
+  visibleScrollbar?: boolean;
+}
+
+export interface Preferences extends EpubPreferences, PdfPreferences {};
+
+// ── Capabilities ─────────────────────────────────────────────────────────────
+
+/**
+ * Something the reader can do with the publication it opened.
+ *
+ * Every `Preferences` field, plus the abilities that are not preferences.
+ */
+// export type Capabilities = {
+//   [K in keyof Preferences]-?: boolean;
+// } & {
+//   zoom: boolean;
+//   search: boolean;
+//   decorations: boolean;
+//   selection: boolean;
+// };
+
+export type Capabilities = {
+  backgroundColor: boolean;
+  columnCount: boolean;
+  fontFamily: boolean;
+  fontSize: boolean;
+  fontWeight: boolean;
+  hyphens: boolean;
+  imageFilter: boolean;
+  language: boolean;
+  letterSpacing: boolean;
+  ligatures: boolean;
+  lineHeight: boolean;
+  pageMargins: boolean;
+  paragraphIndent: boolean;
+  paragraphSpacing: boolean;
+  publisherStyles: boolean;
+  readingProgression: boolean;
+  scroll: boolean;
+  spread: boolean;
+  textAlign: boolean;
+  textColor: boolean;
+  textNormalization: boolean;
+  theme: boolean;
+  typeScale: boolean;
+  verticalText: boolean;
+  wordSpacing: boolean;
+
+  fit: boolean;
+  offsetFirstPage: boolean;
+  pageSpacing: boolean;
+  scrollAxis: boolean;
+  visibleScrollbar: boolean;
+
+  zoom: boolean;
+  search: boolean;
+  decorations: boolean;
+  selection: boolean;
+};
+
 
 // ── Decoration ───────────────────────────────────────────────────────────────
 
@@ -165,6 +234,7 @@ export interface PublicationMetadata {
   sortAs?: string;
   subtitle?: string;
   identifier?: string;
+  conformsTo?: string[];
   accessibility?: Accessibility;
   modified?: string;
   published?: string;
@@ -230,6 +300,11 @@ export interface PublicationReadyEvent {
   tableOfContents: Link[];
   positions: Locator[];
   metadata: PublicationMetadata;
+  capabilities: Capabilities;
+}
+
+export interface PreferencesChangedEvent {
+  capabilities: Capabilities;
 }
 
 export interface DecorationActivatedEvent {
@@ -266,6 +341,7 @@ export interface ReadiumViewProps extends HybridViewProps {
   selectionActions?: SelectionAction[];
   onLocationChange?: (locator: Locator) => void;
   onPublicationReady?: (event: PublicationReadyEvent) => void;
+  onPreferencesChanged?: (event: PreferencesChangedEvent) => void;
   onDecorationActivated?: (event: DecorationActivatedEvent) => void;
   onSelectionChange?: (event: SelectionEvent) => void;
   onSelectionAction?: (event: SelectionActionEvent) => void;

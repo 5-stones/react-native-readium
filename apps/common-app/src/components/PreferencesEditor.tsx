@@ -1,15 +1,16 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
-import type { ReadiumProps } from 'react-native-readium';
+import type { ReadiumProps, Capabilities } from 'react-native-readium';
 import { RANGES } from 'react-native-readium';
 import { ReaderButton } from './ReaderButton';
 import { BaseModal } from './BaseModal';
-import { modalStyles, colors } from '../styles/modal';
+import { colors } from '../styles/modal';
 
 interface Props {
   preferences: ReadiumProps['preferences'];
   onChange: (preferences: ReadiumProps['preferences']) => void;
+  capabilities?: Capabilities;
 }
 
 type Theme = NonNullable<ReadiumProps['preferences']['theme']>;
@@ -20,7 +21,20 @@ const THEME_LABELS: Record<Theme, string> = {
   sepia: 'Sepia',
 };
 
-export const PreferencesEditor = ({ preferences, onChange }: Props) => {
+enum FIT {
+  cover = 'cover',
+  contain = 'contain',
+  width = 'width',
+  height = 'height',
+}
+
+type Spread = 'auto' | 'never' | 'always';
+
+export const PreferencesEditor = ({
+  preferences,
+  onChange,
+  capabilities,
+}: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const nextAppearance = useCallback((theme?: Theme) => {
@@ -55,6 +69,75 @@ export const PreferencesEditor = ({ preferences, onChange }: Props) => {
     });
   };
 
+  const nextFit = useCallback((fit?: 'cover' | 'contain' | 'width' | 'height') => {
+    if (fit === FIT.contain) {
+      return FIT.cover;
+    } else if (fit === FIT.cover) {
+      return FIT.height;
+    } else if (fit === FIT.height) {
+      return FIT.width;
+    } else {
+      return FIT.contain;
+    }
+  }, []);
+
+  const handleFitChange = () => {
+    onChange({
+      ...preferences,
+      fit: nextFit(preferences.fit),
+    });
+  };
+
+  const nextSpread = useCallback((spread?: Spread): Spread => {
+    if (spread === 'auto') {
+      return 'never';
+    } else if (spread === 'never') {
+      return 'always';
+    } else {
+      return 'auto';
+    }
+  }, []);
+
+  const handleSpreadChange = () => {
+    onChange({
+      ...preferences,
+      spread: nextSpread(preferences.spread),
+    });
+  };
+
+  type ColumnCount = 'auto' | '1' | '2';
+
+  const nextColumnCount = useCallback((columnCount?: ColumnCount ): ColumnCount => {
+    if (columnCount === 'auto') {
+      return '1';
+    } else if (columnCount === '1') {
+      return '2';
+    } else {
+      return 'auto';
+    }
+  }, []);
+
+  const handleColumnCountChange = () => {
+    onChange({
+      ...preferences,
+      columnCount: nextColumnCount(preferences.columnCount),
+    });
+  };
+
+  const handleScrollChange = () => {
+    onChange({
+      ...preferences,
+      scroll: !preferences.scroll,
+    })
+  }
+
+  const handleScrollAxisChange = () => {
+    onChange({
+      ...preferences,
+      scrollAxis: preferences.scrollAxis === "vertical" ? "horizontal" : "vertical",
+    })
+  }
+
   return (
     <>
       <ReaderButton size={35} name="settings" onPress={() => setIsOpen(true)} />
@@ -65,73 +148,183 @@ export const PreferencesEditor = ({ preferences, onChange }: Props) => {
         onClose={() => setIsOpen(false)}
       >
         {/* Theme Setting */}
-        <View style={modalStyles.cardItem}>
-          <View style={styles.settingHeader}>
-            <Text style={styles.settingLabel}>Theme</Text>
-            <TouchableOpacity
-              style={styles.themeButton}
-              onPress={handleThemeChange}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.themeButtonText}>
-                {THEME_LABELS[preferences.theme || 'light']}
-              </Text>
-            </TouchableOpacity>
+        {capabilities?.theme && (
+          <View>
+            <View style={styles.settingHeader}>
+              <Text style={styles.settingLabel}>Theme</Text>
+              <TouchableOpacity
+                style={styles.themeButton}
+                onPress={handleThemeChange}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.themeButtonText}>
+                  {THEME_LABELS[preferences.theme || 'light']}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.settingDescription}>
+              Change the reading theme appearance
+            </Text>
           </View>
-          <Text style={styles.settingDescription}>
-            Change the reading theme appearance
-          </Text>
-        </View>
+        )}
 
         {/* Font Size Setting */}
-        <View style={modalStyles.cardItem}>
-          <View style={styles.settingHeader}>
-            <Text style={styles.settingLabel}>Font Size</Text>
-            <Text style={styles.settingValue}>
-              {preferences.fontSize?.toFixed(1) || '1.0'}
-            </Text>
+        {capabilities?.fontSize && (
+          <View>
+            <View style={styles.settingHeader}>
+              <Text style={styles.settingLabel}>Font Size</Text>
+              <Text style={styles.settingValue}>
+                {preferences.fontSize?.toFixed(1) || '1.0'}
+              </Text>
+            </View>
+            <Slider
+              style={styles.slider}
+              minimumValue={RANGES.fontSize[0]}
+              maximumValue={RANGES.fontSize[1]}
+              step={0.1}
+              value={preferences.fontSize}
+              onSlidingComplete={handleFontSizeChange}
+              minimumTrackTintColor={colors.primary}
+              maximumTrackTintColor={colors.border.secondary}
+              thumbTintColor={colors.primary}
+            />
+            <View style={styles.rangeLabels}>
+              <Text style={styles.rangeLabel}>Small</Text>
+              <Text style={styles.rangeLabel}>Large</Text>
+            </View>
           </View>
-          <Slider
-            style={styles.slider}
-            minimumValue={RANGES.fontSize[0]}
-            maximumValue={RANGES.fontSize[1]}
-            step={0.1}
-            value={preferences.fontSize}
-            onSlidingComplete={handleFontSizeChange}
-            minimumTrackTintColor={colors.primary}
-            maximumTrackTintColor={colors.border.secondary}
-            thumbTintColor={colors.primary}
-          />
-          <View style={styles.rangeLabels}>
-            <Text style={styles.rangeLabel}>Small</Text>
-            <Text style={styles.rangeLabel}>Large</Text>
-          </View>
-        </View>
+        )}
 
         {/* Page Margin Setting */}
-        <View style={[modalStyles.cardItem, modalStyles.cardItemLast]}>
-          <View style={styles.settingHeader}>
-            <Text style={styles.settingLabel}>Page Margin</Text>
-            <Text style={styles.settingValue}>
-              {preferences.pageMargins || 0}
+        {capabilities?.pageMargins && (
+          <View>
+            <View style={styles.settingHeader}>
+              <Text style={styles.settingLabel}>Page Margin</Text>
+              <Text style={styles.settingValue}>
+                {preferences.pageMargins || 0}
+              </Text>
+            </View>
+            <Slider
+              style={styles.slider}
+              minimumValue={RANGES.pageMargins[0]}
+              maximumValue={RANGES.pageMargins[1]}
+              step={1}
+              value={preferences.pageMargins}
+              onSlidingComplete={handlePageMarginsChange}
+              minimumTrackTintColor={colors.primary}
+              maximumTrackTintColor={colors.border.secondary}
+              thumbTintColor={colors.primary}
+            />
+            <View style={styles.rangeLabels}>
+              <Text style={styles.rangeLabel}>Narrow</Text>
+              <Text style={styles.rangeLabel}>Wide</Text>
+            </View>
+          </View>
+        )}
+
+        {/* Fit Setting */}
+        {capabilities?.fit && (
+          <View>
+            <View style={styles.settingHeader}>
+              <Text style={styles.settingLabel}>Fit</Text>
+              <TouchableOpacity
+                style={styles.themeButton}
+                onPress={handleFitChange}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.themeButtonText}>
+                  {preferences.fit?.toUpperCase()}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.settingDescription}>
+              Change the fit
             </Text>
           </View>
-          <Slider
-            style={styles.slider}
-            minimumValue={RANGES.pageMargins[0]}
-            maximumValue={RANGES.pageMargins[1]}
-            step={1}
-            value={preferences.pageMargins}
-            onSlidingComplete={handlePageMarginsChange}
-            minimumTrackTintColor={colors.primary}
-            maximumTrackTintColor={colors.border.secondary}
-            thumbTintColor={colors.primary}
-          />
-          <View style={styles.rangeLabels}>
-            <Text style={styles.rangeLabel}>Narrow</Text>
-            <Text style={styles.rangeLabel}>Wide</Text>
+        )}
+
+        {/* Spread Setting */}
+        {capabilities?.spread && (
+          <View>
+            <View style={styles.settingHeader}>
+              <Text style={styles.settingLabel}>Spread</Text>
+              <TouchableOpacity
+                style={styles.themeButton}
+                onPress={handleSpreadChange}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.themeButtonText}>
+                  {preferences.spread?.toUpperCase()}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.settingDescription}>
+              Change the spread
+            </Text>
           </View>
-        </View>
+        )}
+
+        {/* Column Count setting */}
+        {capabilities?.columnCount && (
+          <View>
+            <View style={styles.settingHeader}>
+              <Text style={styles.settingLabel}>Column Count</Text>
+              <TouchableOpacity
+                style={styles.themeButton}
+                onPress={handleColumnCountChange}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.themeButtonText}>
+                  {preferences.columnCount}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.settingDescription}>
+              Change the column count
+            </Text>
+          </View>
+        )}
+
+        {/* Scroll Setting */}
+        {capabilities?.scroll && (
+          <View>
+            <View style={styles.settingHeader}>
+              <Text style={styles.settingLabel}>Scroll</Text>
+              <TouchableOpacity
+                style={styles.themeButton}
+                onPress={handleScrollChange}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.themeButtonText}>
+                  {preferences.scroll ? "Scrolling" : "Paginated"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.settingDescription}>
+              Scroll or Paginate
+            </Text>
+          </View>
+        )}
+
+        {capabilities?.scrollAxis && (
+          <View>
+            <View style={styles.settingHeader}>
+              <Text style={styles.settingLabel}>Scroll Axis</Text>
+              <TouchableOpacity
+                style={styles.themeButton}
+                onPress={handleScrollAxisChange}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.themeButtonText}>
+                  {preferences.scrollAxis}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.settingDescription}>
+              Scroll or Paginate
+            </Text>
+          </View>
+        )}
       </BaseModal>
     </>
   );

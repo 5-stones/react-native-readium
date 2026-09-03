@@ -102,6 +102,11 @@ using namespace margelo::nitro::readium::views;
     swiftPart.setOnPublicationReady(newViewProps.onPublicationReady.value);
     newViewProps.onPublicationReady.isDirty = false;
   }
+  // onPreferencesChanged: optional
+  if (newViewProps.onPreferencesChanged.isDirty) {
+    swiftPart.setOnPreferencesChanged(newViewProps.onPreferencesChanged.value);
+    newViewProps.onPreferencesChanged.isDirty = false;
+  }
   // onDecorationActivated: optional
   if (newViewProps.onDecorationActivated.isDirty) {
     swiftPart.setOnDecorationActivated(newViewProps.onDecorationActivated.value);
