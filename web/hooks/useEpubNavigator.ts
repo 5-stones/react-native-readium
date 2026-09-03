@@ -1,14 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDeepCompareEffect } from 'use-deep-compare';
 
-import { EpubNavigator } from '@readium/navigator';
+import { EpubNavigator, EpubPreferences } from '@readium/navigator';
 import { Locator, Publication } from '@readium/shared';
 
 import type { ReadiumProps } from '../../src/components/ReadiumView';
+import type { Preferences } from '../../src/interfaces/Preferences'
 import {
+  assessCapabilities,
   createNavigatorListeners,
   createPositions,
   extractTableOfContents,
   fetchManifest,
+  mapEpubPreferences,
   normalizeMetadata,
   normalizePublicationURL,
   sanitizeInitialLocation,
@@ -17,7 +21,7 @@ import {
 interface RefProps
   extends Pick<
     ReadiumProps,
-    'file' | 'onLocationChange' | 'onPublicationReady'
+    'file' | 'onLocationChange' | 'onPublicationReady' | 'onPreferencesChanged' | 'preferences'
   > {
   container: HTMLElement | null;
   onPositionChange?: (position: number | null) => void;
@@ -25,12 +29,15 @@ interface RefProps
 
 export const useEpubNavigator = ({
   file,
+  preferences,
   onLocationChange,
   onPublicationReady,
+  onPreferencesChanged,
   container,
   onPositionChange,
 }: RefProps) => {
   const [navigator, setNavigator] = useState<EpubNavigator | null>(null);
+  const [navigatorId, setNavigatorId] = useState(0);
   const navigatorRef = useRef<EpubNavigator | null>(null);
   const [positions, setPositions] = useState<Locator[]>([]);
   const readingOrder = useRef<Locator[]>([]);
@@ -86,7 +93,6 @@ export const useEpubNavigator = ({
   );
 
   useEffect(() => {
-
     if (!isEpub || !container) return;
 
     const epubContainer = container;
@@ -136,8 +142,8 @@ export const useEpubNavigator = ({
 
       // 7. Initialize and load the navigator
       const configuration = {
-        preferences: { scroll: false },
-        defaults: {},
+        preferences,
+        defaults: { scroll: false },
       };
 
       const nav = new EpubNavigator(
@@ -162,11 +168,13 @@ export const useEpubNavigator = ({
           // @ts-ignore
           positions: positionsArray,
           metadata: metadata,
+          capabilities: assessCapabilities(nav, preferences),
         });
       }
 
       navigatorRef.current = nav;
       setNavigator(nav);
+      setNavigatorId((prev) => prev + 1)
     }
 
     initializeNavigator();
@@ -178,6 +186,19 @@ export const useEpubNavigator = ({
       setNavigator(null);
     };
   }, [isEpub, file.url, container]);
+
+  useDeepCompareEffect(() => {
+    if (!navigator || !preferences) return;
+
+    const mappedPreferences = mapEpubPreferences(preferences);
+    Promise.resolve(
+      navigator.submitPreferences(mappedPreferences as EpubPreferences)
+    ).then(() => {
+      onPreferencesChanged?.({
+        capabilities: assessCapabilities(navigator, mappedPreferences as Preferences),
+      });
+    });
+  }, [preferences, navigatorId]);
 
   if (!isEpub) {
     return { navigator: undefined, positions: [] };

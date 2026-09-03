@@ -82,8 +82,16 @@ namespace margelo::nitro::readium {
       jni::local_ref<jni::JBoolean> verticalText = this->getFieldValue(fieldVerticalText);
       static const auto fieldWordSpacing = clazz->getField<jni::JDouble>("wordSpacing");
       jni::local_ref<jni::JDouble> wordSpacing = this->getFieldValue(fieldWordSpacing);
-      static const auto fieldMerging = clazz->getField<jni::JBoolean>("merging");
-      jni::local_ref<jni::JBoolean> merging = this->getFieldValue(fieldMerging);
+      static const auto fieldFit = clazz->getField<jni::JString>("fit");
+      jni::local_ref<jni::JString> fit = this->getFieldValue(fieldFit);
+      static const auto fieldOffsetFirstPage = clazz->getField<jni::JBoolean>("offsetFirstPage");
+      jni::local_ref<jni::JBoolean> offsetFirstPage = this->getFieldValue(fieldOffsetFirstPage);
+      static const auto fieldPageSpacing = clazz->getField<jni::JDouble>("pageSpacing");
+      jni::local_ref<jni::JDouble> pageSpacing = this->getFieldValue(fieldPageSpacing);
+      static const auto fieldScrollAxis = clazz->getField<jni::JString>("scrollAxis");
+      jni::local_ref<jni::JString> scrollAxis = this->getFieldValue(fieldScrollAxis);
+      static const auto fieldVisibleScrollbar = clazz->getField<jni::JBoolean>("visibleScrollbar");
+      jni::local_ref<jni::JBoolean> visibleScrollbar = this->getFieldValue(fieldVisibleScrollbar);
       return Preferences(
         backgroundColor != nullptr ? std::make_optional(backgroundColor->toStdString()) : std::nullopt,
         columnCount != nullptr ? std::make_optional(columnCount->toStdString()) : std::nullopt,
@@ -110,7 +118,11 @@ namespace margelo::nitro::readium {
         typeScale != nullptr ? std::make_optional(typeScale->value()) : std::nullopt,
         verticalText != nullptr ? std::make_optional(static_cast<bool>(verticalText->value())) : std::nullopt,
         wordSpacing != nullptr ? std::make_optional(wordSpacing->value()) : std::nullopt,
-        merging != nullptr ? std::make_optional(static_cast<bool>(merging->value())) : std::nullopt
+        fit != nullptr ? std::make_optional(fit->toStdString()) : std::nullopt,
+        offsetFirstPage != nullptr ? std::make_optional(static_cast<bool>(offsetFirstPage->value())) : std::nullopt,
+        pageSpacing != nullptr ? std::make_optional(pageSpacing->value()) : std::nullopt,
+        scrollAxis != nullptr ? std::make_optional(scrollAxis->toStdString()) : std::nullopt,
+        visibleScrollbar != nullptr ? std::make_optional(static_cast<bool>(visibleScrollbar->value())) : std::nullopt
       );
     }
 
@@ -120,7 +132,7 @@ namespace margelo::nitro::readium {
      */
     [[maybe_unused]]
     static jni::local_ref<JPreferences::javaobject> fromCpp(const Preferences& value) {
-      using JSignature = JPreferences(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>);
+      using JSignature = JPreferences(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JBoolean>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -150,7 +162,11 @@ namespace margelo::nitro::readium {
         value.typeScale.has_value() ? jni::JDouble::valueOf(value.typeScale.value()) : nullptr,
         value.verticalText.has_value() ? jni::JBoolean::valueOf(value.verticalText.value()) : nullptr,
         value.wordSpacing.has_value() ? jni::JDouble::valueOf(value.wordSpacing.value()) : nullptr,
-        value.merging.has_value() ? jni::JBoolean::valueOf(value.merging.value()) : nullptr
+        value.fit.has_value() ? jni::make_jstring(value.fit.value()) : nullptr,
+        value.offsetFirstPage.has_value() ? jni::JBoolean::valueOf(value.offsetFirstPage.value()) : nullptr,
+        value.pageSpacing.has_value() ? jni::JDouble::valueOf(value.pageSpacing.value()) : nullptr,
+        value.scrollAxis.has_value() ? jni::make_jstring(value.scrollAxis.value()) : nullptr,
+        value.visibleScrollbar.has_value() ? jni::JBoolean::valueOf(value.visibleScrollbar.value()) : nullptr
       );
     }
   };

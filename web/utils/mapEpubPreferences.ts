@@ -1,7 +1,4 @@
-import { useRef } from 'react';
-import { useDeepCompareEffect } from 'use-deep-compare';
-
-import { EpubNavigator, EpubPreferences } from '@readium/navigator';
+import { EpubPreferences } from '@readium/navigator';
 
 /**
  * Theme color mappings
@@ -25,11 +22,10 @@ const THEME_COLORS = {
 // Matches Readium's default pageGutter of 20px
 const PAGE_GUTTER_BASE = 20;
 
-/**
- * Maps our app's preferences to the navigator's expected format
- */
-export function mapPreferencesToNavigator(preferences: any): EpubPreferences {
-  const mapped: any = { ...preferences };
+export function mapEpubPreferences(
+  preferences: Record<string, any>
+): EpubPreferences {
+  const mapped: Record<string, any> = { ...preferences };
 
   // Map pageMargins to pageGutter (the navigator uses pageGutter, not pageMargins)
   // Our app uses a multiplier (0.5-4.0), but Readium expects pixel values
@@ -56,24 +52,3 @@ export function mapPreferencesToNavigator(preferences: any): EpubPreferences {
 
   return mapped as EpubPreferences;
 }
-
-export const usePreferencesObserver = (
-  navigator?: EpubNavigator | null,
-  preferences?: any
-) => {
-  // Track navigator identity so we re-apply preferences when the navigator
-  // instance changes (not just when it goes from null → non-null).
-  const navigatorId = useRef(0);
-  const prevNavigator = useRef(navigator);
-  if (prevNavigator.current !== navigator) {
-    prevNavigator.current = navigator;
-    navigatorId.current += 1;
-  }
-
-  useDeepCompareEffect(() => {
-    if (navigator && preferences) {
-      const mappedPreferences = mapPreferencesToNavigator(preferences);
-      navigator?.submitPreferences(mappedPreferences);
-    }
-  }, [preferences, navigatorId.current]);
-};

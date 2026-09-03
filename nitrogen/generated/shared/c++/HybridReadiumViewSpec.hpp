@@ -25,6 +25,8 @@ namespace margelo::nitro::readium { struct SelectionAction; }
 namespace margelo::nitro::readium { struct Locator; }
 // Forward declaration of `PublicationReadyEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct PublicationReadyEvent; }
+// Forward declaration of `PreferencesChangedEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct PreferencesChangedEvent; }
 // Forward declaration of `DecorationActivatedEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct DecorationActivatedEvent; }
 // Forward declaration of `SelectionEvent` to properly resolve imports.
@@ -45,6 +47,7 @@ namespace margelo::nitro::readium { struct SearchOptions; }
 #include "Locator.hpp"
 #include <functional>
 #include "PublicationReadyEvent.hpp"
+#include "PreferencesChangedEvent.hpp"
 #include "DecorationActivatedEvent.hpp"
 #include "SelectionEvent.hpp"
 #include "SelectionActionEvent.hpp"
@@ -92,6 +95,8 @@ namespace margelo::nitro::readium {
       virtual void setOnLocationChange(const std::optional<std::function<void(const Locator& /* locator */)>>& onLocationChange) = 0;
       virtual std::optional<std::function<void(const PublicationReadyEvent& /* event */)>> getOnPublicationReady() = 0;
       virtual void setOnPublicationReady(const std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>& onPublicationReady) = 0;
+      virtual std::optional<std::function<void(const PreferencesChangedEvent& /* event */)>> getOnPreferencesChanged() = 0;
+      virtual void setOnPreferencesChanged(const std::optional<std::function<void(const PreferencesChangedEvent& /* event */)>>& onPreferencesChanged) = 0;
       virtual std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>> getOnDecorationActivated() = 0;
       virtual void setOnDecorationActivated(const std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>& onDecorationActivated) = 0;
       virtual std::optional<std::function<void(const SelectionEvent& /* event */)>> getOnSelectionChange() = 0;

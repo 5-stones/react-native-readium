@@ -18,7 +18,7 @@ public extension PublicationReadyEvent {
   /**
    * Create a new instance of `PublicationReadyEvent`.
    */
-  init(tableOfContents: [Link], positions: [Locator], metadata: PublicationMetadata) {
+  init(tableOfContents: [Link], positions: [Locator], metadata: PublicationMetadata, capabilities: Capabilities) {
     self.init({ () -> bridge.std__vector_Link_ in
       var __vector = bridge.create_std__vector_Link_(tableOfContents.count)
       for __item in tableOfContents {
@@ -31,7 +31,7 @@ public extension PublicationReadyEvent {
         __vector.push_back(__item)
       }
       return __vector
-    }(), metadata)
+    }(), metadata, capabilities)
   }
 
   @inline(__always)
@@ -47,5 +47,10 @@ public extension PublicationReadyEvent {
   @inline(__always)
   var metadata: PublicationMetadata {
     return self.__metadata
+  }
+  
+  @inline(__always)
+  var capabilities: Capabilities {
+    return self.__capabilities
   }
 }

@@ -27,7 +27,7 @@ func nitroPreferencesToEPUB(_ prefs: Preferences) -> EPUBPreferences {
 
   return EPUBPreferences(
     backgroundColor: bgColor,
-    columnCount: prefs.columnCount.flatMap { ColumnCount(rawValue: $0) },
+    columnCount: prefs.columnCount.flatMap { parseColumnCount($0) },
     fontFamily: prefs.fontFamily.map { FontFamily(rawValue: $0) },
     fontSize: prefs.fontSize,
     fontWeight: prefs.fontWeight,
@@ -51,6 +51,100 @@ func nitroPreferencesToEPUB(_ prefs: Preferences) -> EPUBPreferences {
     typeScale: prefs.typeScale,
     verticalText: prefs.verticalText,
     wordSpacing: prefs.wordSpacing
+  )
+}
+
+private func parseFit(_ fit: String) -> ReadiumNavigator.Fit? {
+  switch fit.lowercased() {
+  case "contain", "height":
+    return .page
+  case "cover", "width":
+    return .width
+  default:
+    return .auto
+  }
+}
+
+private func parseColumnCount(_ columnCount: String) -> ReadiumNavigator.ColumnCount? {
+  switch columnCount.lowercased() {
+  case "1", "one":
+    return .one
+  case "2", "two":
+    return .two
+  case "auto":
+    return .auto
+  default:
+    return nil
+  }
+}
+
+func nitroPreferencesToPDF(_ prefs: Preferences) -> PDFPreferences {
+  let isSepia = prefs.theme == "sepia"
+  let bgColor = prefs.backgroundColor.flatMap { ReadiumNavigator.Color(hex: $0) }
+    ?? (isSepia && prefs.backgroundColor == nil ? ReadiumNavigator.Color(hex: sepiaBackground) : nil)
+
+  return PDFPreferences(
+    backgroundColor: bgColor,
+    fit: prefs.fit.flatMap { parseFit($0) },
+    offsetFirstPage: prefs.offsetFirstPage,
+    pageSpacing: prefs.pageSpacing,
+    readingProgression: prefs.readingProgression.flatMap { ReadiumNavigator.ReadingProgression(rawValue: $0) },
+    scroll: prefs.scroll,
+    scrollAxis: prefs.scrollAxis.flatMap { ReadiumNavigator.Axis(rawValue: $0) },
+    spread: prefs.spread.flatMap { Spread(rawValue: $0) },
+    visibleScrollbar: prefs.visibleScrollbar,
+  )
+}
+
+@MainActor
+func readiumCapabilities(
+  for controller: ReaderViewController,
+  preferences: Preferences?
+) -> Capabilities {
+
+  let epubEditor = (controller.navigator as? EPUBNavigatorViewController).map {
+    $0.editor(of: preferences.map(nitroPreferencesToEPUB) ?? EPUBPreferences())
+  }
+
+  let pdfEditor = (controller.navigator as? PDFNavigatorViewController).map {
+    $0.editor(of: preferences.map(nitroPreferencesToPDF) ?? PDFPreferences())
+  }
+
+  return Capabilities(
+    backgroundColor: epubEditor?.backgroundColor.isEffective ?? pdfEditor?.backgroundColor.isEffective ?? false,
+    columnCount: epubEditor?.columnCount.isEffective ?? false,
+    fontFamily: epubEditor?.fontFamily.isEffective ?? false,
+    fontSize: epubEditor?.fontSize.isEffective ?? false,
+    fontWeight: epubEditor?.fontWeight.isEffective ?? false,
+    hyphens: epubEditor?.hyphens.isEffective ?? false,
+    imageFilter: epubEditor?.imageFilter.isEffective ?? false,
+    language: epubEditor?.language.isEffective ?? false,
+    letterSpacing: epubEditor?.letterSpacing.isEffective ?? false,
+    ligatures: epubEditor?.ligatures.isEffective ?? false,
+    lineHeight: epubEditor?.lineHeight.isEffective ?? false,
+    pageMargins: epubEditor?.pageMargins.isEffective ?? false,
+    paragraphIndent: epubEditor?.paragraphIndent.isEffective ?? false,
+    paragraphSpacing: epubEditor?.paragraphSpacing.isEffective ?? false,
+    publisherStyles: epubEditor?.publisherStyles.isEffective ?? false,
+    readingProgression: epubEditor?.readingProgression.isEffective ?? pdfEditor?.readingProgression.isEffective ?? false,
+    scroll: epubEditor?.scroll.isEffective ?? pdfEditor?.scroll.isEffective ?? false,
+    spread: epubEditor?.spread.isEffective ?? pdfEditor?.spread.isEffective ?? false,
+    textAlign: epubEditor?.textAlign.isEffective ?? false,
+    textColor: epubEditor?.textColor.isEffective ?? false,
+    textNormalization: epubEditor?.textNormalization.isEffective ?? false,
+    theme: epubEditor?.theme.isEffective ?? false,
+    typeScale: epubEditor?.typeScale.isEffective ?? false,
+    verticalText: epubEditor?.verticalText.isEffective ?? false,
+    wordSpacing: epubEditor?.wordSpacing.isEffective ?? false,
+    fit: pdfEditor?.fit.isEffective ?? false,
+    offsetFirstPage: pdfEditor?.offsetFirstPage.isEffective ?? false,
+    pageSpacing: pdfEditor?.pageSpacing.isEffective ?? false,
+    scrollAxis: pdfEditor?.scrollAxis.isEffective ?? false,
+    visibleScrollbar: pdfEditor?.visibleScrollbar.isEffective ?? false,
+    zoom: false,
+    search: controller.publication.findService(SearchService.self) != nil,
+    decorations: controller.navigator is DecorableNavigator,
+    selection: controller.navigator is SelectableNavigator
   )
 }
 
@@ -211,6 +305,7 @@ func readiumMetadataToNitro(_ meta: ReadiumShared.Metadata) -> PublicationMetada
     sortAs: meta.sortAs,
     subtitle: meta.subtitle,
     identifier: meta.identifier,
+    conformsTo: meta.conformsTo.map(\.uri),
     accessibility: nil,
     modified: meta.modified?.description,
     published: meta.published?.description,
@@ -229,7 +324,7 @@ func readiumMetadataToNitro(_ meta: ReadiumShared.Metadata) -> PublicationMetada
     publisher: contributors(meta.publishers),
     imprint: contributors(meta.imprints),
     subject: subjects(meta.subjects),
-    layout: nil,
+    layout: meta.layout?.rawValue,
     readingProgression: meta.readingProgression.rawValue,
     description: meta.description,
     duration: meta.duration,

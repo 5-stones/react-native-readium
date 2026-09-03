@@ -79,6 +79,20 @@ abstract class HybridReadiumViewSpec: HybridView() {
       onPublicationReady = value?.let { it }
     }
   
+  abstract var onPreferencesChanged: ((event: PreferencesChangedEvent) -> Unit)?
+  
+  private var onPreferencesChanged_cxx: Func_void_PreferencesChangedEvent?
+    @Keep
+    @DoNotStrip
+    get() {
+      return onPreferencesChanged?.let { Func_void_PreferencesChangedEvent_java(it) }
+    }
+    @Keep
+    @DoNotStrip
+    set(value) {
+      onPreferencesChanged = value?.let { it }
+    }
+  
   abstract var onDecorationActivated: ((event: DecorationActivatedEvent) -> Unit)?
   
   private var onDecorationActivated_cxx: Func_void_DecorationActivatedEvent?

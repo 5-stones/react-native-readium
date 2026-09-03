@@ -25,7 +25,10 @@ data class PublicationReadyEvent(
   val positions: Array<Locator>,
   @DoNotStrip
   @Keep
-  val metadata: PublicationMetadata
+  val metadata: PublicationMetadata,
+  @DoNotStrip
+  @Keep
+  val capabilities: Capabilities
 ) {
   /* primary constructor */
 
@@ -37,8 +40,8 @@ data class PublicationReadyEvent(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(tableOfContents: Array<Link>, positions: Array<Locator>, metadata: PublicationMetadata): PublicationReadyEvent {
-      return PublicationReadyEvent(tableOfContents, positions, metadata)
+    private fun fromCpp(tableOfContents: Array<Link>, positions: Array<Locator>, metadata: PublicationMetadata, capabilities: Capabilities): PublicationReadyEvent {
+      return PublicationReadyEvent(tableOfContents, positions, metadata, capabilities)
     }
   }
 }

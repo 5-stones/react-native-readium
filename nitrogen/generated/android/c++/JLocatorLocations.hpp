@@ -17,11 +17,11 @@ namespace margelo::nitro::readium {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "LocatorLocations" and the Kotlin data class "LocatorLocations".
+   * The C++ JNI bridge between the C++ struct "LocatorLocations" and the the Kotlin data class "LocatorLocations".
    */
   struct JLocatorLocations final: public jni::JavaClass<JLocatorLocations> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/LocatorLocations;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/LocatorLocations;";
 
   public:
     /**

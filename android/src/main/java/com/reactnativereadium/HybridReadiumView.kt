@@ -9,17 +9,20 @@ import androidx.fragment.app.FragmentActivity
 import com.reactnativereadium.ReaderHostView
 import com.reactnativereadium.reader.BaseReaderFragment
 import com.reactnativereadium.reader.EpubReaderFragment
+import com.reactnativereadium.reader.PdfReaderFragment
 import com.reactnativereadium.reader.ReaderService
 import com.reactnativereadium.reader.ReaderViewModel
 import com.reactnativereadium.reader.SearchPageData
 import com.reactnativereadium.reader.SelectionAction as FragmentSelectionAction
 import com.reactnativereadium.utils.nitroPreferencesToEpub
+import com.reactnativereadium.utils.nitroPreferencesToPdf
 import com.reactnativereadium.utils.nitroLocatorToReadium
 import com.reactnativereadium.utils.nitroDecorationToReadium
 import com.reactnativereadium.utils.readiumLocatorToNitro
 import com.reactnativereadium.utils.readiumLinkToNitro
 import com.reactnativereadium.utils.flattenReadiumLinks
 import com.reactnativereadium.utils.readiumDecorationToNitro
+import com.reactnativereadium.utils.readiumCapabilities
 import com.reactnativereadium.utils.readiumMetadataToNitro
 import com.reactnativereadium.utils.nitroSearchOptionsToReadium
 import com.reactnativereadium.utils.nitroSearchResultFromReadium
@@ -106,6 +109,7 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
 
   override var onLocationChange: ((locator: Locator) -> Unit)? = null
   override var onPublicationReady: ((event: PublicationReadyEvent) -> Unit)? = null
+  override var onPreferencesChanged: ((event: PreferencesChangedEvent) -> Unit)? = null
   override var onDecorationActivated: ((event: DecorationActivatedEvent) -> Unit)? = null
   override var onSelectionChange: ((event: SelectionEvent) -> Unit)? = null
   override var onSelectionAction: ((event: SelectionActionEvent) -> Unit)? = null
@@ -123,8 +127,24 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
 
   private fun updatePreferences() {
     val prefs = preferences ?: return
-    val frag = fragment as? EpubReaderFragment ?: return
-    frag.updatePreferences(nitroPreferencesToEpub(prefs))
+    val currentFragment = fragment ?: return
+    val pub = runCatching { currentFragment.publication }.getOrNull() ?: return
+
+    when (currentFragment) {
+      is EpubReaderFragment ->
+        currentFragment.updatePreferences(nitroPreferencesToEpub(prefs))
+      is PdfReaderFragment ->
+        currentFragment.updatePreferences(nitroPreferencesToPdf(prefs))
+    }
+
+    onPreferencesChanged?.invoke(PreferencesChangedEvent(
+      capabilities = readiumCapabilities(
+        pub,
+        currentFragment.navigator,
+        prefs
+      )
+    ))
+
   }
 
   // MARK: - Decorations
@@ -351,7 +371,12 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
           onPublicationReady?.invoke(PublicationReadyEvent(
             tableOfContents = flattenReadiumLinks(event.tableOfContents).toTypedArray(),
             positions = event.positions.map { readiumLocatorToNitro(it) }.toTypedArray(),
-            metadata = readiumMetadataToNitro(event.metadata)
+            metadata = readiumMetadataToNitro(event.metadata),
+            capabilities = readiumCapabilities(
+              event.publication,
+              frag.navigator,
+              preferences
+            )
           ))
         }
         is ReaderViewModel.Event.DecorationActivated -> {

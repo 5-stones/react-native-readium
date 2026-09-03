@@ -18,7 +18,7 @@ public extension PublicationMetadata {
   /**
    * Create a new instance of `PublicationMetadata`.
    */
-  init(title: String, sortAs: String?, subtitle: String?, identifier: String?, accessibility: Accessibility?, modified: String?, published: String?, language: [String]?, author: [Contributor]?, translator: [Contributor]?, editor: [Contributor]?, artist: [Contributor]?, illustrator: [Contributor]?, letterer: [Contributor]?, penciler: [Contributor]?, colorist: [Contributor]?, inker: [Contributor]?, narrator: [Contributor]?, contributor: [Contributor]?, publisher: [Contributor]?, imprint: [Contributor]?, subject: [Subject]?, layout: String?, readingProgression: String?, description: String?, duration: Double?, numberOfPages: Double?, belongsTo: BelongsTo?) {
+  init(title: String, sortAs: String?, subtitle: String?, identifier: String?, conformsTo: [String]?, accessibility: Accessibility?, modified: String?, published: String?, language: [String]?, author: [Contributor]?, translator: [Contributor]?, editor: [Contributor]?, artist: [Contributor]?, illustrator: [Contributor]?, letterer: [Contributor]?, penciler: [Contributor]?, colorist: [Contributor]?, inker: [Contributor]?, narrator: [Contributor]?, contributor: [Contributor]?, publisher: [Contributor]?, imprint: [Contributor]?, subject: [Subject]?, layout: String?, readingProgression: String?, description: String?, duration: Double?, numberOfPages: Double?, belongsTo: BelongsTo?) {
     self.init(std.string(title), { () -> bridge.std__optional_std__string_ in
       if let __unwrappedValue = sortAs {
         return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
@@ -34,6 +34,18 @@ public extension PublicationMetadata {
     }(), { () -> bridge.std__optional_std__string_ in
       if let __unwrappedValue = identifier {
         return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__vector_std__string__ in
+      if let __unwrappedValue = conformsTo {
+        return bridge.create_std__optional_std__vector_std__string__({ () -> bridge.std__vector_std__string_ in
+          var __vector = bridge.create_std__vector_std__string_(__unwrappedValue.count)
+          for __item in __unwrappedValue {
+            __vector.push_back(std.string(__item))
+          }
+          return __vector
+        }())
       } else {
         return .init()
       }
@@ -309,6 +321,18 @@ public extension PublicationMetadata {
       if bridge.has_value_std__optional_std__string_(self.__identifier) {
         let __unwrapped = bridge.get_std__optional_std__string_(self.__identifier)
         return String(__unwrapped)
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var conformsTo: [String]? {
+    return { () -> [String]? in
+      if bridge.has_value_std__optional_std__vector_std__string__(self.__conformsTo) {
+        let __unwrapped = bridge.get_std__optional_std__vector_std__string__(self.__conformsTo)
+        return __unwrapped.map({ __item in String(__item) })
       } else {
         return nil
       }
