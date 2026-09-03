@@ -94,7 +94,19 @@ data class Preferences(
   val wordSpacing: Double?,
   @DoNotStrip
   @Keep
-  val merging: Boolean?
+  val fit: String?,
+  @DoNotStrip
+  @Keep
+  val offsetFirstPage: Boolean?,
+  @DoNotStrip
+  @Keep
+  val pageSpacing: Double?,
+  @DoNotStrip
+  @Keep
+  val scrollAxis: String?,
+  @DoNotStrip
+  @Keep
+  val visibleScrollbar: Boolean?
 ) {
   /* primary constructor */
 
@@ -106,8 +118,8 @@ data class Preferences(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(backgroundColor: String?, columnCount: String?, fontFamily: String?, fontSize: Double?, fontWeight: Double?, hyphens: Boolean?, imageFilter: String?, language: String?, letterSpacing: Double?, ligatures: Boolean?, lineHeight: Double?, pageMargins: Double?, paragraphIndent: Double?, paragraphSpacing: Double?, publisherStyles: Boolean?, readingProgression: String?, scroll: Boolean?, spread: String?, textAlign: String?, textColor: String?, textNormalization: Boolean?, theme: String?, typeScale: Double?, verticalText: Boolean?, wordSpacing: Double?, merging: Boolean?): Preferences {
-      return Preferences(backgroundColor, columnCount, fontFamily, fontSize, fontWeight, hyphens, imageFilter, language, letterSpacing, ligatures, lineHeight, pageMargins, paragraphIndent, paragraphSpacing, publisherStyles, readingProgression, scroll, spread, textAlign, textColor, textNormalization, theme, typeScale, verticalText, wordSpacing, merging)
+    private fun fromCpp(backgroundColor: String?, columnCount: String?, fontFamily: String?, fontSize: Double?, fontWeight: Double?, hyphens: Boolean?, imageFilter: String?, language: String?, letterSpacing: Double?, ligatures: Boolean?, lineHeight: Double?, pageMargins: Double?, paragraphIndent: Double?, paragraphSpacing: Double?, publisherStyles: Boolean?, readingProgression: String?, scroll: Boolean?, spread: String?, textAlign: String?, textColor: String?, textNormalization: Boolean?, theme: String?, typeScale: Double?, verticalText: Boolean?, wordSpacing: Double?, fit: String?, offsetFirstPage: Boolean?, pageSpacing: Double?, scrollAxis: String?, visibleScrollbar: Boolean?): Preferences {
+      return Preferences(backgroundColor, columnCount, fontFamily, fontSize, fontWeight, hyphens, imageFilter, language, letterSpacing, ligatures, lineHeight, pageMargins, paragraphIndent, paragraphSpacing, publisherStyles, readingProgression, scroll, spread, textAlign, textColor, textNormalization, theme, typeScale, verticalText, wordSpacing, fit, offsetFirstPage, pageSpacing, scrollAxis, visibleScrollbar)
     }
   }
 }

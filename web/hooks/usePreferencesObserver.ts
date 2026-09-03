@@ -1,7 +1,14 @@
 import { useRef } from 'react';
 import { useDeepCompareEffect } from 'use-deep-compare';
 
-import { EpubNavigator, EpubPreferences } from '@readium/navigator';
+import type { EpubNavigator, EpubPreferences } from '@readium/navigator';
+
+import { PdfNavigator } from '../classes';
+import { assessCapabilities } from '../utils/capabilities';
+import type {
+  Preferences,
+  PreferencesChangedEvent,
+} from '../../src/interfaces';
 
 /**
  * Theme color mappings
@@ -26,10 +33,10 @@ const THEME_COLORS = {
 const PAGE_GUTTER_BASE = 20;
 
 /**
- * Maps our app's preferences to the navigator's expected format
+ * Maps EPUB preferences into Readium format
  */
-export function mapPreferencesToNavigator(preferences: any): EpubPreferences {
-  const mapped: any = { ...preferences };
+export function mapEpubPreferences(preferences: Record<string, any>): EpubPreferences {
+  const mapped: Record<string, any> = { ...preferences };
 
   // Map pageMargins to pageGutter (the navigator uses pageGutter, not pageMargins)
   // Our app uses a multiplier (0.5-4.0), but Readium expects pixel values
@@ -57,23 +64,43 @@ export function mapPreferencesToNavigator(preferences: any): EpubPreferences {
   return mapped as EpubPreferences;
 }
 
+/**
+ * Maps PDF preferences into Readium format. Currently no preferences supported so no mapping.
+ */
+export function mapPdfPreferences(preferences: Record<string, any>): Preferences {
+  return preferences;
+}
+
 export const usePreferencesObserver = (
-  navigator?: EpubNavigator | null,
-  preferences?: any
+  epubNavigator?: EpubNavigator | null,
+  pdfNavigator?: PdfNavigator | null,
+  preferences?: Record<string, any>,
+  onPreferencesChanged?: (event: PreferencesChangedEvent) => void,
 ) => {
   // Track navigator identity so we re-apply preferences when the navigator
   // instance changes (not just when it goes from null → non-null).
   const navigatorId = useRef(0);
   const prevNavigator = useRef(navigator);
+
   if (prevNavigator.current !== navigator) {
     prevNavigator.current = navigator;
     navigatorId.current += 1;
   }
 
   useDeepCompareEffect(() => {
-    if (navigator && preferences) {
-      const mappedPreferences = mapPreferencesToNavigator(preferences);
-      navigator?.submitPreferences(mappedPreferences);
+    if (!preferences) return;
+    if (pdfNavigator) {
+      const mappedPreferences = mapPdfPreferences(preferences)
+      Promise.resolve(pdfNavigator.submitPreferences(mappedPreferences)).then(() => {
+        onPreferencesChanged?.({ capabilities: assessCapabilities(pdfNavigator, mappedPreferences)});
+      });
+      return;
+    }
+    if (epubNavigator) {
+      const mappedPreferences = mapEpubPreferences(preferences)
+      Promise.resolve(epubNavigator.submitPreferences(mappedPreferences)).then(() => {
+        onPreferencesChanged?.({ capabilities: assessCapabilities(epubNavigator, mappedPreferences as Preferences)});
+      });
     }
   }, [preferences, navigatorId.current]);
 };

@@ -39,8 +39,8 @@ namespace margelo::nitro::readium { struct BelongsTo; }
 
 #include <string>
 #include <optional>
-#include "Accessibility.hpp"
 #include <vector>
+#include "Accessibility.hpp"
 #include "Contributor.hpp"
 #include "Subject.hpp"
 #include "BelongsTo.hpp"
@@ -56,6 +56,7 @@ namespace margelo::nitro::readium {
     std::optional<std::string> sortAs     SWIFT_PRIVATE;
     std::optional<std::string> subtitle     SWIFT_PRIVATE;
     std::optional<std::string> identifier     SWIFT_PRIVATE;
+    std::optional<std::vector<std::string>> conformsTo     SWIFT_PRIVATE;
     std::optional<Accessibility> accessibility     SWIFT_PRIVATE;
     std::optional<std::string> modified     SWIFT_PRIVATE;
     std::optional<std::string> published     SWIFT_PRIVATE;
@@ -83,7 +84,7 @@ namespace margelo::nitro::readium {
 
   public:
     PublicationMetadata() = default;
-    explicit PublicationMetadata(std::string title, std::optional<std::string> sortAs, std::optional<std::string> subtitle, std::optional<std::string> identifier, std::optional<Accessibility> accessibility, std::optional<std::string> modified, std::optional<std::string> published, std::optional<std::vector<std::string>> language, std::optional<std::vector<Contributor>> author, std::optional<std::vector<Contributor>> translator, std::optional<std::vector<Contributor>> editor, std::optional<std::vector<Contributor>> artist, std::optional<std::vector<Contributor>> illustrator, std::optional<std::vector<Contributor>> letterer, std::optional<std::vector<Contributor>> penciler, std::optional<std::vector<Contributor>> colorist, std::optional<std::vector<Contributor>> inker, std::optional<std::vector<Contributor>> narrator, std::optional<std::vector<Contributor>> contributor, std::optional<std::vector<Contributor>> publisher, std::optional<std::vector<Contributor>> imprint, std::optional<std::vector<Subject>> subject, std::optional<std::string> layout, std::optional<std::string> readingProgression, std::optional<std::string> description, std::optional<double> duration, std::optional<double> numberOfPages, std::optional<BelongsTo> belongsTo): title(title), sortAs(sortAs), subtitle(subtitle), identifier(identifier), accessibility(accessibility), modified(modified), published(published), language(language), author(author), translator(translator), editor(editor), artist(artist), illustrator(illustrator), letterer(letterer), penciler(penciler), colorist(colorist), inker(inker), narrator(narrator), contributor(contributor), publisher(publisher), imprint(imprint), subject(subject), layout(layout), readingProgression(readingProgression), description(description), duration(duration), numberOfPages(numberOfPages), belongsTo(belongsTo) {}
+    explicit PublicationMetadata(std::string title, std::optional<std::string> sortAs, std::optional<std::string> subtitle, std::optional<std::string> identifier, std::optional<std::vector<std::string>> conformsTo, std::optional<Accessibility> accessibility, std::optional<std::string> modified, std::optional<std::string> published, std::optional<std::vector<std::string>> language, std::optional<std::vector<Contributor>> author, std::optional<std::vector<Contributor>> translator, std::optional<std::vector<Contributor>> editor, std::optional<std::vector<Contributor>> artist, std::optional<std::vector<Contributor>> illustrator, std::optional<std::vector<Contributor>> letterer, std::optional<std::vector<Contributor>> penciler, std::optional<std::vector<Contributor>> colorist, std::optional<std::vector<Contributor>> inker, std::optional<std::vector<Contributor>> narrator, std::optional<std::vector<Contributor>> contributor, std::optional<std::vector<Contributor>> publisher, std::optional<std::vector<Contributor>> imprint, std::optional<std::vector<Subject>> subject, std::optional<std::string> layout, std::optional<std::string> readingProgression, std::optional<std::string> description, std::optional<double> duration, std::optional<double> numberOfPages, std::optional<BelongsTo> belongsTo): title(title), sortAs(sortAs), subtitle(subtitle), identifier(identifier), conformsTo(conformsTo), accessibility(accessibility), modified(modified), published(published), language(language), author(author), translator(translator), editor(editor), artist(artist), illustrator(illustrator), letterer(letterer), penciler(penciler), colorist(colorist), inker(inker), narrator(narrator), contributor(contributor), publisher(publisher), imprint(imprint), subject(subject), layout(layout), readingProgression(readingProgression), description(description), duration(duration), numberOfPages(numberOfPages), belongsTo(belongsTo) {}
 
   public:
     friend bool operator==(const PublicationMetadata& lhs, const PublicationMetadata& rhs) = default;
@@ -103,6 +104,7 @@ namespace margelo::nitro {
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "sortAs"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "subtitle"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "identifier"))),
+        JSIConverter<std::optional<std::vector<std::string>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "conformsTo"))),
         JSIConverter<std::optional<margelo::nitro::readium::Accessibility>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "accessibility"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "modified"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "published"))),
@@ -135,6 +137,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "sortAs"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.sortAs));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "subtitle"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.subtitle));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "identifier"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.identifier));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "conformsTo"), JSIConverter<std::optional<std::vector<std::string>>>::toJSI(runtime, arg.conformsTo));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "accessibility"), JSIConverter<std::optional<margelo::nitro::readium::Accessibility>>::toJSI(runtime, arg.accessibility));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "modified"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.modified));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "published"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.published));
@@ -173,6 +176,7 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "sortAs")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "subtitle")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "identifier")))) return false;
+      if (!JSIConverter<std::optional<std::vector<std::string>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "conformsTo")))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::readium::Accessibility>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "accessibility")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "modified")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "published")))) return false;

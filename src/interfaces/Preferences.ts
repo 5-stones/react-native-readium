@@ -13,6 +13,8 @@ export interface Preferences
     | 'spread'
     | 'textAlign'
     | 'theme'
+    | 'fit'
+    | 'scrollAxis'
   > {
   columnCount?: 'auto' | '1' | '2';
   fontFamily?:
@@ -29,4 +31,8 @@ export interface Preferences
   spread?: 'auto' | 'never' | 'always';
   textAlign?: 'center' | 'justify' | 'start' | 'end' | 'left' | 'right';
   theme?: 'light' | 'dark' | 'sepia';
+
+  //pdf preferences
+  fit?: 'cover' | 'contain' | 'width' | 'height';
+  scrollAxis?: 'horizontal' | 'vertical';
 }

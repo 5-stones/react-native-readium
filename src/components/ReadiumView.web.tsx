@@ -9,7 +9,10 @@ import {
   useDecorationsObserver,
 } from '../../web/hooks';
 import { convertToNavigatorLocator } from '../../web/utils/locationNormalizer';
-import type { ReadiumProps as BaseReadiumProps, ReadiumViewRef as BaseReadiumViewRef } from './ReadiumView.types';
+import type {
+  ReadiumProps as BaseReadiumProps,
+  ReadiumViewRef as BaseReadiumViewRef,
+} from './ReadiumView.types';
 
 export type ReadiumProps = BaseReadiumProps & {
   height?: number;
@@ -31,6 +34,7 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
       decorations,
       onLocationChange,
       onPublicationReady,
+      onPreferencesChanged,
       onDecorationActivated,
       onZoomChange,
       style = {},
@@ -51,6 +55,7 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
       file,
       onLocationChange,
       onPublicationReady,
+      onPreferencesChanged,
       container,
       onPositionChange: setCurrentPosition,
     });
@@ -60,6 +65,7 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
       container,
       onLocationChange,
       onPublicationReady,
+      onPreferencesChanged,
       onZoomChange,
       initialPage: 1,
     });
@@ -109,8 +115,6 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
         zoomOut: () => pdfNavigator?.zoomOut(),
         setZoom: (scale) => pdfNavigator?.setZoom(scale),
         resetZoom: () => pdfNavigator?.resetZoom(),
-        fitWidth: () => pdfNavigator?.fitWidth(),
-        fitHeight: () => pdfNavigator?.fitHeight(),
         /** @deprecated Use goForward() */
         nextPage: () => {
           navigator?.goForward(true, () => {});
@@ -123,7 +127,7 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
       [navigator, pdfNavigator]
     );
 
-    usePreferencesObserver(epubNavigator, preferences);
+    usePreferencesObserver(epubNavigator, pdfNavigator, preferences, onPreferencesChanged);
     useDecorationsObserver(epubNavigator, decorationsRecord, onDecorationActivated);
 
     // Generate position label text

@@ -30,6 +30,14 @@ namespace margelo::nitro::readium::bridge::swift {
     };
   }
   
+  // pragma MARK: std::function<void(const PreferencesChangedEvent& /* event */)>
+  Func_void_PreferencesChangedEvent create_Func_void_PreferencesChangedEvent(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroReadium::Func_void_PreferencesChangedEvent::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const PreferencesChangedEvent& event) mutable -> void {
+      swiftClosure.call(event);
+    };
+  }
+  
   // pragma MARK: std::function<void(const DecorationActivatedEvent& /* event */)>
   Func_void_DecorationActivatedEvent create_Func_void_DecorationActivatedEvent(void* NON_NULL swiftClosureWrapper) noexcept {
     auto swiftClosure = NitroReadium::Func_void_DecorationActivatedEvent::fromUnsafe(swiftClosureWrapper);

@@ -14,6 +14,8 @@ namespace margelo::nitro::readium { struct AccessibilityCertification; }
 namespace margelo::nitro::readium { struct Accessibility; }
 // Forward declaration of `BelongsTo` to properly resolve imports.
 namespace margelo::nitro::readium { struct BelongsTo; }
+// Forward declaration of `Capabilities` to properly resolve imports.
+namespace margelo::nitro::readium { struct Capabilities; }
 // Forward declaration of `Contributor` to properly resolve imports.
 namespace margelo::nitro::readium { struct Contributor; }
 // Forward declaration of `DecorationActivatedEvent` to properly resolve imports.
@@ -36,6 +38,8 @@ namespace margelo::nitro::readium { struct LocatorText; }
 namespace margelo::nitro::readium { struct Locator; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::readium { struct Point; }
+// Forward declaration of `PreferencesChangedEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct PreferencesChangedEvent; }
 // Forward declaration of `Preferences` to properly resolve imports.
 namespace margelo::nitro::readium { struct Preferences; }
 // Forward declaration of `PublicationMetadata` to properly resolve imports.
@@ -67,6 +71,7 @@ namespace margelo::nitro::readium { struct Subject; }
 #include "Accessibility.hpp"
 #include "AccessibilityCertification.hpp"
 #include "BelongsTo.hpp"
+#include "Capabilities.hpp"
 #include "Contributor.hpp"
 #include "Decoration.hpp"
 #include "DecorationActivatedEvent.hpp"
@@ -79,6 +84,7 @@ namespace margelo::nitro::readium { struct Subject; }
 #include "LocatorText.hpp"
 #include "Point.hpp"
 #include "Preferences.hpp"
+#include "PreferencesChangedEvent.hpp"
 #include "PublicationMetadata.hpp"
 #include "PublicationReadyEvent.hpp"
 #include "ReadiumFile.hpp"

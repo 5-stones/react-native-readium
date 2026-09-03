@@ -10,6 +10,7 @@
     "selectionActions": true,
     "onLocationChange": true,
     "onPublicationReady": true,
+    "onPreferencesChanged": true,
     "onDecorationActivated": true,
     "onSelectionChange": true,
     "onSelectionAction": true,

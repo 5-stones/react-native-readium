@@ -13,6 +13,7 @@ import type {
   SearchOptions,
   ReadiumFile,
   ZoomEvent,
+  Capabilities,
 } from 'react-native-readium';
 
 import { ReaderButton } from './ReaderButton';
@@ -52,12 +53,11 @@ export interface ReaderHandle {
   isSearchSupported: boolean;
   hasMoreSearchResults: boolean;
   file: ReadiumFile | undefined;
+  capabilities: Capabilities | undefined;
   zoom: ZoomEvent | undefined;
   zoomIn: () => void;
   zoomOut: () => void;
   resetZoom: () => void;
-  fitWidth: () => void;
-  fitHeight: () => void;
 }
 
 interface ReaderProps extends BaseReaderProps {
@@ -89,11 +89,13 @@ export const Reader: React.FC<ReaderProps> = ({
 
   const {
     toc,
+    capabilities,
     location,
     preferences,
     setPreferences,
     handleLocationChange,
     handlePublicationReady: baseHandlePublicationReady,
+    handlePreferencesChanged,
   } = useReaderState({ initialPreferences, onPreferencesChange });
 
   const [zoom, setZoom] = useState<ZoomEvent | undefined>(undefined);
@@ -103,8 +105,6 @@ export const Reader: React.FC<ReaderProps> = ({
   const zoomIn = useCallback(() => ref.current?.zoomIn(), []);
   const zoomOut = useCallback(() => ref.current?.zoomOut(), []);
   const resetZoom = useCallback(() => ref.current?.resetZoom(), []);
-  const fitWidth = useCallback(() => ref.current?.fitWidth(), []);
-  const fitHeight = useCallback(() => ref.current?.fitHeight(), []);
 
   const {
     results: searchResults,
@@ -180,12 +180,11 @@ export const Reader: React.FC<ReaderProps> = ({
         isSearchSupported,
         hasMoreSearchResults,
         file,
+        capabilities,
         zoom,
         zoomIn,
         zoomOut,
         resetZoom,
-        fitWidth,
-        fitHeight,
       });
     }
   }, [
@@ -207,12 +206,11 @@ export const Reader: React.FC<ReaderProps> = ({
     search,
     loadMoreSearchResults,
     clearSearch,
+    capabilities,
     zoom,
     zoomIn,
     zoomOut,
     resetZoom,
-    fitWidth,
-    fitHeight,
   ]);
 
   if (error) {
@@ -247,6 +245,7 @@ export const Reader: React.FC<ReaderProps> = ({
             ref={ref}
             file={file}
             preferences={preferences}
+            onPreferencesChanged={handlePreferencesChanged}
             decorations={decorations}
             selectionActions={selectionActions}
             onLocationChange={handleLocationChange}

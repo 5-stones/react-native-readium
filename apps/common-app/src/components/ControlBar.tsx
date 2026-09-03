@@ -8,13 +8,13 @@ import {
 } from 'react-native';
 import type {
   ReadiumProps,
-  ReadiumFile,
   Link,
   Decoration,
   Locator,
   SearchResult,
   SearchOptions,
   ZoomEvent,
+  Capabilities,
 } from 'react-native-readium';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -43,13 +43,11 @@ interface ControlBarProps {
   isLoadingMoreResults: boolean;
   isSearchSupported: boolean;
   hasMoreSearchResults: boolean;
-  file: ReadiumFile | undefined;
+  capabilities: Capabilities | undefined;
   zoom: ZoomEvent | undefined;
   onZoomIn: () => void;
   onZoomOut: () => void;
   onResetZoom: () => void;
-  onFitWidth: () => void;
-  onFitHeight: () => void;
 }
 
 export const ControlBar: React.FC<ControlBarProps> = ({
@@ -71,17 +69,17 @@ export const ControlBar: React.FC<ControlBarProps> = ({
   isLoadingMoreResults,
   isSearchSupported,
   hasMoreSearchResults,
-  file,
+  capabilities,
   zoom,
   onZoomIn,
   onZoomOut,
   onResetZoom,
-  onFitWidth,
-  onFitHeight,
 }) => {
-  const isPdf = file?.url?.toLowerCase().split('?')[0].endsWith('.pdf');
   const insets = useSafeAreaInsets();
-  const showZoom = Platform.OS === 'web' && isPdf && !!zoom;
+
+  const canZoom = capabilities?.zoom;
+
+  const showZoom = Platform.OS === 'web' && canZoom && !!zoom;
   const canZoomIn = !!zoom && zoom.scale < zoom.max - 0.001;
   const canZoomOut = !!zoom && zoom.scale > zoom.min + 0.001;
 
@@ -96,70 +94,80 @@ export const ControlBar: React.FC<ControlBarProps> = ({
       </TouchableOpacity>
 
       <View style={styles.controls}>
-        {showZoom && (
-          <View style={styles.zoomGroup}>
-            <TouchableOpacity
-              style={styles.iconButton}
-              onPress={onZoomOut}
-              disabled={!canZoomOut}
-              accessibilityLabel="Zoom out"
-            >
-              <MaterialIcons
-                name="zoom-out"
-                size={22}
-                color={canZoomOut ? '#333' : '#CCC'}
-              />
-            </TouchableOpacity>
+        <View style={styles.zoomGroup}>
+          {showZoom && (
+            <>
+              <TouchableOpacity
+                style={styles.iconButton}
+                onPress={onZoomOut}
+                disabled={!canZoomOut}
+                accessibilityLabel="Zoom out"
+              >
+                <MaterialIcons
+                  name="zoom-out"
+                  size={22}
+                  color={canZoomOut ? '#333' : '#CCC'}
+                />
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={onResetZoom}
-              disabled={!canZoomOut}
-              accessibilityLabel="Reset zoom to fit"
-            >
-              <Text style={styles.zoomLabel}>
-                {Math.round((zoom?.scale ?? 1) * 100)}%
-              </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={onResetZoom}
+                disabled={!canZoomOut}
+                accessibilityLabel="Reset zoom to fit"
+              >
+                <Text style={styles.zoomLabel}>
+                  {Math.round((zoom?.scale ?? 1) * 100)}%
+                </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.iconButton}
-              onPress={onZoomIn}
-              disabled={!canZoomIn}
-              accessibilityLabel="Zoom in"
-            >
-              <MaterialIcons
-                name="zoom-in"
-                size={22}
-                color={canZoomIn ? '#333' : '#CCC'}
-              />
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.iconButton}
+                onPress={onZoomIn}
+                disabled={!canZoomIn}
+                accessibilityLabel="Zoom in"
+              >
+                <MaterialIcons
+                  name="zoom-in"
+                  size={22}
+                  color={canZoomIn ? '#333' : '#CCC'}
+                />
+              </TouchableOpacity>
+            </>
+          )}
+          {capabilities?.fit && (
+            <>
+              <TouchableOpacity
+                style={styles.iconButton}
+                onPress={() =>
+                  onPreferencesChange({ ...preferences, fit: 'width' })
+                }
+                accessibilityLabel="Fit width"
+              >
+                <MaterialIcons name="swap-horiz" size={22} color="#333" />
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.iconButton}
-              onPress={onFitWidth}
-              accessibilityLabel="Fit width"
-            >
-              <MaterialIcons name="swap-horiz" size={22} color="#333" />
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.iconButton}
+                onPress={() =>
+                  onPreferencesChange({ ...preferences, fit: 'height' })
+                }
+                accessibilityLabel="Fit height"
+              >
+                <MaterialIcons name="swap-vert" size={22} color="#333" />
+              </TouchableOpacity>
+            </>
+          )}
+        </View>
 
-            <TouchableOpacity
-              style={styles.iconButton}
-              onPress={onFitHeight}
-              accessibilityLabel="Fit height"
-            >
-              <MaterialIcons name="swap-vert" size={22} color="#333" />
-            </TouchableOpacity>
-          </View>
-        )}
-
-        {!isPdf && (
+        {
           <View style={styles.iconButton}>
             <PreferencesEditor
               preferences={preferences}
               onChange={onPreferencesChange}
+              capabilities={capabilities}
             />
           </View>
-        )}
+        }
 
         <View style={styles.iconButton}>
           <TableOfContents items={toc} onPress={onNavigateToTocItem} />
