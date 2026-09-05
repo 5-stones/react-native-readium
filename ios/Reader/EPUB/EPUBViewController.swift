@@ -33,6 +33,7 @@ class EPUBViewController: ReaderViewController, SelectionActionHandlerDelegate {
     private var translationResultObserver: NSObjectProtocol?
     private var translationAppearanceObserver: NSObjectProtocol?
     private var translationLayoutObserver: NSObjectProtocol?
+    private var knownVocabularyObserver: NSObjectProtocol?
     private var translationMessageHandler: WeakScriptMessageHandler?
     private var translationWebViews: [String: WKWebView] = [:]
     private let inlineTranslationWebViews = NSHashTable<WKWebView>.weakObjects()
@@ -162,6 +163,9 @@ class EPUBViewController: ReaderViewController, SelectionActionHandlerDelegate {
       if let translationLayoutObserver {
         NotificationCenter.default.removeObserver(translationLayoutObserver)
       }
+      if let knownVocabularyObserver {
+        NotificationCenter.default.removeObserver(knownVocabularyObserver)
+      }
     }
 
 }
@@ -258,10 +262,38 @@ extension EPUBViewController: EPUBNavigatorDelegate {
       }
     }
 
+    if knownVocabularyObserver == nil {
+      knownVocabularyObserver = NotificationCenter.default.addObserver(
+        forName: Notification.Name("BookentKnownVocabularyTranslationsChanged"),
+        object: nil,
+        queue: .main
+      ) { [weak self] notification in
+        guard let self,
+              let translations = notification.userInfo?["translations"] as? [[String: String]],
+              let data = try? JSONSerialization.data(withJSONObject: translations),
+              let json = String(data: data, encoding: .utf8) else {
+          return
+        }
+        for webView in self.inlineTranslationWebViews.allObjects {
+          webView.evaluateJavaScript(
+            "window.__bookentApplyKnownTranslations?.(\(json));"
+          )
+        }
+      }
+    }
+
     let storedScale = UserDefaults.standard.object(
       forKey: "BookentInlineTranslationFontScale"
     ) as? Double ?? 0.85
     let initialScale = min(0.92, max(0.6, storedScale))
+    let knownVocabularyData = UserDefaults.standard.data(
+      forKey: "BookentKnownVocabularyTranslations"
+    )
+    let knownVocabulary = knownVocabularyData.flatMap {
+      try? JSONSerialization.jsonObject(with: $0) as? [[String: String]]
+    } ?? []
+    let knownVocabularyJSON = (try? JSONSerialization.data(withJSONObject: knownVocabulary))
+      .flatMap { String(data: $0, encoding: .utf8) } ?? "[]"
 
     let source = """
       (() => {
@@ -494,6 +526,7 @@ extension EPUBViewController: EPUBNavigatorDelegate {
             annotation.translatedSentence = translatedSentence || '';
             annotation.state = 'translated';
             annotation.error = '';
+            applyTranslationToMatchingWords(annotation);
             scheduleTranslationLayout();
             return;
           }
@@ -503,6 +536,110 @@ extension EPUBViewController: EPUBNavigatorDelegate {
           annotation.error = error || 'Translation unavailable';
           scheduleTranslationLayout();
         };
+
+        function escapedPattern(value) {
+          return value.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');
+        }
+
+        function matchingTextNodes(word) {
+          const matches = [];
+          const pattern = new RegExp(
+            `(?<![\\\\p{L}\\\\p{N}'’])${escapedPattern(word)}(?![\\\\p{L}\\\\p{N}'’])`,
+            'giu'
+          );
+          const walker = document.createTreeWalker(
+            document.body,
+            NodeFilter.SHOW_TEXT,
+            {
+              acceptNode(candidate) {
+                const parent = candidate.parentElement;
+                if (
+                  !candidate.data ||
+                  !parent ||
+                  parent.closest(
+                    '.bookent-inline-translation, ruby, rt, script, style, noscript, a, button, input, textarea, select'
+                  )
+                ) {
+                  return NodeFilter.FILTER_REJECT;
+                }
+                return NodeFilter.FILTER_ACCEPT;
+              },
+            }
+          );
+          let node;
+          while ((node = walker.nextNode())) {
+            pattern.lastIndex = 0;
+            const offsets = Array.from(node.data.matchAll(pattern)).map(
+              (match) => ({
+                start: match.index,
+                length: match[0].length,
+                context: sentenceContextForNode(
+                  node,
+                  match.index,
+                  match.index + match[0].length
+                ),
+              })
+            );
+            if (offsets.length) matches.push({ node, offsets });
+          }
+          return matches;
+        }
+
+        function applyTranslationToMatchingWords(source) {
+          for (const entry of matchingTextNodes(source.word)) {
+            // Work backwards so earlier offsets remain valid as the text node is
+            // split into inline wrappers.
+            for (const match of [...entry.offsets].reverse()) {
+              const selected = entry.node.splitText(match.start);
+              selected.splitText(match.length);
+              const id =
+                globalThis.crypto?.randomUUID?.() ??
+                `bookent-known-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+              const wrapper = document.createElement('span');
+              wrapper.className = 'bookent-inline-translation';
+              wrapper.dataset.bookentRequest = id;
+              const base = document.createElement('span');
+              base.className = 'bookent-word-base';
+              base.textContent = selected.data;
+              const translation = document.createElement('span');
+              translation.className = 'bookent-translation-text';
+              translation.textContent = source.translatedText;
+              wrapper.append(base, translation);
+              selected.replaceWith(wrapper);
+              annotations.set(id, {
+                ...source,
+                id,
+                wrapper,
+                base,
+                translation,
+                word: base.textContent,
+                sentence: match.context.sentence,
+                wordStart: match.context.wordStart,
+                wordLength: match.length,
+                state: 'translated',
+              });
+            }
+          }
+        }
+
+        window.__bookentApplyKnownTranslations = (translations) => {
+          if (!Array.isArray(translations)) return;
+          for (const item of translations) {
+            if (!item?.word || !item?.translation) continue;
+            applyTranslationToMatchingWords({
+              word: item.word,
+              translatedText: item.translation,
+              translatedSentence: item.sentenceTranslation || '',
+              sourceLanguage: item.sourceLanguage || 'en',
+              targetLanguage: item.targetLanguage || 'zh-Hans',
+              state: 'translated',
+              error: '',
+            });
+          }
+          scheduleTranslationLayout();
+        };
+
+        window.__bookentApplyKnownTranslations(\(knownVocabularyJSON));
 
         function sentenceContext(text, wordStart, wordEnd) {
           const isBoundary = (character) => /[.!?。！？\\n]/u.test(character);
