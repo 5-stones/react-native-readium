@@ -31,9 +31,16 @@ Translation sizing uses the EPUB body root `rem`, with an absolute `10px` floor,
 so headings, body text, and footnotes all present translations at one consistent
 reader-controlled size. Critical inline geometry, spacing, and font inheritance
 are explicitly isolated from publisher `span` rules. Adjacent translations are
-measured only after insertion or a reader appearance change and alternate onto a
-second local lane when necessary; their font size is never reduced to resolve a
-collision. These temporary rectangles are not stored as page positions.
+measured only after insertion or a reader appearance change. Readium's horizontal
+page columns and individual text lines are grouped independently before any
+collision adjustment, including columns currently outside the viewport. When
+labels collide, they stay in the same reserved vertical lane and receive the
+smallest available horizontal displacement. Non-colliding labels remain exactly
+centered on their source words. Their font size is never reduced. A label is
+hidden only when the full-size labels on one physical line cannot geometrically
+fit without overlap; its source underline remains visible and tappable. Temporary
+rectangles and visibility decisions are recalculated and are never stored as page
+positions.
 
 ## Host application contract
 

@@ -356,7 +356,7 @@ extension EPUBViewController: EPUBNavigatorDelegate {
             box-sizing: content-box !important;
             width: max-content !important;
             min-width: 0 !important;
-            max-width: none !important;
+            max-width: calc(100vw - 6px) !important;
             height: auto !important;
             margin: 0 !important;
             padding: 0 !important;
@@ -364,7 +364,7 @@ extension EPUBViewController: EPUBNavigatorDelegate {
             z-index: 1 !important;
             top: calc(100% + 0.08em) !important;
             left: 50% !important;
-            transform: translateX(-50%) !important;
+            transform: translateX(calc(-50% + var(--bookent-translation-shift, 0px))) !important;
             color: inherit !important;
             opacity: 0.62;
             font-family: inherit !important;
@@ -376,14 +376,13 @@ extension EPUBViewController: EPUBNavigatorDelegate {
             line-height: 1 !important;
             text-align: center !important;
             white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
             border-bottom: 0 !important;
             text-decoration: none !important;
             -webkit-user-select: none;
             user-select: none;
             pointer-events: none !important;
-          }
-          span.bookent-inline-translation > .bookent-translation-text.bookent-translation-lane-2 {
-            top: calc(100% + 1.08em) !important;
           }
         `;
         document.documentElement.appendChild(style);
@@ -392,10 +391,8 @@ extension EPUBViewController: EPUBNavigatorDelegate {
           String(TRANSLATION_FONT_SCALE)
         );
         let collisionFrame = null;
-        function translationsOverlap(left, right) {
-          const sameLine = Math.abs(left.baseRect.top - right.baseRect.top) < 4;
-          return sameLine && left.translationRect.right + 3 > right.translationRect.left;
-        }
+        const TRANSLATION_GAP = 3;
+        const PAGE_EDGE_INSET = 3;
 
         function translationEntries() {
           return Array.from(annotations.values())
@@ -411,26 +408,161 @@ extension EPUBViewController: EPUBNavigatorDelegate {
             );
         }
 
+        function translationLineGroups(entries, pageWidth) {
+          const pages = new Map();
+          for (const entry of entries) {
+            const sourceCenter = entry.baseRect.left + entry.baseRect.width / 2;
+            const pageIndex = Math.floor(sourceCenter / pageWidth);
+            let lines = pages.get(pageIndex);
+            if (!lines) {
+              lines = [];
+              pages.set(pageIndex, lines);
+            }
+
+            let line = lines.find(
+              (candidate) => Math.abs(candidate.top - entry.baseRect.top) < 4
+            );
+            if (!line) {
+              line = { pageIndex, top: entry.baseRect.top, entries: [] };
+              lines.push(line);
+            }
+            line.entries.push(entry);
+          }
+
+          return Array.from(pages.values()).flat();
+        }
+
+        function setTranslationPosition(entry, left, visible = true) {
+          const shift = left - entry.translationRect.left;
+          entry.annotation.translation.dataset.bookentShift = String(shift);
+          entry.annotation.translation.style.setProperty(
+            '--bookent-translation-shift',
+            `${shift}px`
+          );
+          entry.annotation.translation.style.visibility = visible
+            ? 'visible'
+            : 'hidden';
+        }
+
+        function layoutTranslationLine(line, pageWidth) {
+          const pageLeft = line.pageIndex * pageWidth + PAGE_EDGE_INSET;
+          const pageRight = (line.pageIndex + 1) * pageWidth - PAGE_EDGE_INSET;
+          const availableWidth = pageRight - pageLeft;
+          const entries = line.entries.sort(
+            (left, right) => left.baseRect.left - right.baseRect.left
+          );
+          const widths = entries.map((entry) => entry.translationRect.width);
+          const totalWidth =
+            widths.reduce((sum, width) => sum + width, 0) +
+            TRANSLATION_GAP * Math.max(0, entries.length - 1);
+
+          // If every label can fit in this physical page column, keep each one
+          // as close to its source word as possible while preserving order.
+          if (totalWidth <= availableWidth) {
+            const positions = entries.map((entry, index) =>
+              Math.max(
+                pageLeft,
+                Math.min(
+                  entry.translationRect.left,
+                  pageRight - widths[index]
+                )
+              )
+            );
+
+            for (let index = 1; index < positions.length; index += 1) {
+              positions[index] = Math.max(
+                positions[index],
+                positions[index - 1] + widths[index - 1] + TRANSLATION_GAP
+              );
+            }
+            for (let index = positions.length - 2; index >= 0; index -= 1) {
+              positions[index] = Math.min(
+                positions[index],
+                positions[index + 1] - TRANSLATION_GAP - widths[index]
+              );
+            }
+            if (positions.length) {
+              const rightOverflow =
+                positions[positions.length - 1] +
+                widths[widths.length - 1] -
+                pageRight;
+              if (rightOverflow > 0) {
+                for (let index = 0; index < positions.length; index += 1) {
+                  positions[index] -= rightOverflow;
+                }
+              }
+              const leftOverflow = pageLeft - positions[0];
+              if (leftOverflow > 0) {
+                for (let index = 0; index < positions.length; index += 1) {
+                  positions[index] += leftOverflow;
+                }
+              }
+            }
+
+            entries.forEach((entry, index) => {
+              setTranslationPosition(entry, positions[index]);
+            });
+            return;
+          }
+
+          // It is geometrically impossible to show every full-size label on
+          // one line. Preserve readable labels in source order and hide only
+          // the ones that cannot fit; their source underline remains visible
+          // and tappable for the detailed translation view.
+          let occupiedRight = pageLeft - TRANSLATION_GAP;
+          entries.forEach((entry, index) => {
+            const desiredLeft = Math.max(
+              pageLeft,
+              Math.min(entry.translationRect.left, pageRight - widths[index])
+            );
+            const left = Math.max(
+              desiredLeft,
+              occupiedRight + TRANSLATION_GAP
+            );
+            const visible =
+              widths[index] <= availableWidth && left + widths[index] <= pageRight;
+            setTranslationPosition(entry, left, visible);
+            if (visible) occupiedRight = left + widths[index];
+          });
+        }
+
         function resolveTranslationCollisions() {
           collisionFrame = null;
           const initial = translationEntries();
           for (const entry of initial) {
-            entry.annotation.translation.classList.remove(
-              'bookent-translation-lane-2'
+            const baseStyle = getComputedStyle(entry.annotation.base);
+            const resolvedColor = baseStyle.color;
+            const resolvedFillColor = baseStyle.webkitTextFillColor || resolvedColor;
+            entry.annotation.translation.style.setProperty(
+              'color',
+              resolvedColor,
+              'important'
             );
+            entry.annotation.translation.style.setProperty(
+              '-webkit-text-fill-color',
+              resolvedFillColor,
+              'important'
+            );
+            entry.annotation.translation.dataset.bookentShift = '0';
+            entry.annotation.translation.style.setProperty(
+              '--bookent-translation-shift',
+              '0px'
+            );
+            entry.annotation.translation.style.visibility = 'visible';
           }
 
-          // Keep a consistent body-relative font size. When adjacent labels
-          // collide, move the later one onto a second local lane instead of
-          // shrinking it. Rectangles are used only for this one-time
-          // classification; no viewport coordinates are persisted.
+          // Readium lays out a chapter as horizontal page columns. Bounding
+          // rectangles from adjacent columns can be negative or wider than the
+          // current viewport, so collision work must never share one global
+          // 0...viewportWidth boundary. Lay out each physical column and text
+          // line independently.
+          const pageWidth = Math.max(
+            1,
+            document.documentElement.clientWidth || window.innerWidth
+          );
           const entries = translationEntries();
-          for (let index = 1; index < entries.length; index += 1) {
-            if (translationsOverlap(entries[index - 1], entries[index])) {
-              entries[index].annotation.translation.classList.add(
-                'bookent-translation-lane-2'
-              );
-            }
+          for (const line of translationLineGroups(entries, pageWidth)) {
+            layoutTranslationLine(line, pageWidth);
           }
         }
 
@@ -961,6 +1093,9 @@ extension EPUBViewController: EPUBNavigatorDelegate {
           },
           true
         );
+        window.webkit?.messageHandlers?.bookentTranslation?.postMessage({
+          action: 'register',
+        });
       })();
       """
 
@@ -986,6 +1121,11 @@ extension EPUBViewController: WKScriptMessageHandler {
 
     if body["action"] as? String == "consumeTap" {
       suppressNextNavigatorTap()
+      return
+    }
+
+    if body["action"] as? String == "register" {
+      inlineTranslationWebViews.add(message.webView)
       return
     }
 

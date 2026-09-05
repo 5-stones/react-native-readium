@@ -41,7 +41,9 @@ describe('Bookent inline translation integration', () => {
     expect(source).toContain('position: absolute !important');
     expect(source).toContain('top: calc(100% + 0.08em) !important');
     expect(source).toContain('left: 50% !important');
-    expect(source).toContain('transform: translateX(-50%) !important');
+    expect(source).toContain(
+      'transform: translateX(calc(-50% + var(--bookent-translation-shift, 0px))) !important'
+    );
     expect(source).toContain(
       'font-size: max(10px, calc(1rem * var(--bookent-translation-scale))) !important'
     );
@@ -82,12 +84,21 @@ describe('Bookent inline translation integration', () => {
     );
   });
 
-  it('resolves adjacent translation collisions without a full-page layer', () => {
+  it('resolves collisions independently for every page column and text line', () => {
     expect(source).toContain(
       'window.__bookentRelayoutTranslations = scheduleTranslationLayout'
     );
     expect(source).toContain('function resolveTranslationCollisions()');
-    expect(source).toContain('bookent-translation-lane-2');
+    expect(source).toContain('--bookent-translation-shift');
+    expect(source).toContain('function translationLineGroups');
+    expect(source).toContain(
+      'const pageIndex = Math.floor(sourceCenter / pageWidth)'
+    );
+    expect(source).toContain('layoutTranslationLine(line, pageWidth)');
+    expect(source).toContain("style.visibility = visible");
+    expect(source).not.toContain('const previousRoom');
+    expect(source).not.toContain('const currentRoom');
+    expect(source).not.toContain('bookent-translation-lane-2');
     expect(source).not.toContain('bookent-translation-compact');
     expect(source).toContain('getBoundingClientRect()');
     expect(source).not.toContain('new ResizeObserver');
