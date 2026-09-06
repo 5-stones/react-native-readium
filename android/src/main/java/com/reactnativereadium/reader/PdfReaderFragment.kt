@@ -18,6 +18,7 @@ import org.readium.adapter.pdfium.navigator.PdfiumPreferencesEditor
 import org.readium.r2.navigator.Navigator
 import org.readium.r2.navigator.pdf.PdfNavigatorFactory
 import org.readium.r2.navigator.pdf.PdfNavigatorFragment
+import org.readium.r2.navigator.preferences.Fit
 import org.readium.r2.shared.ExperimentalReadiumApi
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
@@ -58,7 +59,7 @@ class PdfReaderFragment : VisualReaderFragment() {
     childFragmentManager.fragmentFactory =
       navigatorFactory.createFragmentFactory(
         initialLocator = model.initialLocation,
-        initialPreferences = PdfiumPreferences()
+        initialPreferences = PdfiumPreferences(fit = Fit.WIDTH)
       )
 
     setHasOptionsMenu(true)

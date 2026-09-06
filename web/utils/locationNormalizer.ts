@@ -1,4 +1,4 @@
-import type { Locator } from '@readium/shared';
+import { Locator } from '@readium/shared';
 import type { Link, Locator as LocalLocator } from '../../src/interfaces';
 
 /**
@@ -33,26 +33,18 @@ export function normalizeLocation<T extends { href: string }>(location: T): T {
 /**
  * Converts a Link or Locator to a Readium Locator format suitable for navigation.
  *
- * @param location - The Link or Locator from the file.initialLocation
- * @returns A Locator object ready for the Readium navigator, or undefined if invalid
+ * @param location - The Link or Locator to convert
+ * @returns A Locator ready for the Readium navigator, or undefined if invalid
  */
 export function convertToNavigatorLocator(
   location: Link | LocalLocator
 ): Locator | undefined {
-  // First, normalize the href
+  if (!location?.href) return undefined;
+
   const normalized = normalizeLocation(location);
 
-  // Check if this is already a Locator (has locations property)
-  if ('locations' in normalized) {
-    // It's already a Locator, return it
-    return normalized as unknown as Locator;
-  }
-
-  // It's a Link - convert to basic Locator format
-  // The Readium navigator will handle finding the exact position
-  return {
-    href: normalized.href,
-    type: 'application/xhtml+xml',
-    title: normalized.title,
-  } as Locator;
+  return Locator.deserialize({
+    ...normalized,
+    type: ('type' in normalized && normalized.type) || 'application/xhtml+xml',
+  });
 }

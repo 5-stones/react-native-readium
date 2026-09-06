@@ -32,6 +32,7 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
       onLocationChange,
       onPublicationReady,
       onDecorationActivated,
+      onZoomChange,
       style = {},
       height,
       width,
@@ -59,6 +60,7 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
       container,
       onLocationChange,
       onPublicationReady,
+      onZoomChange,
       initialPage: 1,
     });
 
@@ -69,6 +71,12 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
       () => ({
         goTo: (locator) => {
           if (!navigator) return;
+
+          if (pdfNavigator) {
+            pdfNavigator.goToLocator(locator);
+            return;
+          }
+
           const navLocator = convertToNavigatorLocator(locator);
           if (navLocator) {
             // @ts-ignore
@@ -97,6 +105,12 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
             isSupported: false,
           }),
         cancelSearch: () => {},
+        zoomIn: () => pdfNavigator?.zoomIn(),
+        zoomOut: () => pdfNavigator?.zoomOut(),
+        setZoom: (scale) => pdfNavigator?.setZoom(scale),
+        resetZoom: () => pdfNavigator?.resetZoom(),
+        fitWidth: () => pdfNavigator?.fitWidth(),
+        fitHeight: () => pdfNavigator?.fitHeight(),
         /** @deprecated Use goForward() */
         nextPage: () => {
           navigator?.goForward(true, () => {});
@@ -106,7 +120,7 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
           navigator?.goBackward(true, () => {});
         },
       }),
-      [navigator]
+      [navigator, pdfNavigator]
     );
 
     usePreferencesObserver(epubNavigator, preferences);

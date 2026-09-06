@@ -115,9 +115,18 @@ private fun parseTextAlign(value: String): TextAlign? = when (value) {
   else -> null
 }
 
+/**
+ * Stands in for an href that named no resource, so the locator survives conversion
+ * long enough for `ReaderService` to remap it against the opened publication.
+ */
+internal const val UNRESOLVED_HREF_PLACEHOLDER = "__readium_unresolved__"
+
 internal fun nitroLocatorToReadium(loc: Locator): ReadiumLocator? {
   val normalized = normalizeHref(loc.href)
-  val href = ReadiumUrl(normalized.resourcePath) ?: return null
+  // Older web builds persisted PDF locators with a fragment-only href such as
+  // "#page=3". Keep them rather than dropping the reading position on the floor.
+  val resourcePath = normalized.resourcePath.ifEmpty { UNRESOLVED_HREF_PLACEHOLDER }
+  val href = ReadiumUrl(resourcePath) ?: return null
   val mediaType = ReadiumMediaType(loc.type) ?: ReadiumMediaType.BINARY
 
   // Merge any fragment from the href into locations.fragments
@@ -193,7 +202,7 @@ internal fun parseColorString(colorString: String?): Int {
 
 internal fun readiumLocatorToNitro(loc: ReadiumLocator): Locator {
   val locations = LocatorLocations(
-    progression = loc.locations.progression ?: 0.0,
+    progression = loc.locations.progression,
     position = loc.locations.position?.toDouble(),
     totalProgression = loc.locations.totalProgression
   )

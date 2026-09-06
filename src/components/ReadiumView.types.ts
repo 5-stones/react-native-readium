@@ -10,6 +10,7 @@ import type {
   SelectionActionEvent,
   SearchOptions,
   SearchPage,
+  ZoomEvent,
 } from '../interfaces';
 
 export type ReadiumViewRef = {
@@ -22,6 +23,12 @@ export type ReadiumViewRef = {
   loadMoreSearchResults: () => Promise<SearchPage>;
   /** Cancels the in-flight search and releases the iterator. */
   cancelSearch: () => void;
+  zoomIn: () => void;
+  zoomOut: () => void;
+  setZoom: (scale: number) => void;
+  resetZoom: () => void;
+  fitWidth: () => void;
+  fitHeight: () => void;
 };
 
 export type ReadiumProps = {
@@ -35,4 +42,5 @@ export type ReadiumProps = {
   onDecorationActivated?: (event: DecorationActivatedEvent) => void;
   onSelectionChange?: (event: SelectionEvent) => void;
   onSelectionAction?: (event: SelectionActionEvent) => void;
+  onZoomChange?: (event: ZoomEvent) => void;
 };

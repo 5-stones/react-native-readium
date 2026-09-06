@@ -10,3 +10,4 @@ export * from './Selection';
 export * from './SelectionAction';
 export type { Rect, Point } from '../specs/ReadiumView.nitro';
 export * from './Search';
+export * from './Zoom';

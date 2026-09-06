@@ -1,3 +1,27 @@
+## [5.1.1](https://github.com/5-stones/react-native-readium/compare/v5.1.0...v5.1.1) (2026-09-01)
+
+
+### Bug Fixes
+
+* **web:** when zooming, maintain position and render all visible pages ([c871202](https://github.com/5-stones/react-native-readium/commit/c8712026c7f7795af5172ae80ccf97cc080c5506))
+
+
+
+# [5.1.0](https://github.com/5-stones/react-native-readium/compare/v5.0.0...v5.1.0) (2026-08-31)
+
+
+### Bug Fixes
+
+* **ios, web, android:** fix locator specs to match readium spec ([9194c78](https://github.com/5-stones/react-native-readium/commit/9194c78b609cf70f59d3e32545ad0ba18aab9d9d))
+* **web:** build navigator locators through Locator.deserialize ([5ccc353](https://github.com/5-stones/react-native-readium/commit/5ccc353676a9458ec3860cd705a901440e16a00b))
+
+
+### Features
+
+* **web, apps, components, android, ios:** zoom in and out on pdfs ([84d14b5](https://github.com/5-stones/react-native-readium/commit/84d14b57af7dbf0eb0269086ed7a24e594db7755))
+
+
+
 # [5.0.0](https://github.com/5-stones/react-native-readium/compare/v5.0.0-rc.19...v5.0.0) (2026-08-19)
 
 

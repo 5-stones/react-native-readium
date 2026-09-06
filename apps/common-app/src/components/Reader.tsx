@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 import { View, Text, Platform } from 'react-native';
 import { ReadiumView, useSearch } from 'react-native-readium';
 import type {
@@ -12,6 +12,7 @@ import type {
   SearchResult,
   SearchOptions,
   ReadiumFile,
+  ZoomEvent,
 } from 'react-native-readium';
 
 import { ReaderButton } from './ReaderButton';
@@ -51,6 +52,12 @@ export interface ReaderHandle {
   isSearchSupported: boolean;
   hasMoreSearchResults: boolean;
   file: ReadiumFile | undefined;
+  zoom: ZoomEvent | undefined;
+  zoomIn: () => void;
+  zoomOut: () => void;
+  resetZoom: () => void;
+  fitWidth: () => void;
+  fitHeight: () => void;
 }
 
 interface ReaderProps extends BaseReaderProps {
@@ -88,6 +95,16 @@ export const Reader: React.FC<ReaderProps> = ({
     handleLocationChange,
     handlePublicationReady: baseHandlePublicationReady,
   } = useReaderState({ initialPreferences, onPreferencesChange });
+
+  const [zoom, setZoom] = useState<ZoomEvent | undefined>(undefined);
+  const handleZoomChange = useCallback((event: ZoomEvent) => {
+    setZoom(event);
+  }, []);
+  const zoomIn = useCallback(() => ref.current?.zoomIn(), []);
+  const zoomOut = useCallback(() => ref.current?.zoomOut(), []);
+  const resetZoom = useCallback(() => ref.current?.resetZoom(), []);
+  const fitWidth = useCallback(() => ref.current?.fitWidth(), []);
+  const fitHeight = useCallback(() => ref.current?.fitHeight(), []);
 
   const {
     results: searchResults,
@@ -163,6 +180,12 @@ export const Reader: React.FC<ReaderProps> = ({
         isSearchSupported,
         hasMoreSearchResults,
         file,
+        zoom,
+        zoomIn,
+        zoomOut,
+        resetZoom,
+        fitWidth,
+        fitHeight,
       });
     }
   }, [
@@ -184,20 +207,26 @@ export const Reader: React.FC<ReaderProps> = ({
     search,
     loadMoreSearchResults,
     clearSearch,
+    zoom,
+    zoomIn,
+    zoomOut,
+    resetZoom,
+    fitWidth,
+    fitHeight,
   ]);
-
-  if (isLoading || !file) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text>Loading {fileTypeLabel}...</Text>
-      </View>
-    );
-  }
 
   if (error) {
     return (
       <View style={styles.loadingContainer}>
         <Text>Error loading {fileTypeLabel}: {error.message}</Text>
+      </View>
+    );
+  }
+
+  if (isLoading || !file) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text>Loading {fileTypeLabel}...</Text>
       </View>
     );
   }
@@ -225,6 +254,7 @@ export const Reader: React.FC<ReaderProps> = ({
             onDecorationActivated={handleDecorationActivated}
             onSelectionChange={handleSelectionChange}
             onSelectionAction={handleSelectionAction}
+            onZoomChange={handleZoomChange}
           />
         </View>
 

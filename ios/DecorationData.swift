@@ -5,6 +5,10 @@ import UIKit
 
 /// Helper struct for deserializing locator data
 struct LocatorData: Codable {
+  /// Stands in for an href that named no resource, so the locator survives
+  /// conversion long enough to be remapped against the opened publication.
+  static let unresolvedHrefPlaceholder = "__readium_unresolved__"
+
   let href: String
   let type: String
   let title: String?
@@ -14,7 +18,16 @@ struct LocatorData: Codable {
   func toLocator() -> ReadiumShared.Locator? {
     let normalized = normalizeHref(href)
 
-    guard let anyURL = AnyURL(string: normalized.resourcePath) else {
+    // Older web builds persisted PDF locators with a fragment-only href such as
+    // "#page=3", which names no resource. Dropping the locator here would silently
+    // discard the reading position, so keep it with a placeholder href instead --
+    // `ReaderService` remaps any href the publication doesn't know onto its first
+    // reading-order resource, which is all a single-resource PDF has.
+    let resourcePath = normalized.resourcePath.isEmpty
+      ? Self.unresolvedHrefPlaceholder
+      : normalized.resourcePath
+
+    guard let anyURL = AnyURL(string: resourcePath) else {
       return nil
     }
 

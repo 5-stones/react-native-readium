@@ -123,6 +123,12 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
                 isSearchSupported={readerHandle.isSearchSupported}
                 hasMoreSearchResults={readerHandle.hasMoreSearchResults}
                 file={readerHandle.file}
+                zoom={readerHandle.zoom}
+                onZoomIn={readerHandle.zoomIn}
+                onZoomOut={readerHandle.zoomOut}
+                onResetZoom={readerHandle.resetZoom}
+                onFitWidth={readerHandle.fitWidth}
+                onFitHeight={readerHandle.fitHeight}
               />
             ) : (
               <EmptyBar onClose={handleClose} />
