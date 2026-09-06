@@ -76,7 +76,15 @@ final class ReaderService: Loggable {
       return .just(URL(fileURLWithPath: path))
     }
 
-    return .fail(ReaderError.fileNotFound(fatalError("Unable to locate file: " + path)))
+    let error = NSError(
+      domain: NSCocoaErrorDomain,
+      code: NSFileNoSuchFileError,
+      userInfo: [
+        NSFilePathErrorKey: path,
+        NSLocalizedDescriptionKey: "Unable to locate file: \(path)",
+      ]
+    )
+    return .fail(.fileNotFound(error))
   }
 
   private func openPublication(

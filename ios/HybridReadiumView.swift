@@ -312,7 +312,6 @@ class HybridReadiumView: HybridReadiumViewSpec {
     Task { @MainActor [weak self] in
       guard let self else { return }
       self.searchGeneration &+= 1
-      self.searchIterator?.close()
       self.searchIterator = nil
     }
   }
@@ -325,7 +324,6 @@ class HybridReadiumView: HybridReadiumViewSpec {
     // Supersede any prior search and release its iterator.
     searchGeneration &+= 1
     let generation = searchGeneration
-    searchIterator?.close()
     searchIterator = nil
 
     guard
@@ -344,7 +342,6 @@ class HybridReadiumView: HybridReadiumViewSpec {
     case .success(let iterator):
       // A newer search (or cancel) ran while we awaited; discard this iterator.
       guard generation == searchGeneration else {
-        iterator.close()
         return SearchPage(results: [], hasMore: false, totalCount: nil, isSupported: true)
       }
       searchIterator = iterator
@@ -375,7 +372,6 @@ class HybridReadiumView: HybridReadiumViewSpec {
         )
       }
       // Exhausted: release the iterator and report the terminal page.
-      iterator.close()
       searchIterator = nil
       return SearchPage(results: [], hasMore: false, totalCount: total, isSupported: true)
     case .failure(let error):
@@ -383,7 +379,6 @@ class HybridReadiumView: HybridReadiumViewSpec {
       guard generation == searchGeneration else {
         return SearchPage(results: [], hasMore: false, totalCount: nil, isSupported: true)
       }
-      iterator.close()
       searchIterator = nil
       return SearchPage(results: [], hasMore: false, totalCount: nil, isSupported: true)
     }
@@ -393,7 +388,6 @@ class HybridReadiumView: HybridReadiumViewSpec {
   func cleanup() {
     loadedFileUrl = nil
 
-    searchIterator?.close()
     searchIterator = nil
 
     guard let vc = readerViewController else { return }
