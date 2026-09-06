@@ -7,6 +7,22 @@ import SwiftSoup
 import WebKit
 
 /// This class is meant to be subclassed by each publication format view controller. It contains the shared behavior, eg. navigation bar toggling.
+@MainActor
+private final class ReadingInteractionObserver: InputObserving {
+  private let onStart: () -> Void
+
+  init(onStart: @escaping () -> Void) {
+    self.onStart = onStart
+  }
+
+  func didReceive(_ event: PointerEvent) async -> Bool {
+    if event.phase == .down { onStart() }
+    return false
+  }
+
+  func didReceive(_ event: KeyEvent) async -> Bool { false }
+}
+
 class ReaderViewController: UIViewController, Loggable {
 
   weak var moduleDelegate: ReaderFormatModuleDelegate?
@@ -135,6 +151,13 @@ class ReaderViewController: UIViewController, Loggable {
     navigationBarHidden = !navigationBarHidden
   }
 
+  private func hideReaderControlsAfterReadingAction() {
+    guard !navigationBarHidden else {
+      return
+    }
+    navigationBarHidden = true
+  }
+
   func updateNavigationBar(animated: Bool = true) {
     let hidden = navigationBarHidden && !UIAccessibility.isVoiceOverRunning
     navigationController?.setNavigationBarHidden(hidden, animated: animated)
@@ -212,6 +235,22 @@ class ReaderViewController: UIViewController, Loggable {
       return
     }
 
+    // Only publication input reaches this observer; React menu controls are
+    // sibling views above the navigator. Do not consume the pointer: Readium
+    // still needs the entire stream for swipes, taps and text selection.
+    let readingInteractionToken = visualNavigator.addObserver(ReadingInteractionObserver { [weak self] in
+      guard let self else { return }
+      NotificationCenter.default.post(
+        name: Notification.Name("BookentReaderControlsVisibilityChanged"),
+        object: nil,
+        userInfo: [
+          "visible": !self.navigationBarHidden || UIAccessibility.isVoiceOverRunning,
+          "dismissMenus": true
+        ]
+      )
+    })
+    readingInteractionToken.store(in: &navigatorInputObserverTokens)
+
     let inlineTranslationToken = visualNavigator.addObserver(.tap { [weak self] event in
       guard let self, event.phase != .cancel else {
         return false
@@ -219,6 +258,28 @@ class ReaderViewController: UIViewController, Loggable {
       return Date() < self.suppressNavigatorTapUntil
     })
     inlineTranslationToken.store(in: &navigatorInputObserverTokens)
+
+    // Keep the publication interactive while the React settings sheet is
+    // open. Edge taps pass through to Readium's directional adapter, but any
+    // visible reader controls are dismissed as soon as the reading action
+    // starts.
+    let readingTapToken = visualNavigator.addObserver(.tap { [weak self, weak visualNavigator] event in
+      guard
+        let self,
+        let visualNavigator,
+        event.phase != .cancel,
+        self.horizontalNavigationBoundary(
+          at: event.location,
+          in: visualNavigator
+        ) != nil
+      else {
+        return false
+      }
+
+      self.hideReaderControlsAfterReadingAction()
+      return false
+    })
+    readingTapToken.store(in: &navigatorInputObserverTokens)
 
     let navigationAdapter = DirectionalNavigationAdapter(
       pointerPolicy: .init(
@@ -289,6 +350,8 @@ class ReaderViewController: UIViewController, Loggable {
           return false
         }
 
+        self.hideReaderControlsAfterReadingAction()
+
         let checkWorkItem = DispatchWorkItem { [weak self] in
           guard
             let self,
@@ -321,6 +384,10 @@ class ReaderViewController: UIViewController, Loggable {
         return false
       }
 
+      NotificationCenter.default.post(
+        name: Notification.Name("BookentReaderCenterTapped"),
+        object: nil
+      )
       self.toggleNavigationBar()
       return true
     })
@@ -329,6 +396,7 @@ class ReaderViewController: UIViewController, Loggable {
 
   func suppressNextNavigatorTap() {
     suppressNavigatorTapUntil = Date().addingTimeInterval(1.5)
+    hideReaderControlsAfterReadingAction()
   }
 
   private func removeNavigatorInputObservers() {
