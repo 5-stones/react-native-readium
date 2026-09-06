@@ -24,7 +24,18 @@ class ReaderViewController: UIViewController, Loggable {
   private var positionsLoadingTask: Task<Void, Never>?
   private var lastKnownLocator: ReadiumShared.Locator?
   private var navigatorInputObserverTokens = Set<InputObservableToken>()
+  private var directionalNavigationAdapter: DirectionalNavigationAdapter?
   private var suppressNavigatorTapUntil = Date.distantPast
+  private var navigationBoundaryToast: UILabel?
+  private var navigationBoundaryToastHideWorkItem: DispatchWorkItem?
+  private var navigationBoundaryCheckWorkItem: DispatchWorkItem?
+  private var navigationLocationRevision = 0
+  private var boundarySwipeStart: (location: CGPoint, revision: Int)?
+
+  private enum NavigationBoundary {
+    case beginning
+    case end
+  }
 
   /// This regex matches any string with at least 2 consecutive letters (not limited to ASCII).
   /// It's used when evaluating whether to display the body of a noteref referrer as the note's title.
@@ -60,6 +71,8 @@ class ReaderViewController: UIViewController, Loggable {
   deinit {
     NotificationCenter.default.removeObserver(self)
     positionsLoadingTask?.cancel()
+    navigationBoundaryToastHideWorkItem?.cancel()
+    navigationBoundaryCheckWorkItem?.cancel()
     removeNavigatorInputObservers()
   }
 
@@ -207,10 +220,98 @@ class ReaderViewController: UIViewController, Loggable {
     })
     inlineTranslationToken.store(in: &navigatorInputObserverTokens)
 
-    DirectionalNavigationAdapter(
-      pointerPolicy: .init(edges: .all),
+    let navigationAdapter = DirectionalNavigationAdapter(
+      pointerPolicy: .init(
+        edges: .horizontal,
+        minimumHorizontalEdgeSize: 60,
+        horizontalEdgeThresholdPercent: 0.25
+      ),
       animatedTransition: true
-    ).bind(to: visualNavigator)
+    )
+    directionalNavigationAdapter = navigationAdapter
+    navigationAdapter.bind(to: visualNavigator)
+
+    // The directional adapter returns false when it cannot move beyond the
+    // first or last page. Consume that edge tap before the center handler can
+    // toggle the navigation chrome, and give the reader explicit feedback.
+    let boundaryToken = visualNavigator.addObserver(.tap { [weak self, weak visualNavigator] event in
+      guard
+        let self,
+        let visualNavigator,
+        event.phase != .cancel,
+        let boundary = self.horizontalNavigationBoundary(
+          at: event.location,
+          in: visualNavigator
+        ),
+        self.isAtNavigationBoundary(boundary)
+      else {
+        return false
+      }
+
+      self.showNavigationBoundary(boundary)
+      return true
+    })
+    boundaryToken.store(in: &navigatorInputObserverTokens)
+
+    // Readium owns the actual swipe gesture. Observe it without consuming it,
+    // then show the same boundary feedback only when a deliberate horizontal
+    // swipe completed without changing the publication location.
+    let boundarySwipeToken = visualNavigator.addObserver(.drag(
+      onStart: { [weak self] event in
+        guard let self else { return false }
+        self.navigationBoundaryCheckWorkItem?.cancel()
+        self.boundarySwipeStart = (
+          location: event.location,
+          revision: self.navigationLocationRevision
+        )
+        return false
+      },
+      onEnd: { [weak self, weak visualNavigator] event in
+        guard
+          let self,
+          let visualNavigator,
+          let start = self.boundarySwipeStart
+        else {
+          return false
+        }
+        self.boundarySwipeStart = nil
+
+        let deltaX = event.location.x - start.location.x
+        let deltaY = event.location.y - start.location.y
+        guard
+          abs(deltaX) >= 44,
+          abs(deltaX) > abs(deltaY) * 1.25,
+          let boundary = self.horizontalNavigationBoundary(
+            forSwipeDeltaX: deltaX,
+            in: visualNavigator
+          )
+        else {
+          return false
+        }
+
+        let checkWorkItem = DispatchWorkItem { [weak self] in
+          guard
+            let self,
+            self.navigationLocationRevision == start.revision,
+            self.isAtNavigationBoundary(boundary)
+          else {
+            return
+          }
+          self.showNavigationBoundary(boundary)
+        }
+        self.navigationBoundaryCheckWorkItem = checkWorkItem
+        DispatchQueue.main.asyncAfter(
+          deadline: .now() + 0.45,
+          execute: checkWorkItem
+        )
+        return false
+      },
+      onCancel: { [weak self] _ in
+        self?.boundarySwipeStart = nil
+        return false
+      }
+    ))
+    boundarySwipeToken.store(in: &navigatorInputObserverTokens)
 
     let toggleToken = visualNavigator.addObserver(.tap { [weak self] event in
       guard
@@ -231,6 +332,12 @@ class ReaderViewController: UIViewController, Loggable {
   }
 
   private func removeNavigatorInputObservers() {
+    directionalNavigationAdapter?.unbind()
+    directionalNavigationAdapter = nil
+    navigationBoundaryCheckWorkItem?.cancel()
+    navigationBoundaryCheckWorkItem = nil
+    boundarySwipeStart = nil
+
     guard
       let visualNavigator = navigator as? VisualNavigator
     else {
@@ -240,6 +347,140 @@ class ReaderViewController: UIViewController, Loggable {
 
     navigatorInputObserverTokens.forEach { visualNavigator.removeObserver($0) }
     navigatorInputObserverTokens.removeAll()
+  }
+
+  private func horizontalNavigationBoundary(
+    at point: CGPoint,
+    in navigator: VisualNavigator
+  ) -> NavigationBoundary? {
+    guard !navigator.presentation.scroll else {
+      return nil
+    }
+
+    let bounds = navigator.view.bounds
+    let edgeSize = max(60, bounds.width * 0.25)
+    let isLeftEdge = point.x <= edgeSize
+    let isRightEdge = point.x >= bounds.width - edgeSize
+    guard isLeftEdge || isRightEdge else {
+      return nil
+    }
+
+    switch navigator.presentation.readingProgression {
+    case .ltr:
+      return isLeftEdge ? .beginning : .end
+    case .rtl:
+      return isLeftEdge ? .end : .beginning
+    }
+  }
+
+  private func horizontalNavigationBoundary(
+    forSwipeDeltaX deltaX: CGFloat,
+    in navigator: VisualNavigator
+  ) -> NavigationBoundary? {
+    guard !navigator.presentation.scroll, deltaX != 0 else {
+      return nil
+    }
+
+    switch navigator.presentation.readingProgression {
+    case .ltr:
+      return deltaX > 0 ? .beginning : .end
+    case .rtl:
+      return deltaX > 0 ? .end : .beginning
+    }
+  }
+
+  private func isAtNavigationBoundary(_ boundary: NavigationBoundary) -> Bool {
+    guard let locator = lastKnownLocator else {
+      return false
+    }
+
+    switch boundary {
+    case .beginning:
+      if let position = locator.locations.position, position <= 1 {
+        return true
+      }
+      return (locator.locations.totalProgression ?? 1) <= 0.001
+    case .end:
+      if
+        let position = locator.locations.position,
+        let positionsCount,
+        position >= positionsCount
+      {
+        return true
+      }
+      return (locator.locations.totalProgression ?? 0) >= 0.999
+    }
+  }
+
+  private func showNavigationBoundary(_ boundary: NavigationBoundary) {
+    let message: String
+    switch boundary {
+    case .beginning:
+      message = NSLocalizedString(
+        "reader_at_beginning_message",
+        value: "已经是第一页",
+        comment: "Shown when the reader tries to navigate before the first page"
+      )
+    case .end:
+      message = NSLocalizedString(
+        "reader_at_end_message",
+        value: "已经是最后一页",
+        comment: "Shown when the reader tries to navigate past the final page"
+      )
+    }
+
+    navigationBoundaryToastHideWorkItem?.cancel()
+
+    let toast: UILabel
+    if let existingToast = navigationBoundaryToast {
+      toast = existingToast
+    } else {
+      toast = UILabel()
+      toast.translatesAutoresizingMaskIntoConstraints = false
+      toast.backgroundColor = UIColor.black.withAlphaComponent(0.76)
+      toast.textColor = .white
+      toast.font = .systemFont(ofSize: 14, weight: .medium)
+      toast.textAlignment = .center
+      toast.numberOfLines = 1
+      toast.layer.cornerRadius = 18
+      toast.layer.masksToBounds = true
+      toast.isUserInteractionEnabled = false
+      toast.setContentHuggingPriority(.required, for: .horizontal)
+      view.addSubview(toast)
+      NSLayoutConstraint.activate([
+        toast.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+        toast.bottomAnchor.constraint(equalTo: positionLabel.topAnchor, constant: -14),
+        toast.heightAnchor.constraint(greaterThanOrEqualToConstant: 36),
+        toast.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 24),
+        toast.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -24),
+      ])
+      navigationBoundaryToast = toast
+    }
+
+    toast.text = "  \(message)  "
+    toast.alpha = 0
+    UIView.animate(withDuration: 0.16) {
+      toast.alpha = 1
+    }
+    UIAccessibility.post(notification: .announcement, argument: message)
+
+    let hideWorkItem = DispatchWorkItem { [weak self, weak toast] in
+      guard let self, let toast else { return }
+      UIView.animate(
+        withDuration: 0.2,
+        animations: {
+          toast.alpha = 0
+        },
+        completion: { _ in
+          toast.removeFromSuperview()
+          if self.navigationBoundaryToast === toast {
+            self.navigationBoundaryToast = nil
+          }
+        }
+      )
+    }
+    navigationBoundaryToastHideWorkItem = hideWorkItem
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1.2, execute: hideWorkItem)
   }
 
   @objc private func goBackward() {
@@ -268,6 +509,8 @@ class ReaderViewController: UIViewController, Loggable {
 
 extension ReaderViewController: NavigatorDelegate {
   func navigator(_ navigator: Navigator, locationDidChange locator: ReadiumShared.Locator) {
+    navigationLocationRevision += 1
+    navigationBoundaryCheckWorkItem?.cancel()
     subject.send(locator)
     updatePositionLabel(with: locator)
   }
