@@ -370,6 +370,54 @@ for a full search UI with infinite scroll.
 
 DRM is not supported at this time. However, there is a clear path to [support it via LCP](https://www.edrlab.org/readium-lcp/) and the intention is to eventually implement it.
 
+##### Registering a content protection
+
+No DRM scheme ships with this library, but the native `PublicationOpener` it builds internally
+accepts Readium's `ContentProtection` interface, and a host app can fill that slot from its own
+native code. This is the hook an [LCP](https://www.edrlab.org/readium-lcp/) integration would
+plug into: `liblcp` is proprietary and can't be bundled here, so the protection itself is built
+in the app (or in a companion module) and handed over before the reader opens anything.
+
+The registry starts empty, so a publication with no protection keeps opening exactly as it does
+today. Register early — at module init or app launch — since `ReaderService` reads the registry
+once, when it is constructed.
+
+**iOS** (Swift):
+
+```swift
+import ReadiumShared
+import NitroReadium
+
+ReaderContentProtectionRegistry.register(myContentProtection)
+```
+
+From Objective-C — or from a Swift module that can't `import` the library because its own
+Nitro-generated headers are C++-only — go through the Objective-C door instead:
+
+```objc
+@interface RNRContentProtectionRegistry : NSObject
++ (BOOL)registerProtection:(NSObject *)protection;
++ (void)unregisterProtection:(NSObject *)protection;
+@end
+
+[RNRContentProtectionRegistry registerProtection:myContentProtection];
+```
+
+It returns `NO` if the object passed isn't a `ContentProtection`, since the Swift protocol has no
+Objective-C representation and the cast can only happen on the Swift side.
+
+**Android** (Kotlin):
+
+```kotlin
+import com.reactnativereadium.reader.ReaderContentProtectionRegistry
+
+ReaderContentProtectionRegistry.register(myContentProtection)
+```
+
+Both platforms expose a matching `unregister`, for a module that is torn down with the JS runtime
+while the process lives on. Registering twice with the same concrete type replaces the earlier
+entry rather than stacking a second one.
+
 ## API
 
 #### View Props
