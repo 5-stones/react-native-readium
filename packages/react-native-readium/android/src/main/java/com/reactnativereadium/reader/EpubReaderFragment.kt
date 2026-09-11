@@ -21,6 +21,8 @@ import org.readium.r2.navigator.epub.EpubNavigatorFragment
 import org.readium.r2.navigator.Navigator
 import org.readium.r2.navigator.epub.EpubPreferences
 import org.readium.r2.navigator.epub.EpubNavigatorFactory
+import org.readium.r2.navigator.input.InputListener
+import org.readium.r2.navigator.util.DirectionalNavigationAdapter
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
 import org.readium.r2.navigator.preferences.Theme
@@ -54,6 +56,10 @@ class EpubReaderFragment : VisualReaderFragment() {
     private lateinit var factory: ReaderViewModel.Factory
     private lateinit var navigatorFactory: EpubNavigatorFactory
     private var pendingPreferences: EpubPreferences? = null
+
+    // Retained so onDestroyView can remove it: CompositeInputListener.add does not dedupe.
+    @OptIn(ExperimentalReadiumApi::class)
+    private var tapInputListener: InputListener? = null
 
     private lateinit var userPreferences: EpubPreferences
 
@@ -229,6 +235,7 @@ class EpubReaderFragment : VisualReaderFragment() {
         super.onCreate(savedInstanceState)
     }
 
+    @OptIn(ExperimentalReadiumApi::class)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = super.onCreateView(inflater, container, savedInstanceState)
         val navigatorFragmentTag = getString(R.string.epub_navigator_tag)
@@ -241,9 +248,23 @@ class EpubReaderFragment : VisualReaderFragment() {
         navigator = childFragmentManager.findFragmentByTag(navigatorFragmentTag) as Navigator
         navigatorFragment = navigator as EpubNavigatorFragment
 
+        // Turns pages on left/right edge taps and arrow/space keys, following the reading
+        // progression. Taps are ignored in scroll mode. Animated to match iOS.
+        val tapListener = DirectionalNavigationAdapter(navigatorFragment, animatedTransition = true)
+        tapInputListener = tapListener
+        navigatorFragment.addInputListener(tapListener)
+
         applyPendingPreferencesIfNeeded()
 
         return view
+    }
+
+    @OptIn(ExperimentalReadiumApi::class)
+    override fun onDestroyView() {
+        // Via the nullable field: onCreateView can fail before navigatorFragment is assigned.
+        tapInputListener?.let { navigatorFragment.removeInputListener(it) }
+        tapInputListener = null
+        super.onDestroyView()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
