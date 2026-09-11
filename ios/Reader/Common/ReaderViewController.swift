@@ -24,6 +24,9 @@ class ReaderViewController: UIViewController, Loggable {
   private var positionsLoadingTask: Task<Void, Never>?
   private var lastKnownLocator: ReadiumShared.Locator?
   private var navigatorInputObserverTokens = Set<InputObservableToken>()
+  // `bind(to:)` registers the adapter's tokens on itself, so an unretained instance is
+  // deallocated at the end of the statement and immediately unbinds.
+  private var directionalNavigationAdapter: DirectionalNavigationAdapter?
 
   /// This regex matches any string with at least 2 consecutive letters (not limited to ASCII).
   /// It's used when evaluating whether to display the body of a noteref referrer as the note's title.
@@ -193,10 +196,12 @@ class ReaderViewController: UIViewController, Loggable {
       return
     }
 
-    DirectionalNavigationAdapter(
+    let directionalNavigationAdapter = DirectionalNavigationAdapter(
       pointerPolicy: .init(edges: .all),
       animatedTransition: true
-    ).bind(to: visualNavigator)
+    )
+    directionalNavigationAdapter.bind(to: visualNavigator)
+    self.directionalNavigationAdapter = directionalNavigationAdapter
 
     let toggleToken = visualNavigator.addObserver(.tap { [weak self] event in
       guard
