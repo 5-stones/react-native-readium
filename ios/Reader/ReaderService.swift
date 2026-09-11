@@ -20,7 +20,10 @@ final class ReaderService: Loggable {
     )
 
     self.assetRetriever = assetRetriever
-    self.publicationOpener = PublicationOpener(parser: parser)
+    self.publicationOpener = PublicationOpener(
+      parser: parser,
+      contentProtections: ReaderContentProtectionRegistry.protections
+    )
 
     do {
       self.app = try AppModule()

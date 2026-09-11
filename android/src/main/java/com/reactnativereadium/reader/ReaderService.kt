@@ -31,7 +31,8 @@ class ReaderService(
       assetRetriever = assetRetriever,
       httpClient = httpClient,
       pdfFactory = PdfiumDocumentFactory(reactContext),
-    )
+    ),
+    contentProtections = ReaderContentProtectionRegistry.protections,
   )
 
   /**
