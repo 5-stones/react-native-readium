@@ -20,7 +20,21 @@ final class ReaderService: Loggable {
     )
 
     self.assetRetriever = assetRetriever
-    self.publicationOpener = PublicationOpener(parser: parser)
+    self.publicationOpener = PublicationOpener(parser: parser, onCreatePublication: { manifest, container, _ in
+      // Readium's HTML injector searches for </head> when appending its CSS.
+      // Legal XHTML <head/> otherwise loses ReadiumCSS-after (pagination).
+      // Normalize the served resource, never rewrite the imported EPUB.
+      let htmlHrefs = Set((manifest.readingOrder + manifest.resources)
+        .filter { $0.mediaType?.isHTML == true }
+        .map { $0.url().string })
+      container = container.map { href, resource in
+        guard htmlHrefs.contains(href.string) else { return resource }
+        return resource.map { data in
+          guard let html = String(data: data, encoding: .utf8) else { return data }
+          return Data(BookentHTMLCompatibility.expandEmptyHead(in: html).utf8)
+        }
+      }
+    })
 
     do {
       self.app = try AppModule()
@@ -177,6 +191,20 @@ final class ReaderService: Loggable {
       title: locator.title,
       locations: locator.locations,
       text: locator.text
+    )
+  }
+}
+
+// Kept separate from the UIKit service so the exact normalization can be tested
+// on macOS together with Readium's own HTML injector and WebKit pagination.
+enum BookentHTMLCompatibility {
+  static func expandEmptyHead(in html: String) -> String {
+    guard let regex = try? NSRegularExpression(
+      pattern: #"<head\b((?:[^<>"']|"[^"]*"|'[^']*')*?)/\s*>"#,
+      options: [.caseInsensitive]
+    ) else { return html }
+    return regex.stringByReplacingMatches(
+      in: html, range: NSRange(html.startIndex..., in: html), withTemplate: "<head$1></head>"
     )
   }
 }

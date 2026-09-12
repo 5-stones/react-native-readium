@@ -8,6 +8,143 @@ struct SelectionActionData: Codable {
     let label: String
 }
 
+// Runs in each reflowable document, before vocabulary wrappers are restored.
+// Raw Swift string preserves JavaScript escapes. No reading text leaves WebKit.
+private enum BookentTypographyScript {
+  static let source = #"""
+  (() => {
+    if (window.__bookentPrepareTypography) return;
+    const root = document.documentElement;
+    const managed = new Map();
+    const blockSelector = 'p, li, dd, dt, blockquote, figcaption, h1, h2, h3, h4, h5, h6, div, body';
+    let timer;
+    let measuring = false;
+
+    function restore() {
+      for (const [element, original] of managed) {
+        for (const [property, saved] of Object.entries(original)) {
+          if (saved.value) element.style.setProperty(property, saved.value, saved.priority);
+          else element.style.removeProperty(property);
+        }
+      }
+      managed.clear();
+    }
+
+    function setManaged(element, property, value) {
+      if (!managed.has(element)) managed.set(element, {});
+      const saved = managed.get(element);
+      if (!saved[property]) saved[property] = { value: element.style.getPropertyValue(property), priority: element.style.getPropertyPriority(property) };
+      element.style.setProperty(property, value, 'important');
+    }
+
+    function collectBlocks() {
+      const blocks = new Map();
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      let node;
+      while ((node = walker.nextNode())) {
+        const parent = node.parentElement;
+        if (!node.data.trim() || !parent || parent.closest(
+          '.bookent-translation-text, script, style, noscript, pre, code, svg, math, rt, button, input, textarea, select'
+        )) continue;
+        const element = parent.closest(blockSelector);
+        if (!element) continue;
+        const css = getComputedStyle(parent);
+        if (css.visibility === 'hidden' || css.display === 'none') continue;
+        const range = document.createRange();
+        range.setStart(node, 0);
+        range.setEnd(node, Math.min(node.length, 256));
+        const rects = Array.from(range.getClientRects()).filter(rect => rect.width > 0 && rect.height > 0);
+        if (!rects.length) continue;
+        let block = blocks.get(element);
+        if (!block) {
+          const style = getComputedStyle(element);
+          block = { element, font: parseFloat(style.fontSize), height: 0, sizes: new Set() };
+          blocks.set(element, block);
+        }
+        block.height = Math.max(block.height, ...rects.map(rect => rect.height));
+        const textFont = Math.round(parseFloat(css.fontSize) * 10) / 10;
+        block.sizes.add(textFont);
+      }
+      return Array.from(blocks.values());
+    }
+
+    function prepare() {
+      if (measuring || !document.body) return;
+      measuring = true;
+      try {
+        restore();
+        const rootStyle = getComputedStyle(root);
+        const standard = rootStyle.getPropertyValue('--USER__advancedSettings').trim() !== 'readium-advanced-off';
+        if (!getComputedStyle(document.body).writingMode.startsWith('horizontal')) return;
+        // Readium's root size is the user's reference, not a publisher's body
+        // override. Normalize this before deciding which blocks are body copy.
+        if (standard) setManaged(document.body, 'font-size', rootStyle.fontSize);
+        const bodyStyle = getComputedStyle(document.body);
+        if (!bodyStyle.writingMode.startsWith('horizontal')) return;
+        let blocks = collectBlocks();
+        const bodyFont = parseFloat(bodyStyle.fontSize);
+        if (!Number.isFinite(bodyFont) || bodyFont <= 0) return;
+        const scale = Math.min(0.92, Math.max(0.1, parseFloat(rootStyle.getPropertyValue('--bookent-translation-scale')) || 0.85));
+        const requestedLeading = Math.min(2.8, Math.max(2.1, parseFloat(rootStyle.getPropertyValue('--USER__lineHeight')) || 2.1));
+        const eligible = block => {
+          if (block.element.matches('h1,h2,h3,h4,h5,h6')) return false;
+          if (Math.abs(block.font - bodyFont) > 0.1) return false;
+          if ([...block.sizes].some(font => Math.abs(font - bodyFont) > 0.1)) return false;
+          // Never change an ancestor strut inherited by headings, captions or
+          // differently sized paragraphs. Only leaf text blocks are managed.
+          return !block.element.querySelector(blockSelector);
+        };
+        if (standard) {
+          for (const block of blocks.filter(eligible)) {
+            setManaged(block.element, 'font-family', 'Georgia, serif');
+            for (const inline of block.element.querySelectorAll('*')) {
+              if (!inline.closest('.bookent-translation-text, code, pre, svg, math') && Math.abs(parseFloat(getComputedStyle(inline).fontSize) - bodyFont) < .1) {
+                setManaged(inline, 'font-family', 'Georgia, serif');
+              }
+            }
+            // The slider is the FINAL baseline distance, not an extra reserve.
+            setManaged(block.element, 'line-height', `${bodyFont * requestedLeading}px`);
+          }
+          blocks = collectBlocks();
+        }
+        const plans = blocks.filter(eligible);
+        const capacity = plans.length ? Math.min(...plans.map(block => {
+          const leading = parseFloat(getComputedStyle(block.element).lineHeight);
+          // Include the underline and half a CSS pixel for WebKit rounding.
+          return Number.isFinite(leading) ? Math.max(0, (leading - block.height - 1.5) / 1.28) : 0;
+        })) : 0;
+        const translationFont = Math.max(10, Math.min(bodyFont * scale, Math.floor(capacity)));
+        const fontValue = `${translationFont.toFixed(2)}px`;
+        if (root.style.getPropertyValue('--bookent-translation-font-size') !== fontValue) root.style.setProperty('--bookent-translation-font-size', fontValue);
+        root.classList.toggle('bookent-no-translation-space', capacity < 10);
+        // Diagnostic metrics only: no text, and no persistence of device pixels
+        // into the user's per-book preferences.
+        window.__bookentTypographyMetrics = {
+          bodyFontSize: bodyFont, translationFontSize: translationFont,
+          capacity, requestedLeading, standard, blockCount: plans.length,
+        };
+      } finally {
+        measuring = false;
+      }
+    }
+
+    function schedule() {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (window.__bookentRelayoutTranslations) window.__bookentRelayoutTranslations();
+        else prepare();
+      }, 80);
+    }
+    window.__bookentPrepareTypography = prepare;
+    new MutationObserver(schedule).observe(root, { attributes: true, attributeFilter: ['style', 'class'] });
+    window.addEventListener('resize', schedule);
+    window.addEventListener('load', schedule, { once: true });
+    document.fonts?.ready.then(schedule);
+    document.fonts?.addEventListener('loadingdone', schedule);
+  })();
+  """#
+}
+
 private final class WeakScriptMessageHandler: NSObject, WKScriptMessageHandler {
     weak var delegate: WKScriptMessageHandler?
 
@@ -237,7 +374,7 @@ extension EPUBViewController: EPUBNavigatorDelegate {
         else {
           return
         }
-        let scale = min(0.92, max(0.6, requestedScale))
+        let scale = min(0.92, max(0.1, requestedScale))
         let value = String(format: "%.3f", locale: Locale(identifier: "en_US_POSIX"), scale)
         for webView in self.inlineTranslationWebViews.allObjects {
           webView.evaluateJavaScript(
@@ -252,8 +389,16 @@ extension EPUBViewController: EPUBNavigatorDelegate {
         forName: Notification.Name("BookentTranslationLayoutChanged"),
         object: nil,
         queue: .main
-      ) { [weak self] _ in
+      ) { [weak self] notification in
         guard let self else { return }
+        if let completion = notification.userInfo?["metricsCompletion"] as? ([String: Any]?) -> Void {
+          guard self.viewIfLoaded?.window != nil else { return }
+          Task { @MainActor in
+            let result = await self.epubNavigator.evaluateJavaScript("window.__bookentPrepareTypography?.(); window.__bookentTypographyMetrics || null;")
+            completion((try? result.get()) as? [String: Any])
+          }
+          return
+        }
         for webView in self.inlineTranslationWebViews.allObjects {
           webView.evaluateJavaScript(
             "window.__bookentRelayoutTranslations?.();"
@@ -285,7 +430,7 @@ extension EPUBViewController: EPUBNavigatorDelegate {
     let storedScale = UserDefaults.standard.object(
       forKey: "BookentInlineTranslationFontScale"
     ) as? Double ?? 0.85
-    let initialScale = min(0.92, max(0.6, storedScale))
+    let initialScale = min(0.92, max(0.1, storedScale))
     let knownVocabularyData = UserDefaults.standard.data(
       forKey: "BookentKnownVocabularyTranslations"
     )
@@ -296,6 +441,7 @@ extension EPUBViewController: EPUBNavigatorDelegate {
       .flatMap { String(data: $0, encoding: .utf8) } ?? "[]"
 
     let source = """
+      \(publication.metadata.layout == .fixed ? "" : BookentTypographyScript.source)
       (() => {
         if (window.__bookentRubyInstalled) return;
         window.__bookentRubyInstalled = true;
@@ -367,13 +513,13 @@ extension EPUBViewController: EPUBNavigatorDelegate {
             transform: translateX(calc(-50% + var(--bookent-translation-shift, 0px))) !important;
             color: inherit !important;
             opacity: 0.62;
-            font-family: inherit !important;
-            font-size: max(10px, calc(1rem * var(--bookent-translation-scale))) !important;
+            font-family: -apple-system, sans-serif !important;
+            font-size: var(--bookent-translation-font-size, max(10px, calc(1rem * var(--bookent-translation-scale)))) !important;
             font-weight: 400 !important;
             font-style: italic;
             letter-spacing: normal !important;
             word-spacing: normal !important;
-            line-height: 1 !important;
+            line-height: 1.2 !important;
             text-align: center !important;
             white-space: nowrap !important;
             overflow: hidden !important;
@@ -385,11 +531,13 @@ extension EPUBViewController: EPUBNavigatorDelegate {
             pointer-events: none !important;
           }
         `;
+        style.textContent += '.bookent-no-translation-space .bookent-translation-text { display: none !important; }';
         document.documentElement.appendChild(style);
         document.documentElement.style.setProperty(
           '--bookent-translation-scale',
           String(TRANSLATION_FONT_SCALE)
         );
+        window.__bookentPrepareTypography?.();
         let collisionFrame = null;
         const TRANSLATION_GAP = 3;
         const PAGE_EDGE_INSET = 3;
@@ -571,7 +719,10 @@ extension EPUBViewController: EPUBNavigatorDelegate {
           collisionFrame = requestAnimationFrame(resolveTranslationCollisions);
         }
 
-        window.__bookentRelayoutTranslations = scheduleTranslationLayout;
+        window.__bookentRelayoutTranslations = () => {
+          window.__bookentPrepareTypography?.();
+          scheduleTranslationLayout();
+        };
 
         function clearHold() {
           if (holdTimer !== null) {

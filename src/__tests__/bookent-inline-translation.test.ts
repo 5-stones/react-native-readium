@@ -45,11 +45,11 @@ describe('Bookent inline translation integration', () => {
       'transform: translateX(calc(-50% + var(--bookent-translation-shift, 0px))) !important'
     );
     expect(source).toContain(
-      'font-size: max(10px, calc(1rem * var(--bookent-translation-scale))) !important'
+      'font-size: var(--bookent-translation-font-size, max(10px, calc(1rem * var(--bookent-translation-scale)))) !important'
     );
     expect(source).not.toContain("const LAYER_ID = 'bookent-translation-layer'");
     expect(source).not.toContain('position: fixed !important');
-    expect(source).not.toContain('getClientRects()');
+    expect(source).toContain('window.__bookentPrepareTypography?.();');
   });
 
   it('uses the Bookent native translation and presentation channels', () => {
