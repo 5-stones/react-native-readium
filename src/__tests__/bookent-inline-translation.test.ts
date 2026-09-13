@@ -4,7 +4,7 @@ import path from 'path';
 const source = fs.readFileSync(
   path.join(__dirname, '../../ios/Reader/EPUB/EPUBViewController.swift'),
   'utf8'
-);
+) + fs.readFileSync(path.join(__dirname, '../../ios/Reader/EPUB/BookentScripts.swift'), 'utf8');
 
 const commonReaderSource = fs.readFileSync(
   path.join(__dirname, '../../ios/Reader/Common/ReaderViewController.swift'),
