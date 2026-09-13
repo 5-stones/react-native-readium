@@ -21,11 +21,11 @@ namespace margelo::nitro::readium {
   class JHybridReadiumViewSpec: public virtual HybridReadiumViewSpec, public virtual JHybridObject {
   public:
     struct JavaPart: public jni::JavaClass<JavaPart, JHybridObject::JavaPart> {
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/HybridReadiumViewSpec;";
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/HybridReadiumViewSpec;";
       std::shared_ptr<JHybridReadiumViewSpec> getJHybridReadiumViewSpec();
     };
     struct CxxPart: public jni::HybridClass<CxxPart, JHybridObject::CxxPart> {
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/HybridReadiumViewSpec$CxxPart;";
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/HybridReadiumViewSpec$CxxPart;";
       static jni::local_ref<jhybriddata> initHybrid(jni::alias_ref<jhybridobject> jThis);
       static void registerNatives();
       using HybridBase::HybridBase;
@@ -72,6 +72,8 @@ namespace margelo::nitro::readium {
   public:
     // Methods
     void goTo(const Locator& locator) override;
+    std::shared_ptr<Promise<std::string>> getBookmarkLocation() override;
+    std::shared_ptr<Promise<bool>> goToBookmark(const std::string& json) override;
     void goForward() override;
     void goBackward() override;
     void destroy() override;

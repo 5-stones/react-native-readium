@@ -68,6 +68,8 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
       forwardedRef,
       () => ({
         goTo: (locator) => hybridRef.current?.goTo(locator),
+        getBookmarkLocation: () => hybridRef.current?.getBookmarkLocation?.() ?? Promise.reject(new Error('Rebuild the native app to enable bookmarks')),
+        goToBookmark: (json) => hybridRef.current?.goToBookmark?.(json) ?? Promise.resolve(false),
         goForward: () => hybridRef.current?.goForward(),
         goBackward: () => hybridRef.current?.goBackward(),
         search: (query, options) =>

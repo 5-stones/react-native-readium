@@ -50,7 +50,7 @@ namespace margelo::nitro::readium {
    */
   struct JFunc_void_PublicationReadyEvent: public jni::JavaClass<JFunc_void_PublicationReadyEvent> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Func_void_PublicationReadyEvent;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Func_void_PublicationReadyEvent;";
 
   public:
     /**
@@ -86,7 +86,7 @@ namespace margelo::nitro::readium {
     }
 
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Func_void_PublicationReadyEvent_cxx;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Func_void_PublicationReadyEvent_cxx;";
     static void registerNatives() {
       registerHybrid({makeNativeMethod("invoke_cxx", JFunc_void_PublicationReadyEvent_cxx::invoke_cxx)});
     }

@@ -33,9 +33,9 @@ int initialize(JavaVM* vm) {
 }
 
 struct JHybridReadiumViewSpecImpl: public jni::JavaClass<JHybridReadiumViewSpecImpl, JHybridReadiumViewSpec::JavaPart> {
-  static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/HybridReadiumView;";
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/HybridReadiumView;";
   static std::shared_ptr<JHybridReadiumViewSpec> create() {
-    static auto constructorFn = javaClassStatic()->getConstructor<JHybridReadiumViewSpecImpl::javaobject()>();
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridReadiumViewSpecImpl::javaobject()>();
     jni::local_ref<JHybridReadiumViewSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
     return javaPart->getJHybridReadiumViewSpec();
   }

@@ -9,6 +9,7 @@ package com.margelo.nitro.reactnativereadium
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -25,6 +26,20 @@ data class ReadiumFile(
   val initialLocation: Locator?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is ReadiumFile) return false
+    return Objects.deepEquals(this.url, other.url)
+      && Objects.deepEquals(this.initialLocation, other.initialLocation)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      url,
+      initialLocation
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

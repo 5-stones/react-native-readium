@@ -19,11 +19,11 @@ namespace margelo::nitro::readium {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "Link" and the the Kotlin data class "Link".
+   * The C++ JNI bridge between the C++ struct "Link" and the Kotlin data class "Link".
    */
   struct JLink final: public jni::JavaClass<JLink> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Link;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Link;";
 
   public:
     /**
@@ -52,26 +52,26 @@ namespace margelo::nitro::readium {
       return Link(
         href->toStdString(),
         title != nullptr ? std::make_optional(title->toStdString()) : std::nullopt,
-        rels != nullptr ? std::make_optional([&]() {
-          size_t __size = rels->size();
+        rels != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<std::string> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = rels->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toStdString());
           }
           return __vector;
-        }()) : std::nullopt,
-        languages != nullptr ? std::make_optional([&]() {
-          size_t __size = languages->size();
+        }(rels)) : std::nullopt,
+        languages != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<std::string> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = languages->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toStdString());
           }
           return __vector;
-        }()) : std::nullopt,
+        }(languages)) : std::nullopt,
         depth != nullptr ? std::make_optional(depth->value()) : std::nullopt,
         hasChildren != nullptr ? std::make_optional(static_cast<bool>(hasChildren->value())) : std::nullopt,
         parentHref != nullptr ? std::make_optional(parentHref->toStdString()) : std::nullopt,
@@ -92,26 +92,26 @@ namespace margelo::nitro::readium {
         clazz,
         jni::make_jstring(value.href),
         value.title.has_value() ? jni::make_jstring(value.title.value()) : nullptr,
-        value.rels.has_value() ? [&]() {
-          size_t __size = value.rels.value().size();
+        value.rels.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.rels.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = jni::make_jstring(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.languages.has_value() ? [&]() {
-          size_t __size = value.languages.value().size();
+        }(value.rels.value()) : nullptr,
+        value.languages.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.languages.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = jni::make_jstring(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
+        }(value.languages.value()) : nullptr,
         value.depth.has_value() ? jni::JDouble::valueOf(value.depth.value()) : nullptr,
         value.hasChildren.has_value() ? jni::JBoolean::valueOf(value.hasChildren.value()) : nullptr,
         value.parentHref.has_value() ? jni::make_jstring(value.parentHref.value()) : nullptr,

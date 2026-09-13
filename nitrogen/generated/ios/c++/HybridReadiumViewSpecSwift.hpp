@@ -93,8 +93,8 @@ namespace margelo::nitro::readium { struct SearchOptions; }
 #include "Point.hpp"
 #include "SelectionEvent.hpp"
 #include "SelectionActionEvent.hpp"
-#include "SearchPage.hpp"
 #include <NitroModules/Promise.hpp>
+#include "SearchPage.hpp"
 #include "SearchResult.hpp"
 #include "SearchOptions.hpp"
 
@@ -215,6 +215,22 @@ namespace margelo::nitro::readium {
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
+    }
+    inline std::shared_ptr<Promise<std::string>> getBookmarkLocation() override {
+      auto __result = _swiftPart.getBookmarkLocation();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<bool>> goToBookmark(const std::string& json) override {
+      auto __result = _swiftPart.goToBookmark(json);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
     }
     inline void goForward() override {
       auto __result = _swiftPart.goForward();

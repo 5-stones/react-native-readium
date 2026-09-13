@@ -33,7 +33,7 @@ namespace margelo::nitro::readium {
    */
   struct JFunc_void_SelectionEvent: public jni::JavaClass<JFunc_void_SelectionEvent> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Func_void_SelectionEvent;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Func_void_SelectionEvent;";
 
   public:
     /**
@@ -69,7 +69,7 @@ namespace margelo::nitro::readium {
     }
 
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Func_void_SelectionEvent_cxx;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Func_void_SelectionEvent_cxx;";
     static void registerNatives() {
       registerHybrid({makeNativeMethod("invoke_cxx", JFunc_void_SelectionEvent_cxx::invoke_cxx)});
     }

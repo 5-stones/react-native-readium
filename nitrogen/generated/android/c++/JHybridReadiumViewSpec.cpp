@@ -117,9 +117,9 @@ namespace margelo::nitro::readium { struct SearchOptions; }
 #include "SelectionActionEvent.hpp"
 #include "JFunc_void_SelectionActionEvent.hpp"
 #include "JSelectionActionEvent.hpp"
-#include "SearchPage.hpp"
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/JPromise.hpp>
+#include "SearchPage.hpp"
 #include "JSearchPage.hpp"
 #include "SearchResult.hpp"
 #include "JSearchResult.hpp"
@@ -177,56 +177,56 @@ namespace margelo::nitro::readium {
   std::optional<std::vector<DecorationGroup>> JHybridReadiumViewSpec::getDecorations() {
     static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<jni::JArrayClass<JDecorationGroup>>()>("getDecorations");
     auto __result = method(_javaPart);
-    return __result != nullptr ? std::make_optional([&]() {
-      size_t __size = __result->size();
+    return __result != nullptr ? std::make_optional([&](auto&& __input) {
+      size_t __size = __input->size();
       std::vector<DecorationGroup> __vector;
       __vector.reserve(__size);
       for (size_t __i = 0; __i < __size; __i++) {
-        auto __element = __result->getElement(__i);
+        auto __element = __input->getElement(__i);
         __vector.push_back(__element->toCpp());
       }
       return __vector;
-    }()) : std::nullopt;
+    }(__result)) : std::nullopt;
   }
   void JHybridReadiumViewSpec::setDecorations(const std::optional<std::vector<DecorationGroup>>& decorations) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JArrayClass<JDecorationGroup>> /* decorations */)>("setDecorations");
-    method(_javaPart, decorations.has_value() ? [&]() {
-      size_t __size = decorations.value().size();
+    method(_javaPart, decorations.has_value() ? [&](auto&& __input) {
+      size_t __size = __input.size();
       jni::local_ref<jni::JArrayClass<JDecorationGroup>> __array = jni::JArrayClass<JDecorationGroup>::newArray(__size);
       for (size_t __i = 0; __i < __size; __i++) {
-        const auto& __element = decorations.value()[__i];
+        const auto& __element = __input[__i];
         auto __elementJni = JDecorationGroup::fromCpp(__element);
         __array->setElement(__i, *__elementJni);
       }
       return __array;
-    }() : nullptr);
+    }(decorations.value()) : nullptr);
   }
   std::optional<std::vector<SelectionAction>> JHybridReadiumViewSpec::getSelectionActions() {
     static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<jni::JArrayClass<JSelectionAction>>()>("getSelectionActions");
     auto __result = method(_javaPart);
-    return __result != nullptr ? std::make_optional([&]() {
-      size_t __size = __result->size();
+    return __result != nullptr ? std::make_optional([&](auto&& __input) {
+      size_t __size = __input->size();
       std::vector<SelectionAction> __vector;
       __vector.reserve(__size);
       for (size_t __i = 0; __i < __size; __i++) {
-        auto __element = __result->getElement(__i);
+        auto __element = __input->getElement(__i);
         __vector.push_back(__element->toCpp());
       }
       return __vector;
-    }()) : std::nullopt;
+    }(__result)) : std::nullopt;
   }
   void JHybridReadiumViewSpec::setSelectionActions(const std::optional<std::vector<SelectionAction>>& selectionActions) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JArrayClass<JSelectionAction>> /* selectionActions */)>("setSelectionActions");
-    method(_javaPart, selectionActions.has_value() ? [&]() {
-      size_t __size = selectionActions.value().size();
+    method(_javaPart, selectionActions.has_value() ? [&](auto&& __input) {
+      size_t __size = __input.size();
       jni::local_ref<jni::JArrayClass<JSelectionAction>> __array = jni::JArrayClass<JSelectionAction>::newArray(__size);
       for (size_t __i = 0; __i < __size; __i++) {
-        const auto& __element = selectionActions.value()[__i];
+        const auto& __element = __input[__i];
         auto __elementJni = JSelectionAction::fromCpp(__element);
         __array->setElement(__i, *__elementJni);
       }
       return __array;
-    }() : nullptr);
+    }(selectionActions.value()) : nullptr);
   }
   std::optional<std::function<void(const Locator& /* locator */)>> JHybridReadiumViewSpec::getOnLocationChange() {
     static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void_Locator::javaobject>()>("getOnLocationChange_cxx");
@@ -318,6 +318,38 @@ namespace margelo::nitro::readium {
   void JHybridReadiumViewSpec::goTo(const Locator& locator) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JLocator> /* locator */)>("goTo");
     method(_javaPart, JLocator::fromCpp(locator));
+  }
+  std::shared_ptr<Promise<std::string>> JHybridReadiumViewSpec::getBookmarkLocation() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("getBookmarkLocation");
+    auto __result = method(_javaPart);
+    return [&]() {
+      auto __promise = Promise<std::string>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<jni::JString>(__boxedResult);
+        __promise->resolve(__result->toStdString());
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<bool>> JHybridReadiumViewSpec::goToBookmark(const std::string& json) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* json */)>("goToBookmark");
+    auto __result = method(_javaPart, jni::make_jstring(json));
+    return [&]() {
+      auto __promise = Promise<bool>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<jni::JBoolean>(__boxedResult);
+        __promise->resolve(static_cast<bool>(__result->value()));
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
   }
   void JHybridReadiumViewSpec::goForward() {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void()>("goForward");

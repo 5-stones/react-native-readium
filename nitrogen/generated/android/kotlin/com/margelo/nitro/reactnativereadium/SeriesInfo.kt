@@ -9,6 +9,7 @@ package com.margelo.nitro.reactnativereadium
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -25,6 +26,20 @@ data class SeriesInfo(
   val position: Double?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is SeriesInfo) return false
+    return Objects.deepEquals(this.name, other.name)
+      && Objects.deepEquals(this.position, other.position)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      name,
+      position
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

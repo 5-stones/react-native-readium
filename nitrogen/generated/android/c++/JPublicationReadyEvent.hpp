@@ -41,11 +41,11 @@ namespace margelo::nitro::readium {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "PublicationReadyEvent" and the the Kotlin data class "PublicationReadyEvent".
+   * The C++ JNI bridge between the C++ struct "PublicationReadyEvent" and the Kotlin data class "PublicationReadyEvent".
    */
   struct JPublicationReadyEvent final: public jni::JavaClass<JPublicationReadyEvent> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/PublicationReadyEvent;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/PublicationReadyEvent;";
 
   public:
     /**
@@ -62,26 +62,26 @@ namespace margelo::nitro::readium {
       static const auto fieldMetadata = clazz->getField<JPublicationMetadata>("metadata");
       jni::local_ref<JPublicationMetadata> metadata = this->getFieldValue(fieldMetadata);
       return PublicationReadyEvent(
-        [&]() {
-          size_t __size = tableOfContents->size();
+        [&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<Link> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = tableOfContents->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }(),
-        [&]() {
-          size_t __size = positions->size();
+        }(tableOfContents),
+        [&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<Locator> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = positions->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }(),
+        }(positions),
         metadata->toCpp()
       );
     }
@@ -97,26 +97,26 @@ namespace margelo::nitro::readium {
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
-        [&]() {
-          size_t __size = value.tableOfContents.size();
+        [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JLink>> __array = jni::JArrayClass<JLink>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.tableOfContents[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JLink::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }(),
-        [&]() {
-          size_t __size = value.positions.size();
+        }(value.tableOfContents),
+        [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JLocator>> __array = jni::JArrayClass<JLocator>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.positions[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JLocator::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }(),
+        }(value.positions),
         JPublicationMetadata::fromCpp(value.metadata)
       );
     }

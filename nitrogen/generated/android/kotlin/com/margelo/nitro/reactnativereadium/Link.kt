@@ -9,6 +9,7 @@ package com.margelo.nitro.reactnativereadium
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -43,6 +44,32 @@ data class Link(
   val position: Double?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is Link) return false
+    return Objects.deepEquals(this.href, other.href)
+      && Objects.deepEquals(this.title, other.title)
+      && Objects.deepEquals(this.rels, other.rels)
+      && Objects.deepEquals(this.languages, other.languages)
+      && Objects.deepEquals(this.depth, other.depth)
+      && Objects.deepEquals(this.hasChildren, other.hasChildren)
+      && Objects.deepEquals(this.parentHref, other.parentHref)
+      && Objects.deepEquals(this.position, other.position)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      href,
+      title,
+      rels,
+      languages,
+      depth,
+      hasChildren,
+      parentHref,
+      position
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

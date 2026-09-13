@@ -9,6 +9,7 @@ package com.margelo.nitro.reactnativereadium
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -25,6 +26,20 @@ data class DecorationGroup(
   val decorations: Array<Decoration>
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is DecorationGroup) return false
+    return Objects.deepEquals(this.name, other.name)
+      && Objects.deepEquals(this.decorations, other.decorations)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      name,
+      decorations
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

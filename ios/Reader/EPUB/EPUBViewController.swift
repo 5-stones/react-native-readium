@@ -19,6 +19,18 @@ private enum BookentTypographyScript {
     const blockSelector = 'p, li, dd, dt, blockquote, figcaption, h1, h2, h3, h4, h5, h6, div, body';
     let timer;
     let measuring = false;
+    let preparedSignature = null;
+
+    function typographySignature() {
+      const css = getComputedStyle(root);
+      // Input/selection classes and our output CSS variables are not typography
+      // preferences. Readium changes them while a page gesture is in flight.
+      const preferences = Array.from(css).filter(name => name.startsWith('--USER__'))
+        .sort().map(name => [name, css.getPropertyValue(name)]);
+      return JSON.stringify([preferences, css.fontSize, css.fontFamily,
+        css.writingMode, innerWidth, innerHeight,
+        css.getPropertyValue('--bookent-translation-scale')]);
+    }
 
     function restore() {
       for (const [element, original] of managed) {
@@ -70,6 +82,8 @@ private enum BookentTypographyScript {
 
     function prepare() {
       if (measuring || !document.body) return;
+      const signature = typographySignature();
+      if (signature === preparedSignature) return;
       measuring = true;
       try {
         restore();
@@ -123,6 +137,7 @@ private enum BookentTypographyScript {
           bodyFontSize: bodyFont, translationFontSize: translationFont,
           capacity, requestedLeading, standard, blockCount: plans.length,
         };
+        preparedSignature = signature;
       } finally {
         measuring = false;
       }
@@ -139,8 +154,9 @@ private enum BookentTypographyScript {
     new MutationObserver(schedule).observe(root, { attributes: true, attributeFilter: ['style', 'class'] });
     window.addEventListener('resize', schedule);
     window.addEventListener('load', schedule, { once: true });
-    document.fonts?.ready.then(schedule);
-    document.fonts?.addEventListener('loadingdone', schedule);
+    const fontsChanged = () => { preparedSignature = null; schedule(); };
+    document.fonts?.ready.then(fontsChanged);
+    document.fonts?.addEventListener('loadingdone', fontsChanged);
   })();
   """#
 }
@@ -167,6 +183,7 @@ protocol SelectionActionDelegate: AnyObject {
 class EPUBViewController: ReaderViewController, SelectionActionHandlerDelegate {
     private var selectionActionHandler: SelectionActionHandler?
     private var isInlineRubyEnabled = false
+    private var isDecorationPrototypeEnabled = false
     private var translationResultObserver: NSObjectProtocol?
     private var translationAppearanceObserver: NSObjectProtocol?
     private var translationLayoutObserver: NSObjectProtocol?
@@ -188,6 +205,7 @@ class EPUBViewController: ReaderViewController, SelectionActionHandlerDelegate {
 
       if let actions = selectionActions {
         isInlineRubyEnabled = actions.contains(where: { $0.id == "get-word" })
+        isDecorationPrototypeEnabled = actions.contains(where: { $0.id == "decoration-prototype" })
         for action in actions {
           actionIds.append(action.id)
 
@@ -207,11 +225,29 @@ class EPUBViewController: ReaderViewController, SelectionActionHandlerDelegate {
         editingActions.append(contentsOf: EditingAction.defaultActions)
       }
 
+      var templates = HTMLDecorationTemplate.defaultTemplates()
+      templates["bookent-translation-prototype"] = HTMLDecorationTemplate(
+        layout: .boxes, width: .wrap,
+        element: { decoration in
+          // The label is data, never executable publisher/translation HTML.
+          let label = (decoration.userInfo["translation"] as? String ?? "")
+            .replacingOccurrences(of: "&", with: "&amp;")
+            .replacingOccurrences(of: "<", with: "&lt;")
+            .replacingOccurrences(of: ">", with: "&gt;")
+            .replacingOccurrences(of: "\"", with: "&quot;")
+          return "<div class='bookent-decoration-prototype'><span>\(label)</span></div>"
+        },
+        stylesheet: """
+        .bookent-decoration-prototype { width:100%; height:100%; border-bottom:1px dashed currentColor; color:var(--USER__textColor, currentColor); }
+        .bookent-decoration-prototype span { position:absolute; top:100%; left:50%; transform:translateX(-50%); white-space:nowrap; font:12px/1.2 sans-serif; }
+        """
+      )
       let navigator = try EPUBNavigatorViewController(
         publication: publication,
         initialLocation: locator,
         config: EPUBNavigatorViewController.Configuration(
-          editingActions: editingActions
+          editingActions: editingActions,
+          decorationTemplates: templates
         )
       )
 
@@ -324,6 +360,14 @@ extension EPUBViewController: EPUBNavigatorDelegate {
     _ navigator: EPUBNavigatorViewController,
     setupUserScripts userContentController: WKUserContentController
   ) {
+    if isDecorationPrototypeEnabled {
+      // Keep the current typography baseline while isolating decoration/input.
+      // Do not load the legacy wrapping, matching or gesture implementation.
+      if publication.metadata.layout != .fixed {
+        userContentController.addUserScript(WKUserScript(source: BookentTypographyScript.source, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
+      }
+      return
+    }
     guard isInlineRubyEnabled else {
       return
     }
@@ -413,6 +457,14 @@ extension EPUBViewController: EPUBNavigatorDelegate {
         object: nil,
         queue: .main
       ) { [weak self] notification in
+        if let word = notification.userInfo?["masteredWord"] as? String,
+           let data = try? JSONSerialization.data(withJSONObject: [word]),
+           let json = String(data: data, encoding: .utf8) {
+          for webView in self?.inlineTranslationWebViews.allObjects ?? [] {
+            webView.evaluateJavaScript("window.__bookentRemoveLearnedWord?.(...\(json));")
+          }
+          return
+        }
         guard let self,
               let translations = notification.userInfo?["translations"] as? [[String: String]],
               let data = try? JSONSerialization.data(withJSONObject: translations),
@@ -455,6 +507,7 @@ extension EPUBViewController: EPUBNavigatorDelegate {
         let holdTimer = null;
         let startPoint = null;
         let gestureConsumed = false;
+        let annotationTap = null;
         let activePointer = null;
         let suppressClickUntil = 0;
 
@@ -922,6 +975,18 @@ extension EPUBViewController: EPUBNavigatorDelegate {
           scheduleTranslationLayout();
         };
 
+        window.__bookentRemoveLearnedWord = (word) => {
+          const normalize = value => value.normalize('NFKC').replace(/[‘’]/g, "'").trim().toLocaleLowerCase('en-US');
+          for (const wrapper of document.querySelectorAll('.bookent-inline-translation')) {
+            const base = wrapper.querySelector('.bookent-word-base');
+            if (base && normalize(base.textContent) === normalize(word)) {
+              annotations.delete(wrapper.dataset.bookentRequest);
+              wrapper.replaceWith(document.createTextNode(base.textContent));
+            }
+          }
+          scheduleTranslationLayout();
+        };
+
         window.__bookentApplyKnownTranslations(\(knownVocabularyJSON));
 
         function sentenceContext(text, wordStart, wordEnd) {
@@ -1114,10 +1179,14 @@ extension EPUBViewController: EPUBNavigatorDelegate {
         document.addEventListener(
           'touchstart',
           (event) => {
-            if (event.touches.length !== 1) return;
+            annotationTap = null;
+            if (event.touches.length !== 1) { clearHold(); return; }
             gestureConsumed = false;
-            if (annotationFromEvent(event)) {
+            const touchedAnnotation = annotationFromEvent(event);
+            if (touchedAnnotation) {
               clearHold();
+              const touch = event.touches[0];
+              annotationTap = { annotation: touchedAnnotation, identifier: touch.identifier, x: touch.clientX, y: touch.clientY };
               suppressNavigatorTap();
               return;
             }
@@ -1142,6 +1211,10 @@ extension EPUBViewController: EPUBNavigatorDelegate {
         document.addEventListener(
           'touchmove',
           (event) => {
+            if (annotationTap) {
+              const touch = Array.from(event.touches).find(t => t.identifier === annotationTap.identifier);
+              if (event.touches.length !== 1 || !touch || Math.hypot(touch.clientX - annotationTap.x, touch.clientY - annotationTap.y) > MAX_MOVE) annotationTap = null;
+            }
             if (gestureConsumed) {
               event.preventDefault();
               event.stopImmediatePropagation();
@@ -1164,6 +1237,23 @@ extension EPUBViewController: EPUBNavigatorDelegate {
         document.addEventListener(
           'touchend',
           (event) => {
+            const tap = annotationTap;
+            annotationTap = null;
+            if (tap) {
+              const touch = Array.from(event.changedTouches).find(t => t.identifier === tap.identifier);
+              if (touch && Math.hypot(touch.clientX - tap.x, touch.clientY - tap.y) <= MAX_MOVE) {
+                clearHold();
+                gestureConsumed = true;
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                suppressNavigatorTap();
+                activateAnnotation(tap.annotation);
+                // Ignore only the compatibility click; a new touch uses its
+                // own lifecycle and is not blocked by this deadline.
+                suppressClickUntil = Date.now() + 800;
+                return;
+              }
+            }
             const shouldConsume = gestureConsumed;
             clearHold();
             if (shouldConsume) {
@@ -1173,7 +1263,7 @@ extension EPUBViewController: EPUBNavigatorDelegate {
           },
           { passive: false, capture: true }
         );
-        document.addEventListener('touchcancel', clearHold, {
+        document.addEventListener('touchcancel', () => { annotationTap = null; clearHold(); }, {
           passive: true,
           capture: true,
         });
@@ -1195,22 +1285,7 @@ extension EPUBViewController: EPUBNavigatorDelegate {
           },
           { passive: true, capture: true }
         );
-        document.addEventListener(
-          'click',
-          (event) => {
-            if (Date.now() < suppressClickUntil) {
-              event.preventDefault();
-              event.stopImmediatePropagation();
-              return;
-            }
-
-            const annotation = annotationFromEvent(event);
-            if (!annotation) return;
-
-            event.preventDefault();
-            event.stopImmediatePropagation();
-            suppressNavigatorTap();
-
+        function activateAnnotation(annotation) {
             const text = annotation.word.trim();
             if (!text) return;
 
@@ -1241,9 +1316,16 @@ extension EPUBViewController: EPUBNavigatorDelegate {
               sourceLanguage: annotation.sourceLanguage,
               targetLanguage: annotation.targetLanguage,
             });
-          },
-          true
-        );
+        }
+        document.addEventListener('click', event => {
+          const annotation = annotationFromEvent(event);
+          if (!annotation) return;
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          if (Date.now() < suppressClickUntil && event.detail !== 0) return;
+          suppressNavigatorTap();
+          activateAnnotation(annotation);
+        }, true);
         window.webkit?.messageHandlers?.bookentTranslation?.postMessage({
           action: 'register',
         });

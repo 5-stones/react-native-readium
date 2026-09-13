@@ -24,11 +24,11 @@ namespace margelo::nitro::readium {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "ReadiumFile" and the the Kotlin data class "ReadiumFile".
+   * The C++ JNI bridge between the C++ struct "ReadiumFile" and the Kotlin data class "ReadiumFile".
    */
   struct JReadiumFile final: public jni::JavaClass<JReadiumFile> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/ReadiumFile;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/ReadiumFile;";
 
   public:
     /**

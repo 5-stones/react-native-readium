@@ -15,6 +15,8 @@ import type {
 
 export type ReadiumViewRef = {
   goTo: (locator: Locator) => void;
+  getBookmarkLocation: () => Promise<string>;
+  goToBookmark: (json: string) => Promise<boolean>;
   goForward: () => void;
   goBackward: () => void;
   /** Starts a new search and resolves with the first page of results. */

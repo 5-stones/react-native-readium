@@ -33,6 +33,8 @@ namespace margelo::nitro::readium {
       prototype.registerHybridGetter("onSelectionAction", &HybridReadiumViewSpec::getOnSelectionAction);
       prototype.registerHybridSetter("onSelectionAction", &HybridReadiumViewSpec::setOnSelectionAction);
       prototype.registerHybridMethod("goTo", &HybridReadiumViewSpec::goTo);
+      prototype.registerHybridMethod("getBookmarkLocation", &HybridReadiumViewSpec::getBookmarkLocation);
+      prototype.registerHybridMethod("goToBookmark", &HybridReadiumViewSpec::goToBookmark);
       prototype.registerHybridMethod("goForward", &HybridReadiumViewSpec::goForward);
       prototype.registerHybridMethod("goBackward", &HybridReadiumViewSpec::goBackward);
       prototype.registerHybridMethod("destroy", &HybridReadiumViewSpec::destroy);

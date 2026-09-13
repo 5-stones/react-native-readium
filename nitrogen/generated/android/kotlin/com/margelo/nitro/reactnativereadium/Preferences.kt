@@ -9,6 +9,7 @@ package com.margelo.nitro.reactnativereadium
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -97,6 +98,68 @@ data class Preferences(
   val merging: Boolean?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is Preferences) return false
+    return Objects.deepEquals(this.backgroundColor, other.backgroundColor)
+      && Objects.deepEquals(this.columnCount, other.columnCount)
+      && Objects.deepEquals(this.fontFamily, other.fontFamily)
+      && Objects.deepEquals(this.fontSize, other.fontSize)
+      && Objects.deepEquals(this.fontWeight, other.fontWeight)
+      && Objects.deepEquals(this.hyphens, other.hyphens)
+      && Objects.deepEquals(this.imageFilter, other.imageFilter)
+      && Objects.deepEquals(this.language, other.language)
+      && Objects.deepEquals(this.letterSpacing, other.letterSpacing)
+      && Objects.deepEquals(this.ligatures, other.ligatures)
+      && Objects.deepEquals(this.lineHeight, other.lineHeight)
+      && Objects.deepEquals(this.pageMargins, other.pageMargins)
+      && Objects.deepEquals(this.paragraphIndent, other.paragraphIndent)
+      && Objects.deepEquals(this.paragraphSpacing, other.paragraphSpacing)
+      && Objects.deepEquals(this.publisherStyles, other.publisherStyles)
+      && Objects.deepEquals(this.readingProgression, other.readingProgression)
+      && Objects.deepEquals(this.scroll, other.scroll)
+      && Objects.deepEquals(this.spread, other.spread)
+      && Objects.deepEquals(this.textAlign, other.textAlign)
+      && Objects.deepEquals(this.textColor, other.textColor)
+      && Objects.deepEquals(this.textNormalization, other.textNormalization)
+      && Objects.deepEquals(this.theme, other.theme)
+      && Objects.deepEquals(this.typeScale, other.typeScale)
+      && Objects.deepEquals(this.verticalText, other.verticalText)
+      && Objects.deepEquals(this.wordSpacing, other.wordSpacing)
+      && Objects.deepEquals(this.merging, other.merging)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      backgroundColor,
+      columnCount,
+      fontFamily,
+      fontSize,
+      fontWeight,
+      hyphens,
+      imageFilter,
+      language,
+      letterSpacing,
+      ligatures,
+      lineHeight,
+      pageMargins,
+      paragraphIndent,
+      paragraphSpacing,
+      publisherStyles,
+      readingProgression,
+      scroll,
+      spread,
+      textAlign,
+      textColor,
+      textNormalization,
+      theme,
+      typeScale,
+      verticalText,
+      wordSpacing,
+      merging
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

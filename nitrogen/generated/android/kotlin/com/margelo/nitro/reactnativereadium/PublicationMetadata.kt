@@ -9,6 +9,7 @@ package com.margelo.nitro.reactnativereadium
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -103,6 +104,72 @@ data class PublicationMetadata(
   val belongsTo: BelongsTo?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is PublicationMetadata) return false
+    return Objects.deepEquals(this.title, other.title)
+      && Objects.deepEquals(this.sortAs, other.sortAs)
+      && Objects.deepEquals(this.subtitle, other.subtitle)
+      && Objects.deepEquals(this.identifier, other.identifier)
+      && Objects.deepEquals(this.accessibility, other.accessibility)
+      && Objects.deepEquals(this.modified, other.modified)
+      && Objects.deepEquals(this.published, other.published)
+      && Objects.deepEquals(this.language, other.language)
+      && Objects.deepEquals(this.author, other.author)
+      && Objects.deepEquals(this.translator, other.translator)
+      && Objects.deepEquals(this.editor, other.editor)
+      && Objects.deepEquals(this.artist, other.artist)
+      && Objects.deepEquals(this.illustrator, other.illustrator)
+      && Objects.deepEquals(this.letterer, other.letterer)
+      && Objects.deepEquals(this.penciler, other.penciler)
+      && Objects.deepEquals(this.colorist, other.colorist)
+      && Objects.deepEquals(this.inker, other.inker)
+      && Objects.deepEquals(this.narrator, other.narrator)
+      && Objects.deepEquals(this.contributor, other.contributor)
+      && Objects.deepEquals(this.publisher, other.publisher)
+      && Objects.deepEquals(this.imprint, other.imprint)
+      && Objects.deepEquals(this.subject, other.subject)
+      && Objects.deepEquals(this.layout, other.layout)
+      && Objects.deepEquals(this.readingProgression, other.readingProgression)
+      && Objects.deepEquals(this.description, other.description)
+      && Objects.deepEquals(this.duration, other.duration)
+      && Objects.deepEquals(this.numberOfPages, other.numberOfPages)
+      && Objects.deepEquals(this.belongsTo, other.belongsTo)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      title,
+      sortAs,
+      subtitle,
+      identifier,
+      accessibility,
+      modified,
+      published,
+      language,
+      author,
+      translator,
+      editor,
+      artist,
+      illustrator,
+      letterer,
+      penciler,
+      colorist,
+      inker,
+      narrator,
+      contributor,
+      publisher,
+      imprint,
+      subject,
+      layout,
+      readingProgression,
+      description,
+      duration,
+      numberOfPages,
+      belongsTo
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

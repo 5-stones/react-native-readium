@@ -18,11 +18,11 @@ namespace margelo::nitro::readium {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "Preferences" and the the Kotlin data class "Preferences".
+   * The C++ JNI bridge between the C++ struct "Preferences" and the Kotlin data class "Preferences".
    */
   struct JPreferences final: public jni::JavaClass<JPreferences> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Preferences;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Preferences;";
 
   public:
     /**

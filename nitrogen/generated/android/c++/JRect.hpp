@@ -17,11 +17,11 @@ namespace margelo::nitro::readium {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "Rect" and the the Kotlin data class "Rect".
+   * The C++ JNI bridge between the C++ struct "Rect" and the Kotlin data class "Rect".
    */
   struct JRect final: public jni::JavaClass<JRect> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Rect;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Rect;";
 
   public:
     /**

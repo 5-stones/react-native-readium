@@ -18,6 +18,9 @@ class HybridReadiumView: HybridReadiumViewSpec {
       guard file.url != (pendingFileUrl ?? loadedFileUrl) else { return }
       pendingFileUrl = file.url
       pendingInitialLocation = file.initialLocation
+      #if DEBUG
+      print("[ReaderTrace] \(Date().timeIntervalSince1970) file.reload initial=\(file.initialLocation != nil)")
+      #endif
       tryLoadBook()
     }
   }
@@ -130,6 +133,9 @@ class HybridReadiumView: HybridReadiumViewSpec {
     guard let prefs = preferences else { return }
 
     let epubPrefs = nitroPreferencesToEPUB(prefs)
+    #if DEBUG
+    print("[ReaderTrace] \(Date().timeIntervalSince1970) preferences.submit \(epubPrefs)")
+    #endif
     navigator.submitPreferences(epubPrefs)
   }
 
@@ -254,8 +260,30 @@ class HybridReadiumView: HybridReadiumViewSpec {
   }
 
   // MARK: - Imperative navigation
+  func getBookmarkLocation() throws -> Promise<String> {
+    Promise.async { @MainActor [weak self] in
+      guard let navigator = self?.readerViewController?.navigator,
+            let location = navigator.currentLocation else {
+        throw NSError(domain: "BookentBookmarks", code: 1, userInfo: [NSLocalizedDescriptionKey: "Reader is not ready"])
+      }
+      return try location.jsonString()
+    }
+  }
+
+  func goToBookmark(json: String) throws -> Promise<Bool> {
+    Promise.async { @MainActor [weak self] in
+      guard let navigator = self?.readerViewController?.navigator,
+            let data = json.data(using: .utf8),
+            let object = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+            let locator = try ReadiumShared.Locator(json: JSONValue(object), warnings: nil) else { return false }
+      return await navigator.go(to: locator, options: .animated)
+    }
+  }
 
   func goTo(locator: Locator) {
+    #if DEBUG
+    print("[ReaderTrace] \(Date().timeIntervalSince1970) command.goTo href=\(locator.href)")
+    #endif
     Task { @MainActor [weak self] in
       guard let self else { return }
       guard let navigator = self.readerViewController?.navigator else { return }
@@ -265,6 +293,9 @@ class HybridReadiumView: HybridReadiumViewSpec {
   }
 
   func goForward() {
+    #if DEBUG
+    print("[ReaderTrace] \(Date().timeIntervalSince1970) command.forward")
+    #endif
     Task { @MainActor in
       guard let navigator = readerViewController?.navigator else { return }
       _ = await navigator.goForward(options: .animated)
@@ -272,6 +303,9 @@ class HybridReadiumView: HybridReadiumViewSpec {
   }
 
   func goBackward() {
+    #if DEBUG
+    print("[ReaderTrace] \(Date().timeIntervalSince1970) command.backward")
+    #endif
     Task { @MainActor in
       guard let navigator = readerViewController?.navigator else { return }
       _ = await navigator.goBackward(options: .animated)

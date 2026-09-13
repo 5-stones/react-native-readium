@@ -48,9 +48,9 @@ namespace margelo::nitro::readium { struct SearchOptions; }
 #include "DecorationActivatedEvent.hpp"
 #include "SelectionEvent.hpp"
 #include "SelectionActionEvent.hpp"
-#include "SearchPage.hpp"
-#include <NitroModules/Promise.hpp>
 #include <string>
+#include <NitroModules/Promise.hpp>
+#include "SearchPage.hpp"
 #include "SearchOptions.hpp"
 
 namespace margelo::nitro::readium {
@@ -102,6 +102,8 @@ namespace margelo::nitro::readium {
     public:
       // Methods
       virtual void goTo(const Locator& locator) = 0;
+      virtual std::shared_ptr<Promise<std::string>> getBookmarkLocation() = 0;
+      virtual std::shared_ptr<Promise<bool>> goToBookmark(const std::string& json) = 0;
       virtual void goForward() = 0;
       virtual void goBackward() = 0;
       virtual void destroy() = 0;

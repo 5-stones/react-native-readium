@@ -100,6 +100,8 @@ struct StyleData: Codable {
 
   func toDecorationStyle() -> ReadiumNavigator.Decoration.Style? {
     switch type {
+    case "bookent-translation-prototype":
+      return .init(id: "bookent-translation-prototype")
     case "highlight":
       let color = tint.flatMap { UIColor.fromCSS($0) }
       return .highlight(tint: color, isActive: isActive ?? false)

@@ -264,6 +264,9 @@ class ReaderViewController: UIViewController, Loggable {
     // visible reader controls are dismissed as soon as the reading action
     // starts.
     let readingTapToken = visualNavigator.addObserver(.tap { [weak self, weak visualNavigator] event in
+      #if DEBUG
+      print("[ReaderTrace] \(Date().timeIntervalSince1970) tap phase=\(event.phase) x=\(event.location.x) y=\(event.location.y)")
+      #endif
       guard
         let self,
         let visualNavigator,
@@ -319,6 +322,9 @@ class ReaderViewController: UIViewController, Loggable {
     // swipe completed without changing the publication location.
     let boundarySwipeToken = visualNavigator.addObserver(.drag(
       onStart: { [weak self] event in
+        #if DEBUG
+        print("[ReaderTrace] \(Date().timeIntervalSince1970) drag.start x=\(event.location.x) y=\(event.location.y)")
+        #endif
         guard let self else { return false }
         self.navigationBoundaryCheckWorkItem?.cancel()
         self.boundarySwipeStart = (
@@ -339,6 +345,9 @@ class ReaderViewController: UIViewController, Loggable {
 
         let deltaX = event.location.x - start.location.x
         let deltaY = event.location.y - start.location.y
+        #if DEBUG
+        print("[ReaderTrace] \(Date().timeIntervalSince1970) drag.end dx=\(deltaX) dy=\(deltaY) revision=\(self.navigationLocationRevision)")
+        #endif
         guard
           abs(deltaX) >= 44,
           abs(deltaX) > abs(deltaY) * 1.25,
@@ -577,6 +586,9 @@ class ReaderViewController: UIViewController, Loggable {
 
 extension ReaderViewController: NavigatorDelegate {
   func navigator(_ navigator: Navigator, locationDidChange locator: ReadiumShared.Locator) {
+    #if DEBUG
+    print("[ReaderTrace] \(Date().timeIntervalSince1970) location href=\(locator.href) position=\(String(describing: locator.locations.position)) progression=\(String(describing: locator.locations.progression)) total=\(String(describing: locator.locations.totalProgression))")
+    #endif
     navigationLocationRevision += 1
     navigationBoundaryCheckWorkItem?.cancel()
     subject.send(locator)
@@ -592,6 +604,9 @@ extension ReaderViewController: NavigatorDelegate {
   }
 
   func navigator(_ navigator: Navigator, presentError error: NavigatorError) {
+    #if DEBUG
+    print("[ReaderTrace] \(Date().timeIntervalSince1970) navigator.error \(error)")
+    #endif
     moduleDelegate?.presentError(error, from: self)
   }
 

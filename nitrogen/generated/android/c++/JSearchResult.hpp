@@ -24,11 +24,11 @@ namespace margelo::nitro::readium {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "SearchResult" and the the Kotlin data class "SearchResult".
+   * The C++ JNI bridge between the C++ struct "SearchResult" and the Kotlin data class "SearchResult".
    */
   struct JSearchResult final: public jni::JavaClass<JSearchResult> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/SearchResult;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/SearchResult;";
 
   public:
     /**

@@ -9,6 +9,7 @@ package com.margelo.nitro.reactnativereadium
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -31,6 +32,24 @@ data class SearchResult(
   val after: String?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is SearchResult) return false
+    return Objects.deepEquals(this.locator, other.locator)
+      && Objects.deepEquals(this.before, other.before)
+      && Objects.deepEquals(this.highlight, other.highlight)
+      && Objects.deepEquals(this.after, other.after)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      locator,
+      before,
+      highlight,
+      after
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

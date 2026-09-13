@@ -18,11 +18,11 @@ namespace margelo::nitro::readium {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "Contributor" and the the Kotlin data class "Contributor".
+   * The C++ JNI bridge between the C++ struct "Contributor" and the Kotlin data class "Contributor".
    */
   struct JContributor final: public jni::JavaClass<JContributor> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Contributor;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Contributor;";
 
   public:
     /**

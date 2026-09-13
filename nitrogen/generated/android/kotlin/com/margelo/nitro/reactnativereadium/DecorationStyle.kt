@@ -9,6 +9,7 @@ package com.margelo.nitro.reactnativereadium
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -43,6 +44,32 @@ data class DecorationStyle(
   val width: String?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is DecorationStyle) return false
+    return Objects.deepEquals(this.type, other.type)
+      && Objects.deepEquals(this.tint, other.tint)
+      && Objects.deepEquals(this.isActive, other.isActive)
+      && Objects.deepEquals(this.id, other.id)
+      && Objects.deepEquals(this.html, other.html)
+      && Objects.deepEquals(this.css, other.css)
+      && Objects.deepEquals(this.layout, other.layout)
+      && Objects.deepEquals(this.width, other.width)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      type,
+      tint,
+      isActive,
+      id,
+      html,
+      css,
+      layout,
+      width
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

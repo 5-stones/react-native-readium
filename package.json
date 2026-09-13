@@ -83,7 +83,7 @@
     "eslint-plugin-unused-imports": "^4.3.0",
     "husky": "^6.0.0",
     "jest": "^29.6.3",
-    "nitrogen": "^0.35.0",
+    "nitrogen": "0.36.5",
     "pod-install": "^0.1.0",
     "prettier": "2.8.8",
     "react": "19.2.3",

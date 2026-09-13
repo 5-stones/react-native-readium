@@ -151,6 +151,12 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
 
   // MARK: - Imperative navigation
 
+  override fun getBookmarkLocation(): Promise<String> = Promise.async(scope) {
+    throw UnsupportedOperationException("Bookmarks are currently supported on iOS only")
+  }
+
+  override fun goToBookmark(json: String): Promise<Boolean> = Promise.resolved(false)
+
   override fun goTo(locator: Locator) {
     val action = Runnable {
       val readiumLocator = nitroLocatorToReadium(locator) ?: return@Runnable

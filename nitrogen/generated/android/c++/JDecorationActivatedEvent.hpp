@@ -33,11 +33,11 @@ namespace margelo::nitro::readium {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "DecorationActivatedEvent" and the the Kotlin data class "DecorationActivatedEvent".
+   * The C++ JNI bridge between the C++ struct "DecorationActivatedEvent" and the Kotlin data class "DecorationActivatedEvent".
    */
   struct JDecorationActivatedEvent final: public jni::JavaClass<JDecorationActivatedEvent> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/DecorationActivatedEvent;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/DecorationActivatedEvent;";
 
   public:
     /**

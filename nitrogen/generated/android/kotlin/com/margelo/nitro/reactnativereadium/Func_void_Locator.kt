@@ -10,7 +10,6 @@ package com.margelo.nitro.reactnativereadium
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
-import dalvik.annotation.optimization.FastNative
 
 
 /**
@@ -59,7 +58,6 @@ class Func_void_Locator_cxx: Func_void_Locator {
   override fun invoke(locator: Locator): Unit
     = invoke_cxx(locator)
 
-  @FastNative
   private external fun invoke_cxx(locator: Locator): Unit
 }
 

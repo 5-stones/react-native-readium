@@ -9,6 +9,7 @@ package com.margelo.nitro.reactnativereadium
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -34,6 +35,26 @@ data class SearchOptions(
   val language: String?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is SearchOptions) return false
+    return Objects.deepEquals(this.caseSensitive, other.caseSensitive)
+      && Objects.deepEquals(this.diacriticSensitive, other.diacriticSensitive)
+      && Objects.deepEquals(this.wholeWord, other.wholeWord)
+      && Objects.deepEquals(this.regularExpression, other.regularExpression)
+      && Objects.deepEquals(this.language, other.language)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      caseSensitive,
+      diacriticSensitive,
+      wholeWord,
+      regularExpression,
+      language
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

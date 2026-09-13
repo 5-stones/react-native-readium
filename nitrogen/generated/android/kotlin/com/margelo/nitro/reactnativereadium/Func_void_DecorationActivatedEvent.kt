@@ -10,7 +10,6 @@ package com.margelo.nitro.reactnativereadium
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
-import dalvik.annotation.optimization.FastNative
 
 
 /**
@@ -59,7 +58,6 @@ class Func_void_DecorationActivatedEvent_cxx: Func_void_DecorationActivatedEvent
   override fun invoke(event: DecorationActivatedEvent): Unit
     = invoke_cxx(event)
 
-  @FastNative
   private external fun invoke_cxx(event: DecorationActivatedEvent): Unit
 }
 

@@ -17,11 +17,11 @@ namespace margelo::nitro::readium {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "SelectionAction" and the the Kotlin data class "SelectionAction".
+   * The C++ JNI bridge between the C++ struct "SelectionAction" and the Kotlin data class "SelectionAction".
    */
   struct JSelectionAction final: public jni::JavaClass<JSelectionAction> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/SelectionAction;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/SelectionAction;";
 
   public:
     /**

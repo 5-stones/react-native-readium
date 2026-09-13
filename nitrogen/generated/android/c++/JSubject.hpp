@@ -18,11 +18,11 @@ namespace margelo::nitro::readium {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "Subject" and the the Kotlin data class "Subject".
+   * The C++ JNI bridge between the C++ struct "Subject" and the Kotlin data class "Subject".
    */
   struct JSubject final: public jni::JavaClass<JSubject> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Subject;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/reactnativereadium/Subject;";
 
   public:
     /**

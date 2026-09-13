@@ -22,6 +22,8 @@ public protocol HybridReadiumViewSpec_protocol: HybridObject, HybridView {
 
   // Methods
   func goTo(locator: Locator) throws -> Void
+  func getBookmarkLocation() throws -> Promise<String>
+  func goToBookmark(json: String) throws -> Promise<Bool>
   func goForward() throws -> Void
   func goBackward() throws -> Void
   func destroy() throws -> Void

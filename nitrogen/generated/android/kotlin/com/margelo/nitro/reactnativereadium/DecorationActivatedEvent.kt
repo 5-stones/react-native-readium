@@ -9,6 +9,7 @@ package com.margelo.nitro.reactnativereadium
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -31,6 +32,24 @@ data class DecorationActivatedEvent(
   val point: Point?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is DecorationActivatedEvent) return false
+    return Objects.deepEquals(this.decoration, other.decoration)
+      && Objects.deepEquals(this.group, other.group)
+      && Objects.deepEquals(this.rect, other.rect)
+      && Objects.deepEquals(this.point, other.point)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      decoration,
+      group,
+      rect,
+      point
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

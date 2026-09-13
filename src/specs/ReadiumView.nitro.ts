@@ -273,6 +273,8 @@ export interface ReadiumViewProps extends HybridViewProps {
 
 export interface ReadiumViewMethods extends HybridViewMethods {
   goTo(locator: Locator): void;
+  getBookmarkLocation(): Promise<string>;
+  goToBookmark(json: string): Promise<boolean>;
   goForward(): void;
   goBackward(): void;
   destroy(): void;

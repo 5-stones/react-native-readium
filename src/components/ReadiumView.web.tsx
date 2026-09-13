@@ -69,6 +69,8 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
     useImperativeHandle(
       ref,
       () => ({
+        getBookmarkLocation: () => Promise.reject(new Error('Bookmarks are currently supported on iOS only')),
+        goToBookmark: () => Promise.resolve(false),
         goTo: (locator) => {
           if (!navigator) return;
 

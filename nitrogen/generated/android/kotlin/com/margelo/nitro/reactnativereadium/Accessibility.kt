@@ -9,6 +9,7 @@ package com.margelo.nitro.reactnativereadium
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -40,6 +41,30 @@ data class Accessibility(
   val summary: String?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is Accessibility) return false
+    return Objects.deepEquals(this.conformsTo, other.conformsTo)
+      && Objects.deepEquals(this.certification, other.certification)
+      && Objects.deepEquals(this.accessMode, other.accessMode)
+      && Objects.deepEquals(this.accessModeSufficient, other.accessModeSufficient)
+      && Objects.deepEquals(this.feature, other.feature)
+      && Objects.deepEquals(this.hazard, other.hazard)
+      && Objects.deepEquals(this.summary, other.summary)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      conformsTo,
+      certification,
+      accessMode,
+      accessModeSufficient,
+      feature,
+      hazard,
+      summary
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**
