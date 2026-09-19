@@ -31,6 +31,9 @@ data class PublicationMetadata(
   val identifier: String?,
   @DoNotStrip
   @Keep
+  val conformsTo: Array<String>?,
+  @DoNotStrip
+  @Keep
   val accessibility: Accessibility?,
   @DoNotStrip
   @Keep
@@ -112,8 +115,8 @@ data class PublicationMetadata(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(title: String, sortAs: String?, subtitle: String?, identifier: String?, accessibility: Accessibility?, modified: String?, published: String?, language: Array<String>?, author: Array<Contributor>?, translator: Array<Contributor>?, editor: Array<Contributor>?, artist: Array<Contributor>?, illustrator: Array<Contributor>?, letterer: Array<Contributor>?, penciler: Array<Contributor>?, colorist: Array<Contributor>?, inker: Array<Contributor>?, narrator: Array<Contributor>?, contributor: Array<Contributor>?, publisher: Array<Contributor>?, imprint: Array<Contributor>?, subject: Array<Subject>?, layout: String?, readingProgression: String?, description: String?, duration: Double?, numberOfPages: Double?, belongsTo: BelongsTo?): PublicationMetadata {
-      return PublicationMetadata(title, sortAs, subtitle, identifier, accessibility, modified, published, language, author, translator, editor, artist, illustrator, letterer, penciler, colorist, inker, narrator, contributor, publisher, imprint, subject, layout, readingProgression, description, duration, numberOfPages, belongsTo)
+    private fun fromCpp(title: String, sortAs: String?, subtitle: String?, identifier: String?, conformsTo: Array<String>?, accessibility: Accessibility?, modified: String?, published: String?, language: Array<String>?, author: Array<Contributor>?, translator: Array<Contributor>?, editor: Array<Contributor>?, artist: Array<Contributor>?, illustrator: Array<Contributor>?, letterer: Array<Contributor>?, penciler: Array<Contributor>?, colorist: Array<Contributor>?, inker: Array<Contributor>?, narrator: Array<Contributor>?, contributor: Array<Contributor>?, publisher: Array<Contributor>?, imprint: Array<Contributor>?, subject: Array<Subject>?, layout: String?, readingProgression: String?, description: String?, duration: Double?, numberOfPages: Double?, belongsTo: BelongsTo?): PublicationMetadata {
+      return PublicationMetadata(title, sortAs, subtitle, identifier, conformsTo, accessibility, modified, published, language, author, translator, editor, artist, illustrator, letterer, penciler, colorist, inker, narrator, contributor, publisher, imprint, subject, layout, readingProgression, description, duration, numberOfPages, belongsTo)
     }
   }
 }

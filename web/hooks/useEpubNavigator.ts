@@ -4,6 +4,7 @@ import { EpubNavigator } from '@readium/navigator';
 import { Locator, Publication } from '@readium/shared';
 
 import type { ReadiumProps } from '../../src/components/ReadiumView';
+import { assessCapabilities } from '../utils/capabilities';
 import {
   createNavigatorListeners,
   createPositions,
@@ -17,7 +18,7 @@ import {
 interface RefProps
   extends Pick<
     ReadiumProps,
-    'file' | 'onLocationChange' | 'onPublicationReady'
+    'file' | 'onLocationChange' | 'onPublicationReady' | 'onPreferencesChanged'
   > {
   container: HTMLElement | null;
   onPositionChange?: (position: number | null) => void;
@@ -86,7 +87,6 @@ export const useEpubNavigator = ({
   );
 
   useEffect(() => {
-
     if (!isEpub || !container) return;
 
     const epubContainer = container;
@@ -162,6 +162,7 @@ export const useEpubNavigator = ({
           // @ts-ignore
           positions: positionsArray,
           metadata: metadata,
+          capabilities: assessCapabilities(nav, configuration.preferences),
         });
       }
 

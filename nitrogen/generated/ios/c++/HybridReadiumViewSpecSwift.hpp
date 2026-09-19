@@ -48,6 +48,10 @@ namespace margelo::nitro::readium { struct Subject; }
 namespace margelo::nitro::readium { struct BelongsTo; }
 // Forward declaration of `SeriesInfo` to properly resolve imports.
 namespace margelo::nitro::readium { struct SeriesInfo; }
+// Forward declaration of `Capabilities` to properly resolve imports.
+namespace margelo::nitro::readium { struct Capabilities; }
+// Forward declaration of `PreferencesChangedEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct PreferencesChangedEvent; }
 // Forward declaration of `DecorationActivatedEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct DecorationActivatedEvent; }
 // Forward declaration of `Rect` to properly resolve imports.
@@ -88,6 +92,8 @@ namespace margelo::nitro::readium { struct SearchOptions; }
 #include "Subject.hpp"
 #include "BelongsTo.hpp"
 #include "SeriesInfo.hpp"
+#include "Capabilities.hpp"
+#include "PreferencesChangedEvent.hpp"
 #include "DecorationActivatedEvent.hpp"
 #include "Rect.hpp"
 #include "Point.hpp"
@@ -185,6 +191,13 @@ namespace margelo::nitro::readium {
     }
     inline void setOnPublicationReady(const std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>& onPublicationReady) noexcept override {
       _swiftPart.setOnPublicationReady(onPublicationReady);
+    }
+    inline std::optional<std::function<void(const PreferencesChangedEvent& /* event */)>> getOnPreferencesChanged() noexcept override {
+      auto __result = _swiftPart.getOnPreferencesChanged();
+      return __result;
+    }
+    inline void setOnPreferencesChanged(const std::optional<std::function<void(const PreferencesChangedEvent& /* event */)>>& onPreferencesChanged) noexcept override {
+      _swiftPart.setOnPreferencesChanged(onPreferencesChanged);
     }
     inline std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>> getOnDecorationActivated() noexcept override {
       auto __result = _swiftPart.getOnDecorationActivated();

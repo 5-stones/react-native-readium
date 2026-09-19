@@ -279,6 +279,38 @@ open class HybridReadiumViewSpec_cxx {
     }
   }
   
+  public final var onPreferencesChanged: bridge.std__optional_std__function_void_const_PreferencesChangedEvent_____event______ {
+    @inline(__always)
+    get {
+      return { () -> bridge.std__optional_std__function_void_const_PreferencesChangedEvent_____event______ in
+        if let __unwrappedValue = self.__implementation.onPreferencesChanged {
+          return bridge.create_std__optional_std__function_void_const_PreferencesChangedEvent_____event______({ () -> bridge.Func_void_PreferencesChangedEvent in
+            let __closureWrapper = Func_void_PreferencesChangedEvent(__unwrappedValue)
+            return bridge.create_Func_void_PreferencesChangedEvent(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__implementation.onPreferencesChanged = { () -> ((_ event: PreferencesChangedEvent) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_const_PreferencesChangedEvent_____event______(newValue) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_const_PreferencesChangedEvent_____event______(newValue)
+          return { () -> (PreferencesChangedEvent) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_PreferencesChangedEvent(__unwrapped)
+            return { (__event: PreferencesChangedEvent) -> Void in
+              __wrappedFunction.call(__event)
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
+    }
+  }
+  
   public final var onDecorationActivated: bridge.std__optional_std__function_void_const_DecorationActivatedEvent_____event______ {
     @inline(__always)
     get {

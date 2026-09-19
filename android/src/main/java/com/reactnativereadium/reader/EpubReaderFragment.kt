@@ -49,7 +49,7 @@ class EpubReaderFragment : VisualReaderFragment() {
 
     override lateinit var model: ReaderViewModel
     override lateinit var navigator: Navigator
-    private lateinit var publication: Publication
+    override lateinit var publication: Publication
     lateinit var navigatorFragment: EpubNavigatorFragment
     private lateinit var factory: ReaderViewModel.Factory
     private lateinit var navigatorFactory: EpubNavigatorFactory

@@ -8,6 +8,11 @@ export * from './PublicationMetadata';
 export * from './PublicationReady';
 export * from './Selection';
 export * from './SelectionAction';
-export type { Rect, Point } from '../specs/ReadiumView.nitro';
+export type {
+  Rect,
+  Point,
+  Capabilities,
+  PreferencesChangedEvent,
+} from '../specs/ReadiumView.nitro';
 export * from './Search';
 export * from './Zoom';

@@ -40,7 +40,8 @@ class ReaderViewModel(
         class PublicationReady(
             val tableOfContents: List<Link>,
             val positions: List<Locator>,
-            val metadata: Metadata
+            val metadata: Metadata,
+            val publication: Publication
         ) : Event()
         class DecorationActivated(
             val decoration: Decoration,

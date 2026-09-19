@@ -24,7 +24,9 @@ class HybridReadiumView: HybridReadiumViewSpec {
 
   var preferences: Preferences? = nil {
     didSet {
-      updatePreferences()
+      Task { @MainActor [weak self] in
+        self?.updatePreferences()
+      }
     }
   }
 
@@ -43,6 +45,7 @@ class HybridReadiumView: HybridReadiumViewSpec {
 
   var onLocationChange: ((Locator) -> Void)? = nil
   var onPublicationReady: ((PublicationReadyEvent) -> Void)? = nil
+  var onPreferencesChanged: ((PreferencesChangedEvent) -> Void)? = nil
   var onDecorationActivated: ((DecorationActivatedEvent) -> Void)? = nil
   var onSelectionChange: ((SelectionEvent) -> Void)? = nil
   var onSelectionAction: ((SelectionActionEvent) -> Void)? = nil
@@ -123,14 +126,27 @@ class HybridReadiumView: HybridReadiumViewSpec {
   }
 
   // MARK: - Preferences
-
+  @MainActor
   private func updatePreferences() {
     guard readerViewController != nil else { return }
-    guard let navigator = readerViewController?.navigator as? EPUBNavigatorViewController else { return }
-    guard let prefs = preferences else { return }
+    guard let navigator = readerViewController?.navigator,
+          let prefs = preferences else { return }
 
-    let epubPrefs = nitroPreferencesToEPUB(prefs)
-    navigator.submitPreferences(epubPrefs)
+    if let epubNavigator = navigator as? EPUBNavigatorViewController {
+      let epubPrefs = nitroPreferencesToEPUB(prefs)
+      epubNavigator.submitPreferences(epubPrefs)
+    } else if let pdfNavigator = navigator as? PDFNavigatorViewController {
+      let pdfPrefs = nitroPreferencesToPDF(prefs)
+      pdfNavigator.submitPreferences(pdfPrefs)
+    }
+
+    guard let vc = readerViewController else { return }
+
+    let event = PreferencesChangedEvent(
+      capabilities: readiumCapabilities(for: vc, preferences: prefs)
+    )
+
+    self.onPreferencesChanged?(event)
   }
 
   // MARK: - Decorations
@@ -198,7 +214,11 @@ class HybridReadiumView: HybridReadiumViewSpec {
     readerViewController = vc
 
     // Apply pending state
-    if preferences != nil { updatePreferences() }
+    if preferences != nil {
+      Task { @MainActor [weak self] in
+        self?.updatePreferences()
+      }
+    }
     if decorations != nil { updateDecorations() }
 
     guard
@@ -246,7 +266,8 @@ class HybridReadiumView: HybridReadiumViewSpec {
       let event = PublicationReadyEvent(
         tableOfContents: tocLinks,
         positions: positions,
-        metadata: metadata
+        metadata: metadata,
+        capabilities: readiumCapabilities(for: vc, preferences: self.preferences)
       )
 
       self.onPublicationReady?(event)

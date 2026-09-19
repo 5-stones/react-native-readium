@@ -4,6 +4,7 @@ import android.graphics.Color
 import com.margelo.nitro.reactnativereadium.*
 import org.readium.r2.navigator.epub.EpubPreferences as ReadiumEpubPreferences
 import org.readium.r2.navigator.preferences.ColumnCount
+import org.readium.r2.navigator.preferences.Fit
 import org.readium.r2.navigator.preferences.FontFamily
 import org.readium.r2.navigator.preferences.ImageFilter
 import org.readium.r2.navigator.preferences.ReadingProgression as NavReadingProgression
@@ -11,8 +12,18 @@ import org.readium.r2.navigator.preferences.Spread as NavSpread
 import org.readium.r2.navigator.preferences.TextAlign
 import org.readium.r2.navigator.preferences.Theme
 import org.readium.r2.navigator.preferences.Color as ReadiumColor
+import org.readium.r2.navigator.preferences.Axis
 import org.readium.r2.shared.util.Language
 import org.readium.r2.shared.publication.services.search.SearchService
+import org.readium.r2.navigator.DecorableNavigator
+import org.readium.r2.navigator.Navigator
+import org.readium.r2.navigator.SelectableNavigator
+import org.readium.r2.navigator.epub.EpubNavigatorFactory
+import org.readium.r2.navigator.epub.EpubNavigatorFragment
+import org.readium.r2.navigator.pdf.PdfNavigatorFactory
+import org.readium.r2.navigator.pdf.PdfNavigatorFragment
+import org.readium.r2.shared.publication.Publication
+import org.readium.r2.shared.publication.services.search.SearchService as SearchServiceClass
 
 import org.readium.r2.shared.publication.Locator as ReadiumLocator
 import org.readium.r2.shared.publication.Link as ReadiumLink
@@ -20,6 +31,14 @@ import org.readium.r2.shared.publication.Metadata as ReadiumMetadata
 import org.readium.r2.shared.util.Url as ReadiumUrl
 import org.readium.r2.shared.util.mediatype.MediaType as ReadiumMediaType
 import org.readium.r2.navigator.Decoration as ReadiumDecoration
+
+import org.readium.adapter.pdfium.navigator.PdfiumPreferences as ReadiumPdfPreferences
+import org.readium.adapter.pdfium.navigator.PdfiumEngineProvider
+
+import android.util.Log
+
+private const val TAG = "ReadiumConverters"
+
 
 // MARK: - Nitro → Readium converters
 
@@ -35,33 +54,52 @@ internal fun nitroPreferencesToEpub(prefs: Preferences): ReadiumEpubPreferences 
   val txtColor = prefs.textColor?.let { parseReadiumColor(it) }
     ?: if (prefs.theme == "sepia" && prefs.textColor == null) parseReadiumColor(SEPIA_TEXT) else null
 
-  return ReadiumEpubPreferences(
-    backgroundColor = bgColor,
-    columnCount = prefs.columnCount?.let { parseColumnCount(it) },
-    fontFamily = prefs.fontFamily?.let { FontFamily(it) },
-    fontSize = prefs.fontSize,
-    fontWeight = prefs.fontWeight,
-    hyphens = prefs.hyphens,
-    imageFilter = prefs.imageFilter?.let { parseImageFilter(it) },
-    language = prefs.language?.let { Language(it) },
-    letterSpacing = prefs.letterSpacing,
-    ligatures = prefs.ligatures,
-    lineHeight = prefs.lineHeight,
-    pageMargins = prefs.pageMargins,
-    paragraphIndent = prefs.paragraphIndent,
-    paragraphSpacing = prefs.paragraphSpacing,
-    publisherStyles = prefs.publisherStyles,
-    readingProgression = prefs.readingProgression?.let { parseReadingProgression(it) },
-    scroll = prefs.scroll,
-    spread = prefs.spread?.let { parseSpread(it) },
-    textAlign = prefs.textAlign?.let { parseTextAlign(it) },
-    textColor = txtColor,
-    textNormalization = prefs.textNormalization,
-    theme = prefs.theme?.let { parseTheme(it) },
-    typeScale = prefs.typeScale,
-    verticalText = prefs.verticalText,
-    wordSpacing = prefs.wordSpacing,
-  )
+  return try {
+    ReadiumEpubPreferences(
+      backgroundColor = bgColor,
+      columnCount = prefs.columnCount?.let { parseColumnCount(it) },
+      fontFamily = prefs.fontFamily?.let { FontFamily(it) },
+      fontSize = prefs.fontSize,
+      fontWeight = prefs.fontWeight,
+      hyphens = prefs.hyphens,
+      imageFilter = prefs.imageFilter?.let { parseImageFilter(it) },
+      language = prefs.language?.let { Language(it) },
+      letterSpacing = prefs.letterSpacing,
+      ligatures = prefs.ligatures,
+      lineHeight = prefs.lineHeight,
+      pageMargins = prefs.pageMargins,
+      paragraphIndent = prefs.paragraphIndent,
+      paragraphSpacing = prefs.paragraphSpacing,
+      publisherStyles = prefs.publisherStyles,
+      readingProgression = prefs.readingProgression?.let { parseReadingProgression(it) },
+      scroll = prefs.scroll,
+      spread = prefs.spread?.let { parseSpread(it) },
+      textAlign = prefs.textAlign?.let { parseTextAlign(it) },
+      textColor = txtColor,
+      textNormalization = prefs.textNormalization,
+      theme = prefs.theme?.let { parseTheme(it) },
+      typeScale = prefs.typeScale,
+      verticalText = prefs.verticalText,
+      wordSpacing = prefs.wordSpacing,
+    )
+  } catch (e: IllegalArgumentException) {
+    Log.e(TAG, "Failed to build EPUB preferences, using defaults", e)
+    ReadiumEpubPreferences()
+  }
+}
+
+internal fun nitroPreferencesToPdf(prefs: Preferences): ReadiumPdfPreferences {
+  return try {
+    ReadiumPdfPreferences(
+      fit = prefs.fit?.let { parseFit(it) },
+      pageSpacing = prefs.pageSpacing,
+      readingProgression = prefs.readingProgression?.let { parseReadingProgression(it) },
+      scrollAxis = prefs.scrollAxis?.let { parseAxis(it) },
+    )
+  } catch (e: IllegalArgumentException) {
+    Log.e(TAG, "Failed to build PDF preferences, using defaults", e)
+    ReadiumPdfPreferences()
+  }
 }
 
 private fun parseReadiumColor(hex: String): ReadiumColor? {
@@ -72,46 +110,54 @@ private fun parseReadiumColor(hex: String): ReadiumColor? {
   }
 }
 
-private fun parseTheme(value: String): Theme? = when (value) {
+private fun parseTheme(value: String): Theme? = when (value.lowercase()) {
   "light" -> Theme.LIGHT
   "dark" -> Theme.DARK
   "sepia" -> Theme.SEPIA
   else -> null
 }
 
-private fun parseColumnCount(value: String): ColumnCount? = when (value) {
+private fun parseColumnCount(value: String): ColumnCount? = when (value.lowercase()) {
   "auto" -> ColumnCount.AUTO
   "1" -> ColumnCount.ONE
   "2" -> ColumnCount.TWO
   else -> null
 }
 
-private fun parseImageFilter(value: String): ImageFilter? = when (value) {
+private fun parseImageFilter(value: String): ImageFilter? = when (value.lowercase()) {
   "darken" -> ImageFilter.DARKEN
   "invert" -> ImageFilter.INVERT
   else -> null
 }
 
-private fun parseReadingProgression(value: String): NavReadingProgression? = when (value) {
+private fun parseReadingProgression(value: String): NavReadingProgression? = when (value.lowercase()) {
   "ltr" -> NavReadingProgression.LTR
   "rtl" -> NavReadingProgression.RTL
   else -> null
 }
 
-private fun parseSpread(value: String): NavSpread? = when (value) {
+private fun parseSpread(value: String): NavSpread? = when (value.lowercase()) {
   "auto" -> NavSpread.AUTO
   "never" -> NavSpread.NEVER
   "always" -> NavSpread.ALWAYS
   else -> null
 }
 
-private fun parseTextAlign(value: String): TextAlign? = when (value) {
+private fun parseTextAlign(value: String): TextAlign? = when (value.lowercase()) {
   "center" -> TextAlign.CENTER
   "justify" -> TextAlign.JUSTIFY
   "start" -> TextAlign.START
   "end" -> TextAlign.END
   "left" -> TextAlign.LEFT
   "right" -> TextAlign.RIGHT
+  else -> null
+}
+
+private fun parseFit(value: String): Fit? = when (value.lowercase()) {
+  "cover" -> Fit.COVER
+  "contain" -> Fit.CONTAIN
+  "width" -> Fit.WIDTH
+  "height" -> Fit.HEIGHT
   else -> null
 }
 
@@ -175,6 +221,12 @@ internal fun nitroDecorationToReadium(dec: Decoration): ReadiumDecoration? {
     style = style,
     extras = extras
   )
+}
+
+private fun parseAxis(value: String): Axis? = when (value) {
+  "horizontal" -> Axis.HORIZONTAL
+  "vertical" -> Axis.VERTICAL
+  else -> null
 }
 
 internal fun parseColorString(colorString: String?): Int {
@@ -304,6 +356,7 @@ internal fun readiumMetadataToNitro(meta: ReadiumMetadata): PublicationMetadata 
     sortAs = null,
     subtitle = meta.localizedSubtitle?.string,
     identifier = meta.identifier,
+    conformsTo = meta.conformsTo.map { it.uri }.toTypedArray(),
     accessibility = null,
     modified = meta.modified?.toString(),
     published = meta.published?.toString(),
@@ -322,12 +375,80 @@ internal fun readiumMetadataToNitro(meta: ReadiumMetadata): PublicationMetadata 
     publisher = contributors(meta.publishers),
     imprint = contributors(meta.imprints),
     subject = subjects(meta.subjects),
-    layout = null,
+    layout = meta.layout?.value,
     readingProgression = meta.readingProgression?.name?.lowercase(),
     description = meta.description,
     duration = meta.duration,
     numberOfPages = meta.numberOfPages?.toDouble(),
     belongsTo = null
+  )
+}
+
+/**
+ * What this reader can do with the publication it opened.
+ *
+ * Asks Readium rather than consulting a list: `isEffective` is the toolkit's own
+ * answer for whether submitting a preference would change anything, given this
+ * publication's layout and the preferences in force.
+ */
+internal fun readiumCapabilities(
+  publication: Publication,
+  navigator: Navigator,
+  preferences: Preferences?
+): Capabilities {
+
+  val epubEditor = (navigator as? EpubNavigatorFragment)?.let { nav ->
+    val current = preferences?.let { nitroPreferencesToEpub(it) } ?: ReadiumEpubPreferences()
+    EpubNavigatorFactory(publication).createPreferencesEditor(current)
+  }
+
+  val pdfEditor = (navigator as? PdfNavigatorFragment<*, *>)?.let { nav ->
+    val current = preferences?.let { nitroPreferencesToPdf(it) } ?: ReadiumPdfPreferences()
+    PdfNavigatorFactory(publication, PdfiumEngineProvider()).createPreferencesEditor(current)
+  }
+
+  return Capabilities(
+    // Shared Preferences
+    readingProgression = epubEditor?.readingProgression?.isEffective ?: pdfEditor?.readingProgression?.isEffective ?: false,
+
+    // EPUB-only Preferences
+    backgroundColor = epubEditor?.backgroundColor?.isEffective ?: false,
+    columnCount = epubEditor?.columnCount?.isEffective ?: false,
+    fontFamily = epubEditor?.fontFamily?.isEffective ?: false,
+    fontSize = epubEditor?.fontSize?.isEffective ?: false,
+    fontWeight = epubEditor?.fontWeight?.isEffective ?: false,
+    hyphens = epubEditor?.hyphens?.isEffective ?: false,
+    imageFilter = epubEditor?.imageFilter?.isEffective ?: false,
+    language = epubEditor?.language?.isEffective ?: false,
+    letterSpacing = epubEditor?.letterSpacing?.isEffective ?: false,
+    ligatures = epubEditor?.ligatures?.isEffective ?: false,
+    lineHeight = epubEditor?.lineHeight?.isEffective ?: false,
+    pageMargins = epubEditor?.pageMargins?.isEffective ?: false,
+    paragraphIndent = epubEditor?.paragraphIndent?.isEffective ?: false,
+    paragraphSpacing = epubEditor?.paragraphSpacing?.isEffective ?: false,
+    publisherStyles = epubEditor?.publisherStyles?.isEffective ?: false,
+    scroll = epubEditor?.scroll?.isEffective ?: false,
+    spread = epubEditor?.spread?.isEffective ?: false,
+    textAlign = epubEditor?.textAlign?.isEffective ?: false,
+    textColor = epubEditor?.textColor?.isEffective ?: false,
+    textNormalization = epubEditor?.textNormalization?.isEffective ?: false,
+    theme = epubEditor?.theme?.isEffective ?: false,
+    typeScale = epubEditor?.typeScale?.isEffective ?: false,
+    verticalText = epubEditor?.verticalText?.isEffective ?: false,
+    wordSpacing = epubEditor?.wordSpacing?.isEffective ?: false,
+
+    // PDF-only Preferences
+    fit = pdfEditor?.fit?.isEffective ?: false,
+    offsetFirstPage = false,
+    pageSpacing = pdfEditor?.pageSpacing?.isEffective ?: false,
+    scrollAxis = pdfEditor?.scrollAxis?.isEffective ?: false,
+    visibleScrollbar = false,
+
+    // Web-only or Derived Capabilities
+    zoom = false,
+    search = publication.findService(SearchServiceClass::class) != null,
+    decorations = navigator is DecorableNavigator,
+    selection = navigator is SelectableNavigator
   )
 }
 

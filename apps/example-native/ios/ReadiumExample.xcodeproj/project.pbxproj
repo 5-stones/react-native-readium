@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		4F133645305B0045000A5D9D /* svg-in-spine.epub in Resources */ = {isa = PBXBuildFile; fileRef = 4F133644305B0045000A5D9D /* svg-in-spine.epub */; };
 		52EE71AD2D77A5F200617F39 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52EE71AC2D77A5F200617F39 /* AppDelegate.swift */; };
 		52EE71AE2D77A5F200617F39 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52EE71AC2D77A5F200617F39 /* AppDelegate.swift */; };
 		5D1EE602EDE6F8E6A11D067C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 5132B95C75527C78BB94579A /* PrivacyInfo.xcprivacy */; };
@@ -45,12 +46,13 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ReadiumExample/Info.plist; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* ReadiumExample-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ReadiumExample-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* ReadiumExample-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ReadiumExample-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F133644305B0045000A5D9D /* svg-in-spine.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = "svg-in-spine.epub"; sourceTree = "<group>"; };
 		5132B95C75527C78BB94579A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = ReadiumExample/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		52EE71AC2D77A5F200617F39 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		670D9951AF9B76C5BB3A24CC /* Pods-ReadiumExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReadiumExample.release.xcconfig"; path = "Target Support Files/Pods-ReadiumExample/Pods-ReadiumExample.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ReadiumExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A1B2C3D4E5F60718A1B2C3D4 /* the-brothers-karamazov.epub */ = {isa = PBXFileReference; lastKnownFileType = file; name = "the-brothers-karamazov.epub"; path = "../resources/the-brothers-karamazov.epub"; sourceTree = "<group>"; };
-		A1B2C3D4E5F60718A1B2C3D6 /* sense-and-sensibility.pdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "sense-and-sensibility.pdf"; path = "../resources/sense-and-sensibility.pdf"; sourceTree = "<group>"; };
+		A1B2C3D4E5F60718A1B2C3D6 /* sense-and-sensibility.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = "sense-and-sensibility.pdf"; path = "../resources/sense-and-sensibility.pdf"; sourceTree = "<group>"; };
 		B334C6DBDA9937FDFBC060B8 /* Pods-ReadiumExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReadiumExample.debug.xcconfig"; path = "Target Support Files/Pods-ReadiumExample/Pods-ReadiumExample.debug.xcconfig"; sourceTree = "<group>"; };
 		B862455935D64D3826D1780F /* libPods-ReadiumExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReadiumExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -159,6 +161,7 @@
 		EFB246D809604331A20C1ABD /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4F133644305B0045000A5D9D /* svg-in-spine.epub */,
 				A1B2C3D4E5F60718A1B2C3D4 /* the-brothers-karamazov.epub */,
 				A1B2C3D4E5F60718A1B2C3D6 /* sense-and-sensibility.pdf */,
 			);
@@ -311,6 +314,7 @@
 				E461B59F65233381FD4757D0 /* PrivacyInfo.xcprivacy in Resources */,
 				A1B2C3D4E5F60718A1B2C3D5 /* the-brothers-karamazov.epub in Resources */,
 				A1B2C3D4E5F60718A1B2C3D7 /* sense-and-sensibility.pdf in Resources */,
+				4F133645305B0045000A5D9D /* svg-in-spine.epub in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -834,10 +838,7 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DRCT_REMOVE_LEGACY_ARCH=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				PODFILE_DIR = "$(SRCROOT)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../../../node_modules/react-native";
 				SDKROOT = iphoneos;
@@ -911,10 +912,7 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DRCT_REMOVE_LEGACY_ARCH=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				PODFILE_DIR = "$(SRCROOT)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../../../node_modules/react-native";
 				SDKROOT = iphoneos;

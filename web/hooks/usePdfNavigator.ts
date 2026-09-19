@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type {
   PDFDocumentLoadingTask,
   PDFDocumentProxy,
@@ -7,16 +7,21 @@ import type {
 import type {
   Link,
   Locator,
+  Preferences,
   PublicationReadyEvent,
   ReadiumFile,
   ZoomEvent,
+  PreferencesChangedEvent
 } from '../../src/interfaces';
+import { pdfCapabilities } from '../utils/capabilities';
+import { PdfNavigator } from '../classes'
 
 interface UsePdfNavigatorProps {
   file: ReadiumFile;
   container: HTMLElement | null;
   onLocationChange?: (locator: Locator) => void;
   onPublicationReady?: (event: PublicationReadyEvent) => void;
+  onPreferencesChanged?: (event: PreferencesChangedEvent) => void;
   onZoomChange?: (event: ZoomEvent) => void;
   initialPage?: number;
   onError?: (error: any) => void;
@@ -35,12 +40,6 @@ const PAGE_GAP_PX = 20;
 
 /**
  * Ceilings on a page's backing store.
- *
- * iOS Safari refuses a canvas over 4096px on a side and over roughly 16M pixels
- * in total, and it fails by handing back a blank bitmap rather than by throwing,
- * so a page that trips either limit renders as an empty rectangle and reports
- * success. Both caps are therefore applied unconditionally - there is no
- * resolution floor that could push a canvas back over them.
  */
 const MAX_CANVAS_SIDE = 4096;
 const MAX_CANVAS_PIXELS = 16_000_000;
@@ -49,11 +48,6 @@ const MAX_DEVICE_PIXEL_RATIO = 2;
 
 /**
  * Magnification bounds, where 1 is a page fitted to the reader's width.
- *
- * The floor is far below anything a reader would step down to by hand, because
- * `fitHeight` has to be able to reach it: fitting a page ten times taller than
- * it is wide into the viewport needs a scale in the low hundredths, and a
- * floor that clamped it would make the control silently not do its job.
  */
 const MIN_ZOOM = 0.05;
 const MAX_ZOOM = 4;
@@ -73,15 +67,6 @@ const PINCH_THRESHOLD_PX = 8;
 /** Settling time for a programmatic scroll, before positions are reported again. */
 const NAVIGATION_SETTLE_MS = 100;
 
-/**
- * HREF of the single reading-order resource for a standalone PDF.
- *
- * The Readium toolkits deliberately name a standalone file `publication.<ext>`
- * rather than using its filename, so that a locator stays valid across devices
- * where the file may be stored under a different name (see `SingleResourceContainer`
- * in ReadiumStreamer). Emitting the same href here keeps locators produced on web
- * resolvable by the iOS and Android navigators, and vice versa.
- */
 const PDF_PUBLICATION_HREF = 'publication.pdf';
 
 interface OutlineNode {
@@ -100,15 +85,6 @@ const clampZoom = (scale: number): number => {
   return Math.min(Math.max(scale, MIN_ZOOM), MAX_ZOOM);
 };
 
-/**
- * Scale to rasterise a page at so it is sharp when drawn `cssWidth` px wide.
- *
- * The displayed width is what matters, not the page's own dimensions: a page is
- * always stretched to the strip, so a 360pt page and a 1440pt page shown side by
- * side need very different scales to look the same. Both caps are hard, which is
- * what keeps a page ten times taller than it is wide inside the canvas limits -
- * it comes out soft rather than blank.
- */
 const rasterScaleFor = (natural: PageSize, cssWidth: number): number => {
   if (natural.width <= 0 || natural.height <= 0 || cssWidth <= 0) return 1;
 
@@ -134,18 +110,14 @@ export const usePdfNavigator = ({
   container,
   onLocationChange,
   onPublicationReady,
+  onPreferencesChanged,
   onZoomChange,
   initialPage = 1,
-  // There is no public error channel on ReadiumView yet, so failures are at
-  // least reported rather than leaving a blank reader with no explanation.
   onError = (error: any) => {
-    // eslint-disable-next-line no-console
     console.error('[react-native-readium] failed to open PDF', error);
   },
-}: UsePdfNavigatorProps) => {
+}: UsePdfNavigatorProps): PdfNavigator | undefined => {
   const pdfRef = useRef<PDFDocumentProxy | null>(null);
-  // Held so the worker can be torn down on cleanup: `destroy()` lives on the
-  // loading task, not on the document proxy.
   const loadingTaskRef = useRef<PDFDocumentLoadingTask | null>(null);
   const [pageNumber, setPageNumber] = useState(initialPage);
   const [pageCount, setPageCount] = useState(0);
@@ -153,24 +125,104 @@ export const usePdfNavigator = ({
   const [zoom, setZoomState] = useState(1);
   const isNavigatingRef = useRef<boolean>(false);
 
-  /** The strip element, so navigation and zoom can reach it after it is built. */
   const wrapperRef = useRef<HTMLElement | null>(null);
-  /** Natural size per page, measured once when the strip is built. */
   const sizesRef = useRef<Map<number, PageSize>>(new Map());
-  /** Repaints the pages around the visible one at the current zoom. */
   const repaintRef = useRef<(() => void) | null>(null);
-  // Read by the gesture handlers and the step helpers, so neither has to be
-  // rebuilt - and the imperative handle with them - as the magnification moves.
   const zoomRef = useRef(zoom);
   zoomRef.current = zoom;
-  // Read by `repaint`, which is built once with the strip and would otherwise
-  // close over the page the reader happened to open on.
   const pageNumberRef = useRef(pageNumber);
   pageNumberRef.current = pageNumber;
 
   const isPdfUrl = (url: string) => url.toLowerCase().split('?')[0].endsWith('.pdf');
   const isPdf = !!file?.url && isPdfUrl(file.url);
   const url = file?.url;
+
+  const setZoom = useCallback((scale: number) => {
+    setZoomState((current) => {
+      const next = clampZoom(scale);
+      return Math.abs(next - current) < 0.001 ? current : next;
+    });
+  }, []);
+
+  const scrollToPage = useCallback((n: number) => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+
+    const target = wrapper.querySelector<HTMLElement>(`[data-page-number="${n}"]`);
+    if (!target) return;
+
+    isNavigatingRef.current = true;
+    wrapper.scrollTop = target.offsetTop - wrapper.offsetTop;
+    setTimeout(() => {
+      isNavigatingRef.current = false;
+    }, NAVIGATION_SETTLE_MS);
+  }, []);
+
+  // Helper to compute the scale needed to fit the page height inside the container
+  const getFitHeightScale = useCallback((): number | null => {
+    const wrapper = wrapperRef.current;
+    const natural = sizesRef.current.get(pageNumberRef.current);
+    if (!wrapper || !natural || !natural.height) return null;
+
+    const available = wrapper.clientHeight - PAGE_GAP_PX * 2;
+    const stripWidth = wrapper.clientWidth;
+    if (available <= 0 || stripWidth <= 0) return null;
+
+    return (available * natural.width) / (stripWidth * natural.height);
+  }, []);
+
+  const fitWidth = useCallback(() => {
+    setZoom(1);
+    scrollToPage(pageNumberRef.current);
+  }, [setZoom, scrollToPage]);
+
+  const fitHeight = useCallback(() => {
+    const scale = getFitHeightScale();
+    if (scale !== null) {
+      setZoom(scale);
+      scrollToPage(pageNumberRef.current);
+    }
+  }, [getFitHeightScale, setZoom, scrollToPage]);
+
+  const fitContain = useCallback(() => {
+    const heightScale = getFitHeightScale();
+    // Width-fit scale is 1. Pick min of width scale (1) and height scale.
+    const containScale = heightScale !== null ? Math.min(1, heightScale) : 1;
+    setZoom(containScale);
+    scrollToPage(pageNumberRef.current);
+  }, [getFitHeightScale, setZoom, scrollToPage]);
+
+  const fitCover = useCallback(() => {
+    const heightScale = getFitHeightScale();
+    // Pick max of width scale (1) and height scale.
+    const coverScale = heightScale !== null ? Math.max(1, heightScale) : 1;
+    setZoom(coverScale);
+    scrollToPage(pageNumberRef.current);
+  }, [getFitHeightScale, setZoom, scrollToPage]);
+
+  const submitPreferences = useCallback(
+    (preferences: Preferences) => {
+      switch (preferences.fit) {
+        case 'width':
+          fitWidth();
+          break;
+        case 'height':
+          fitHeight();
+          break;
+        case 'contain':
+          fitContain();
+          break;
+        case 'cover':
+          fitCover();
+          break;
+        default:
+          break;
+      }
+      if (!onPreferencesChanged) return;
+      onPreferencesChanged({capabilities: pdfCapabilities(preferences)});
+    },
+    [fitWidth, fitHeight, fitContain, fitCover]
+  );
 
   const resolveDestToPageNumber = useCallback(
     async (dest: string | any[] | null): Promise<number | null> => {
@@ -183,7 +235,9 @@ export const usePdfNavigator = ({
 
       const pageIndex = await pdf.getPageIndex(explicitDest[0]);
       return pageIndex + 1;
-    }, []);
+    },
+    []
+  );
 
   const flattenOutline = useCallback(
     async (nodes: OutlineNode[] | null, depth = 0): Promise<Link[]> => {
@@ -205,28 +259,9 @@ export const usePdfNavigator = ({
         });
       }
       return result;
-    }, [resolveDestToPageNumber]);
-
-  /**
-   * Puts page `n` at the top of the strip.
-   *
-   * Shared by the flip controls and by locator navigation - previously only the
-   * latter scrolled, so the controls moved the reported position and left the
-   * reader looking at the same page.
-   */
-  const scrollToPage = useCallback((n: number) => {
-    const wrapper = wrapperRef.current;
-    if (!wrapper) return;
-
-    const target = wrapper.querySelector<HTMLElement>(`[data-page-number="${n}"]`);
-    if (!target) return;
-
-    isNavigatingRef.current = true;
-    wrapper.scrollTop = target.offsetTop - wrapper.offsetTop;
-    setTimeout(() => {
-      isNavigatingRef.current = false;
-    }, NAVIGATION_SETTLE_MS);
-  }, []);
+    },
+    [resolveDestToPageNumber]
+  );
 
   const restyleInPlace = useCallback((restyle: () => void) => {
     const wrapper = wrapperRef.current;
@@ -275,6 +310,10 @@ export const usePdfNavigator = ({
     [goToPage]
   );
 
+  const zoomIn = useCallback(() => setZoom(zoomRef.current * ZOOM_STEP), [setZoom]);
+  const zoomOut = useCallback(() => setZoom(zoomRef.current / ZOOM_STEP), [setZoom]);
+  const resetZoom = useCallback(() => setZoom(1), [setZoom]);
+
   // ── Build the strip ────────────────────────────────────────────────────────
 
   useEffect(() => {
@@ -313,6 +352,7 @@ export const usePdfNavigator = ({
           tableOfContents,
           positions: [],
           metadata: { title: '' },
+          capabilities: pdfCapabilities(),
         });
 
         const scrollWrapper = document.createElement('div');
@@ -596,60 +636,15 @@ export const usePdfNavigator = ({
       href: PDF_PUBLICATION_HREF,
       type: 'application/pdf',
       title: '',
-      locations: { position: pageNumber, totalProgression: pageCount ? (pageNumber - 1) / pageCount : 0 },
+      locations: {
+        position: pageNumber,
+        totalProgression: pageCount ? (pageNumber - 1) / pageCount : 0,
+      },
     });
   }, [isPdf, pageNumber, pageCount, isReady]);
 
-  // ── Zoom ───────────────────────────────────────────────────────────────────
+  // ── Zoom restyle ───────────────────────────────────────────────────────────
 
-  const setZoom = useCallback((scale: number) => {
-    setZoomState((current) => {
-      const next = clampZoom(scale);
-      return Math.abs(next - current) < 0.001 ? current : next;
-    });
-  }, []);
-
-  const zoomIn = useCallback(() => setZoom(zoomRef.current * ZOOM_STEP), [setZoom]);
-  const zoomOut = useCallback(() => setZoom(zoomRef.current / ZOOM_STEP), [setZoom]);
-  const resetZoom = useCallback(() => setZoom(1), [setZoom]);
-
-  /**
-   * Sizes the current page to the reader's width, which is what a scale of 1
-   * means, and puts it back at the top of the view.
-   */
-  const fitWidth = useCallback(() => {
-    setZoom(1);
-    scrollToPage(pageNumberRef.current);
-  }, [setZoom, scrollToPage]);
-
-  /**
-   * Sizes the current page so the whole of it is on screen at once.
-   *
-   * Only this hook can work this out: the scale depends on the page's own
-   * proportions and on how much room the strip has, neither of which a caller
-   * can see. A page is `stripWidth * zoom` across and, keeping its aspect,
-   * `stripWidth * zoom * height / width` down, so fitting the viewport height
-   * is that solved for `zoom`.
-   *
-   * Pages in one document can differ in size, so this fits the page the reader
-   * is on rather than assuming the first one speaks for the rest.
-   */
-  const fitHeight = useCallback(() => {
-    const wrapper = wrapperRef.current;
-    const natural = sizesRef.current.get(pageNumberRef.current);
-    if (!wrapper || !natural || !natural.height) return;
-
-    const available = wrapper.clientHeight - PAGE_GAP_PX * 2;
-    const stripWidth = wrapper.clientWidth;
-    if (available <= 0 || stripWidth <= 0) return;
-
-    setZoom((available * natural.width) / (stripWidth * natural.height));
-    scrollToPage(pageNumberRef.current);
-  }, [setZoom, scrollToPage]);
-
-  // Applying a zoom is a restyle, not a rebuild: the containers carry the
-  // geometry and the canvases fill them, so the pages resize immediately and
-  // only their resolution has to catch up.
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!isPdf || !isReady || !wrapper) return;
@@ -828,21 +823,41 @@ export const usePdfNavigator = ({
     };
   }, [isPdf, isReady, container, setZoom, restyleInPlace]);
 
-  if (!isPdf) return undefined;
+  const pdfNavigator = useMemo(() => {
+    if (!isPdf) return undefined;
 
-  return {
+    return new PdfNavigator({
+      pageNumber,
+      pageCount,
+      isReady,
+      zoom,
+      goForward,
+      goBackward,
+      goToLocator,
+      zoomIn,
+      zoomOut,
+      setZoom,
+      resetZoom,
+      submitPreferences,
+    });
+  }, [
+    isPdf,
     pageNumber,
     pageCount,
+    isReady,
+    zoom,
     goForward,
     goBackward,
     goToLocator,
-    isReady,
-    zoom,
     zoomIn,
     zoomOut,
     setZoom,
     resetZoom,
-    fitWidth,
-    fitHeight,
-  };
+
+    fitContain,
+    fitCover,
+    submitPreferences,
+  ]);
+
+  return pdfNavigator;
 };

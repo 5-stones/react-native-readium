@@ -62,6 +62,8 @@ namespace margelo::nitro::readium {
     void setOnLocationChange(const std::optional<std::function<void(const Locator& /* locator */)>>& onLocationChange) override;
     std::optional<std::function<void(const PublicationReadyEvent& /* event */)>> getOnPublicationReady() override;
     void setOnPublicationReady(const std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>& onPublicationReady) override;
+    std::optional<std::function<void(const PreferencesChangedEvent& /* event */)>> getOnPreferencesChanged() override;
+    void setOnPreferencesChanged(const std::optional<std::function<void(const PreferencesChangedEvent& /* event */)>>& onPreferencesChanged) override;
     std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>> getOnDecorationActivated() override;
     void setOnDecorationActivated(const std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>& onDecorationActivated) override;
     std::optional<std::function<void(const SelectionEvent& /* event */)>> getOnSelectionChange() override;

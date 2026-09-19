@@ -19,6 +19,12 @@ const books: BookOption[] = [
     asset: 'https://www.gutenberg.org/ebooks/3296.epub3.images',
   },
   {
+    id: 'svg-in-spine',
+    title: 'SVG In Spine (Fixed Layout)',
+    author: 'Unknown',
+    asset: 'svg-in-spine.epub',
+  },
+  {
     id: 'brothers-karamazov',
     title: 'The Brothers Karamazov',
     author: 'Fyodor Dostoevsky',

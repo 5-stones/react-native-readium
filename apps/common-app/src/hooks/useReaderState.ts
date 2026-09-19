@@ -4,7 +4,10 @@ import type {
   Locator,
   ReadiumProps,
   PublicationReadyEvent,
+  Capabilities,
 } from 'react-native-readium';
+
+import { PreferencesChangedEvent } from '../../../../src/interfaces';
 
 export interface UseReaderStateOptions {
   initialPreferences?: ReadiumProps['preferences'];
@@ -14,6 +17,7 @@ export interface UseReaderStateOptions {
 export const useReaderState = (options?: UseReaderStateOptions) => {
   const [toc, setToc] = useState<Link[] | null>([]);
   const [positions, setPositions] = useState<Locator[]>([]);
+  const [capabilities, setCapabilities] = useState<Capabilities>();
   const [location, setLocation] = useState<Locator | undefined>();
   const [preferences, _setPreferences] = useState<ReadiumProps['preferences']>(
     options?.initialPreferences ?? { theme: 'dark' }
@@ -33,12 +37,18 @@ export const useReaderState = (options?: UseReaderStateOptions) => {
   const handlePublicationReady = useCallback((event: PublicationReadyEvent) => {
     setToc(event.tableOfContents);
     setPositions(event.positions || []);
+    setCapabilities(event.capabilities);
   }, []);
+
+  const handlePreferencesChanged = useCallback((event: PreferencesChangedEvent) => {
+    setCapabilities(event.capabilities);
+  }, [])
 
   return {
     // State
     toc,
     positions,
+    capabilities,
     location,
     preferences,
 
@@ -48,5 +58,6 @@ export const useReaderState = (options?: UseReaderStateOptions) => {
     // Handlers
     handleLocationChange,
     handlePublicationReady,
+    handlePreferencesChanged,
   };
 };
