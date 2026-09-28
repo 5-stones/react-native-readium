@@ -1,3 +1,12 @@
+# [5.2.0](https://github.com/5-stones/react-native-readium/compare/v5.1.1...v5.2.0) (2026-09-28)
+
+
+### Features
+
+* **web, apps, components, android, ios:** onPublicationReady and onPreferencesChanged report capabilities based on isEffective ([6b3f29c](https://github.com/5-stones/react-native-readium/commit/6b3f29cceafdd884de6bfae308c7ae28fdc1972c))
+
+
+
 ## [5.1.1](https://github.com/5-stones/react-native-readium/compare/v5.1.0...v5.1.1) (2026-09-01)
 
 
