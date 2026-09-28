@@ -101,7 +101,7 @@
   "peerDependencies": {
     "react": "*",
     "react-native": ">=0.78.0",
-    "react-native-nitro-modules": "*"
+    "react-native-nitro-modules": "^0.35.0"
   },
   "jest": {
     "preset": "react-native",
