@@ -5,7 +5,7 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "react-native-readium": ["../../src"]
+      "react-native-readium": ["../../packages/react-native-readium/src"]
     }
   },
   "include": ["src/**/*"],
