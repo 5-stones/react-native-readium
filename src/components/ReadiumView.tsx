@@ -22,6 +22,7 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
       onLocationChange,
       onPublicationReady,
       onPreferencesChanged,
+      onPublicationError,
       onDecorationActivated,
       onSelectionChange,
       onSelectionAction,
@@ -116,6 +117,7 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
             onLocationChange={callback(onLocationChange ?? noop)}
             onPublicationReady={callback(handlePublicationReady)}
             onPreferencesChanged={callback(onPreferencesChanged)}
+            onPublicationError={callback(onPublicationError ?? noop)}
             onDecorationActivated={callback(onDecorationActivated ?? noop)}
             onSelectionChange={callback(onSelectionChange ?? noop)}
             onSelectionAction={callback(onSelectionAction ?? noop)}

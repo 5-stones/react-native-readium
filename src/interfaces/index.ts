@@ -13,6 +13,8 @@ export type {
   Point,
   Capabilities,
   PreferencesChangedEvent,
+  PublicationErrorCode,
+  PublicationErrorEvent,
 } from '../specs/ReadiumView.nitro';
 export * from './Search';
 export * from './Zoom';

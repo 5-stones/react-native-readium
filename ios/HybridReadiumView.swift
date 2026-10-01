@@ -15,8 +15,12 @@ class HybridReadiumView: HybridReadiumViewSpec {
   var file: ReadiumFile? = nil {
     didSet {
       guard let file = file else { return }
-      guard file.url != (pendingFileUrl ?? loadedFileUrl) else { return }
-      pendingFileUrl = file.url
+      let key = OpenKey(url: file.url, credentials: file.credentials)
+      // A re-render with the same values must not reopen, or a failure would loop.
+      guard key != (pendingKey ?? loadedKey) else { return }
+      // New credentials are only for retrying a failed open, not for a book already showing.
+      if pendingKey == nil, readerViewController != nil, file.url == loadedKey?.url { return }
+      pendingKey = key
       pendingInitialLocation = file.initialLocation
       tryLoadBook()
     }
@@ -46,6 +50,7 @@ class HybridReadiumView: HybridReadiumViewSpec {
   var onLocationChange: ((Locator) -> Void)? = nil
   var onPublicationReady: ((PublicationReadyEvent) -> Void)? = nil
   var onPreferencesChanged: ((PreferencesChangedEvent) -> Void)? = nil
+  var onPublicationError: ((PublicationErrorEvent) -> Void)? = nil
   var onDecorationActivated: ((DecorationActivatedEvent) -> Void)? = nil
   var onSelectionChange: ((SelectionEvent) -> Void)? = nil
   var onSelectionAction: ((SelectionActionEvent) -> Void)? = nil
@@ -66,9 +71,12 @@ class HybridReadiumView: HybridReadiumViewSpec {
   /// replaced it.
   private var searchGeneration = 0
   private var subscriptions = Set<AnyCancellable>()
-  private var pendingFileUrl: String?
+  private var pendingKey: OpenKey?
   private var pendingInitialLocation: Locator?
-  private var loadedFileUrl: String?
+  /// The `file` most recently opened, kept after a failure so the same values don't reopen.
+  private var loadedKey: OpenKey?
+  /// Bumped on every open and teardown, so a superseded open can't deliver its result.
+  private var loadGeneration = 0
   private var selectionActionsReceived = false
   private var activeDecorationGroups = Set<String>()
 
@@ -80,23 +88,26 @@ class HybridReadiumView: HybridReadiumViewSpec {
   // MARK: - Book loading
 
   private func tryLoadBook() {
-    guard let url = pendingFileUrl,
+    guard let key = pendingKey,
           selectionActionsReceived else {
       return
     }
 
     let initialLoc = pendingInitialLocation
-    pendingFileUrl = nil
+    pendingKey = nil
     pendingInitialLocation = nil
 
     cleanup()
 
-    loadedFileUrl = url
+    loadedKey = key
 
-    loadBook(url: url, location: initialLoc)
+    loadBook(url: key.url, location: initialLoc, credentials: key.credentials)
   }
 
-  private func loadBook(url: String, location: Locator?) {
+  private func loadBook(url: String, location: Locator?, credentials: String?) {
+    loadGeneration += 1
+    let generation = loadGeneration
+
     guard let rootViewController = UIApplication.shared.delegate?.window??.rootViewController else { return }
 
     // Convert Nitro Locator directly to Readium Locator
@@ -112,15 +123,27 @@ class HybridReadiumView: HybridReadiumViewSpec {
       bookId: url,
       locator: readiumLocator,
       selectionActions: actionData,
+      credentials: credentials,
       sender: rootViewController,
       completion: { [weak self] vc in
-        guard let self = self else { return }
+        guard let self = self, generation == self.loadGeneration else { return }
 
         if let epubVC = vc as? EPUBViewController {
           epubVC.selectionActionDelegate = self
         }
 
         self.addViewControllerAsSubview(vc)
+      },
+      onError: { [weak self] error in
+        Task { @MainActor in
+          guard let self = self, generation == self.loadGeneration else { return }
+          self.onPublicationError?(PublicationErrorEvent(
+            url: url,
+            code: error.code,
+            message: error.localizedDescription,
+            protectionScheme: error.protectionScheme
+          ))
+        }
       }
     )
   }
@@ -267,7 +290,9 @@ class HybridReadiumView: HybridReadiumViewSpec {
         tableOfContents: tocLinks,
         positions: positions,
         metadata: metadata,
-        capabilities: readiumCapabilities(for: vc, preferences: self.preferences)
+        capabilities: readiumCapabilities(for: vc, preferences: self.preferences),
+        isProtected: vc.publication.isProtected,
+        protectionScheme: vc.publication.protectionScheme?.rawValue.string
       )
 
       self.onPublicationReady?(event)
@@ -412,7 +437,9 @@ class HybridReadiumView: HybridReadiumViewSpec {
 
   // Cleanup
   func cleanup() {
-    loadedFileUrl = nil
+    loadedKey = nil
+    loadGeneration += 1
+    readerService.cancelPendingOpens()
 
     searchIterator?.close()
     searchIterator = nil
@@ -452,4 +479,10 @@ extension HybridReadiumView: SelectionActionDelegate {
 
     self.onSelectionAction?(event)
   }
+}
+
+/// What identifies an open: retrying the same file with new credentials is a new open.
+private struct OpenKey: Equatable {
+  let url: String
+  let credentials: String?
 }

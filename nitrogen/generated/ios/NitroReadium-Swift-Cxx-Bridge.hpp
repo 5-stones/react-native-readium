@@ -42,6 +42,10 @@ namespace margelo::nitro::readium { struct Point; }
 namespace margelo::nitro::readium { struct PreferencesChangedEvent; }
 // Forward declaration of `Preferences` to properly resolve imports.
 namespace margelo::nitro::readium { struct Preferences; }
+// Forward declaration of `PublicationErrorCode` to properly resolve imports.
+namespace margelo::nitro::readium { enum class PublicationErrorCode; }
+// Forward declaration of `PublicationErrorEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct PublicationErrorEvent; }
 // Forward declaration of `PublicationMetadata` to properly resolve imports.
 namespace margelo::nitro::readium { struct PublicationMetadata; }
 // Forward declaration of `PublicationReadyEvent` to properly resolve imports.
@@ -89,6 +93,8 @@ namespace NitroReadium { class HybridReadiumViewSpec_cxx; }
 #include "Point.hpp"
 #include "Preferences.hpp"
 #include "PreferencesChangedEvent.hpp"
+#include "PublicationErrorCode.hpp"
+#include "PublicationErrorEvent.hpp"
 #include "PublicationMetadata.hpp"
 #include "PublicationReadyEvent.hpp"
 #include "ReadiumFile.hpp"
@@ -620,6 +626,43 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline std::function<void(const PreferencesChangedEvent& /* event */)> get_std__optional_std__function_void_const_PreferencesChangedEvent_____event______(const std::optional<std::function<void(const PreferencesChangedEvent& /* event */)>>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::function<void(const PublicationErrorEvent& /* event */)>
+  /**
+   * Specialized version of `std::function<void(const PublicationErrorEvent&)>`.
+   */
+  using Func_void_PublicationErrorEvent = std::function<void(const PublicationErrorEvent& /* event */)>;
+  /**
+   * Wrapper class for a `std::function<void(const PublicationErrorEvent& / * event * /)>`, this can be used from Swift.
+   */
+  class Func_void_PublicationErrorEvent_Wrapper final {
+  public:
+    explicit Func_void_PublicationErrorEvent_Wrapper(std::function<void(const PublicationErrorEvent& /* event */)>&& func): _function(std::make_unique<std::function<void(const PublicationErrorEvent& /* event */)>>(std::move(func))) {}
+    inline void call(PublicationErrorEvent event) const noexcept {
+      _function->operator()(event);
+    }
+  private:
+    std::unique_ptr<std::function<void(const PublicationErrorEvent& /* event */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_PublicationErrorEvent create_Func_void_PublicationErrorEvent(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_PublicationErrorEvent_Wrapper wrap_Func_void_PublicationErrorEvent(Func_void_PublicationErrorEvent value) noexcept {
+    return Func_void_PublicationErrorEvent_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<std::function<void(const PublicationErrorEvent& /* event */)>>
+  /**
+   * Specialized version of `std::optional<std::function<void(const PublicationErrorEvent& / * event * /)>>`.
+   */
+  using std__optional_std__function_void_const_PublicationErrorEvent_____event______ = std::optional<std::function<void(const PublicationErrorEvent& /* event */)>>;
+  inline std::optional<std::function<void(const PublicationErrorEvent& /* event */)>> create_std__optional_std__function_void_const_PublicationErrorEvent_____event______(const std::function<void(const PublicationErrorEvent& /* event */)>& value) noexcept {
+    return std::optional<std::function<void(const PublicationErrorEvent& /* event */)>>(value);
+  }
+  inline bool has_value_std__optional_std__function_void_const_PublicationErrorEvent_____event______(const std::optional<std::function<void(const PublicationErrorEvent& /* event */)>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::function<void(const PublicationErrorEvent& /* event */)> get_std__optional_std__function_void_const_PublicationErrorEvent_____event______(const std::optional<std::function<void(const PublicationErrorEvent& /* event */)>>& optional) noexcept {
     return optional.value();
   }
   

@@ -65,6 +65,10 @@ namespace margelo::nitro::readium {
       jni::local_ref<JPublicationMetadata> metadata = this->getFieldValue(fieldMetadata);
       static const auto fieldCapabilities = clazz->getField<JCapabilities>("capabilities");
       jni::local_ref<JCapabilities> capabilities = this->getFieldValue(fieldCapabilities);
+      static const auto fieldIsProtected = clazz->getField<jboolean>("isProtected");
+      jboolean isProtected = this->getFieldValue(fieldIsProtected);
+      static const auto fieldProtectionScheme = clazz->getField<jni::JString>("protectionScheme");
+      jni::local_ref<jni::JString> protectionScheme = this->getFieldValue(fieldProtectionScheme);
       return PublicationReadyEvent(
         [&]() {
           size_t __size = tableOfContents->size();
@@ -87,7 +91,9 @@ namespace margelo::nitro::readium {
           return __vector;
         }(),
         metadata->toCpp(),
-        capabilities->toCpp()
+        capabilities->toCpp(),
+        static_cast<bool>(isProtected),
+        protectionScheme != nullptr ? std::make_optional(protectionScheme->toStdString()) : std::nullopt
       );
     }
 
@@ -97,7 +103,7 @@ namespace margelo::nitro::readium {
      */
     [[maybe_unused]]
     static jni::local_ref<JPublicationReadyEvent::javaobject> fromCpp(const PublicationReadyEvent& value) {
-      using JSignature = JPublicationReadyEvent(jni::alias_ref<jni::JArrayClass<JLink>>, jni::alias_ref<jni::JArrayClass<JLocator>>, jni::alias_ref<JPublicationMetadata>, jni::alias_ref<JCapabilities>);
+      using JSignature = JPublicationReadyEvent(jni::alias_ref<jni::JArrayClass<JLink>>, jni::alias_ref<jni::JArrayClass<JLocator>>, jni::alias_ref<JPublicationMetadata>, jni::alias_ref<JCapabilities>, jboolean, jni::alias_ref<jni::JString>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -123,7 +129,9 @@ namespace margelo::nitro::readium {
           return __array;
         }(),
         JPublicationMetadata::fromCpp(value.metadata),
-        JCapabilities::fromCpp(value.capabilities)
+        JCapabilities::fromCpp(value.capabilities),
+        value.isProtected,
+        value.protectionScheme.has_value() ? jni::make_jstring(value.protectionScheme.value()) : nullptr
       );
     }
   };

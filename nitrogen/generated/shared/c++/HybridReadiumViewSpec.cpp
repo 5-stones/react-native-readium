@@ -28,6 +28,8 @@ namespace margelo::nitro::readium {
       prototype.registerHybridSetter("onPublicationReady", &HybridReadiumViewSpec::setOnPublicationReady);
       prototype.registerHybridGetter("onPreferencesChanged", &HybridReadiumViewSpec::getOnPreferencesChanged);
       prototype.registerHybridSetter("onPreferencesChanged", &HybridReadiumViewSpec::setOnPreferencesChanged);
+      prototype.registerHybridGetter("onPublicationError", &HybridReadiumViewSpec::getOnPublicationError);
+      prototype.registerHybridSetter("onPublicationError", &HybridReadiumViewSpec::setOnPublicationError);
       prototype.registerHybridGetter("onDecorationActivated", &HybridReadiumViewSpec::getOnDecorationActivated);
       prototype.registerHybridSetter("onDecorationActivated", &HybridReadiumViewSpec::setOnDecorationActivated);
       prototype.registerHybridGetter("onSelectionChange", &HybridReadiumViewSpec::getOnSelectionChange);

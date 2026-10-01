@@ -34,6 +34,7 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
       onLocationChange,
       onPublicationReady,
       onPreferencesChanged,
+      onPublicationError,
       onDecorationActivated,
       onZoomChange,
       style = {},
@@ -56,6 +57,7 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
       onLocationChange,
       onPublicationReady,
       onPreferencesChanged,
+      onPublicationError,
       container,
       onPositionChange: setCurrentPosition,
     });
@@ -67,6 +69,7 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
       onLocationChange,
       onPublicationReady,
       onPreferencesChanged,
+      onPublicationError,
       onZoomChange,
       initialPage: 1,
     });

@@ -44,10 +44,11 @@ namespace margelo::nitro::readium {
   public:
     std::string url     SWIFT_PRIVATE;
     std::optional<Locator> initialLocation     SWIFT_PRIVATE;
+    std::optional<std::string> credentials     SWIFT_PRIVATE;
 
   public:
     ReadiumFile() = default;
-    explicit ReadiumFile(std::string url, std::optional<Locator> initialLocation): url(url), initialLocation(initialLocation) {}
+    explicit ReadiumFile(std::string url, std::optional<Locator> initialLocation, std::optional<std::string> credentials): url(url), initialLocation(initialLocation), credentials(credentials) {}
 
   public:
     friend bool operator==(const ReadiumFile& lhs, const ReadiumFile& rhs) = default;
@@ -64,13 +65,15 @@ namespace margelo::nitro {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::readium::ReadiumFile(
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "url"))),
-        JSIConverter<std::optional<margelo::nitro::readium::Locator>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "initialLocation")))
+        JSIConverter<std::optional<margelo::nitro::readium::Locator>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "initialLocation"))),
+        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "credentials")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::readium::ReadiumFile& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "url"), JSIConverter<std::string>::toJSI(runtime, arg.url));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "initialLocation"), JSIConverter<std::optional<margelo::nitro::readium::Locator>>::toJSI(runtime, arg.initialLocation));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "credentials"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.credentials));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -83,6 +86,7 @@ namespace margelo::nitro {
       }
       if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "url")))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::readium::Locator>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "initialLocation")))) return false;
+      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "credentials")))) return false;
       return true;
     }
   };

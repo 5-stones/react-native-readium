@@ -26,6 +26,7 @@
 #include <functional>
 #include "PublicationReadyEvent.hpp"
 #include "PreferencesChangedEvent.hpp"
+#include "PublicationErrorEvent.hpp"
 #include "DecorationActivatedEvent.hpp"
 #include "SelectionEvent.hpp"
 #include "SelectionActionEvent.hpp"
@@ -59,6 +60,7 @@ namespace margelo::nitro::readium::views {
     CachedProp<std::optional<std::function<void(const Locator& /* locator */)>>> onLocationChange;
     CachedProp<std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>> onPublicationReady;
     CachedProp<std::optional<std::function<void(const PreferencesChangedEvent& /* event */)>>> onPreferencesChanged;
+    CachedProp<std::optional<std::function<void(const PublicationErrorEvent& /* event */)>>> onPublicationError;
     CachedProp<std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>> onDecorationActivated;
     CachedProp<std::optional<std::function<void(const SelectionEvent& /* event */)>>> onSelectionChange;
     CachedProp<std::optional<std::function<void(const SelectionActionEvent& /* event */)>>> onSelectionAction;

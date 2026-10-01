@@ -301,6 +301,33 @@ export interface PublicationReadyEvent {
   positions: Locator[];
   metadata: PublicationMetadata;
   capabilities: Capabilities;
+  /** True when a registered content protection unlocked this publication. */
+  isProtected: boolean;
+  /** The protection's scheme URI, e.g. `http://readium.org/2014/01/lcp`. */
+  protectionScheme?: string;
+}
+
+/**
+ * Why a publication could not be opened.
+ * - `protectionNotSupported`: protected with a scheme no registered content protection handles.
+ * - `restricted`: a protection matched but refused access, e.g. an expired license.
+ * - `cancelled`: restricted with no error, e.g. the passphrase prompt was dismissed.
+ */
+export type PublicationErrorCode =
+  | 'fileNotFound'
+  | 'formatNotSupported'
+  | 'openFailed'
+  | 'protectionNotSupported'
+  | 'restricted'
+  | 'cancelled';
+
+/** The publication could not be opened. */
+export interface PublicationErrorEvent {
+  /** The `file.url` whose open failed. */
+  url: string;
+  code: PublicationErrorCode;
+  message: string;
+  protectionScheme?: string;
 }
 
 export interface PreferencesChangedEvent {
@@ -330,6 +357,11 @@ export interface SelectionActionEvent {
 export interface ReadiumFile {
   url: string;
   initialLocation?: Locator;
+  /**
+   * Handed to the registered content protections when the publication is opened, e.g. an LCP
+   * passphrase or its SHA-256 hex hash. Ignored by unprotected publications and on web.
+   */
+  credentials?: string;
 }
 
 // ── HybridView ───────────────────────────────────────────────────────────────
@@ -342,6 +374,7 @@ export interface ReadiumViewProps extends HybridViewProps {
   onLocationChange?: (locator: Locator) => void;
   onPublicationReady?: (event: PublicationReadyEvent) => void;
   onPreferencesChanged?: (event: PreferencesChangedEvent) => void;
+  onPublicationError?: (event: PublicationErrorEvent) => void;
   onDecorationActivated?: (event: DecorationActivatedEvent) => void;
   onSelectionChange?: (event: SelectionEvent) => void;
   onSelectionAction?: (event: SelectionActionEvent) => void;

@@ -42,6 +42,8 @@ namespace margelo::nitro::readium { struct Capabilities; }
 #include "Locator.hpp"
 #include "PublicationMetadata.hpp"
 #include "Capabilities.hpp"
+#include <string>
+#include <optional>
 
 namespace margelo::nitro::readium {
 
@@ -54,10 +56,12 @@ namespace margelo::nitro::readium {
     std::vector<Locator> positions     SWIFT_PRIVATE;
     PublicationMetadata metadata     SWIFT_PRIVATE;
     Capabilities capabilities     SWIFT_PRIVATE;
+    bool isProtected     SWIFT_PRIVATE;
+    std::optional<std::string> protectionScheme     SWIFT_PRIVATE;
 
   public:
     PublicationReadyEvent() = default;
-    explicit PublicationReadyEvent(std::vector<Link> tableOfContents, std::vector<Locator> positions, PublicationMetadata metadata, Capabilities capabilities): tableOfContents(tableOfContents), positions(positions), metadata(metadata), capabilities(capabilities) {}
+    explicit PublicationReadyEvent(std::vector<Link> tableOfContents, std::vector<Locator> positions, PublicationMetadata metadata, Capabilities capabilities, bool isProtected, std::optional<std::string> protectionScheme): tableOfContents(tableOfContents), positions(positions), metadata(metadata), capabilities(capabilities), isProtected(isProtected), protectionScheme(protectionScheme) {}
 
   public:
     friend bool operator==(const PublicationReadyEvent& lhs, const PublicationReadyEvent& rhs) = default;
@@ -76,7 +80,9 @@ namespace margelo::nitro {
         JSIConverter<std::vector<margelo::nitro::readium::Link>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "tableOfContents"))),
         JSIConverter<std::vector<margelo::nitro::readium::Locator>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "positions"))),
         JSIConverter<margelo::nitro::readium::PublicationMetadata>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "metadata"))),
-        JSIConverter<margelo::nitro::readium::Capabilities>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "capabilities")))
+        JSIConverter<margelo::nitro::readium::Capabilities>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "capabilities"))),
+        JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "isProtected"))),
+        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "protectionScheme")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::readium::PublicationReadyEvent& arg) {
@@ -85,6 +91,8 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "positions"), JSIConverter<std::vector<margelo::nitro::readium::Locator>>::toJSI(runtime, arg.positions));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "metadata"), JSIConverter<margelo::nitro::readium::PublicationMetadata>::toJSI(runtime, arg.metadata));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "capabilities"), JSIConverter<margelo::nitro::readium::Capabilities>::toJSI(runtime, arg.capabilities));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "isProtected"), JSIConverter<bool>::toJSI(runtime, arg.isProtected));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "protectionScheme"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.protectionScheme));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -99,6 +107,8 @@ namespace margelo::nitro {
       if (!JSIConverter<std::vector<margelo::nitro::readium::Locator>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "positions")))) return false;
       if (!JSIConverter<margelo::nitro::readium::PublicationMetadata>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "metadata")))) return false;
       if (!JSIConverter<margelo::nitro::readium::Capabilities>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "capabilities")))) return false;
+      if (!JSIConverter<bool>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "isProtected")))) return false;
+      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "protectionScheme")))) return false;
       return true;
     }
   };

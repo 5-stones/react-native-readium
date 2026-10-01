@@ -5,6 +5,7 @@ import type {
   DecorationGroup,
   SelectionAction,
   PublicationReadyEvent,
+  PublicationErrorEvent,
   DecorationActivatedEvent,
   SelectionEvent,
   SelectionActionEvent,
@@ -39,6 +40,7 @@ export type ReadiumProps = {
   onLocationChange?: (locator: Locator) => void;
   onPublicationReady?: (event: PublicationReadyEvent) => void;
   onPreferencesChanged?: (event: PreferencesChangedEvent) => void;
+  onPublicationError?: (event: PublicationErrorEvent) => void;
   onDecorationActivated?: (event: DecorationActivatedEvent) => void;
   onSelectionChange?: (event: SelectionEvent) => void;
   onSelectionAction?: (event: SelectionActionEvent) => void;

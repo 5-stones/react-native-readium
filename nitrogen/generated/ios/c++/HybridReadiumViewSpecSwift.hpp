@@ -52,6 +52,10 @@ namespace margelo::nitro::readium { struct SeriesInfo; }
 namespace margelo::nitro::readium { struct Capabilities; }
 // Forward declaration of `PreferencesChangedEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct PreferencesChangedEvent; }
+// Forward declaration of `PublicationErrorEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct PublicationErrorEvent; }
+// Forward declaration of `PublicationErrorCode` to properly resolve imports.
+namespace margelo::nitro::readium { enum class PublicationErrorCode; }
 // Forward declaration of `DecorationActivatedEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct DecorationActivatedEvent; }
 // Forward declaration of `Rect` to properly resolve imports.
@@ -94,6 +98,8 @@ namespace margelo::nitro::readium { struct SearchOptions; }
 #include "SeriesInfo.hpp"
 #include "Capabilities.hpp"
 #include "PreferencesChangedEvent.hpp"
+#include "PublicationErrorEvent.hpp"
+#include "PublicationErrorCode.hpp"
 #include "DecorationActivatedEvent.hpp"
 #include "Rect.hpp"
 #include "Point.hpp"
@@ -198,6 +204,13 @@ namespace margelo::nitro::readium {
     }
     inline void setOnPreferencesChanged(const std::optional<std::function<void(const PreferencesChangedEvent& /* event */)>>& onPreferencesChanged) noexcept override {
       _swiftPart.setOnPreferencesChanged(onPreferencesChanged);
+    }
+    inline std::optional<std::function<void(const PublicationErrorEvent& /* event */)>> getOnPublicationError() noexcept override {
+      auto __result = _swiftPart.getOnPublicationError();
+      return __result;
+    }
+    inline void setOnPublicationError(const std::optional<std::function<void(const PublicationErrorEvent& /* event */)>>& onPublicationError) noexcept override {
+      _swiftPart.setOnPublicationError(onPublicationError);
     }
     inline std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>> getOnDecorationActivated() noexcept override {
       auto __result = _swiftPart.getOnDecorationActivated();

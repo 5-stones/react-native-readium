@@ -18,10 +18,16 @@ public extension ReadiumFile {
   /**
    * Create a new instance of `ReadiumFile`.
    */
-  init(url: String, initialLocation: Locator?) {
+  init(url: String, initialLocation: Locator?, credentials: String?) {
     self.init(std.string(url), { () -> bridge.std__optional_Locator_ in
       if let __unwrappedValue = initialLocation {
         return bridge.create_std__optional_Locator_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__string_ in
+      if let __unwrappedValue = credentials {
+        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
       } else {
         return .init()
       }
@@ -36,5 +42,17 @@ public extension ReadiumFile {
   @inline(__always)
   var initialLocation: Locator? {
     return self.__initialLocation.value
+  }
+  
+  @inline(__always)
+  var credentials: String? {
+    return { () -> String? in
+      if bridge.has_value_std__optional_std__string_(self.__credentials) {
+        let __unwrapped = bridge.get_std__optional_std__string_(self.__credentials)
+        return String(__unwrapped)
+      } else {
+        return nil
+      }
+    }()
   }
 }

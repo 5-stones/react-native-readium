@@ -65,6 +65,10 @@ void JHybridReadiumViewStateUpdater::updateViewProps(jni::alias_ref<jni::JClass>
     hybridView->setOnPreferencesChanged(props->onPreferencesChanged.value);
     props->onPreferencesChanged.isDirty = false;
   }
+  if (props->onPublicationError.isDirty) {
+    hybridView->setOnPublicationError(props->onPublicationError.value);
+    props->onPublicationError.isDirty = false;
+  }
   if (props->onDecorationActivated.isDirty) {
     hybridView->setOnDecorationActivated(props->onDecorationActivated.value);
     props->onDecorationActivated.isDirty = false;

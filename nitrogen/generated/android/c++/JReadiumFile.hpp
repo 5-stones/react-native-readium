@@ -42,9 +42,12 @@ namespace margelo::nitro::readium {
       jni::local_ref<jni::JString> url = this->getFieldValue(fieldUrl);
       static const auto fieldInitialLocation = clazz->getField<JLocator>("initialLocation");
       jni::local_ref<JLocator> initialLocation = this->getFieldValue(fieldInitialLocation);
+      static const auto fieldCredentials = clazz->getField<jni::JString>("credentials");
+      jni::local_ref<jni::JString> credentials = this->getFieldValue(fieldCredentials);
       return ReadiumFile(
         url->toStdString(),
-        initialLocation != nullptr ? std::make_optional(initialLocation->toCpp()) : std::nullopt
+        initialLocation != nullptr ? std::make_optional(initialLocation->toCpp()) : std::nullopt,
+        credentials != nullptr ? std::make_optional(credentials->toStdString()) : std::nullopt
       );
     }
 
@@ -54,13 +57,14 @@ namespace margelo::nitro::readium {
      */
     [[maybe_unused]]
     static jni::local_ref<JReadiumFile::javaobject> fromCpp(const ReadiumFile& value) {
-      using JSignature = JReadiumFile(jni::alias_ref<jni::JString>, jni::alias_ref<JLocator>);
+      using JSignature = JReadiumFile(jni::alias_ref<jni::JString>, jni::alias_ref<JLocator>, jni::alias_ref<jni::JString>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         jni::make_jstring(value.url),
-        value.initialLocation.has_value() ? JLocator::fromCpp(value.initialLocation.value()) : nullptr
+        value.initialLocation.has_value() ? JLocator::fromCpp(value.initialLocation.value()) : nullptr,
+        value.credentials.has_value() ? jni::make_jstring(value.credentials.value()) : nullptr
       );
     }
   };

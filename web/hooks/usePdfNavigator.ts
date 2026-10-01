@@ -13,7 +13,8 @@ import type {
   PublicationReadyEvent,
   ReadiumFile,
   ZoomEvent,
-  PreferencesChangedEvent
+  PreferencesChangedEvent,
+  PublicationErrorEvent,
 } from '../../src/interfaces';
 import { assessCapabilities, pdfCapabilities } from '../utils/capabilities';
 import { PdfNavigator } from '../classes'
@@ -26,6 +27,7 @@ interface UsePdfNavigatorProps {
   onLocationChange?: (locator: Locator) => void;
   onPublicationReady?: (event: PublicationReadyEvent) => void;
   onPreferencesChanged?: (event: PreferencesChangedEvent) => void;
+  onPublicationError?: (event: PublicationErrorEvent) => void;
   onZoomChange?: (event: ZoomEvent) => void;
   initialPage?: number;
   onError?: (error: any) => void;
@@ -116,6 +118,7 @@ export const usePdfNavigator = ({
   onLocationChange,
   onPublicationReady,
   onPreferencesChanged,
+  onPublicationError,
   onZoomChange,
   initialPage = 1,
   onError = (error: any) => {
@@ -361,6 +364,7 @@ export const usePdfNavigator = ({
           positions: [],
           metadata: { title: '' },
           capabilities: pdfCapabilities(preferences),
+          isProtected: false,
         });
 
         const scrollWrapper = document.createElement('div');
@@ -596,6 +600,7 @@ export const usePdfNavigator = ({
         if (!cancelled) {
           setIsReady(false);
           onError(error);
+          onPublicationError?.({ url, code: 'openFailed', message: String((error as any)?.message ?? error) });
         }
       }
     })();
