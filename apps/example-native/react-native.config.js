@@ -1,10 +1,9 @@
 const path = require('path');
-const pak = require('../../package.json');
+const packages = path.join(__dirname, '../../packages');
+const workspacePackages = ['react-native-readium'];
 
 module.exports = {
-  dependencies: {
-    [pak.name]: {
-      root: path.join(__dirname, '../..'),
-    },
-  },
+  dependencies: Object.fromEntries(
+    workspacePackages.map((name) => [name, { root: path.join(packages, name) }])
+  ),
 };

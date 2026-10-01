@@ -84,7 +84,10 @@ const config = {
         '../../node_modules/react-native-safe-area-context'
       ),
       // Use web-specific implementation for Readium (source files)
-      'react-native-readium$': path.resolve(__dirname, '../../src/index.tsx'),
+      'react-native-readium$': path.resolve(
+        __dirname,
+        '../../packages/react-native-readium/src/index.tsx'
+      ),
       // Use source files for react-native-ratings (dist has JSX)
       'react-native-ratings': path.resolve(
         __dirname,

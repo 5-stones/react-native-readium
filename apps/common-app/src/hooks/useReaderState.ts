@@ -5,9 +5,8 @@ import type {
   ReadiumProps,
   PublicationReadyEvent,
   Capabilities,
+  PreferencesChangedEvent,
 } from 'react-native-readium';
-
-import { PreferencesChangedEvent } from '../../../../src/interfaces';
 
 export interface UseReaderStateOptions {
   initialPreferences?: ReadiumProps['preferences'];

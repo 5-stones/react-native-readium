@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "react-native-readium": ["./src/index"]
+    },
+    "outDir": "./lib"
+  },
+  "include": ["src", "dita.d.ts"],
+  "exclude": ["**/__tests__/*"]
+}
