@@ -2,7 +2,8 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "react-native-readium": ["./packages/react-native-readium/src/index"]
+      "react-native-readium": ["./packages/react-native-readium/src/index"],
+      "react-native-readium-lcp": ["./packages/react-native-readium-lcp/src/index"]
     },
     "allowJs": false,
     "allowSyntheticDefaultImports": true,

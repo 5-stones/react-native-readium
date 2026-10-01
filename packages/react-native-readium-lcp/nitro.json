@@ -1,0 +1,16 @@
+{
+  "cxxNamespace": ["readiumlcp"],
+  "ios": {
+    "iosModuleName": "NitroReadiumLCP"
+  },
+  "android": {
+    "androidNamespace": ["reactnativereadiumlcp"],
+    "androidCxxLibName": "NitroReadiumLCP"
+  },
+  "autolinking": {
+    "ReadiumLCP": {
+      "swift": "HybridReadiumLCP",
+      "kotlin": "HybridReadiumLCP"
+    }
+  }
+}

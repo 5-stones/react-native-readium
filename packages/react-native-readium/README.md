@@ -386,7 +386,11 @@ for a full search UI with infinite scroll.
 
 #### DRM Support
 
-DRM is not supported at this time. However, there is a clear path to [support it via LCP](https://www.edrlab.org/readium-lcp/) and the intention is to eventually implement it.
+This library ships no DRM scheme itself. For [Readium LCP](https://www.edrlab.org/readium-lcp/),
+install the companion package
+[`react-native-readium-lcp`](https://github.com/5-stones/react-native-readium/tree/main/packages/react-native-readium-lcp),
+which builds the LCP protection and registers it through the hook described below. Other schemes
+can use the same hook directly.
 
 ##### Registering a content protection
 
