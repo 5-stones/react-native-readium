@@ -95,7 +95,6 @@ export function useLcp() {
     } catch (e: any) {
       // Every LCP call rejects with an LcpError, whose message is a sentence for users (and
       // whose `code` is for branching). Moving the file can fail too, with a plain Error.
-      console.log('>>>>> e', JSON.stringify(e, null, 2));
       Alert.alert(
         "Couldn't add this book",
         e instanceof LcpError
