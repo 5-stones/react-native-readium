@@ -8,8 +8,7 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "jsx": "react-native",
-    "lib": ["es2017", "DOM", "DOM.Iterable"],
-    "moduleResolution": "node",
+    "lib": ["es2020", "DOM", "DOM.Iterable"],
     "baseUrl": ".",
     "paths": {
       "react-native-readium": ["../../packages/react-native-readium/src/index.tsx"],

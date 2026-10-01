@@ -45,7 +45,7 @@ Thats it! :tada:, you should now be running the example project.
 ### 3. Readium LCP (optional)
 
 The app always includes `react-native-readium-lcp`. Debug builds without liblcp use a
-stand-in client that only opens test licenses (see [End-to-end tests](#4-end-to-end-tests));
+stand-in client that only opens test licenses (see [Testing LCP without liblcp](#4-testing-lcp-without-liblcp));
 release builds without liblcp report "Unavailable" on the LCP tab, whose **Client** line shows
 which one you have. liblcp itself is private and licensed per app by
 [EDRLab](https://www.edrlab.org/contact/), so point the build at what they gave you:
@@ -88,7 +88,7 @@ If opening fails:
 | `protectionNotSupported` | No LCP client at all (**Client: None**) |
 | `restricted` after cancelling the prompt | Expected: no passphrase, no book |
 
-### 4. End-to-end tests
+### 4. Testing LCP without liblcp
 
 Debug builds without liblcp include a stand-in client for LCP's open *basic profile*
 (`ios/BasicProfileLCPClient.swift`, `android/app/src/lcpTestClient`). It opens the two bundled
