@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useState } from 'react';
-import { View, Text, Platform } from 'react-native';
+import { View, Text, Platform, StyleSheet } from 'react-native';
 import { ReadiumView, useSearch } from 'react-native-readium';
 import type {
   ReadiumViewRef,
@@ -9,6 +9,7 @@ import type {
   Decoration,
   SelectionAction,
   PublicationReadyEvent,
+  PublicationErrorEvent,
   SearchResult,
   SearchOptions,
   ReadiumFile,
@@ -151,8 +152,13 @@ export const Reader: React.FC<ReaderProps> = ({
     handleCancelEdit,
   } = useHighlights();
 
+  const [openError, setOpenError] = useState<PublicationErrorEvent>();
+  const [isProtected, setIsProtected] = useState(false);
+
   const handlePublicationReady = React.useCallback(
     (event: PublicationReadyEvent) => {
+      setOpenError(undefined);
+      setIsProtected(event.isProtected);
       baseHandlePublicationReady(event);
     },
     [baseHandlePublicationReady]
@@ -250,12 +256,28 @@ export const Reader: React.FC<ReaderProps> = ({
             selectionActions={selectionActions}
             onLocationChange={handleLocationChange}
             onPublicationReady={handlePublicationReady}
+            onPublicationError={setOpenError}
             onDecorationActivated={handleDecorationActivated}
             onSelectionChange={handleSelectionChange}
             onSelectionAction={handleSelectionAction}
             onZoomChange={handleZoomChange}
           />
         </View>
+
+        {isProtected ? (
+          <Text testID="protection-badge" style={badgeStyles.badge}>
+            LCP
+          </Text>
+        ) : null}
+
+        {openError ? (
+          <View style={[styles.loadingContainer, StyleSheet.absoluteFill]}>
+            <Text testID="publication-error">
+              Couldn't open this {fileTypeLabel} ({openError.code}):{' '}
+              {openError.message}
+            </Text>
+          </View>
+        ) : null}
 
         {showChevrons ? (
           <ReaderButton
@@ -284,3 +306,19 @@ export const Reader: React.FC<ReaderProps> = ({
     </View>
   );
 };
+
+const badgeStyles = StyleSheet.create({
+  badge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+    overflow: 'hidden',
+    backgroundColor: '#2E7D32',
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+});

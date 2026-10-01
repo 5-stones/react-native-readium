@@ -16,6 +16,8 @@ export interface BookOption {
    * view picks its navigator from the URL.
    */
   asset: string;
+  /** Set when the publication is DRM-protected, e.g. with Readium LCP. */
+  protection?: 'lcp';
 }
 
 export interface ReaderProps {
