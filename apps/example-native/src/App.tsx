@@ -87,10 +87,6 @@ export default function App({ lcpClient = 'none' }: AppProps) {
     setSheetOpen(true);
   }, []);
 
-  const handleClearBook = useCallback(() => {
-    setSelectedBook(null);
-  }, []);
-
   const handleCloseSheet = useCallback(() => {
     setSheetOpen(false);
     setSelectedBook(null);
@@ -128,7 +124,6 @@ export default function App({ lcpClient = 'none' }: AppProps) {
           <ReaderBottomSheet
             key={selectedBook?.id ?? 'empty'}
             book={selectedBook}
-            onClearBook={handleClearBook}
             onClose={handleCloseSheet}
           />
         )}

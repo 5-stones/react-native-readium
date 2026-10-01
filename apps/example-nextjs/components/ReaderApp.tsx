@@ -91,11 +91,6 @@ export default function ReaderApp() {
     try { localStorage.setItem(SELECTED_BOOK_KEY, book.id); } catch {}
   }, []);
 
-  const handleClearBook = useCallback(() => {
-    setSelectedBook(null);
-    try { localStorage.removeItem(SELECTED_BOOK_KEY); } catch {}
-  }, []);
-
   const handleCloseSheet = useCallback(() => {
     setSheetOpen(false);
     setSelectedBook(null);
@@ -123,7 +118,6 @@ export default function ReaderApp() {
           <ReaderBottomSheet
             key={selectedBook?.id ?? 'empty'}
             book={selectedBook}
-            onClearBook={handleClearBook}
             onClose={handleCloseSheet}
             initialPreferences={initialPreferences}
             onPreferencesChange={handlePreferencesChange}
