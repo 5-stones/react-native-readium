@@ -28,7 +28,13 @@ data class PublicationReadyEvent(
   val metadata: PublicationMetadata,
   @DoNotStrip
   @Keep
-  val capabilities: Capabilities
+  val capabilities: Capabilities,
+  @DoNotStrip
+  @Keep
+  val isProtected: Boolean,
+  @DoNotStrip
+  @Keep
+  val protectionScheme: String?
 ) {
   /* primary constructor */
 
@@ -40,8 +46,8 @@ data class PublicationReadyEvent(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(tableOfContents: Array<Link>, positions: Array<Locator>, metadata: PublicationMetadata, capabilities: Capabilities): PublicationReadyEvent {
-      return PublicationReadyEvent(tableOfContents, positions, metadata, capabilities)
+    private fun fromCpp(tableOfContents: Array<Link>, positions: Array<Locator>, metadata: PublicationMetadata, capabilities: Capabilities, isProtected: Boolean, protectionScheme: String?): PublicationReadyEvent {
+      return PublicationReadyEvent(tableOfContents, positions, metadata, capabilities, isProtected, protectionScheme)
     }
   }
 }

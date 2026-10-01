@@ -397,8 +397,9 @@ plug into: `liblcp` is proprietary and can't be bundled here, so the protection 
 in the app (or in a companion module) and handed over before the reader opens anything.
 
 The registry starts empty, so a publication with no protection keeps opening exactly as it does
-today. Register early — at module init or app launch — since `ReaderService` reads the registry
-once, when it is constructed.
+today. It is read each time a publication is opened, so a protection must be registered before the
+reader's `file` is set; registering after a `ReadiumView` mounts is fine. A protected publication
+opened with no matching protection registered fails to open rather than rendering.
 
 **iOS** (Swift):
 
@@ -414,15 +415,24 @@ Nitro-generated headers are C++-only — go through the Objective-C door instead
 
 ```objc
 @interface RNRContentProtectionRegistry : NSObject
-+ (BOOL)registerProtection:(NSObject *)protection;
-+ (void)unregisterProtection:(NSObject *)protection;
++ (BOOL)registerProtection:(id)protection;
++ (void)unregisterProtection:(id)protection;
 @end
 
 [RNRContentProtectionRegistry registerProtection:myContentProtection];
 ```
 
+From Swift, with that declaration in a bridging header, `id` imports as `Any`, so pure-Swift
+classes pass straight through, including the one `LCPService.contentProtection(with:)` returns:
+
+```swift
+let protection = lcpService.contentProtection(with: LCPDialogAuthentication())
+RNRContentProtectionRegistry.registerProtection(protection)
+```
+
 It returns `NO` if the object passed isn't a `ContentProtection`, since the Swift protocol has no
-Objective-C representation and the cast can only happen on the Swift side.
+Objective-C representation and the cast can only happen on the Swift side. Hold on to the same
+instance if you later call `unregisterProtection`, since entries are matched by identity.
 
 **Android** (Kotlin):
 
@@ -431,6 +441,30 @@ import com.reactnativereadium.reader.ReaderContentProtectionRegistry
 
 ReaderContentProtectionRegistry.register(myContentProtection)
 ```
+
+A protected publication that opens reports `isProtected: true` and its `protectionScheme` in
+`onPublicationReady`. One that can't be unlocked never reaches the reader; `onPublicationError`
+fires instead, with `code: 'protectionNotSupported'` when no registered protection handles its
+scheme, or `'restricted'` when one does but refuses access (an expired loan, a wrong passphrase),
+and the `protectionScheme` in both cases.
+
+A secret the app already holds can be passed as `file.credentials`; it is handed to the
+registered protections when the publication opens. For LCP that is the user's passphrase, or
+preferably its SHA-256 hex hash, so the book opens without a prompt. Like any prop it is visible to
+React DevTools, so don't log it.
+
+After a `restricted` or `cancelled` error, setting `file` again with different `credentials` retries
+the open; re-rendering with the same `url` and `credentials` does not. Each `onPublicationError`
+carries the `url` that failed, and an open superseded by a newer `file` reports nothing.
+
+```tsx
+<ReadiumView file={{ url: localPath, credentials: passphraseHash }} />
+```
+
+Publications are opened for reading, so protections are told user interaction is allowed. Prompts
+such as a passphrase request are meant to be answered from JS, through the protection's own
+library, not through Readium's native dialogs: on Android, `LcpDialogAuthentication` waits for the
+host to call `onParentViewAttachedToWindow(view)` and the open stalls until it does.
 
 Both platforms expose a matching `unregister`, for a module that is torn down with the JS runtime
 while the process lives on. Registering twice with the same concrete type replaces the earlier
@@ -448,7 +482,8 @@ entry rather than stacking a second one.
 | `selectionActions`      | [`SelectionAction[]`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/SelectionAction.ts)                                 | :white_check_mark: | Custom actions to show in the context menu when the user selects text.                                                                                                                                                                                                              |
 | `style`                 | `ViewStyle`                                                                                                                                         | :white_check_mark: | A traditional style object.                                                                                                                                                                                                                                                         |
 | `onLocationChange`      | `(locator: Locator) => void`                                                                                                                        | :white_check_mark: | A callback that fires whenever the location is changed (e.g. the user transitions to a new page).                                                                                                                                                                                   |
-| `onPublicationReady`    | `(event: PublicationReadyEvent) => void`                                                                                                            | :white_check_mark: | A callback that fires once the publication is loaded and provides access to the table of contents, positions, metadata, and the [capabilities](#knowing-which-settings-apply) of the opened publication. See the [`PublicationReadyEvent`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/PublicationReady.ts) interface for details. |
+| `onPublicationReady`    | `(event: PublicationReadyEvent) => void`                                                                                                            | :white_check_mark: | A callback that fires once the publication is loaded and provides access to the table of contents, positions, metadata, the [capabilities](#knowing-which-settings-apply) of the opened publication, and whether it is protected (`isProtected`, `protectionScheme`). See the [`PublicationReadyEvent`](https://github.com/5-stones/react-native-readium/blob/main/src/interfaces/PublicationReady.ts) interface for details. |
+| `onPublicationError`    | `(event: PublicationErrorEvent) => void`                                                                                                            | :white_check_mark: | A callback that fires when the publication can't be opened. `code` is one of `fileNotFound`, `formatNotSupported`, `openFailed`, `protectionNotSupported`, `restricted` or `cancelled`; see [Registering a content protection](#registering-a-content-protection). |
 | `onDecorationActivated` | `(event: DecorationActivatedEvent) => void`                                                                                                         | :white_check_mark: | A callback that fires when a user taps on a decoration (e.g. a highlight).                                                                                                                                                                                                          |
 | `onSelectionChange`     | `(event: SelectionEvent) => void`                                                                                                                   | :white_check_mark: | A callback that fires when the user's text selection changes.                                                                                                                                                                                                                       |
 | `onSelectionAction`     | `(event: SelectionActionEvent) => void`                                                                                                             | :white_check_mark: | A callback that fires when the user taps a custom selection action from the context menu.                                                                                                                                                                                           |

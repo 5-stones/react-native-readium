@@ -311,6 +311,38 @@ open class HybridReadiumViewSpec_cxx {
     }
   }
   
+  public final var onPublicationError: bridge.std__optional_std__function_void_const_PublicationErrorEvent_____event______ {
+    @inline(__always)
+    get {
+      return { () -> bridge.std__optional_std__function_void_const_PublicationErrorEvent_____event______ in
+        if let __unwrappedValue = self.__implementation.onPublicationError {
+          return bridge.create_std__optional_std__function_void_const_PublicationErrorEvent_____event______({ () -> bridge.Func_void_PublicationErrorEvent in
+            let __closureWrapper = Func_void_PublicationErrorEvent(__unwrappedValue)
+            return bridge.create_Func_void_PublicationErrorEvent(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__implementation.onPublicationError = { () -> ((_ event: PublicationErrorEvent) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_const_PublicationErrorEvent_____event______(newValue) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_const_PublicationErrorEvent_____event______(newValue)
+          return { () -> (PublicationErrorEvent) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_PublicationErrorEvent(__unwrapped)
+            return { (__event: PublicationErrorEvent) -> Void in
+              __wrappedFunction.call(__event)
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
+    }
+  }
+  
   public final var onDecorationActivated: bridge.std__optional_std__function_void_const_DecorationActivatedEvent_____event______ {
     @inline(__always)
     get {

@@ -21,7 +21,7 @@ import {
 interface RefProps
   extends Pick<
     ReadiumProps,
-    'file' | 'onLocationChange' | 'onPublicationReady' | 'onPreferencesChanged' | 'preferences'
+    'file' | 'onLocationChange' | 'onPublicationReady' | 'onPreferencesChanged' | 'onPublicationError' | 'preferences'
   > {
   container: HTMLElement | null;
   onPositionChange?: (position: number | null) => void;
@@ -33,6 +33,7 @@ export const useEpubNavigator = ({
   onLocationChange,
   onPublicationReady,
   onPreferencesChanged,
+  onPublicationError,
   container,
   onPositionChange,
 }: RefProps) => {
@@ -169,6 +170,7 @@ export const useEpubNavigator = ({
           positions: positionsArray,
           metadata: metadata,
           capabilities: assessCapabilities(nav, preferences),
+          isProtected: false,
         });
       }
 
@@ -177,7 +179,11 @@ export const useEpubNavigator = ({
       setNavigatorId((prev) => prev + 1)
     }
 
-    initializeNavigator();
+    initializeNavigator().catch((error) => {
+      if (cancelled) return;
+      console.error('[react-native-readium] failed to open EPUB', error);
+      onPublicationError?.({ url: file.url, code: 'openFailed', message: String(error?.message ?? error) });
+    });
 
     return () => {
       cancelled = true;

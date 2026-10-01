@@ -96,6 +96,16 @@ namespace margelo::nitro::readium::views {
         throw std::runtime_error(std::string("ReadiumView.onPreferencesChanged: ") + exc.what());
       }
     }()),
+    onPublicationError([&]() -> CachedProp<std::optional<std::function<void(const PublicationErrorEvent& /* event */)>>> {
+      try {
+        const react::RawValue* rawValue = rawProps.at("onPublicationError", nullptr, nullptr);
+        if (rawValue == nullptr) return sourceProps.onPublicationError;
+        const auto& [runtime, value] = (std::pair<jsi::Runtime*, jsi::Value>)*rawValue;
+        return CachedProp<std::optional<std::function<void(const PublicationErrorEvent& /* event */)>>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.onPublicationError);
+      } catch (const std::exception& exc) {
+        throw std::runtime_error(std::string("ReadiumView.onPublicationError: ") + exc.what());
+      }
+    }()),
     onDecorationActivated([&]() -> CachedProp<std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>> {
       try {
         const react::RawValue* rawValue = rawProps.at("onDecorationActivated", nullptr, nullptr);
@@ -146,6 +156,7 @@ namespace margelo::nitro::readium::views {
       case hashString("onLocationChange"): return true;
       case hashString("onPublicationReady"): return true;
       case hashString("onPreferencesChanged"): return true;
+      case hashString("onPublicationError"): return true;
       case hashString("onDecorationActivated"): return true;
       case hashString("onSelectionChange"): return true;
       case hashString("onSelectionAction"): return true;

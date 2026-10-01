@@ -19,6 +19,7 @@
 #include "JFunc_void_Locator.hpp"
 #include "JFunc_void_PublicationReadyEvent.hpp"
 #include "JFunc_void_PreferencesChangedEvent.hpp"
+#include "JFunc_void_PublicationErrorEvent.hpp"
 #include "JFunc_void_DecorationActivatedEvent.hpp"
 #include "JFunc_void_SelectionEvent.hpp"
 #include "JFunc_void_SelectionActionEvent.hpp"
@@ -51,6 +52,7 @@ void registerAllNatives() {
   margelo::nitro::readium::JFunc_void_Locator_cxx::registerNatives();
   margelo::nitro::readium::JFunc_void_PublicationReadyEvent_cxx::registerNatives();
   margelo::nitro::readium::JFunc_void_PreferencesChangedEvent_cxx::registerNatives();
+  margelo::nitro::readium::JFunc_void_PublicationErrorEvent_cxx::registerNatives();
   margelo::nitro::readium::JFunc_void_DecorationActivatedEvent_cxx::registerNatives();
   margelo::nitro::readium::JFunc_void_SelectionEvent_cxx::registerNatives();
   margelo::nitro::readium::JFunc_void_SelectionActionEvent_cxx::registerNatives();

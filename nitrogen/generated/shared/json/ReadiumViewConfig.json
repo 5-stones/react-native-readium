@@ -11,6 +11,7 @@
     "onLocationChange": true,
     "onPublicationReady": true,
     "onPreferencesChanged": true,
+    "onPublicationError": true,
     "onDecorationActivated": true,
     "onSelectionChange": true,
     "onSelectionAction": true,

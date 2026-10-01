@@ -7,7 +7,7 @@ import UIKit
 final class ReaderService: Loggable {
   var app: AppModule?
   private let assetRetriever: AssetRetriever
-  private let publicationOpener: PublicationOpener
+  private let parser: PublicationParser
   private var subscriptions = Set<AnyCancellable>()
 
   init() {
@@ -20,10 +20,7 @@ final class ReaderService: Loggable {
     )
 
     self.assetRetriever = assetRetriever
-    self.publicationOpener = PublicationOpener(
-      parser: parser,
-      contentProtections: ReaderContentProtectionRegistry.protections
-    )
+    self.parser = parser
 
     do {
       self.app = try AppModule()
@@ -37,17 +34,20 @@ final class ReaderService: Loggable {
     bookId: String,
     locator: ReadiumShared.Locator?,
     selectionActions: [SelectionActionData]?,
+    credentials: String?,
     sender: UIViewController?,
-    completion: @escaping (ReaderViewController) -> Void
+    completion: @escaping (ReaderViewController) -> Void,
+    onError: @escaping (ReaderError) -> Void
   ) {
     guard let reader = self.app?.reader else { return }
     self.url(path: url)
-      .flatMap { self.openPublication(at: $0, allowUserInteraction: true, sender: sender ) }
+      .flatMap { self.openPublication(at: $0, credentials: credentials, allowUserInteraction: true, sender: sender) }
       .flatMap { (pub, _) in self.checkIsReadable(publication: pub) }
       .sink(
         receiveCompletion: { [weak self] completion in
           if case .failure(let error) = completion {
             self?.log(.error, "Failed to open publication: \(error)")
+            onError(error)
           }
         },
         receiveValue: { pub in
@@ -68,6 +68,11 @@ final class ReaderService: Loggable {
       .store(in: &subscriptions)
   }
 
+  /// Drops in-flight opens, so a view switching files never hears back from the previous one.
+  func cancelPendingOpens() {
+    subscriptions.removeAll()
+  }
+
   func url(path: String) -> AnyPublisher<URL, ReaderError> {
     // Absolute URL.
     if let url = URL(string: path), url.scheme != nil {
@@ -84,6 +89,7 @@ final class ReaderService: Loggable {
 
   private func openPublication(
     at url: URL,
+    credentials: String?,
     allowUserInteraction: Bool,
     sender: UIViewController?
   ) -> AnyPublisher<(Publication, MediaType), ReaderError> {
@@ -116,9 +122,15 @@ final class ReaderService: Loggable {
 
           let mediaType = asset.format.mediaType ?? .binary
 
-          let openResult = await self.publicationOpener.open(
+          // Built per open so a protection registered after this view mounted still applies.
+          let publicationOpener = PublicationOpener(
+            parser: self.parser,
+            contentProtections: ReaderContentProtectionRegistry.protections
+          )
+          let openResult = await publicationOpener.open(
             asset: asset,
             allowUserInteraction: allowUserInteraction,
+            credentials: credentials,
             sender: sender
           )
 
@@ -142,7 +154,7 @@ final class ReaderService: Loggable {
   private func checkIsReadable(publication: Publication) -> AnyPublisher<Publication, ReaderError> {
     guard !publication.isRestricted else {
       if let error = publication.protectionError {
-        return .fail(.openFailed(error))
+        return .fail(.restricted(scheme: publication.protectionScheme, error: error))
       } else {
         return .fail(.cancelled)
       }

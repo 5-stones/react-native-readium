@@ -2,12 +2,17 @@ package com.reactnativereadium.reader
 
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.util.RNLog
+import com.margelo.nitro.reactnativereadium.PublicationErrorCode
 import com.reactnativereadium.utils.LinkOrLocator
 import java.io.File
 import java.util.Locale
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
 import org.readium.r2.shared.publication.firstWithHref
+import org.readium.r2.shared.publication.protection.FallbackContentProtection
+import org.readium.r2.shared.publication.services.isRestricted
+import org.readium.r2.shared.publication.services.protectionScheme
+import org.readium.r2.shared.publication.services.protectionError
 import org.readium.r2.shared.util.FileExtension
 import org.readium.r2.shared.util.asset.AssetRetriever
 import org.readium.r2.shared.util.format.FormatHints
@@ -25,14 +30,11 @@ class ReaderService(
     reactContext.contentResolver,
     httpClient
   )
-  private val publicationOpener = PublicationOpener(
-    publicationParser = DefaultPublicationParser(
-      context = reactContext,
-      assetRetriever = assetRetriever,
-      httpClient = httpClient,
-      pdfFactory = PdfiumDocumentFactory(reactContext),
-    ),
-    contentProtections = ReaderContentProtectionRegistry.protections,
+  private val publicationParser = DefaultPublicationParser(
+    context = reactContext,
+    assetRetriever = assetRetriever,
+    httpClient = httpClient,
+    pdfFactory = PdfiumDocumentFactory(reactContext),
   )
 
   /**
@@ -81,6 +83,8 @@ class ReaderService(
   suspend fun openPublication(
     fileName: String,
     initialLocation: LinkOrLocator?,
+    credentials: String?,
+    onError: (OpenError) -> Unit,
     callback: suspend (fragment: BaseReaderFragment) -> Unit
   ) {
     val publicationUrl = if (fileName.startsWith("http://") || fileName.startsWith("https://")) {
@@ -89,6 +93,7 @@ class ReaderService(
       val targetFile = File(fileName).absoluteFile
       if (!targetFile.exists()) {
         RNLog.e(reactContext, "Failed to open publication: File does not exist: $fileName")
+        onError(OpenError(PublicationErrorCode.FILENOTFOUND, "File does not exist: $fileName"))
         return
       }
       runCatching {
@@ -103,6 +108,7 @@ class ReaderService(
         reactContext,
         "Invalid publication layout. AbsoluteUrl creation aborted for path: $fileName"
       )
+      onError(OpenError(PublicationErrorCode.OPENFAILED, "Invalid publication URL: $fileName"))
       return
     }
 
@@ -119,16 +125,45 @@ class ReaderService(
       )
       .onFailure {
         RNLog.w(reactContext, "Unable to retrieve publication asset: ${it.message}")
+        val code = when (it) {
+          is AssetRetriever.RetrieveUrlError.FormatNotSupported -> PublicationErrorCode.FORMATNOTSUPPORTED
+          else -> PublicationErrorCode.OPENFAILED
+        }
+        onError(OpenError(code, it.message))
       }
       .getOrNull()
       ?: return
 
+    // Built per open so a protection registered after this view mounted still applies.
+    val publicationOpener = PublicationOpener(
+      publicationParser = publicationParser,
+      contentProtections = ReaderContentProtectionRegistry.protections,
+    )
+
     publicationOpener
       .open(
         asset = asset,
-        allowUserInteraction = false
+        credentials = credentials,
+        // Opened to render, so a protection may ask for credentials, as on iOS.
+        allowUserInteraction = true
       )
       .onSuccess { publication ->
+        if (publication.isRestricted) {
+          val error = publication.protectionError
+          RNLog.w(reactContext, "Unable to open restricted publication: ${error?.message}")
+          onError(OpenError(
+            code = when (error) {
+              null -> PublicationErrorCode.CANCELLED
+              is FallbackContentProtection.SchemeNotSupportedError -> PublicationErrorCode.PROTECTIONNOTSUPPORTED
+              else -> PublicationErrorCode.RESTRICTED
+            },
+            message = error?.message ?: "Access to the publication was not granted.",
+            protectionScheme = publication.protectionScheme?.uri
+          ))
+          publication.close()
+          return@onSuccess
+        }
+
         val locator = locatorFromLinkOrLocator(initialLocation, publication)
         val readerFragment: BaseReaderFragment = when {
           publication.conformsTo(Publication.Profile.PDF) -> {
@@ -150,9 +185,20 @@ class ReaderService(
           reactContext,
           "Error executing ReaderService.openPublication: ${it.message}"
         )
-        // TODO: implement failure event
+        val code = when (it) {
+          is PublicationOpener.OpenError.FormatNotSupported -> PublicationErrorCode.FORMATNOTSUPPORTED
+          else -> PublicationErrorCode.OPENFAILED
+        }
+        onError(OpenError(code, it.message))
       }
   }
+
+  /** A failed open, reported to JS as a `PublicationErrorEvent`. */
+  class OpenError(
+    val code: PublicationErrorCode,
+    val message: String,
+    val protectionScheme: String? = null,
+  )
 
   sealed class Event {
 

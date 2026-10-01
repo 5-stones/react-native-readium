@@ -17,6 +17,7 @@ public protocol HybridReadiumViewSpec_protocol: HybridObject, HybridView {
   var onLocationChange: ((_ locator: Locator) -> Void)? { get set }
   var onPublicationReady: ((_ event: PublicationReadyEvent) -> Void)? { get set }
   var onPreferencesChanged: ((_ event: PreferencesChangedEvent) -> Void)? { get set }
+  var onPublicationError: ((_ event: PublicationErrorEvent) -> Void)? { get set }
   var onDecorationActivated: ((_ event: DecorationActivatedEvent) -> Void)? { get set }
   var onSelectionChange: ((_ event: SelectionEvent) -> Void)? { get set }
   var onSelectionAction: ((_ event: SelectionActionEvent) -> Void)? { get set }

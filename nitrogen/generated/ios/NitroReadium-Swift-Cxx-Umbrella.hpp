@@ -42,6 +42,10 @@ namespace margelo::nitro::readium { struct Point; }
 namespace margelo::nitro::readium { struct PreferencesChangedEvent; }
 // Forward declaration of `Preferences` to properly resolve imports.
 namespace margelo::nitro::readium { struct Preferences; }
+// Forward declaration of `PublicationErrorCode` to properly resolve imports.
+namespace margelo::nitro::readium { enum class PublicationErrorCode; }
+// Forward declaration of `PublicationErrorEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct PublicationErrorEvent; }
 // Forward declaration of `PublicationMetadata` to properly resolve imports.
 namespace margelo::nitro::readium { struct PublicationMetadata; }
 // Forward declaration of `PublicationReadyEvent` to properly resolve imports.
@@ -85,6 +89,8 @@ namespace margelo::nitro::readium { struct Subject; }
 #include "Point.hpp"
 #include "Preferences.hpp"
 #include "PreferencesChangedEvent.hpp"
+#include "PublicationErrorCode.hpp"
+#include "PublicationErrorEvent.hpp"
 #include "PublicationMetadata.hpp"
 #include "PublicationReadyEvent.hpp"
 #include "ReadiumFile.hpp"

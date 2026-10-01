@@ -47,6 +47,10 @@ namespace margelo::nitro::readium { struct SeriesInfo; }
 namespace margelo::nitro::readium { struct Capabilities; }
 // Forward declaration of `PreferencesChangedEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct PreferencesChangedEvent; }
+// Forward declaration of `PublicationErrorEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct PublicationErrorEvent; }
+// Forward declaration of `PublicationErrorCode` to properly resolve imports.
+namespace margelo::nitro::readium { enum class PublicationErrorCode; }
 // Forward declaration of `DecorationActivatedEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct DecorationActivatedEvent; }
 // Forward declaration of `Rect` to properly resolve imports.
@@ -113,6 +117,11 @@ namespace margelo::nitro::readium { struct SearchOptions; }
 #include "PreferencesChangedEvent.hpp"
 #include "JFunc_void_PreferencesChangedEvent.hpp"
 #include "JPreferencesChangedEvent.hpp"
+#include "PublicationErrorEvent.hpp"
+#include "JFunc_void_PublicationErrorEvent.hpp"
+#include "JPublicationErrorEvent.hpp"
+#include "PublicationErrorCode.hpp"
+#include "JPublicationErrorCode.hpp"
 #include "DecorationActivatedEvent.hpp"
 #include "JFunc_void_DecorationActivatedEvent.hpp"
 #include "JDecorationActivatedEvent.hpp"
@@ -287,6 +296,23 @@ namespace margelo::nitro::readium {
   void JHybridReadiumViewSpec::setOnPreferencesChanged(const std::optional<std::function<void(const PreferencesChangedEvent& /* event */)>>& onPreferencesChanged) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_PreferencesChangedEvent::javaobject> /* onPreferencesChanged */)>("setOnPreferencesChanged_cxx");
     method(_javaPart, onPreferencesChanged.has_value() ? JFunc_void_PreferencesChangedEvent_cxx::fromCpp(onPreferencesChanged.value()) : nullptr);
+  }
+  std::optional<std::function<void(const PublicationErrorEvent& /* event */)>> JHybridReadiumViewSpec::getOnPublicationError() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void_PublicationErrorEvent::javaobject>()>("getOnPublicationError_cxx");
+    auto __result = method(_javaPart);
+    return __result != nullptr ? std::make_optional([&]() -> std::function<void(const PublicationErrorEvent& /* event */)> {
+      if (__result->isInstanceOf(JFunc_void_PublicationErrorEvent_cxx::javaClassStatic())) [[likely]] {
+        auto downcast = jni::static_ref_cast<JFunc_void_PublicationErrorEvent_cxx::javaobject>(__result);
+        return downcast->cthis()->getFunction();
+      } else {
+        auto __resultRef = jni::make_global(__result);
+        return JNICallable<JFunc_void_PublicationErrorEvent, void(PublicationErrorEvent)>(std::move(__resultRef));
+      }
+    }()) : std::nullopt;
+  }
+  void JHybridReadiumViewSpec::setOnPublicationError(const std::optional<std::function<void(const PublicationErrorEvent& /* event */)>>& onPublicationError) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_PublicationErrorEvent::javaobject> /* onPublicationError */)>("setOnPublicationError_cxx");
+    method(_javaPart, onPublicationError.has_value() ? JFunc_void_PublicationErrorEvent_cxx::fromCpp(onPublicationError.value()) : nullptr);
   }
   std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>> JHybridReadiumViewSpec::getOnDecorationActivated() {
     static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void_DecorationActivatedEvent::javaobject>()>("getOnDecorationActivated_cxx");

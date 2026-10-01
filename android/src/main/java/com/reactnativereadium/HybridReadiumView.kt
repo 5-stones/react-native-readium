@@ -27,6 +27,8 @@ import com.reactnativereadium.utils.readiumMetadataToNitro
 import com.reactnativereadium.utils.nitroSearchOptionsToReadium
 import com.reactnativereadium.utils.nitroSearchResultFromReadium
 import com.margelo.nitro.core.Promise
+import org.readium.r2.shared.publication.services.isProtected
+import org.readium.r2.shared.publication.services.protectionScheme
 import org.readium.r2.shared.publication.services.search.SearchService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -56,6 +58,10 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
   private var fragment: BaseReaderFragment? = null
   private var isFragmentAdded = false
   private var isBuilding = false
+  /** The `file` most recently opened, kept after a failure so the same values don't reopen. */
+  private var openedKey: OpenKey? = null
+  /** Bumped on every open and teardown, so a superseded open can't deliver its result. */
+  private var openGeneration = 0
   private var isAttached = false
   private var isDestroyed = false
   private var frameCallback: Choreographer.FrameCallback? = null
@@ -79,14 +85,16 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
 
   override var file: ReadiumFile? = null
     set(value) {
-      val previousUrl = field?.url
       field = value
-      if (value != null) {
-        if (isFragmentAdded && value.url != previousUrl) {
-          teardownFragment()
-        }
-        buildForViewIfReady()
-      }
+      if (value == null) return
+      val key = OpenKey(value.url, value.credentials)
+      // A re-render with the same values must not reopen, or a failure would loop.
+      if (key == openedKey) return
+      // New credentials are only for retrying a failed open, not for a book already showing.
+      if (isFragmentAdded && value.url == openedKey?.url) return
+      // Supersede whatever is showing or still opening.
+      if (isFragmentAdded || isBuilding) teardownFragment()
+      buildForViewIfReady()
     }
 
   override var preferences: Preferences? = null
@@ -110,6 +118,7 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
   override var onLocationChange: ((locator: Locator) -> Unit)? = null
   override var onPublicationReady: ((event: PublicationReadyEvent) -> Unit)? = null
   override var onPreferencesChanged: ((event: PreferencesChangedEvent) -> Unit)? = null
+  override var onPublicationError: ((event: PublicationErrorEvent) -> Unit)? = null
   override var onDecorationActivated: ((event: DecorationActivatedEvent) -> Unit)? = null
   override var onSelectionChange: ((event: SelectionEvent) -> Unit)? = null
   override var onSelectionAction: ((event: SelectionActionEvent) -> Unit)? = null
@@ -261,6 +270,9 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
     fragment = null
     isFragmentAdded = false
     isBuilding = false
+    // Re-attaching reopens the current file.
+    openedKey = null
+    openGeneration++
 
     scope.cancel()
     scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
@@ -292,6 +304,8 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
     val service = svc ?: return
 
     isBuilding = true
+    openedKey = OpenKey(fileUrl, currentFile.credentials)
+    val generation = ++openGeneration
 
     val path = fileUrl.replace("^(file:/+)?(/.*)$".toRegex(), "$2")
 
@@ -300,8 +314,23 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
     }
 
     scope.launch {
-      service.openPublication(path, initialLocator) { frag ->
-        addFragment(frag)
+      service.openPublication(
+        path,
+        initialLocator,
+        currentFile.credentials,
+        onError = onError@{ error ->
+          if (generation != openGeneration) return@onError
+          // openedKey stays, so only a `file` with different values retries.
+          isBuilding = false
+          onPublicationError?.invoke(PublicationErrorEvent(
+            url = fileUrl,
+            code = error.code,
+            message = error.message,
+            protectionScheme = error.protectionScheme
+          ))
+        }
+      ) { frag ->
+        if (generation == openGeneration) addFragment(frag)
       }
     }
   }
@@ -376,7 +405,9 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
               event.publication,
               frag.navigator,
               preferences
-            )
+            ),
+            isProtected = event.publication.isProtected,
+            protectionScheme = event.publication.protectionScheme?.uri
           ))
         }
         is ReaderViewModel.Event.DecorationActivated -> {
@@ -479,3 +510,6 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
     return null
   }
 }
+
+/** What identifies an open: retrying the same file with new credentials is a new open. */
+private data class OpenKey(val url: String, val credentials: String?)

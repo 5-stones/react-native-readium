@@ -18,7 +18,7 @@ public extension PublicationReadyEvent {
   /**
    * Create a new instance of `PublicationReadyEvent`.
    */
-  init(tableOfContents: [Link], positions: [Locator], metadata: PublicationMetadata, capabilities: Capabilities) {
+  init(tableOfContents: [Link], positions: [Locator], metadata: PublicationMetadata, capabilities: Capabilities, isProtected: Bool, protectionScheme: String?) {
     self.init({ () -> bridge.std__vector_Link_ in
       var __vector = bridge.create_std__vector_Link_(tableOfContents.count)
       for __item in tableOfContents {
@@ -31,7 +31,13 @@ public extension PublicationReadyEvent {
         __vector.push_back(__item)
       }
       return __vector
-    }(), metadata, capabilities)
+    }(), metadata, capabilities, isProtected, { () -> bridge.std__optional_std__string_ in
+      if let __unwrappedValue = protectionScheme {
+        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+      } else {
+        return .init()
+      }
+    }())
   }
 
   @inline(__always)
@@ -52,5 +58,22 @@ public extension PublicationReadyEvent {
   @inline(__always)
   var capabilities: Capabilities {
     return self.__capabilities
+  }
+  
+  @inline(__always)
+  var isProtected: Bool {
+    return self.__isProtected
+  }
+  
+  @inline(__always)
+  var protectionScheme: String? {
+    return { () -> String? in
+      if bridge.has_value_std__optional_std__string_(self.__protectionScheme) {
+        let __unwrapped = bridge.get_std__optional_std__string_(self.__protectionScheme)
+        return String(__unwrapped)
+      } else {
+        return nil
+      }
+    }()
   }
 }
