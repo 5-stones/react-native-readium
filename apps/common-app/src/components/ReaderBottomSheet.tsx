@@ -14,7 +14,6 @@ type ContentMode = 'reader' | 'details';
 
 interface ReaderBottomSheetProps {
   book: BookOption | null;
-  onClearBook: () => void;
   onClose: () => void;
   initialPreferences?: ReadiumProps['preferences'];
   onPreferencesChange?: (preferences: ReadiumProps['preferences']) => void;
@@ -57,7 +56,6 @@ const BookDetails: React.FC<{
 
 export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
   book,
-  onClearBook,
   onClose,
   initialPreferences,
   onPreferencesChange,
@@ -112,7 +110,6 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
                 onDeleteHighlight={readerHandle.deleteHighlight}
                 onNavigateToHighlight={readerHandle.navigateToLocator}
                 onEditHighlight={readerHandle.editHighlight}
-                onClearBook={onClearBook}
                 onClose={handleClose}
                 onSearch={readerHandle.search}
                 onLoadMoreSearchResults={readerHandle.loadMoreSearchResults}

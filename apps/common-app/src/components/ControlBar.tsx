@@ -33,7 +33,6 @@ interface ControlBarProps {
   onDeleteHighlight: (id: string) => void;
   onNavigateToHighlight: (locator: Locator) => void;
   onEditHighlight: (highlight: Decoration) => void;
-  onClearBook: () => void;
   onClose: () => void;
   onSearch: (query: string, options?: SearchOptions) => void;
   onLoadMoreSearchResults: () => void;
@@ -59,7 +58,6 @@ export const ControlBar: React.FC<ControlBarProps> = ({
   onDeleteHighlight,
   onNavigateToHighlight,
   onEditHighlight,
-  onClearBook,
   onClose,
   onSearch,
   onLoadMoreSearchResults,
@@ -198,7 +196,7 @@ export const ControlBar: React.FC<ControlBarProps> = ({
 
         <TouchableOpacity
           style={styles.iconButton}
-          onPress={onClearBook}
+          onPress={onClose}
           accessibilityLabel="Clear book"
         >
           <MaterialIcons name="close" size={22} color="#999" />
