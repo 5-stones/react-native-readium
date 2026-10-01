@@ -18,5 +18,8 @@
     "react-native-safe-area-context": "*",
     "react-native-vector-icons": "*",
     "react-native-worklets": "*"
+  },
+  "devDependencies": {
+    "@types/react-native-vector-icons": "^6.4.18"
   }
 }

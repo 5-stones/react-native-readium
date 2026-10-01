@@ -55,4 +55,4 @@ scared of.
 
 Our goal is to make it as easy as possible for you to make changes to the library.
 All the documentation on how to work on the library and it's dependencies is
-[located in this Guide](./example/README.md)
+[located in this Guide](./apps/example-native/README.md)
