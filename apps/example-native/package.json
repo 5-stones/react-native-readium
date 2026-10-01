@@ -25,6 +25,7 @@
     "react-native-gesture-handler": "^2.32.0",
     "react-native-nitro-modules": "^0.35.0",
     "react-native-readium": "workspace:*",
+    "react-native-readium-lcp": "workspace:*",
     "react-native-reanimated": "4.6.0-nightly-20260818-2a121ea78",
     "react-native-safe-area-context": "^5.6.2",
     "react-native-screens": "^4.19.0",

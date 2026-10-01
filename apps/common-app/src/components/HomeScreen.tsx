@@ -13,11 +13,16 @@ import type { BookOption } from '../types/reader.types';
 interface HomeScreenProps {
   books: BookOption[];
   onSelectBook: (book: BookOption) => void;
+  /** Rendered above the book list, e.g. an app's own import controls. */
+  header?: React.ReactElement;
+  title?: string;
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   books,
   onSelectBook,
+  header,
+  title = 'Library',
 }) => {
   const insets = useSafeAreaInsets();
 
@@ -45,12 +50,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   return (
     <View style={styles.container}>
       <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
-        <Text style={styles.headerTitle}>Library</Text>
+        <Text style={styles.headerTitle}>{title}</Text>
       </View>
       <FlatList
         data={books}
         keyExtractor={(item) => item.id}
         renderItem={renderBook}
+        ListHeaderComponent={header}
         contentContainerStyle={styles.list}
       />
     </View>

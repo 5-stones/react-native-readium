@@ -47,7 +47,7 @@ async function copyBundledAsset(
  * documents directory, so that later opens are local and work offline. Anything
  * already there is reused.
  */
-async function resolveAsset(asset: string): Promise<string> {
+export async function resolveAsset(asset: string): Promise<string> {
   // Web has no filesystem - RNFS is a stub there - so reading the asset where
   // it already lives is the only option.
   if (Platform.OS === 'web') {

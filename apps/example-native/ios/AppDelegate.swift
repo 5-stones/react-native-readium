@@ -2,6 +2,12 @@ import UIKit
 import React
 import React_RCTAppDelegate
 import ReactAppDependencyProvider
+#if canImport(R2LCPClient)
+import R2LCPClient
+#endif
+#if canImport(R2LCPClient) || DEBUG
+import ReadiumLCP
+#endif
 
 @main
 class AppDelegate: RCTAppDelegate {
@@ -9,9 +15,23 @@ class AppDelegate: RCTAppDelegate {
     self.moduleName = "ReadiumExample"
     self.dependencyProvider = RCTAppDependencyProvider()
 
-    // You can add your custom initial props in the dictionary below.
-    // They will be passed down to the ViewController used by React Native.
-    self.initialProps = [:]
+    // Initial props tell JS which LCP client is in use, to show it in the LCP tab.
+    var lcpClient = "none"
+
+#if canImport(R2LCPClient)
+    // Hands react-native-readium-lcp the liblcp it can't link itself.
+    RNRLCPClientRegistry.registerClient(LiblcpClient())
+    lcpClient = "liblcp"
+#elseif DEBUG
+    // Without liblcp, debug builds open LCP's basic-profile test books (passphrase "test").
+    // Launch with `-ReadiumLCPTestClient NO` to see the app without LCP.
+    let defaults = UserDefaults.standard
+    if defaults.object(forKey: "ReadiumLCPTestClient") == nil || defaults.bool(forKey: "ReadiumLCPTestClient") {
+      RNRLCPClientRegistry.registerClient(BasicProfileLCPClient())
+      lcpClient = "basic-profile"
+    }
+#endif
+    self.initialProps = ["lcpClient": lcpClient]
 
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
@@ -28,3 +48,20 @@ class AppDelegate: RCTAppDelegate {
 #endif
   }
 }
+
+#if canImport(R2LCPClient)
+/// Facade to EDRLab's proprietary R2LCPClient, as the Readium LCP guide describes.
+final class LiblcpClient: ReadiumLCP.LCPClient {
+  func createContext(jsonLicense: String, hashedPassphrase: LCPPassphraseHash, pemCrl: String) throws -> LCPClientContext {
+    try R2LCPClient.createContext(jsonLicense: jsonLicense, hashedPassphrase: hashedPassphrase, pemCrl: pemCrl)
+  }
+
+  func decrypt(data: Data, using context: LCPClientContext) -> Data? {
+    R2LCPClient.decrypt(data: data, using: context as! DRMContext)
+  }
+
+  func findOneValidPassphrase(jsonLicense: String, hashedPassphrases: [LCPPassphraseHash]) -> LCPPassphraseHash? {
+    R2LCPClient.findOneValidPassphrase(jsonLicense: jsonLicense, hashedPassphrases: hashedPassphrases)
+  }
+}
+#endif
