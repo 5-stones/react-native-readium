@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "react-native-readium-lcp": ["./src/index"]
+    },
+    "outDir": "./lib"
+  },
+  "include": ["src"],
+  "exclude": ["**/__tests__/*"]
+}

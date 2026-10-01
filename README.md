@@ -5,6 +5,7 @@ A monorepo for React Native bindings to the [Readium](https://readium.org/) tool
 | Package | Description |
 | --- | --- |
 | [`react-native-readium`](./packages/react-native-readium) | The reader: EPUB and PDF on iOS, Android and web. |
+| [`react-native-readium-lcp`](./packages/react-native-readium-lcp) | [Readium LCP](https://www.edrlab.org/readium-lcp/) DRM support for iOS and Android, as a companion to `react-native-readium`. |
 
 ## Example apps
 

@@ -1,0 +1,102 @@
+buildscript {
+  // Buildscript is evaluated before everything else so we can't use getExtOrDefault
+  def kotlin_version = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : project.properties['ReadiumLCP_kotlinVersion']
+
+  repositories {
+    google()
+    mavenCentral()
+  }
+
+  dependencies {
+    classpath 'com.android.tools.build:gradle:8.5.0'
+    // noinspection DifferentKotlinGradleVersion
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+  }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+def getExtOrDefault(name) {
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties['ReadiumLCP_' + name]
+}
+
+def getExtOrIntegerDefault(name) {
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties['ReadiumLCP_' + name]).toInteger()
+}
+
+// Builds only the ABIs the app asks for, like NitroModules does.
+def reactNativeArchitectures() {
+  def value = rootProject.getProperties().get("reactNativeArchitectures")
+  return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
+}
+
+// Must match the Readium version react-native-readium is built against.
+def readium_version = '3.3.0'
+
+android {
+  compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
+  namespace "com.reactnativereadiumlcp"
+  defaultConfig {
+    minSdkVersion 24
+    targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
+
+    externalNativeBuild {
+      cmake {
+        cppFlags "-O2 -frtti -fexceptions -Wall -fstack-protector-all"
+        arguments "-DANDROID_STL=c++_shared", "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
+        abiFilters(*reactNativeArchitectures())
+      }
+    }
+  }
+
+  externalNativeBuild {
+    cmake {
+      path "CMakeLists.txt"
+    }
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+    }
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+  kotlinOptions {
+    jvmTarget = "17"
+  }
+
+  buildFeatures {
+    prefab true
+  }
+
+  sourceSets {
+    main {
+      java.srcDirs += ["${project.projectDir}/../nitrogen/generated/android/kotlin"]
+    }
+  }
+}
+
+repositories {
+  mavenCentral()
+  google()
+}
+
+def kotlin_version = getExtOrDefault('kotlinVersion')
+
+dependencies {
+  // noinspection GradleDynamicVersion
+  api "com.facebook.react:react-native:+"
+  implementation project(':react-native-nitro-modules')
+  // The content protection registry this package registers into.
+  implementation project(':react-native-readium')
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0"
+
+  implementation "org.readium.kotlin-toolkit:readium-shared:$readium_version"
+  // readium-lcp loads the proprietary liblcp AAR by reflection; the host app adds that AAR.
+  implementation "org.readium.kotlin-toolkit:readium-lcp:$readium_version"
+}
