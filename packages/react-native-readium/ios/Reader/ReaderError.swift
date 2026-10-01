@@ -20,7 +20,8 @@ enum ReaderError: LocalizedError {
     case .fileNotFound(let error):
       return String(format: NSLocalizedString("reader_error_openFailed", comment: "Error message used when a low-level error occured while attempting to open the specified file"), error.localizedDescription)
     case .restricted(_, let error):
-      return error.localizedDescription
+      // Protection errors such as LCPError aren't LocalizedError, and would read "error 14".
+      return (error as? LocalizedError)?.errorDescription ?? String(describing: error)
     default:
       return nil
     }

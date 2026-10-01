@@ -6,6 +6,8 @@ import type { Link as SpecLink } from '../specs/ReadiumView.nitro';
  * and supports hierarchical TOC via nested children.
  */
 export interface Link extends Omit<SpecLink, 'depth' | 'hasChildren' | 'parentHref' | 'position'> {
+  /** The linked resource's media type, when known; the web reader sets it. */
+  type?: string;
   properties?: any;
   children?: Link[];
 }
