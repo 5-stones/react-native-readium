@@ -22276,7 +22276,7 @@ __metadata:
   peerDependencies:
     react: "*"
     react-native: ">=0.78.0"
-    react-native-nitro-modules: "*"
+    react-native-nitro-modules: ">=0.35.0"
     react-native-readium: ">=5.3.0"
   languageName: unknown
   linkType: soft
@@ -22331,7 +22331,7 @@ __metadata:
   peerDependencies:
     react: "*"
     react-native: ">=0.78.0"
-    react-native-nitro-modules: "*"
+    react-native-nitro-modules: ">=0.35.0"
   languageName: unknown
   linkType: soft
 
