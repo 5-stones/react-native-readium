@@ -3,6 +3,7 @@ package com.margelo.nitro.reactnativereadiumlcp
 import com.margelo.nitro.NitroModules
 import com.margelo.nitro.core.Promise
 import com.reactnativereadium.reader.ReaderContentProtectionRegistry
+import com.reactnativereadium.utils.fileFromPath
 import java.io.File
 import org.readium.r2.lcp.LcpError
 import org.readium.r2.lcp.LcpLicense
@@ -79,7 +80,7 @@ class HybridReadiumLCP : HybridReadiumLCPSpec() {
     checkStatus: Boolean,
     onProgress: ((fraction: Double) -> Unit)?,
   ): Promise<LcpAcquiredPublication> = Promise.async {
-    val lcpl = File(lcplPath)
+    val lcpl = file(lcplPath)
     if (checkStatus) ensureLicenseIsUsable(lcpl)
     requireService()
       .acquirePublication(lcpl, progressReporter(onProgress))
@@ -130,7 +131,7 @@ class HybridReadiumLCP : HybridReadiumLCPSpec() {
       val license = LicenseDocument.fromBytes(licenseJSON.toByteArray())
         .getOrElse { throw it.toException() }
       requireService()
-        .injectLicenseDocument(license, File(publicationPath))
+        .injectLicenseDocument(license, file(publicationPath))
         .getOrElse { throw it.toException() }
     }
 
@@ -183,6 +184,10 @@ class HybridReadiumLCP : HybridReadiumLCPSpec() {
 
   // MARK: - Helpers
 
+  /** An absolute path or a `file://` URL, as on iOS. */
+  private fun file(path: String): File =
+    fileFromPath(path) ?: throw LcpBridgeException(LcpErrorCode.OPENFAILED, "Not a file path: $path")
+
   private fun requireService(): LcpService =
     service ?: throw LcpBridgeException(
       LcpErrorCode.NOTINITIALIZED,
@@ -191,7 +196,7 @@ class HybridReadiumLCP : HybridReadiumLCPSpec() {
 
   private suspend fun retrieveAsset(path: String): Asset {
     val retriever = assetRetriever ?: throw LcpBridgeException(LcpErrorCode.NOTINITIALIZED, "LCP is not initialized.")
-    return retriever.retrieve(File(path))
+    return retriever.retrieve(file(path))
       .getOrElse { throw LcpBridgeException(LcpErrorCode.OPENFAILED, it.message) }
   }
 

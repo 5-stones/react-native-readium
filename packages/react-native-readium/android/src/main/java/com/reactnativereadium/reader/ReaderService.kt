@@ -4,7 +4,7 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.util.RNLog
 import com.margelo.nitro.reactnativereadium.PublicationErrorCode
 import com.reactnativereadium.utils.LinkOrLocator
-import java.io.File
+import com.reactnativereadium.utils.fileFromPath
 import java.util.Locale
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
@@ -90,8 +90,8 @@ class ReaderService(
     val publicationUrl = if (fileName.startsWith("http://") || fileName.startsWith("https://")) {
       runCatching { org.readium.r2.shared.util.AbsoluteUrl(fileName) }.getOrNull()
     } else {
-      val targetFile = File(fileName).absoluteFile
-      if (!targetFile.exists()) {
+      val targetFile = fileFromPath(fileName)?.absoluteFile
+      if (targetFile == null || !targetFile.exists()) {
         RNLog.e(reactContext, "Failed to open publication: File does not exist: $fileName")
         onError(OpenError(PublicationErrorCode.FILENOTFOUND, "File does not exist: $fileName"))
         return
@@ -115,7 +115,7 @@ class ReaderService(
     val fileExtension = if (fileName.startsWith("http://") || fileName.startsWith("https://")) {
       fileName.substringBefore("?").substringAfterLast(".", "")
     } else {
-      File(fileName).extension
+      fileFromPath(fileName)?.extension.orEmpty()
     }.takeIf { it.isNotEmpty() }?.lowercase(Locale.ROOT)
 
     val asset = assetRetriever
