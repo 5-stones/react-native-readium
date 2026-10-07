@@ -49,6 +49,10 @@ jobs:
           name: Lint files
           command: |
             yarn lint
+      - run:
+          name: Check for liblcp leaks
+          command: |
+            yarn check:liblcp
 
   typescript:
     executor: default
