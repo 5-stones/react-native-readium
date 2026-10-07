@@ -25,10 +25,16 @@ def getExtOrIntegerDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties['ReadiumLCP_' + name]).toInteger()
 }
 
-// Builds only the ABIs the app asks for, like NitroModules does.
+// Builds only the ABIs the app asks for, read like React Native reads them: from
+// `reactNativeArchitectures` (gradle.properties, or -PreactNativeArchitectures, which
+// --active-arch-only sets), or else its scoped form, `react.nativeArchitectures`.
 def reactNativeArchitectures() {
-  def value = rootProject.getProperties().get("reactNativeArchitectures")
-  return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
+  def value = project.findProperty('reactNativeArchitectures') ?: project.findProperty('react.nativeArchitectures')
+  if (value) {
+    return value.toString().split(',').collect { it.trim() }.findAll { it }
+  }
+
+  return ['x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a']
 }
 
 // Must match the Readium version react-native-readium is built against.
