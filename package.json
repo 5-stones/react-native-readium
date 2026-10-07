@@ -10,6 +10,7 @@
     "typescript": "yarn workspaces foreach --all --no-private run typescript",
     "lint": "eslint \"./packages/*/src/**/*.{js,ts,tsx}\" \"./apps/**/src/**/*.{js,ts,tsx}\"",
     "lint:fix": "eslint ./packages/*/src ./apps/*/src --fix",
+    "check:liblcp": "node scripts/check-liblcp-leaks.js",
     "prettier": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "prettier:fix": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "nitrogen": "yarn workspaces foreach --all --no-private run nitrogen",
