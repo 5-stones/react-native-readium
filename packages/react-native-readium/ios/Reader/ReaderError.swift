@@ -9,22 +9,28 @@ enum ReaderError: LocalizedError {
   case cancelled
   case restricted(scheme: ContentProtectionScheme?, error: Error)
 
+  /// The platform's own description, which JS reports as the error's `detail`; its `message`
+  /// comes from `code`, the same on every platform.
   var errorDescription: String? {
     switch self {
     case .formatNotSupported:
-      return NSLocalizedString("reader_error_formatNotSupported", comment: "Error message when trying to read a publication with a unsupported format")
+      return "Format not supported"
     case .epubNotValid:
-      return NSLocalizedString("reader_error_epubNotValid", comment: "Error message when trying to read an EPUB that is invalid")
+      return "Invalid EPUB"
     case .openFailed(let error):
-      return String(format: NSLocalizedString("reader_error_openFailed", comment: "Error message used when a low-level error occured while opening a publication"), error.localizedDescription)
+      return "Failed to open the publication: \(Self.describe(error))"
     case .fileNotFound(let error):
-      return String(format: NSLocalizedString("reader_error_openFailed", comment: "Error message used when a low-level error occured while attempting to open the specified file"), error.localizedDescription)
+      return Self.describe(error)
+    case .cancelled:
+      return "Access to the publication was not granted."
     case .restricted(_, let error):
-      // Protection errors such as LCPError aren't LocalizedError, and would read "error 14".
-      return (error as? LocalizedError)?.errorDescription ?? String(describing: error)
-    default:
-      return nil
+      return Self.describe(error)
     }
+  }
+
+  /// Readium's errors, such as LCPError, are rarely `LocalizedError` and would read "error 14".
+  private static func describe(_ error: Error) -> String {
+    (error as? LocalizedError)?.errorDescription ?? String(describing: error)
   }
 
   /// The `code` reported to JS in `PublicationErrorEvent`.

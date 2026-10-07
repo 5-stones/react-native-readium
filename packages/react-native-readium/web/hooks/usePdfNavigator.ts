@@ -19,6 +19,7 @@ import type {
 import { assessCapabilities, pdfCapabilities } from '../utils/capabilities';
 import { PdfNavigator } from '../classes'
 import { mapPdfPreferences } from '../utils';
+import { toPublicationErrorEvent } from '../../src/utils/publicationError';
 
 interface UsePdfNavigatorProps {
   file: ReadiumFile;
@@ -600,7 +601,7 @@ export const usePdfNavigator = ({
         if (!cancelled) {
           setIsReady(false);
           onError(error);
-          onPublicationError?.({ url, code: 'openFailed', message: String((error as any)?.message ?? error) });
+          onPublicationError?.(toPublicationErrorEvent({ url, code: 'openFailed', message: String((error as any)?.message ?? error) }));
         }
       }
     })();

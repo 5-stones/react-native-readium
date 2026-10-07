@@ -20,4 +20,9 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  errorDetail: {
+    marginTop: 8,
+    fontSize: 12,
+    opacity: 0.6,
+  },
 });

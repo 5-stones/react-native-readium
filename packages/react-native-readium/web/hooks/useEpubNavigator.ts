@@ -17,6 +17,7 @@ import {
   normalizePublicationURL,
   sanitizeInitialLocation,
 } from '../utils';
+import { toPublicationErrorEvent } from '../../src/utils/publicationError';
 
 interface RefProps
   extends Pick<
@@ -182,7 +183,7 @@ export const useEpubNavigator = ({
     initializeNavigator().catch((error) => {
       if (cancelled) return;
       console.error('[react-native-readium] failed to open EPUB', error);
-      onPublicationError?.({ url: file.url, code: 'openFailed', message: String(error?.message ?? error) });
+      onPublicationError?.(toPublicationErrorEvent({ url: file.url, code: 'openFailed', message: String(error?.message ?? error) }));
     });
 
     return () => {

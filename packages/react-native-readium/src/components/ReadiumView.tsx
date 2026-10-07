@@ -10,8 +10,12 @@ import { View, StyleSheet } from 'react-native';
 import { callback } from 'react-native-nitro-modules';
 
 import type { Dimensions } from '../interfaces';
-import type { PublicationReadyEvent as SpecPublicationReadyEvent } from '../specs/ReadiumView.nitro';
+import type {
+  PublicationErrorEvent as NativePublicationErrorEvent,
+  PublicationReadyEvent as SpecPublicationReadyEvent,
+} from '../specs/ReadiumView.nitro';
 import { buildLinkTree } from '../utils/buildLinkTree';
+import { toPublicationErrorEvent } from '../utils/publicationError';
 import { NitroReadiumView } from './NitroReadiumView';
 export type { ReadiumViewRef, ReadiumProps } from './ReadiumView.types';
 import type { ReadiumViewRef, ReadiumProps } from './ReadiumView.types';
@@ -117,7 +121,9 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
             onLocationChange={callback(onLocationChange ?? noop)}
             onPublicationReady={callback(handlePublicationReady)}
             onPreferencesChanged={callback(onPreferencesChanged)}
-            onPublicationError={callback(onPublicationError ?? noop)}
+            onPublicationError={callback((event: NativePublicationErrorEvent) =>
+              onPublicationError?.(toPublicationErrorEvent(event))
+            )}
             onDecorationActivated={callback(onDecorationActivated ?? noop)}
             onSelectionChange={callback(onSelectionChange ?? noop)}
             onSelectionAction={callback(onSelectionAction ?? noop)}
