@@ -36,7 +36,7 @@ const statusText: Record<LcpStatus, string> = {
   initializing: 'Starting…',
   ready: 'Ready',
   unavailable:
-    'Unavailable: this build has no liblcp. See the README to build with READIUM_LCP_PODSPEC / READIUM_LCP_AAR.',
+    "Unavailable: this build has no liblcp. See the README to configure EDRLab's liblcp in .env.",
   failed: 'Failed to start',
 };
 

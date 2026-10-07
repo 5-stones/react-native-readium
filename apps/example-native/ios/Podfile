@@ -34,12 +34,9 @@ target 'ReadiumExample' do
 
   readium_pods
 
-  # Opt-in LCP: liblcp (R2LCPClient) is private and licensed per app by EDRLab, so point
-  # READIUM_LCP_PODSPEC at the podspec URL they gave you:
-  #   READIUM_LCP_PODSPEC=https://… pod install
-  if ENV['READIUM_LCP_PODSPEC']
-    pod 'R2LCPClient', :podspec => ENV['READIUM_LCP_PODSPEC']
-  end
+  # Opt-in LCP: links EDRLab's liblcp when READIUM_LCP_IOS_PODSPEC is set, here in ../.env
+  # (gitignored; see ../.env.default). The URL is private, so it never lives in this repo.
+  readium_lcp_pods
 
   post_install do |installer|
     react_native_post_install(
