@@ -307,15 +307,14 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
     openedKey = OpenKey(fileUrl, currentFile.credentials)
     val generation = ++openGeneration
 
-    val path = fileUrl.replace("^(file:/+)?(/.*)$".toRegex(), "$2")
-
     val initialLocator = currentFile.initialLocation?.let { loc ->
       nitroLocatorToReadium(loc)?.let { com.reactnativereadium.utils.LinkOrLocator.Locator(it) }
     }
 
     scope.launch {
+      // A path or a file:// URL as given: fileFromPath decodes the URL's percent-escapes.
       service.openPublication(
-        path,
+        fileUrl,
         initialLocator,
         currentFile.credentials,
         onError = onError@{ error ->
