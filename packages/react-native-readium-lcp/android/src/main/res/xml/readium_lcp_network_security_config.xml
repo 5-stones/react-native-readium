@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   Applied to the app by this package's manifest: an app has a single network security config.
-  An app that declares its own must replace this one (tools:replace) and keep these domains.
+  An app that declares its own must replace this one (tools:replace) and keep allowing cleartext.
+
+  LCP needs cleartext traffic (see readium/kotlin-toolkit#211 and #241): EDRLab's certificate
+  revocation list is served over HTTP (crl.edrlab.telesec.de), and so may be a provider's license
+  and status servers. A network
+  security config makes Android ignore android:usesCleartextTraffic, so it is allowed here.
 -->
 <network-security-config>
-    <domain-config cleartextTrafficPermitted="true">
-        <!--
-        Readium LCP downloads EDRLab's certificate revocation list over HTTP; without it, no
-        license opens (crlFetching).
-        -->
-        <domain includeSubdomains="false">crl.edrlab.telesec.de</domain>
-    </domain-config>
-    <domain-config cleartextTrafficPermitted="true">
-        <!--
-        A network security config makes Android ignore android:usesCleartextTraffic, which React
-        Native debug builds rely on to reach the Metro dev server, so allow its hosts here.
-        -->
-        <domain includeSubdomains="false">localhost</domain>
-        <domain includeSubdomains="false">127.0.0.1</domain>
-        <domain includeSubdomains="false">10.0.2.2</domain>
-    </domain-config>
+    <base-config cleartextTrafficPermitted="true" />
 </network-security-config>

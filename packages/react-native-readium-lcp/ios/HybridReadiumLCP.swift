@@ -37,7 +37,7 @@ class HybridReadiumLCP: HybridReadiumLCPSpec {
     Promise.async { [self] in
       if services != nil { return true }
 
-      // Null until the host app registers its adapter around R2LCPClient.
+      // Null when the app neither links liblcp nor registers a client.
       guard let client = LCPClientRegistry.client else { return false }
 
       let httpClient = DefaultHTTPClient()

@@ -1,11 +1,12 @@
 import Foundation
 import ReadiumLCP
 
-/// Where the host app hands over its `LCPClient`: the adapter around EDRLab's proprietary
-/// `R2LCPClient`, which only the app can link. `HybridReadiumLCP.initialize` reads it.
+/// Where `HybridReadiumLCP.initialize` gets its `LCPClient`: EDRLab's liblcp, adapted by
+/// `LiblcpClient` when the app links it with `readium_lcp_pods`, or a client the app registers,
+/// which takes precedence (a test client, or its own adapter).
 ///
 /// Exposed to Objective-C because a host's Swift code may be unable to `import NitroReadiumLCP`,
-/// whose Nitro headers are C++. Declare it in the app's bridging header:
+/// whose Nitro headers are C++. To register a client, declare it in the app's bridging header:
 ///
 /// ```objc
 /// @interface RNRLCPClientRegistry : NSObject
@@ -20,8 +21,14 @@ public final class LCPClientRegistry: NSObject {
   static var client: LCPClient? {
     lock.lock()
     defer { lock.unlock() }
-    return storage
+    return storage ?? linkedClient
   }
+
+#if canImport(R2LCPClient)
+  private static let linkedClient: LCPClient? = LiblcpClient()
+#else
+  private static let linkedClient: LCPClient? = nil
+#endif
 
   /// Returns false when `client` doesn't conform to `ReadiumLCP.LCPClient`.
   @objc

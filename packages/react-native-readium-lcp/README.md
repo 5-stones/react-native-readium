@@ -12,8 +12,9 @@ passphrase prompts to JS. Decryption stays native, so reading performs as in a n
 ## Requirements
 
 - `react-native-readium` with the content protection registry (5.3.0 or later).
-- **liblcp**, EDRLab's private library, licensed per app.
-  [Contact EDRLab](https://www.edrlab.org/contact/) to get it; this package can't ship it.
+- **liblcp** (`R2LCPClient` on iOS), EDRLab's private pre-compiled library, which this package
+  can't ship. [Contact EDRLab](https://www.edrlab.org/contact/) for it and for its integration
+  instructions; they provide test and production builds.
 
 ## Installation
 
@@ -21,16 +22,80 @@ passphrase prompts to JS. Decryption stays native, so reading performs as in a n
 yarn add react-native-readium-lcp
 ```
 
-### iOS
+Each platform's build links liblcp when you tell it where to find it, using EDRLab's
+instructions; leave it unset to build without liblcp, and LCP reports itself unavailable at
+runtime. Set it in the environment, or in a `.env` file at your app's root (next to `ios/` and
+`android/`) that you keep out of version control:
 
-Add the `R2LCPClient` pod EDRLab gave you to your Podfile:
-
-```ruby
-pod 'R2LCPClient', :podspec => '<podspec URL from EDRLab>'
+```sh
+# .env
+READIUM_LCP_IOS_PODSPEC=<R2LCPClient podspec URL from EDRLab>
+READIUM_LCP_ANDROID_AAR=<path to the liblcp .aar from EDRLab>
 ```
 
-Then give this package an adapter around it, at launch. `ReadiumLCP` and `R2LCPClient` are both
-importable from your app target:
+The environment wins over `.env`, and a blank value counts as unset. `.env` support is
+deliberately small: `KEY=value` lines, with optional `export` and quotes, and no interpolation.
+Switching between EDRLab's test and production libs is a matter of changing these values.
+
+### iOS
+
+Call `readium_lcp_pods` in your Podfile's target, next to `react-native-readium`'s
+`readium_pods`:
+
+```ruby
+target 'MyApp' do
+  config = use_native_modules!
+  # ...
+  readium_pods
+  readium_lcp_pods
+  # ...
+end
+```
+
+It adds `R2LCPClient` from `READIUM_LCP_IOS_PODSPEC`; pass `readium_lcp_pods(podspec: '…')` to
+override the environment and `.env`. Rerun `pod install` after changing the URL.
+
+The URL is private to your app, so `Podfile.lock` records it as
+`READIUM_LCP_IOS_PODSPEC_REDACTED`, and CocoaPods fetches the podspec again on each install. To
+keep the real URL there instead, pass `readium_lcp_pods(redact_lockfile: false)`.
+
+When liblcp is linked, this package adapts and registers it itself; no app code is needed.
+
+Readium downloads EDRLab's certificate revocation list over plain HTTP, so allow that one host
+in your `Info.plist`; without it, every license fails to open:
+
+```xml
+<key>NSAppTransportSecurity</key>
+<dict>
+  <key>NSExceptionDomains</key>
+  <dict>
+    <key>crl.edrlab.telesec.de</key>
+    <dict>
+      <key>NSExceptionAllowsInsecureHTTPLoads</key>
+      <true/>
+    </dict>
+  </dict>
+</dict>
+```
+
+#### Linking liblcp without CocoaPods
+
+If your app adds `R2LCPClient` another way (Swift Package Manager, Carthage, or a framework added
+in Xcode), this package's pod can't see it, so it can't adapt it for you: LCP reports itself
+unavailable until you register an adapter at launch. Skip `readium_lcp_pods` in that case.
+
+This package's Swift module can't be imported from an app (its Nitro headers are C++), so declare
+its registry in your bridging header:
+
+```objc
+#import <Foundation/Foundation.h>
+
+@interface RNRLCPClientRegistry : NSObject
++ (BOOL)registerClient:(id)client;
+@end
+```
+
+Then adapt `R2LCPClient` to Readium's `LCPClient` and register it:
 
 ```swift
 import R2LCPClient
@@ -50,53 +115,29 @@ final class LiblcpClient: ReadiumLCP.LCPClient {
   }
 }
 
-// In application(_:didFinishLaunchingWithOptions:)
+// In application(_:didFinishLaunchingWithOptions:), before JS calls LCP.initialize()
 RNRLCPClientRegistry.registerClient(LiblcpClient())
 ```
 
-Readium downloads EDRLab's certificate revocation list over plain HTTP, so allow that one host
-in your `Info.plist`; without it, every license fails to open:
-
-```xml
-<key>NSAppTransportSecurity</key>
-<dict>
-  <key>NSExceptionDomains</key>
-  <dict>
-    <key>crl.edrlab.telesec.de</key>
-    <dict>
-      <key>NSExceptionAllowsInsecureHTTPLoads</key>
-      <true/>
-    </dict>
-  </dict>
-</dict>
-```
-
-This package's Swift module can't be imported from an app (its Nitro headers are C++), so declare
-the registry in your bridging header:
-
-```objc
-#import <Foundation/Foundation.h>
-
-@interface RNRLCPClientRegistry : NSObject
-+ (BOOL)registerClient:(id)client;
-@end
-```
+A registered client always takes precedence over the one `readium_lcp_pods` links, so the same
+call also swaps in any other `LCPClient`, such as a test client.
 
 ### Android
 
-Add the liblcp AAR EDRLab gave you to your app module; Readium finds it by reflection:
+Apply this package's Gradle script in `android/app/build.gradle`:
 
 ```groovy
-dependencies {
-  implementation files('libs/liblcp.aar') // or the repository EDRLab gave you
-}
+apply from: "../../node_modules/react-native-readium-lcp/android/liblcp.gradle"
 ```
 
-LCP needs cleartext HTTP for EDRLab's revocation list (`crl.edrlab.telesec.de`). This package's
-manifest applies a network security config that allows it, plus the React Native dev-server
-hosts (`localhost`, `127.0.0.1`, `10.0.2.2`), since a config makes Android ignore
-`usesCleartextTraffic`. An app has a single config, so if yours declares one, replace this
-package's in your manifest and keep those domains, or every license fails with `crlFetching`:
+It links the `.aar` at `READIUM_LCP_ANDROID_AAR`. A relative path is resolved against your app's
+root. To set it in Gradle instead, use the `readiumLcpAar` property (in `gradle.properties` or
+with `-PreadiumLcpAar`); it takes precedence over the environment and `.env`.
+
+#### If your app has its own network security config
+
+This package's manifest sets a network security config that allows cleartext HTTP, which LCP
+needs. If your app sets its own `android:networkSecurityConfig`, replace this package's:
 
 ```xml
 <application
@@ -105,7 +146,13 @@ package's in your manifest and keep those domains, or every license fails with `
   tools:replace="android:networkSecurityConfig">
 ```
 
-If the license or status servers you use are HTTP-only, add their domains too.
+and allow cleartext in your config, or no license will open (`crlFetching`):
+
+```xml
+<network-security-config>
+  <base-config cleartextTrafficPermitted="true" />
+</network-security-config>
+```
 
 ## Usage
 

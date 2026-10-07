@@ -2,6 +2,9 @@ require "json"
 
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 
+# Podfile helper: readium_lcp_pods
+load File.join(__dir__, "scripts/readium_lcp_pods.rb")
+
 # Load Nitrogen autolinking
 nitrogen_autolinking = File.join(__dir__, "nitrogen/generated/ios/NitroReadiumLCP+autolinking.rb")
 if File.exist?(nitrogen_autolinking)
@@ -30,6 +33,8 @@ Pod::Spec.new do |s|
   s.dependency 'ReadiumLCP',    '~> 3.11.0'
   # Provides the content protection registry this pod registers into.
   s.dependency 'react-native-readium'
+  # liblcp, when the app's Podfile links it with readium_lcp_pods; ios/LiblcpClient.swift adapts it.
+  s.dependency 'R2LCPClient' if $readium_lcp_podspec
 
   install_modules_dependencies(s)
 
