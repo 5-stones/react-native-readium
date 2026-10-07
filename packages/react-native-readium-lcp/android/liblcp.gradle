@@ -1,0 +1,47 @@
+// Adds liblcp, EDRLab's private library, to the app; Readium finds it by reflection. This package
+// can't depend on it itself: each app gets its own build from EDRLab, test or production.
+//
+// Apply it from your app module's build.gradle:
+//
+//   apply from: "../../node_modules/react-native-readium-lcp/android/liblcp.gradle"
+//
+// The .aar path comes from, in order:
+//   1. the readiumLcpAar property: `ext.readiumLcpAar = "…"` before the apply line,
+//      gradle.properties, or -PreadiumLcpAar;
+//   2. READIUM_LCP_ANDROID_AAR in the environment;
+//   3. READIUM_LCP_ANDROID_AAR in the app's .env file, next to the android/ folder.
+// A relative path is resolved against that folder, the app's root.
+//
+// Without one, the app builds without liblcp and LCP reports itself unavailable at runtime.
+// Sets `readiumLcpLinked` on the project for the rest of the build script.
+
+def appRoot = rootProject.layout.projectDirectory.dir('..')
+def variable = 'READIUM_LCP_ANDROID_AAR'
+
+// A value from the app's .env file: KEY=value lines, with optional `export` and quotes. Read
+// through providers so Gradle's configuration cache notices when the file changes.
+def dotenvValue = {
+    def contents = providers.fileContents(appRoot.file('.env')).asText.getOrNull()
+    def line = contents?.readLines()?.find { it ==~ /^\s*(export\s+)?${variable}\s*=.*/ }
+    line?.split('=', 2)?.getAt(1)?.trim()?.replaceAll(/^(['"])(.*)\1$/, '$2')
+}
+
+def aar = [
+    project.findProperty('readiumLcpAar'),
+    providers.environmentVariable(variable).getOrNull(),
+    dotenvValue(),
+].collect { it?.toString()?.trim() }.find { it }
+
+if (aar) {
+    def aarFile = appRoot.asFile.toPath().resolve(aar).toFile()
+    if (!aarFile.isFile()) {
+        throw new GradleException("[react-native-readium-lcp] liblcp not found at ${aarFile} (${variable}).")
+    }
+    dependencies {
+        implementation files(aarFile)
+    }
+} else {
+    logger.lifecycle('[react-native-readium-lcp] No liblcp configured; building without liblcp.')
+}
+
+project.ext.readiumLcpLinked = aar as boolean
