@@ -4,8 +4,10 @@
  * *basic profile* (passphrase "test"), for end-to-end tests.
  *
  * The basic profile is LCP's open test profile: the user key is SHA-256(passphrase), and keys
- * and resources are AES-256-CBC with the IV prepended. Its license carries no EDRLab signature,
- * so only the debug basic-profile client in this app opens it, not EDRLab's liblcp.
+ * and resources are AES-256-CBC with the IV prepended. Its license is signed by a throwaway
+ * self-signed provider certificate, not one EDRLab issued, so only the debug basic-profile client
+ * in this app opens it; EDRLab's liblcp rejects it as an integrity failure. (liblcp aborts the app
+ * on a certificate it can't parse, so the certificate must be a real one.) Needs `openssl`.
  *
  *   node apps/example-native/scripts/make-lcp-fixture.js
  */
@@ -39,8 +41,48 @@ const walk = (dir, root = dir) =>
     return entry.isDirectory() ? walk(full, root) : [path.relative(root, full)];
   });
 
+/** JSON with keys sorted and no whitespace: the form an LCP license signature covers. */
+const canonical = (value) =>
+  Array.isArray(value)
+    ? `[${value.map(canonical).join(',')}]`
+    : value && typeof value === 'object'
+    ? `{${Object.keys(value)
+        .sort()
+        .map((key) => `${JSON.stringify(key)}:${canonical(value[key])}`)
+        .join(',')}}`
+    : JSON.stringify(value);
+
 const work = fs.mkdtempSync(path.join(os.tmpdir(), 'lcp-fixture-'));
 execFileSync('unzip', ['-q', source, '-d', work]);
+
+// A throwaway provider certificate, outside the EPUB's folder.
+const keys = fs.mkdtempSync(path.join(os.tmpdir(), 'lcp-fixture-keys-'));
+execFileSync(
+  'openssl',
+  [
+    'req',
+    '-x509',
+    '-newkey',
+    'ec',
+    '-pkeyopt',
+    'ec_paramgen_curve:P-256',
+    '-nodes',
+    '-keyout',
+    path.join(keys, 'key.pem'),
+    '-out',
+    path.join(keys, 'cert.pem'),
+    '-days',
+    '3650',
+    '-subj',
+    '/CN=react-native-readium test provider',
+  ],
+  { stdio: 'ignore' }
+);
+const privateKey = fs.readFileSync(path.join(keys, 'key.pem'));
+const certificate = new crypto.X509Certificate(
+  fs.readFileSync(path.join(keys, 'cert.pem'))
+).raw.toString('base64');
+fs.rmSync(keys, { recursive: true, force: true });
 
 const userKey = crypto.createHash('sha256').update(PASSPHRASE).digest();
 const contentKey = crypto.randomBytes(32);
@@ -89,12 +131,13 @@ const license = {
   ],
   user: { id: 'e2e' },
   rights: { print: 10, copy: 4000 },
-  // Placeholder: the basic-profile test client doesn't verify signatures.
-  signature: {
-    algorithm: 'http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256',
-    certificate: '',
-    value: '',
-  },
+};
+license.signature = {
+  algorithm: 'http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256',
+  certificate,
+  value: crypto
+    .sign('sha256', Buffer.from(canonical(license)), privateKey)
+    .toString('base64'),
 };
 
 const encryptedData = encrypted
@@ -134,5 +177,7 @@ execFileSync('zip', ['-q', '-X', '-r', output, '.', '-x', 'mimetype'], {
 fs.rmSync(work, { recursive: true, force: true });
 
 console.log(
-  `Wrote ${path.relative(process.cwd(), output)}: ${encrypted.length} resources encrypted, passphrase "${PASSPHRASE}".`
+  `Wrote ${path.relative(process.cwd(), output)}: ${
+    encrypted.length
+  } resources encrypted, passphrase "${PASSPHRASE}".`
 );
