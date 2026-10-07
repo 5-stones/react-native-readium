@@ -321,11 +321,15 @@ export type PublicationErrorCode =
   | 'restricted'
   | 'cancelled';
 
-/** The publication could not be opened. */
+/**
+ * The publication could not be opened, as native reports it. JS turns it into the public
+ * `PublicationErrorEvent` (src/interfaces/PublicationError.ts).
+ */
 export interface PublicationErrorEvent {
   /** The `file.url` whose open failed. */
   url: string;
   code: PublicationErrorCode;
+  /** The platform's own description; becomes the public event's `detail`. */
   message: string;
   protectionScheme?: string;
 }

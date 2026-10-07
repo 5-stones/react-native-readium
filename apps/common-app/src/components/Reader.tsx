@@ -276,6 +276,9 @@ export const Reader: React.FC<ReaderProps> = ({
               Couldn't open this {fileTypeLabel} ({openError.code}):{' '}
               {openError.message}
             </Text>
+            {openError.detail ? (
+              <Text style={styles.errorDetail}>{openError.detail}</Text>
+            ) : null}
           </View>
         ) : null}
 
