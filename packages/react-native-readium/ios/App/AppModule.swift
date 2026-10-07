@@ -33,7 +33,7 @@ extension AppModule: ModuleDelegate {
 
   func presentAlert(_ title: String, message: String, from viewController: UIViewController) {
     let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-    let dismissButton = UIAlertAction(title: NSLocalizedString("ok_button", comment: "Alert button"), style: .cancel)
+    let dismissButton = UIAlertAction(title: NSLocalizedString("ok_button", value: "OK", comment: "Alert button"), style: .cancel)
     alert.addAction(dismissButton)
     viewController.present(alert, animated: true)
   }
@@ -42,7 +42,7 @@ extension AppModule: ModuleDelegate {
     guard let error = error else { return }
     if case ReaderError.cancelled = error { return }
     presentAlert(
-      NSLocalizedString("error_title", comment: "Alert title for errors"),
+      NSLocalizedString("error_title", value: "Error", comment: "Alert title for errors"),
       message: error.localizedDescription,
       from: viewController
     )

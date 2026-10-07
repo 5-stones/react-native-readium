@@ -74,17 +74,27 @@ final class ReaderService: Loggable {
   }
 
   func url(path: String) -> AnyPublisher<URL, ReaderError> {
-    // Absolute URL.
-    if let url = URL(string: path), url.scheme != nil {
-      return .just(url)
+    let url: URL
+    if let absoluteURL = URL(string: path), absoluteURL.scheme != nil {
+      url = absoluteURL
+    } else if path.hasPrefix("/") {
+      url = URL(fileURLWithPath: path)
+    } else {
+      return .fail(.fileNotFound(Self.fileNotFound(path)))
     }
 
-    // Absolute file path.
-    if path.hasPrefix("/") {
-      return .just(URL(fileURLWithPath: path))
+    // Reported as fileNotFound, as on Android, rather than as a failure to read.
+    if url.isFileURL && !FileManager.default.fileExists(atPath: url.path) {
+      return .fail(.fileNotFound(Self.fileNotFound(path)))
     }
+    return .just(url)
+  }
 
-    return .fail(ReaderError.fileNotFound(fatalError("Unable to locate file: " + path)))
+  private static func fileNotFound(_ path: String) -> Error {
+    CocoaError(.fileNoSuchFile, userInfo: [
+      NSFilePathErrorKey: path,
+      NSLocalizedDescriptionKey: "File does not exist: \(path)",
+    ])
   }
 
   private func openPublication(
