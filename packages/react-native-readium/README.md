@@ -5,17 +5,8 @@
 ![PRs welcome!](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 ![This project is released under the MIT license](https://img.shields.io/badge/license-MIT-blue.svg)
 
----
-
-## Have A Bug/Feature You Care About?
-
-We :heart: open source. We work on the things that are important to us when
-we're able to work on them. Have an issue you care about?
-
-- [Dive Into The Code!](CONTRIBUTING.md)
-- [Sponsor Your Issue](#sponsor-the-library)
-
----
+Have a bug or feature you care about? [Contribute](https://github.com/5-stones/react-native-readium/blob/main/CONTRIBUTING.md)
+or [sponsor it](https://github.com/5-stones/react-native-readium#sponsor-the-library).
 
 ## Overview
 
@@ -42,8 +33,8 @@ allows you to do things like:
 - [Release](#release)
 - [License](#license)
 
-| Dark Mode                                                                                        | Light Mode                                                                                         |
-| ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| Dark Mode                                                                                                                      | Light Mode                                                                                                                       |
+| ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
 | ![Dark Mode](https://github.com/5-stones/react-native-readium/blob/main/packages/react-native-readium/docs/demo-dark-mode.gif) | ![Light Mode](https://github.com/5-stones/react-native-readium/blob/main/packages/react-native-readium/docs/demo-light-mode.gif) |
 
 ## Installation
@@ -216,7 +207,7 @@ const MyComponent: React.FC = () => {
 
 ### Knowing Which Settings Apply
 
-`onPublicationReady` and `onPreferencesChanged` report an object of valid `capabilites`. These are reported by the navigator's isEffective for the particular publication and set of preferences. Reflowable Epubs, fixed layout Epubs, and PDFs may have different capabilities and preferences available on different platforms and some preferences may render others effective or ineffective (eg. `scroll` and `scrollAxis`) so it is best to trust this list of capabilites to decide whether to render a given user control. 
+`onPublicationReady` and `onPreferencesChanged` report an object of valid `capabilites`. These are reported by the navigator's isEffective for the particular publication and set of preferences. Reflowable Epubs, fixed layout Epubs, and PDFs may have different capabilities and preferences available on different platforms and some preferences may render others effective or ineffective (eg. `scroll` and `scrollAxis`) so it is best to trust this list of capabilites to decide whether to render a given user control.
 
 ```tsx
 const [capabilities, setCapabilities] = useState<Capabilities>();
@@ -227,10 +218,11 @@ const [capabilities, setCapabilities] = useState<Capabilities>();
   onPreferencesChanged={(event) => setCapabilities(event.capabilities)}
 />;
 
-(capabilities.fontSize ? <FontSizeControl/> : null) // show the font size slider?
-(capabilities.zoom ? <ZoomControl/> : null) // show the zoom controls?
+(capabilities.fontSize ? <FontSizeControl /> : null)(
+  // show the font size slider?
+  capabilities.zoom ? <ZoomControl /> : null
+); // show the zoom controls?
 ```
-
 
 ### Highlights & Note Taking
 
@@ -375,12 +367,12 @@ for a full search UI with infinite scroll.
 
 #### Format Support
 
-| Format | Support            | Notes                                                          |
-| ------ | ------------------ | -------------------------------------------------------------- |
-| Epub 2 | :white_check_mark: |                                                                |
-| Epub 3 | :white_check_mark: |                                                                |
+| Format | Support            | Notes                                                                                        |
+| ------ | ------------------ | -------------------------------------------------------------------------------------------- |
+| Epub 2 | :white_check_mark: |                                                                                              |
+| Epub 3 | :white_check_mark: |                                                                                              |
 | PDF    | :white_check_mark: | Scrolling, fitted to width. Ignores `preferences`; magnify with the zoom methods on the ref. |
-| CBZ    | :x:                | On the roadmap, feel free to submit a PR or ask for direction. |
+| CBZ    | :x:                | On the roadmap, feel free to submit a PR or ask for direction.                               |
 
 **Missing a format you need?** Reach out and see if it can be added to the roadmap.
 
@@ -478,19 +470,19 @@ entry rather than stacking a second one.
 
 #### View Props
 
-| Name                    | Type                                                                                                                                                | Optional           | Description                                                                                                                                                                                                                                                                         |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `file`                  | [`File`](https://github.com/5-stones/react-native-readium/blob/main/packages/react-native-readium/src/interfaces/File.ts)                                                         | :x:                | A file object containing the path to the eBook file on disk. Use `File.initialLocation` to set the reader's position on mount.                                                                                                                                                      |
-| `preferences`           | [`Partial<Preferences>`](https://github.com/readium/swift-toolkit/blob/main/docs/Guides/Navigator%20Preferences.md#appendix-preference-constraints) | :white_check_mark: | An object that allows you to control various aspects of the reader's UI (epub only)                                                                                                                                                                                                 |
-| `decorations`           | [`DecorationGroup[]`](https://github.com/5-stones/react-native-readium/blob/main/packages/react-native-readium/src/interfaces/Decoration.ts)                                      | :white_check_mark: | An array of decoration groups to render in the publication (e.g. highlights, underlines).                                                                                                                                                                                           |
-| `selectionActions`      | [`SelectionAction[]`](https://github.com/5-stones/react-native-readium/blob/main/packages/react-native-readium/src/interfaces/SelectionAction.ts)                                 | :white_check_mark: | Custom actions to show in the context menu when the user selects text.                                                                                                                                                                                                              |
-| `style`                 | `ViewStyle`                                                                                                                                         | :white_check_mark: | A traditional style object.                                                                                                                                                                                                                                                         |
-| `onLocationChange`      | `(locator: Locator) => void`                                                                                                                        | :white_check_mark: | A callback that fires whenever the location is changed (e.g. the user transitions to a new page).                                                                                                                                                                                   |
+| Name                    | Type                                                                                                                                                | Optional           | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `file`                  | [`File`](https://github.com/5-stones/react-native-readium/blob/main/packages/react-native-readium/src/interfaces/File.ts)                           | :x:                | A file object containing the path to the eBook file on disk. Use `File.initialLocation` to set the reader's position on mount.                                                                                                                                                                                                                                                                                                                              |
+| `preferences`           | [`Partial<Preferences>`](https://github.com/readium/swift-toolkit/blob/main/docs/Guides/Navigator%20Preferences.md#appendix-preference-constraints) | :white_check_mark: | An object that allows you to control various aspects of the reader's UI (epub only)                                                                                                                                                                                                                                                                                                                                                                         |
+| `decorations`           | [`DecorationGroup[]`](https://github.com/5-stones/react-native-readium/blob/main/packages/react-native-readium/src/interfaces/Decoration.ts)        | :white_check_mark: | An array of decoration groups to render in the publication (e.g. highlights, underlines).                                                                                                                                                                                                                                                                                                                                                                   |
+| `selectionActions`      | [`SelectionAction[]`](https://github.com/5-stones/react-native-readium/blob/main/packages/react-native-readium/src/interfaces/SelectionAction.ts)   | :white_check_mark: | Custom actions to show in the context menu when the user selects text.                                                                                                                                                                                                                                                                                                                                                                                      |
+| `style`                 | `ViewStyle`                                                                                                                                         | :white_check_mark: | A traditional style object.                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `onLocationChange`      | `(locator: Locator) => void`                                                                                                                        | :white_check_mark: | A callback that fires whenever the location is changed (e.g. the user transitions to a new page).                                                                                                                                                                                                                                                                                                                                                           |
 | `onPublicationReady`    | `(event: PublicationReadyEvent) => void`                                                                                                            | :white_check_mark: | A callback that fires once the publication is loaded and provides access to the table of contents, positions, metadata, the [capabilities](#knowing-which-settings-apply) of the opened publication, and whether it is protected (`isProtected`, `protectionScheme`). See the [`PublicationReadyEvent`](https://github.com/5-stones/react-native-readium/blob/main/packages/react-native-readium/src/interfaces/PublicationReady.ts) interface for details. |
-| `onPublicationError`    | `(event: PublicationErrorEvent) => void`                                                                                                            | :white_check_mark: | A callback that fires when the publication can't be opened. `code` is one of `fileNotFound`, `formatNotSupported`, `openFailed`, `protectionNotSupported`, `restricted` or `cancelled`; see [Registering a content protection](#registering-a-content-protection). |
-| `onDecorationActivated` | `(event: DecorationActivatedEvent) => void`                                                                                                         | :white_check_mark: | A callback that fires when a user taps on a decoration (e.g. a highlight).                                                                                                                                                                                                          |
-| `onSelectionChange`     | `(event: SelectionEvent) => void`                                                                                                                   | :white_check_mark: | A callback that fires when the user's text selection changes.                                                                                                                                                                                                                       |
-| `onSelectionAction`     | `(event: SelectionActionEvent) => void`                                                                                                             | :white_check_mark: | A callback that fires when the user taps a custom selection action from the context menu.                                                                                                                                                                                           |
+| `onPublicationError`    | `(event: PublicationErrorEvent) => void`                                                                                                            | :white_check_mark: | A callback that fires when the publication can't be opened. `code` is one of `fileNotFound`, `formatNotSupported`, `openFailed`, `protectionNotSupported`, `restricted` or `cancelled`; see [Registering a content protection](#registering-a-content-protection).                                                                                                                                                                                          |
+| `onDecorationActivated` | `(event: DecorationActivatedEvent) => void`                                                                                                         | :white_check_mark: | A callback that fires when a user taps on a decoration (e.g. a highlight).                                                                                                                                                                                                                                                                                                                                                                                  |
+| `onSelectionChange`     | `(event: SelectionEvent) => void`                                                                                                                   | :white_check_mark: | A callback that fires when the user's text selection changes.                                                                                                                                                                                                                                                                                                                                                                                               |
+| `onSelectionAction`     | `(event: SelectionActionEvent) => void`                                                                                                             | :white_check_mark: | A callback that fires when the user taps a custom selection action from the context menu.                                                                                                                                                                                                                                                                                                                                                                   |
 
 #### Ref Methods
 
@@ -518,14 +510,14 @@ const MyComponent: React.FC = () => {
 };
 ```
 
-| Method                    | Description                                                                                                                                                                                                                                     |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `goTo(locator)`           | Navigate to a specific location in the publication (e.g. a chapter or bookmark).                                                                                                                                                                |
-| `goForward()`             | Navigate forward in the publication (e.g. next page).                                                                                                                                                                                           |
-| `goBackward()`            | Navigate backward in the publication (e.g. previous page).                                                                                                                                                                                      |
+| Method                    | Description                                                                                                                                                                                                                                                                   |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `goTo(locator)`           | Navigate to a specific location in the publication (e.g. a chapter or bookmark).                                                                                                                                                                                              |
+| `goForward()`             | Navigate forward in the publication (e.g. next page).                                                                                                                                                                                                                         |
+| `goBackward()`            | Navigate backward in the publication (e.g. previous page).                                                                                                                                                                                                                    |
 | `search(query, options?)` | Start a full-text search; resolves with the first [`SearchPage`](https://github.com/5-stones/react-native-readium/blob/main/packages/react-native-readium/src/specs/ReadiumView.nitro.ts) of results. Most consumers should prefer the [`useSearch`](#full-text-search) hook. |
-| `loadMoreSearchResults()` | Resolves with the next `SearchPage` for the in-flight search (empty terminal page when exhausted).                                                                                                                                              |
-| `cancelSearch()`          | Cancel the in-flight search and release its iterator.                                                                                                                                                                                           |
+| `loadMoreSearchResults()` | Resolves with the next `SearchPage` for the in-flight search (empty terminal page when exhausted).                                                                                                                                                                            |
+| `cancelSearch()`          | Cancel the in-flight search and release its iterator.                                                                                                                                                                                                                         |
 
 #### :warning: Web vs Native File URLs
 
@@ -538,8 +530,8 @@ readium [r2-\*-js](https://github.com/readium?q=js) libraries)
 
 ## Contributing
 
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the
-repository and the development workflow.
+See the [contributing guide](https://github.com/5-stones/react-native-readium/blob/main/CONTRIBUTING.md)
+and the [repository README](https://github.com/5-stones/react-native-readium#readme).
 
 ## Release
 
@@ -561,10 +553,6 @@ e.g.
 yarn version --new-version 1.2.17
 yarn version --patch // 1.2.17 -> 1.2.18
 ```
-
-## Sponsor The Library
-
-If you'd like to sponsor a specific feature, fix, or the library in general, please reach out on an issue and we'll have a conversation!
 
 ## License
 
