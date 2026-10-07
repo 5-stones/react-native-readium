@@ -8,6 +8,12 @@
 #pragma once
 
 // Forward declarations of C++ defined types
+// Forward declaration of `AcquirePublicationOptions` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct AcquirePublicationOptions; }
+// Forward declaration of `AddPassphraseOptions` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct AddPassphraseOptions; }
+// Forward declaration of `GetLicenseOptions` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct GetLicenseOptions; }
 // Forward declaration of `HybridReadiumLCPSpec` to properly resolve imports.
 namespace margelo::nitro::readiumlcp { class HybridReadiumLCPSpec; }
 // Forward declaration of `LcpAcquiredPublication` to properly resolve imports.
@@ -22,14 +28,21 @@ namespace margelo::nitro::readiumlcp { struct LcpCapabilities; }
 namespace margelo::nitro::readiumlcp { enum class LcpErrorCode; }
 // Forward declaration of `LcpInitOptions` to properly resolve imports.
 namespace margelo::nitro::readiumlcp { struct LcpInitOptions; }
-// Forward declaration of `LcpLicenseInfo` to properly resolve imports.
-namespace margelo::nitro::readiumlcp { struct LcpLicenseInfo; }
 // Forward declaration of `LcpLicenseStatus` to properly resolve imports.
 namespace margelo::nitro::readiumlcp { enum class LcpLicenseStatus; }
+// Forward declaration of `LcpLicense` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct LcpLicense; }
 // Forward declaration of `LcpLink` to properly resolve imports.
 namespace margelo::nitro::readiumlcp { struct LcpLink; }
+// Forward declaration of `LcplSource` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct LcplSource; }
+// Forward declaration of `RenewLoanOptions` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct RenewLoanOptions; }
 
 // Include C++ defined types
+#include "AcquirePublicationOptions.hpp"
+#include "AddPassphraseOptions.hpp"
+#include "GetLicenseOptions.hpp"
 #include "HybridReadiumLCPSpec.hpp"
 #include "LcpAcquiredPublication.hpp"
 #include "LcpAuthReason.hpp"
@@ -37,11 +50,14 @@ namespace margelo::nitro::readiumlcp { struct LcpLink; }
 #include "LcpCapabilities.hpp"
 #include "LcpErrorCode.hpp"
 #include "LcpInitOptions.hpp"
-#include "LcpLicenseInfo.hpp"
+#include "LcpLicense.hpp"
 #include "LcpLicenseStatus.hpp"
 #include "LcpLink.hpp"
+#include "LcplSource.hpp"
+#include "RenewLoanOptions.hpp"
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/Result.hpp>
+#include <chrono>
 #include <exception>
 #include <functional>
 #include <memory>

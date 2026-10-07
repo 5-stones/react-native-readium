@@ -1,0 +1,9 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "extends": ["./typedoc.base.json"],
+  "entryPoints": ["../packages/react-native-readium-lcp/src/index.ts"],
+  "tsconfig": "../packages/react-native-readium-lcp/tsconfig.json",
+  "out": "./lcp/api",
+  "docsPath": "./lcp",
+  "groupOrder": ["Entry point", "*"]
+}

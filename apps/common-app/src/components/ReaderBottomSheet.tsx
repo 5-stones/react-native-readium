@@ -8,15 +8,15 @@ import { Reader } from './Reader';
 import type { ReaderHandle } from './Reader';
 import { ControlBar } from './ControlBar';
 import type { BookOption } from '../types/reader.types';
-import type { ReadiumProps } from 'react-native-readium';
+import type { Preferences } from 'react-native-readium';
 
 type ContentMode = 'reader' | 'details';
 
 interface ReaderBottomSheetProps {
   book: BookOption | null;
   onClose: () => void;
-  initialPreferences?: ReadiumProps['preferences'];
-  onPreferencesChange?: (preferences: ReadiumProps['preferences']) => void;
+  initialPreferences?: Preferences;
+  onPreferencesChange?: (preferences: Preferences) => void;
 }
 
 const snapPoints = ['100%'];

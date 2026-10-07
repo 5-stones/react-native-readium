@@ -67,19 +67,15 @@ class HybridReadiumLCP: HybridReadiumLCPSpec {
   }
 
   func setAuthenticationHandler(
-    handler: @escaping (LcpAuthRequest) -> Promise<Promise<String?>>
+    handler: ((LcpAuthRequest) -> Promise<Promise<String?>>)?
   ) throws {
     authentication.handler = handler
   }
 
-  func clearAuthenticationHandler() throws {
-    authentication.handler = nil
-  }
-
-  func addPassphrase(passphrase: String, isHashed: Bool) throws -> Promise<Void> {
+  func addPassphrase(passphrase: String, options: AddPassphraseOptions?) throws -> Promise<Void> {
     Promise.async { [self] in
       do {
-        try await requireServices().lcp.addPassphrase(passphrase, isHashed: isHashed)
+        try await requireServices().lcp.addPassphrase(passphrase, isHashed: options?.isHashed ?? false)
       } catch let error as LCPBridgeError {
         throw error
       } catch {
@@ -102,27 +98,25 @@ class HybridReadiumLCP: HybridReadiumLCPSpec {
 
   // MARK: - Acquisition
 
-  func acquirePublicationFromFile(
-    lcplPath: String,
-    checkStatus: Bool,
-    onProgress: ((Double) -> Void)?
+  /// `url` sources are downloaded by the JS layer and arrive here as `json`.
+  func acquirePublication(
+    source: LcplSource,
+    options: AcquirePublicationOptions?
   ) throws -> Promise<LcpAcquiredPublication> {
     Promise.async { [self] in
-      let lcpl = try fileURL(lcplPath)
-      if checkStatus {
-        try await ensureLicenseIsUsable(lcpl)
+      let checkStatus = options?.checkStatus ?? true
+      if let path = source.path {
+        let lcpl = try fileURL(path)
+        if checkStatus {
+          try await ensureLicenseIsUsable(lcpl)
+        }
+        return try await acquire(from: .file(lcpl), onProgress: options?.onProgress)
       }
-      return try await acquire(from: .file(lcpl), onProgress: onProgress)
-    }
-  }
 
-  func acquirePublicationFromJSON(
-    lcplJSON: String,
-    checkStatus: Bool,
-    onProgress: ((Double) -> Void)?
-  ) throws -> Promise<LcpAcquiredPublication> {
-    Promise.async { [self] in
-      let data = Data(lcplJSON.utf8)
+      guard let json = source.json else {
+        throw LCPBridgeError(code: .openfailed, message: "The license source needs a path or JSON.")
+      }
+      let data = Data(json.utf8)
       if checkStatus {
         // Validation reads a license from a file, so check a temporary copy.
         let url = FileManager.default.temporaryDirectory
@@ -131,7 +125,7 @@ class HybridReadiumLCP: HybridReadiumLCPSpec {
         defer { try? FileManager.default.removeItem(at: url) }
         try await ensureLicenseIsUsable(try fileURL(url.path))
       }
-      return try await acquire(from: .data(data), onProgress: onProgress)
+      return try await acquire(from: .data(data), onProgress: options?.onProgress)
     }
   }
 
@@ -179,18 +173,19 @@ class HybridReadiumLCP: HybridReadiumLCPSpec {
 
   // MARK: - Licenses
 
-  func getLicense(publicationPath: String, allowUserInteraction: Bool) throws -> Promise<LcpLicenseInfo> {
+  func getLicense(publicationPath: String, options: GetLicenseOptions?) throws -> Promise<LcpLicense> {
     Promise.async { [self] in
-      try await retrieveLicense(publicationPath, allowUserInteraction: allowUserInteraction).info()
+      try await retrieveLicense(
+        publicationPath,
+        allowUserInteraction: options?.allowUserInteraction ?? true
+      ).info()
     }
   }
 
-  func renewLoan(publicationPath: String, preferredEndDate: Double?) throws -> Promise<LcpLicenseInfo> {
+  func renewLoan(publicationPath: String, options: RenewLoanOptions?) throws -> Promise<LcpLicense> {
     Promise.async { [self] in
       let license = try await retrieveLicense(publicationPath, allowUserInteraction: true)
-      let delegate = BridgeRenewDelegate(
-        preferredEndDate: preferredEndDate.map { Date(timeIntervalSince1970: $0 / 1000) }
-      )
+      let delegate = BridgeRenewDelegate(preferredEndDate: options?.preferredEndDate)
       try await license.renewLoan(with: delegate).get(orThrow: \.bridged)
       return await license.info()
     }
@@ -279,21 +274,20 @@ private struct BridgeRenewDelegate: LCPRenewDelegate {
 }
 
 private extension LCPLicense {
-  func info() async -> LcpLicenseInfo {
+  func info() async -> LcpLicense {
     let document = license
-    let millis: (Date) -> Double = { $0.timeIntervalSince1970 * 1000 }
-    return LcpLicenseInfo(
+    return LcpLicense(
       id: document.id,
       provider: document.provider,
-      issued: millis(document.issued),
-      updated: millis(document.updated),
-      start: document.rights.start.map(millis),
-      end: document.rights.end.map(millis),
+      issued: document.issued,
+      updated: document.updated,
+      start: document.rights.start,
+      end: document.rights.end,
       status: status.flatMap { LcpLicenseStatus(fromString: $0.status.rawValue) },
       charactersToCopyLeft: await charactersToCopyLeft().map(Double.init),
       pagesToPrintLeft: await pagesToPrintLeft().map(Double.init),
       canRenewLoan: canRenewLoan,
-      maxRenewDate: maxRenewDate.map(millis),
+      maxRenewDate: maxRenewDate,
       canReturnPublication: canReturnPublication,
       restriction: error?.code
     )

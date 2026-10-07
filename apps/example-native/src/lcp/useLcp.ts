@@ -51,7 +51,7 @@ export function useLcp() {
   const [books, setBooks] = useState<BookOption[]>([]);
   const [progress, setProgress] = useState<number>();
   const [prompt, setPrompt] = useState<LcpAuthRequest | null>(null);
-  const answer = useRef<((passphrase: string | null) => void) | undefined>(
+  const answer = useRef<((passphrase?: string) => void) | undefined>(
     undefined
   );
 
@@ -61,7 +61,7 @@ export function useLcp() {
         new Promise((resolve) => {
           // Readium waits on every request, so one must never go unanswered: a newer request
           // replaces the prompt, and the one it replaces gives up.
-          answer.current?.(null);
+          answer.current?.();
           answer.current = resolve;
           setPrompt(request);
         })
@@ -77,12 +77,12 @@ export function useLcp() {
     loadLibrary().then(setBooks).catch(console.warn);
 
     return () => {
-      LCP.setAuthenticationHandler(null);
-      answer.current?.(null);
+      LCP.setAuthenticationHandler();
+      answer.current?.();
     };
   }, []);
 
-  const respond = useCallback((passphrase: string | null) => {
+  const respond = useCallback((passphrase?: string) => {
     answer.current?.(passphrase);
     answer.current = undefined;
     setPrompt(null);
@@ -163,6 +163,6 @@ export function useLcp() {
     forgetPassphrases,
     prompt,
     submitPassphrase: (passphrase: string) => respond(passphrase),
-    cancelPassphrase: () => respond(null),
+    cancelPassphrase: () => respond(),
   };
 }

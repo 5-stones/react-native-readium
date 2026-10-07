@@ -96,3 +96,8 @@ lib/
 
 # Local build settings for the example app, such as EDRLab's private liblcp (see .env.default)
 apps/example-native/.env
+
+# Docs site
+docs/.docusaurus/
+docs/core/api/
+docs/lcp/api/

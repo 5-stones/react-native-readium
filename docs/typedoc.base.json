@@ -1,0 +1,44 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "plugin": ["typedoc-plugin-markdown", "typedoc-docusaurus-theme"],
+  "readme": "none",
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "excludeExternals": true,
+  "disableSources": true,
+  "outputFileStrategy": "members",
+  "entryFileName": "index",
+  "hidePageHeader": true,
+  "hideBreadcrumbs": true,
+  "useCodeBlocks": true,
+  "sort": ["source-order"],
+  "indexFormat": "table",
+  "parametersFormat": "table",
+  "enumMembersFormat": "table",
+  "tableColumnSettings": {
+    "hideModifiers": true,
+    "hideOverrides": true,
+    "hideInherited": true
+  },
+  "blockTags": [
+    "@default",
+    "@defaultValue",
+    "@deprecated",
+    "@example",
+    "@param",
+    "@remarks",
+    "@returns",
+    "@see",
+    "@throws",
+    "@platform",
+    "@group"
+  ],
+  "sidebar": {
+    "autoConfiguration": true,
+    "pretty": true
+  },
+  "textContentMappings": {
+    "title.indexPage": "API reference",
+    "title.memberPage": "{name}"
+  }
+}

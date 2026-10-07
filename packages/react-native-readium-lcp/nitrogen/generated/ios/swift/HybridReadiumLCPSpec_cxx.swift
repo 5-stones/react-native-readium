@@ -149,33 +149,40 @@ open class HybridReadiumLCPSpec_cxx {
   }
   
   @inline(__always)
-  public final func setAuthenticationHandler(handler: bridge.Func_std__shared_ptr_Promise_std__shared_ptr_Promise_std__optional_std__string______LcpAuthRequest) -> bridge.Result_void_ {
+  public final func setAuthenticationHandler(handler: bridge.std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_std__optional_std__string______const_LcpAuthRequest_____request______) -> bridge.Result_void_ {
     do {
-      try self.__implementation.setAuthenticationHandler(handler: { () -> (LcpAuthRequest) -> Promise<Promise<String?>> in
-        let __wrappedFunction = bridge.wrap_Func_std__shared_ptr_Promise_std__shared_ptr_Promise_std__optional_std__string______LcpAuthRequest(handler)
-        return { (__request: LcpAuthRequest) -> Promise<Promise<String?>> in
-          let __result = __wrappedFunction.call(__request)
-          return { () -> Promise<Promise<String?>> in
-            let __promise = Promise<Promise<String?>>()
-            let __resolver = { (__result: Promise<String?>) in
-              __promise.resolve(withResult: __result)
+      try self.__implementation.setAuthenticationHandler(handler: { () -> ((_ request: LcpAuthRequest) -> Promise<Promise<String?>>)? in
+        if bridge.has_value_std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_std__optional_std__string______const_LcpAuthRequest_____request______(handler) {
+          let __unwrapped = bridge.get_std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_std__optional_std__string______const_LcpAuthRequest_____request______(handler)
+          return { () -> (LcpAuthRequest) -> Promise<Promise<String?>> in
+            let __wrappedFunction = bridge.wrap_Func_std__shared_ptr_Promise_std__shared_ptr_Promise_std__optional_std__string______LcpAuthRequest(__unwrapped)
+            return { (__request: LcpAuthRequest) -> Promise<Promise<String?>> in
+              let __result = __wrappedFunction.call(__request)
+              return { () -> Promise<Promise<String?>> in
+                let __promise = Promise<Promise<String?>>()
+                let __resolver = { (__result: Promise<String?>) in
+                  __promise.resolve(withResult: __result)
+                }
+                let __rejecter = { (__error: Error) in
+                  __promise.reject(withError: __error)
+                }
+                let __resolverCpp = { () -> bridge.Func_void_std__shared_ptr_Promise_std__optional_std__string___ in
+                  let __closureWrapper = Func_void_std__shared_ptr_Promise_std__optional_std__string___(__resolver)
+                  return bridge.create_Func_void_std__shared_ptr_Promise_std__optional_std__string___(__closureWrapper.toUnsafe())
+                }()
+                let __rejecterCpp = { () -> bridge.Func_void_std__exception_ptr in
+                  let __closureWrapper = Func_void_std__exception_ptr(__rejecter)
+                  return bridge.create_Func_void_std__exception_ptr(__closureWrapper.toUnsafe())
+                }()
+                let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_std__shared_ptr_Promise_std__optional_std__string_____(__result)
+                __promiseHolder.addOnResolvedListener(__resolverCpp)
+                __promiseHolder.addOnRejectedListener(__rejecterCpp)
+                return __promise
+              }()
             }
-            let __rejecter = { (__error: Error) in
-              __promise.reject(withError: __error)
-            }
-            let __resolverCpp = { () -> bridge.Func_void_std__shared_ptr_Promise_std__optional_std__string___ in
-              let __closureWrapper = Func_void_std__shared_ptr_Promise_std__optional_std__string___(__resolver)
-              return bridge.create_Func_void_std__shared_ptr_Promise_std__optional_std__string___(__closureWrapper.toUnsafe())
-            }()
-            let __rejecterCpp = { () -> bridge.Func_void_std__exception_ptr in
-              let __closureWrapper = Func_void_std__exception_ptr(__rejecter)
-              return bridge.create_Func_void_std__exception_ptr(__closureWrapper.toUnsafe())
-            }()
-            let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_std__shared_ptr_Promise_std__optional_std__string_____(__result)
-            __promiseHolder.addOnResolvedListener(__resolverCpp)
-            __promiseHolder.addOnRejectedListener(__rejecterCpp)
-            return __promise
           }()
+        } else {
+          return nil
         }
       }())
       return bridge.create_Result_void_()
@@ -186,20 +193,9 @@ open class HybridReadiumLCPSpec_cxx {
   }
   
   @inline(__always)
-  public final func clearAuthenticationHandler() -> bridge.Result_void_ {
+  public final func addPassphrase(passphrase: std.string, options: bridge.std__optional_AddPassphraseOptions_) -> bridge.Result_std__shared_ptr_Promise_void___ {
     do {
-      try self.__implementation.clearAuthenticationHandler()
-      return bridge.create_Result_void_()
-    } catch (let __error) {
-      let __exceptionPtr = __error.toCpp()
-      return bridge.create_Result_void_(__exceptionPtr)
-    }
-  }
-  
-  @inline(__always)
-  public final func addPassphrase(passphrase: std.string, isHashed: Bool) -> bridge.Result_std__shared_ptr_Promise_void___ {
-    do {
-      let __result = try self.__implementation.addPassphrase(passphrase: String(passphrase), isHashed: isHashed)
+      let __result = try self.__implementation.addPassphrase(passphrase: String(passphrase), options: options.value)
       let __resultCpp = { () -> bridge.std__shared_ptr_Promise_void__ in
         let __promise = bridge.create_std__shared_ptr_Promise_void__()
         let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_void__(__promise)
@@ -235,52 +231,9 @@ open class HybridReadiumLCPSpec_cxx {
   }
   
   @inline(__always)
-  public final func acquirePublicationFromFile(lcplPath: std.string, checkStatus: Bool, onProgress: bridge.std__optional_std__function_void_double____fraction______) -> bridge.Result_std__shared_ptr_Promise_LcpAcquiredPublication___ {
+  public final func acquirePublication(source: LcplSource, options: bridge.std__optional_AcquirePublicationOptions_) -> bridge.Result_std__shared_ptr_Promise_LcpAcquiredPublication___ {
     do {
-      let __result = try self.__implementation.acquirePublicationFromFile(lcplPath: String(lcplPath), checkStatus: checkStatus, onProgress: { () -> ((_ fraction: Double) -> Void)? in
-        if bridge.has_value_std__optional_std__function_void_double____fraction______(onProgress) {
-          let __unwrapped = bridge.get_std__optional_std__function_void_double____fraction______(onProgress)
-          return { () -> (Double) -> Void in
-            let __wrappedFunction = bridge.wrap_Func_void_double(__unwrapped)
-            return { (__fraction: Double) -> Void in
-              __wrappedFunction.call(__fraction)
-            }
-          }()
-        } else {
-          return nil
-        }
-      }())
-      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_LcpAcquiredPublication__ in
-        let __promise = bridge.create_std__shared_ptr_Promise_LcpAcquiredPublication__()
-        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_LcpAcquiredPublication__(__promise)
-        __result
-          .then({ __result in __promiseHolder.resolve(__result) })
-          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
-        return __promise
-      }()
-      return bridge.create_Result_std__shared_ptr_Promise_LcpAcquiredPublication___(__resultCpp)
-    } catch (let __error) {
-      let __exceptionPtr = __error.toCpp()
-      return bridge.create_Result_std__shared_ptr_Promise_LcpAcquiredPublication___(__exceptionPtr)
-    }
-  }
-  
-  @inline(__always)
-  public final func acquirePublicationFromJSON(lcplJSON: std.string, checkStatus: Bool, onProgress: bridge.std__optional_std__function_void_double____fraction______) -> bridge.Result_std__shared_ptr_Promise_LcpAcquiredPublication___ {
-    do {
-      let __result = try self.__implementation.acquirePublicationFromJSON(lcplJSON: String(lcplJSON), checkStatus: checkStatus, onProgress: { () -> ((_ fraction: Double) -> Void)? in
-        if bridge.has_value_std__optional_std__function_void_double____fraction______(onProgress) {
-          let __unwrapped = bridge.get_std__optional_std__function_void_double____fraction______(onProgress)
-          return { () -> (Double) -> Void in
-            let __wrappedFunction = bridge.wrap_Func_void_double(__unwrapped)
-            return { (__fraction: Double) -> Void in
-              __wrappedFunction.call(__fraction)
-            }
-          }()
-        } else {
-          return nil
-        }
-      }())
+      let __result = try self.__implementation.acquirePublication(source: source, options: options.value)
       let __resultCpp = { () -> bridge.std__shared_ptr_Promise_LcpAcquiredPublication__ in
         let __promise = bridge.create_std__shared_ptr_Promise_LcpAcquiredPublication__()
         let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_LcpAcquiredPublication__(__promise)
@@ -316,47 +269,40 @@ open class HybridReadiumLCPSpec_cxx {
   }
   
   @inline(__always)
-  public final func getLicense(publicationPath: std.string, allowUserInteraction: Bool) -> bridge.Result_std__shared_ptr_Promise_LcpLicenseInfo___ {
+  public final func getLicense(publicationPath: std.string, options: bridge.std__optional_GetLicenseOptions_) -> bridge.Result_std__shared_ptr_Promise_LcpLicense___ {
     do {
-      let __result = try self.__implementation.getLicense(publicationPath: String(publicationPath), allowUserInteraction: allowUserInteraction)
-      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_LcpLicenseInfo__ in
-        let __promise = bridge.create_std__shared_ptr_Promise_LcpLicenseInfo__()
-        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_LcpLicenseInfo__(__promise)
+      let __result = try self.__implementation.getLicense(publicationPath: String(publicationPath), options: options.value)
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_LcpLicense__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_LcpLicense__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_LcpLicense__(__promise)
         __result
           .then({ __result in __promiseHolder.resolve(__result) })
           .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
         return __promise
       }()
-      return bridge.create_Result_std__shared_ptr_Promise_LcpLicenseInfo___(__resultCpp)
+      return bridge.create_Result_std__shared_ptr_Promise_LcpLicense___(__resultCpp)
     } catch (let __error) {
       let __exceptionPtr = __error.toCpp()
-      return bridge.create_Result_std__shared_ptr_Promise_LcpLicenseInfo___(__exceptionPtr)
+      return bridge.create_Result_std__shared_ptr_Promise_LcpLicense___(__exceptionPtr)
     }
   }
   
   @inline(__always)
-  public final func renewLoan(publicationPath: std.string, preferredEndDate: bridge.std__optional_double_) -> bridge.Result_std__shared_ptr_Promise_LcpLicenseInfo___ {
+  public final func renewLoan(publicationPath: std.string, options: bridge.std__optional_RenewLoanOptions_) -> bridge.Result_std__shared_ptr_Promise_LcpLicense___ {
     do {
-      let __result = try self.__implementation.renewLoan(publicationPath: String(publicationPath), preferredEndDate: { () -> Double? in
-        if bridge.has_value_std__optional_double_(preferredEndDate) {
-          let __unwrapped = bridge.get_std__optional_double_(preferredEndDate)
-          return __unwrapped
-        } else {
-          return nil
-        }
-      }())
-      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_LcpLicenseInfo__ in
-        let __promise = bridge.create_std__shared_ptr_Promise_LcpLicenseInfo__()
-        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_LcpLicenseInfo__(__promise)
+      let __result = try self.__implementation.renewLoan(publicationPath: String(publicationPath), options: options.value)
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_LcpLicense__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_LcpLicense__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_LcpLicense__(__promise)
         __result
           .then({ __result in __promiseHolder.resolve(__result) })
           .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
         return __promise
       }()
-      return bridge.create_Result_std__shared_ptr_Promise_LcpLicenseInfo___(__resultCpp)
+      return bridge.create_Result_std__shared_ptr_Promise_LcpLicense___(__resultCpp)
     } catch (let __error) {
       let __exceptionPtr = __error.toCpp()
-      return bridge.create_Result_std__shared_ptr_Promise_LcpLicenseInfo___(__exceptionPtr)
+      return bridge.create_Result_std__shared_ptr_Promise_LcpLicense___(__exceptionPtr)
     }
   }
   

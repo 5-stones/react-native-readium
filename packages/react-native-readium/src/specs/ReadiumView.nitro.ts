@@ -6,20 +6,34 @@ import {
 
 // ── Locator ──────────────────────────────────────────────────────────────────
 
+/** Where in its resource a `Locator` points. */
 export interface LocatorLocations {
+  /** How far into the resource, from 0 to 1. */
   progression?: number;
+  /** The position in the publication, counting from 1, as in `positions`. */
   position?: number;
+  /** How far into the whole publication, from 0 to 1. */
   totalProgression?: number;
 }
 
+/** Text around a location, e.g. a search match in context. */
 export interface LocatorText {
+  /** The text just before. */
   before?: string;
+  /** The text at the location. */
   highlight?: string;
+  /** The text just after. */
   after?: string;
 }
 
+/**
+ * A location in a publication, as Readium describes it: reading positions, bookmarks,
+ * highlights and search results are all locators. Store them as they are to reopen there later.
+ */
 export interface Locator {
+  /** The resource (e.g. a chapter's file) within the publication. */
   href: string;
+  /** The resource's media type. */
   type: string;
   target?: number;
   title?: string;
@@ -142,8 +156,11 @@ export type Capabilities = {
 
 // ── Decoration ───────────────────────────────────────────────────────────────
 
+/** How a decoration looks. */
 export interface DecorationStyle {
+  /** `'highlight'` or `'underline'`. */
   type: string;
+  /** Its color, as a CSS color. */
   tint?: string;
   isActive?: boolean;
   id?: string;
@@ -153,13 +170,19 @@ export interface DecorationStyle {
   width?: string;
 }
 
+/** One annotation rendered over the publication, such as a highlight. */
 export interface Decoration {
+  /** Your identifier for it, unique within its group. */
   id: string;
+  /** Where it is. */
   locator: Locator;
+  /** How it looks. */
   style: DecorationStyle;
+  /** Your own data, such as a note or the selected text. */
   extras?: Record<string, string>;
 }
 
+/** A named set of decorations, such as `"highlights"`. */
 export interface DecorationGroup {
   name: string;
   decorations: Decoration[];
@@ -181,8 +204,11 @@ export interface Point {
 
 // ── Selection ────────────────────────────────────────────────────────────────
 
+/** An item added to the text-selection menu. */
 export interface SelectionAction {
+  /** Reported as `actionId` when the user picks it. */
   id: string;
+  /** The menu item's text. */
   label: string;
 }
 
@@ -296,10 +322,15 @@ export interface SearchPage {
 
 // ── Events ───────────────────────────────────────────────────────────────────
 
+/** Reported by `onPublicationReady` once a publication opens. */
 export interface PublicationReadyEvent {
+  /** The table of contents, nested through each link's `children`. */
   tableOfContents: Link[];
+  /** One locator per position in the publication, e.g. for a page slider. */
   positions: Locator[];
+  /** Title, authors, language and more. */
   metadata: PublicationMetadata;
+  /** Which preferences and features apply to this publication. */
   capabilities: Capabilities;
   /** True when a registered content protection unlocked this publication. */
   isProtected: boolean;
@@ -328,38 +359,56 @@ export type PublicationErrorCode =
 export interface PublicationErrorEvent {
   /** The `file.url` whose open failed. */
   url: string;
+  /** Why, the same on every platform: branch on it, or map it to your own localized text. */
   code: PublicationErrorCode;
   /** The platform's own description; becomes the public event's `detail`. */
   message: string;
+  /** For a protected publication, its DRM scheme's URI. */
   protectionScheme?: string;
 }
 
+/** Reported by `onPreferencesChanged` once preferences are applied. */
 export interface PreferencesChangedEvent {
+  /** Which preferences and features apply now. */
   capabilities: Capabilities;
 }
 
+/** Reported by `onDecorationActivated` when the user taps a decoration. */
 export interface DecorationActivatedEvent {
+  /** The decoration tapped. */
   decoration: Decoration;
+  /** The name of its group. */
   group: string;
   rect?: Rect;
   point?: Point;
 }
 
+/** Reported by `onSelectionChange` as the user adjusts a selection. */
 export interface SelectionEvent {
+  /** Where the selection is; undefined once it's cleared. */
   locator?: Locator;
   selectedText?: string;
 }
 
+/** Reported by `onSelectionAction` when the user picks one of the `selectionActions`. */
 export interface SelectionActionEvent {
+  /** Where the selection is, e.g. to create a highlight there. */
   locator: Locator;
   selectedText: string;
+  /** The `id` of the action picked. */
   actionId: string;
 }
 
 // ── File ─────────────────────────────────────────────────────────────────────
 
+/** The publication a `ReadiumView` opens. */
 export interface ReadiumFile {
+  /**
+   * iOS and Android: a local path or `file://` URL to an EPUB or PDF. Web: the URL of an unpacked
+   * EPUB's `manifest.json`, or of a PDF.
+   */
   url: string;
+  /** Where to start reading, e.g. a locator saved from `onLocationChange`. */
   initialLocation?: Locator;
   /**
    * Handed to the registered content protections when the publication is opened, e.g. an LCP

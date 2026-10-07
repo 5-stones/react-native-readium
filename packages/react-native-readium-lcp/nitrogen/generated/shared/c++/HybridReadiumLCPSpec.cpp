@@ -17,11 +17,9 @@ namespace margelo::nitro::readiumlcp {
       prototype.registerHybridGetter("capabilities", &HybridReadiumLCPSpec::getCapabilities);
       prototype.registerHybridMethod("initialize", &HybridReadiumLCPSpec::initialize);
       prototype.registerHybridMethod("setAuthenticationHandler", &HybridReadiumLCPSpec::setAuthenticationHandler);
-      prototype.registerHybridMethod("clearAuthenticationHandler", &HybridReadiumLCPSpec::clearAuthenticationHandler);
       prototype.registerHybridMethod("addPassphrase", &HybridReadiumLCPSpec::addPassphrase);
       prototype.registerHybridMethod("forgetPassphrases", &HybridReadiumLCPSpec::forgetPassphrases);
-      prototype.registerHybridMethod("acquirePublicationFromFile", &HybridReadiumLCPSpec::acquirePublicationFromFile);
-      prototype.registerHybridMethod("acquirePublicationFromJSON", &HybridReadiumLCPSpec::acquirePublicationFromJSON);
+      prototype.registerHybridMethod("acquirePublication", &HybridReadiumLCPSpec::acquirePublication);
       prototype.registerHybridMethod("injectLicense", &HybridReadiumLCPSpec::injectLicense);
       prototype.registerHybridMethod("getLicense", &HybridReadiumLCPSpec::getLicense);
       prototype.registerHybridMethod("renewLoan", &HybridReadiumLCPSpec::renewLoan);

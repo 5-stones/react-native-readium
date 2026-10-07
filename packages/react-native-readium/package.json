@@ -110,6 +110,9 @@
       "@release-it/conventional-changelog": {
         "preset": "angular"
       }
+    },
+    "hooks": {
+      "after:bump": "node ../../docs/scripts/cut-docs-version.js readium ${version}"
     }
   },
   "engines": {

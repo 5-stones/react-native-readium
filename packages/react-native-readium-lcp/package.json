@@ -96,6 +96,9 @@
         "preset": "angular",
         "infile": "CHANGELOG.md"
       }
+    },
+    "hooks": {
+      "after:bump": "node ../../docs/scripts/cut-docs-version.js lcp ${version}"
     }
   },
   "engines": {

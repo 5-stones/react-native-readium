@@ -9,7 +9,7 @@ import React, {
 import { View, StyleSheet } from 'react-native';
 import { callback } from 'react-native-nitro-modules';
 
-import type { Dimensions } from '../interfaces';
+import type { Dimensions, Preferences } from '../interfaces';
 import type {
   PublicationErrorEvent as NativePublicationErrorEvent,
   PublicationReadyEvent as SpecPublicationReadyEvent,
@@ -20,6 +20,23 @@ import { NitroReadiumView } from './NitroReadiumView';
 export type { ReadiumViewRef, ReadiumProps } from './ReadiumView.types';
 import type { ReadiumViewRef, ReadiumProps } from './ReadiumView.types';
 
+/** One object for every render, so effects that depend on `preferences` don't rerun. */
+const NO_PREFERENCES: Preferences = {};
+
+/**
+ * Renders a publication: an EPUB or PDF on iOS and Android, or a web publication on web.
+ *
+ * @example
+ * ```tsx
+ * <ReadiumView
+ *   file={{ url: path, initialLocation: savedLocator }}
+ *   preferences={{ theme: 'dark' }}
+ *   onLocationChange={saveLocator}
+ * />
+ * ```
+ *
+ * @group Components
+ */
 export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
   (
     {
@@ -30,7 +47,7 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
       onDecorationActivated,
       onSelectionChange,
       onSelectionAction,
-      preferences,
+      preferences = NO_PREFERENCES,
       decorations,
       selectionActions,
       ...props

@@ -1,16 +1,18 @@
-import type { PublicationErrorCode } from '../specs/ReadiumView.nitro';
+import type {
+  PublicationErrorCode,
+  PublicationErrorEvent as NativePublicationErrorEvent,
+} from '../specs/ReadiumView.nitro';
 
-/** The publication could not be opened. */
-export interface PublicationErrorEvent {
-  /** The `file.url` whose open failed. */
-  url: string;
-  /** Why, the same on every platform: branch on it, or map it to your own localized text. */
-  code: PublicationErrorCode;
+/**
+ * The publication could not be opened. `url`, `code` and `protectionScheme` are as native reports
+ * them; `message` and `detail` are described below.
+ */
+export interface PublicationErrorEvent
+  extends Omit<NativePublicationErrorEvent, 'message'> {
   /** A default English description of `code`, the same on every platform. */
   message: string;
   /** The platform's own description of what went wrong, for logs. Varies by platform. */
   detail?: string;
-  protectionScheme?: string;
 }
 
 /** The default English description of a `PublicationErrorCode`, as `message` reports it. */

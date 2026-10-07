@@ -11,8 +11,8 @@
 namespace margelo::nitro::readiumlcp { struct LcpCapabilities; }
 // Forward declaration of `LcpAcquiredPublication` to properly resolve imports.
 namespace margelo::nitro::readiumlcp { struct LcpAcquiredPublication; }
-// Forward declaration of `LcpLicenseInfo` to properly resolve imports.
-namespace margelo::nitro::readiumlcp { struct LcpLicenseInfo; }
+// Forward declaration of `LcpLicense` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct LcpLicense; }
 // Forward declaration of `LcpLicenseStatus` to properly resolve imports.
 namespace margelo::nitro::readiumlcp { enum class LcpLicenseStatus; }
 // Forward declaration of `LcpErrorCode` to properly resolve imports.
@@ -25,6 +25,16 @@ namespace margelo::nitro::readiumlcp { struct LcpAuthRequest; }
 namespace margelo::nitro::readiumlcp { enum class LcpAuthReason; }
 // Forward declaration of `LcpLink` to properly resolve imports.
 namespace margelo::nitro::readiumlcp { struct LcpLink; }
+// Forward declaration of `AddPassphraseOptions` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct AddPassphraseOptions; }
+// Forward declaration of `LcplSource` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct LcplSource; }
+// Forward declaration of `AcquirePublicationOptions` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct AcquirePublicationOptions; }
+// Forward declaration of `GetLicenseOptions` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct GetLicenseOptions; }
+// Forward declaration of `RenewLoanOptions` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct RenewLoanOptions; }
 
 #include "LcpCapabilities.hpp"
 #include "JLcpCapabilities.hpp"
@@ -34,8 +44,10 @@ namespace margelo::nitro::readiumlcp { struct LcpLink; }
 #include "LcpAcquiredPublication.hpp"
 #include "JLcpAcquiredPublication.hpp"
 #include <string>
-#include "LcpLicenseInfo.hpp"
-#include "JLcpLicenseInfo.hpp"
+#include "LcpLicense.hpp"
+#include "JLcpLicense.hpp"
+#include <chrono>
+#include <NitroModules/JInstant.hpp>
 #include <optional>
 #include "LcpLicenseStatus.hpp"
 #include "JLcpLicenseStatus.hpp"
@@ -53,7 +65,17 @@ namespace margelo::nitro::readiumlcp { struct LcpLink; }
 #include "LcpLink.hpp"
 #include "JLcpLink.hpp"
 #include <vector>
+#include "AddPassphraseOptions.hpp"
+#include "JAddPassphraseOptions.hpp"
+#include "LcplSource.hpp"
+#include "JLcplSource.hpp"
+#include "AcquirePublicationOptions.hpp"
+#include "JAcquirePublicationOptions.hpp"
 #include "JFunc_void_double.hpp"
+#include "GetLicenseOptions.hpp"
+#include "JGetLicenseOptions.hpp"
+#include "RenewLoanOptions.hpp"
+#include "JRenewLoanOptions.hpp"
 
 namespace margelo::nitro::readiumlcp {
 
@@ -108,17 +130,13 @@ namespace margelo::nitro::readiumlcp {
       return __promise;
     }();
   }
-  void JHybridReadiumLCPSpec::setAuthenticationHandler(const std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<std::optional<std::string>>>>>(const LcpAuthRequest& /* request */)>& handler) {
+  void JHybridReadiumLCPSpec::setAuthenticationHandler(const std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<std::optional<std::string>>>>>(const LcpAuthRequest& /* request */)>>& handler) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_std__shared_ptr_Promise_std__shared_ptr_Promise_std__optional_std__string______LcpAuthRequest::javaobject> /* handler */)>("setAuthenticationHandler_cxx");
-    method(_javaPart, JFunc_std__shared_ptr_Promise_std__shared_ptr_Promise_std__optional_std__string______LcpAuthRequest_cxx::fromCpp(handler));
+    method(_javaPart, handler.has_value() ? JFunc_std__shared_ptr_Promise_std__shared_ptr_Promise_std__optional_std__string______LcpAuthRequest_cxx::fromCpp(handler.value()) : nullptr);
   }
-  void JHybridReadiumLCPSpec::clearAuthenticationHandler() {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<void()>("clearAuthenticationHandler");
-    method(_javaPart);
-  }
-  std::shared_ptr<Promise<void>> JHybridReadiumLCPSpec::addPassphrase(const std::string& passphrase, bool isHashed) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* passphrase */, jboolean /* isHashed */)>("addPassphrase");
-    auto __result = method(_javaPart, jni::make_jstring(passphrase), isHashed);
+  std::shared_ptr<Promise<void>> JHybridReadiumLCPSpec::addPassphrase(const std::string& passphrase, const std::optional<AddPassphraseOptions>& options) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* passphrase */, jni::alias_ref<JAddPassphraseOptions> /* options */)>("addPassphrase");
+    auto __result = method(_javaPart, jni::make_jstring(passphrase), options.has_value() ? JAddPassphraseOptions::fromCpp(options.value()) : nullptr);
     return [&]() {
       auto __promise = Promise<void>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
@@ -146,25 +164,9 @@ namespace margelo::nitro::readiumlcp {
       return __promise;
     }();
   }
-  std::shared_ptr<Promise<LcpAcquiredPublication>> JHybridReadiumLCPSpec::acquirePublicationFromFile(const std::string& lcplPath, bool checkStatus, const std::optional<std::function<void(double /* fraction */)>>& onProgress) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* lcplPath */, jboolean /* checkStatus */, jni::alias_ref<JFunc_void_double::javaobject> /* onProgress */)>("acquirePublicationFromFile_cxx");
-    auto __result = method(_javaPart, jni::make_jstring(lcplPath), checkStatus, onProgress.has_value() ? JFunc_void_double_cxx::fromCpp(onProgress.value()) : nullptr);
-    return [&]() {
-      auto __promise = Promise<LcpAcquiredPublication>::create();
-      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
-        auto __result = jni::static_ref_cast<JLcpAcquiredPublication>(__boxedResult);
-        __promise->resolve(__result->toCpp());
-      });
-      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
-        jni::JniException __jniError(__throwable);
-        __promise->reject(std::make_exception_ptr(__jniError));
-      });
-      return __promise;
-    }();
-  }
-  std::shared_ptr<Promise<LcpAcquiredPublication>> JHybridReadiumLCPSpec::acquirePublicationFromJSON(const std::string& lcplJSON, bool checkStatus, const std::optional<std::function<void(double /* fraction */)>>& onProgress) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* lcplJSON */, jboolean /* checkStatus */, jni::alias_ref<JFunc_void_double::javaobject> /* onProgress */)>("acquirePublicationFromJSON_cxx");
-    auto __result = method(_javaPart, jni::make_jstring(lcplJSON), checkStatus, onProgress.has_value() ? JFunc_void_double_cxx::fromCpp(onProgress.value()) : nullptr);
+  std::shared_ptr<Promise<LcpAcquiredPublication>> JHybridReadiumLCPSpec::acquirePublication(const LcplSource& source, const std::optional<AcquirePublicationOptions>& options) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<JLcplSource> /* source */, jni::alias_ref<JAcquirePublicationOptions> /* options */)>("acquirePublication");
+    auto __result = method(_javaPart, JLcplSource::fromCpp(source), options.has_value() ? JAcquirePublicationOptions::fromCpp(options.value()) : nullptr);
     return [&]() {
       auto __promise = Promise<LcpAcquiredPublication>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
@@ -193,13 +195,13 @@ namespace margelo::nitro::readiumlcp {
       return __promise;
     }();
   }
-  std::shared_ptr<Promise<LcpLicenseInfo>> JHybridReadiumLCPSpec::getLicense(const std::string& publicationPath, bool allowUserInteraction) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* publicationPath */, jboolean /* allowUserInteraction */)>("getLicense");
-    auto __result = method(_javaPart, jni::make_jstring(publicationPath), allowUserInteraction);
+  std::shared_ptr<Promise<LcpLicense>> JHybridReadiumLCPSpec::getLicense(const std::string& publicationPath, const std::optional<GetLicenseOptions>& options) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* publicationPath */, jni::alias_ref<JGetLicenseOptions> /* options */)>("getLicense");
+    auto __result = method(_javaPart, jni::make_jstring(publicationPath), options.has_value() ? JGetLicenseOptions::fromCpp(options.value()) : nullptr);
     return [&]() {
-      auto __promise = Promise<LcpLicenseInfo>::create();
+      auto __promise = Promise<LcpLicense>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
-        auto __result = jni::static_ref_cast<JLcpLicenseInfo>(__boxedResult);
+        auto __result = jni::static_ref_cast<JLcpLicense>(__boxedResult);
         __promise->resolve(__result->toCpp());
       });
       __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
@@ -209,13 +211,13 @@ namespace margelo::nitro::readiumlcp {
       return __promise;
     }();
   }
-  std::shared_ptr<Promise<LcpLicenseInfo>> JHybridReadiumLCPSpec::renewLoan(const std::string& publicationPath, std::optional<double> preferredEndDate) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* publicationPath */, jni::alias_ref<jni::JDouble> /* preferredEndDate */)>("renewLoan");
-    auto __result = method(_javaPart, jni::make_jstring(publicationPath), preferredEndDate.has_value() ? jni::JDouble::valueOf(preferredEndDate.value()) : nullptr);
+  std::shared_ptr<Promise<LcpLicense>> JHybridReadiumLCPSpec::renewLoan(const std::string& publicationPath, const std::optional<RenewLoanOptions>& options) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* publicationPath */, jni::alias_ref<JRenewLoanOptions> /* options */)>("renewLoan");
+    auto __result = method(_javaPart, jni::make_jstring(publicationPath), options.has_value() ? JRenewLoanOptions::fromCpp(options.value()) : nullptr);
     return [&]() {
-      auto __promise = Promise<LcpLicenseInfo>::create();
+      auto __promise = Promise<LcpLicense>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
-        auto __result = jni::static_ref_cast<JLcpLicenseInfo>(__boxedResult);
+        auto __result = jni::static_ref_cast<JLcpLicense>(__boxedResult);
         __promise->resolve(__result->toCpp());
       });
       __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {

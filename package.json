@@ -3,7 +3,8 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "apps/*"
+    "apps/*",
+    "docs"
   ],
   "scripts": {
     "test": "yarn workspaces foreach --all --no-private run test",
@@ -18,7 +19,9 @@
     "example": "yarn workspace example-native",
     "example:nextjs": "yarn workspace example-nextjs",
     "pods": "cd apps/example-native && pod-install --quiet",
-    "bootstrap": "yarn example && yarn && yarn pods"
+    "bootstrap": "yarn example && yarn && yarn pods",
+    "docs": "yarn workspace docs start",
+    "docs:build": "yarn workspace docs build"
   },
   "repository": "http://github.com/5-stones/react-native-readium",
   "license": "MIT",

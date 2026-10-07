@@ -1,19 +1,19 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
-import type { ReadiumProps, Capabilities } from 'react-native-readium';
+import type { Capabilities, Preferences } from 'react-native-readium';
 import { RANGES } from 'react-native-readium';
 import { ReaderButton } from './ReaderButton';
 import { BaseModal } from './BaseModal';
 import { colors } from '../styles/modal';
 
 interface Props {
-  preferences: ReadiumProps['preferences'];
-  onChange: (preferences: ReadiumProps['preferences']) => void;
+  preferences: Preferences;
+  onChange: (preferences: Preferences) => void;
   capabilities?: Capabilities;
 }
 
-type Theme = NonNullable<ReadiumProps['preferences']['theme']>;
+type Theme = NonNullable<Preferences['theme']>;
 
 const THEME_LABELS: Record<Theme, string> = {
   light: 'Light',

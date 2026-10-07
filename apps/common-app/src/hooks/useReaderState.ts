@@ -2,15 +2,15 @@ import { useState, useCallback, useRef } from 'react';
 import type {
   Link,
   Locator,
-  ReadiumProps,
   PublicationReadyEvent,
   Capabilities,
   PreferencesChangedEvent,
+  Preferences,
 } from 'react-native-readium';
 
 export interface UseReaderStateOptions {
-  initialPreferences?: ReadiumProps['preferences'];
-  onPreferencesChange?: (preferences: ReadiumProps['preferences']) => void;
+  initialPreferences?: Preferences;
+  onPreferencesChange?: (preferences: Preferences) => void;
 }
 
 export const useReaderState = (options?: UseReaderStateOptions) => {
@@ -18,13 +18,13 @@ export const useReaderState = (options?: UseReaderStateOptions) => {
   const [positions, setPositions] = useState<Locator[]>([]);
   const [capabilities, setCapabilities] = useState<Capabilities>();
   const [location, setLocation] = useState<Locator | undefined>();
-  const [preferences, _setPreferences] = useState<ReadiumProps['preferences']>(
+  const [preferences, _setPreferences] = useState<Preferences>(
     options?.initialPreferences ?? { theme: 'dark' }
   );
   const onPreferencesChangeRef = useRef(options?.onPreferencesChange);
   onPreferencesChangeRef.current = options?.onPreferencesChange;
 
-  const setPreferences = useCallback((prefs: ReadiumProps['preferences']) => {
+  const setPreferences = useCallback((prefs: Preferences) => {
     _setPreferences(prefs);
     onPreferencesChangeRef.current?.(prefs);
   }, []);

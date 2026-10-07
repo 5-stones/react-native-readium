@@ -22,6 +22,8 @@ on them. Have an issue you care about?
 An ebook reader for React Native, built on the [Readium](https://readium.org/) toolkits, on iOS,
 Android and web.
 
+**[Read the documentation](https://5-stones.github.io/react-native-readium/)**
+
 - Render EPUB 2, EPUB 3 and PDF publications in a `ReadiumView`.
 - Track the reading position, and jump to any location, chapter or bookmark.
 - Read the table of contents, positions and metadata.
@@ -30,9 +32,9 @@ Android and web.
 - Full-text search.
 - DRM: [Readium LCP](https://www.edrlab.org/readium-lcp/) through a companion package.
 
-| Dark Mode                                                             | Light Mode                                                              |
-| --------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| ![Dark Mode](./packages/react-native-readium/docs/demo-dark-mode.gif) | ![Light Mode](./packages/react-native-readium/docs/demo-light-mode.gif) |
+| Dark Mode                                          | Light Mode                                           |
+| -------------------------------------------------- | ---------------------------------------------------- |
+| ![Dark Mode](./docs/static/img/demo-dark-mode.gif) | ![Light Mode](./docs/static/img/demo-light-mode.gif) |
 
 ## Quick start
 
@@ -46,8 +48,8 @@ yarn add react-native-readium react-native-nitro-modules
 | Android  | `compileSdkVersion` 31+, JDK 17, Kotlin 2.3.20+.                                                                         |
 | Web      | `file.url` points to the `manifest.json` of an unpacked EPUB served over HTTP.                                           |
 
-See the [package README](./packages/react-native-readium#installation) for the full setup on each
-platform.
+See [Installation](https://5-stones.github.io/react-native-readium/docs/getting-started/installation) for the
+full setup on each platform.
 
 ```tsx
 import { ReadiumView } from 'react-native-readium';
@@ -65,8 +67,8 @@ export function Reader({ path }: { path: string }) {
 }
 ```
 
-The [package README](./packages/react-native-readium#usage) covers preferences, highlights, search
-and the full API.
+The [documentation](https://5-stones.github.io/react-native-readium/) covers preferences, highlights,
+search, LCP and the full API.
 
 ## Packages
 
@@ -104,6 +106,7 @@ yarn test           # run every package's tests
 yarn lint
 yarn nitrogen       # regenerate Nitro bindings after editing a *.nitro.ts spec
 yarn example ios    # or: yarn example android
+yarn docs           # run the documentation site locally
 ```
 
 Each package is released on its own from its directory with `yarn release`.

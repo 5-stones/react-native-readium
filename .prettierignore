@@ -26,3 +26,7 @@ out/
 
 # Cache
 .cache/
+
+# Generated API reference (docs site)
+docs/**/api/
+docs/.docusaurus/
