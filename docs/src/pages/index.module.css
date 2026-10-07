@@ -1,0 +1,94 @@
+.hero {
+  padding: 4rem 0 3rem;
+  text-align: center;
+  background: var(--ifm-color-emphasis-100);
+}
+
+.logo {
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 3rem;
+}
+
+.tagline {
+  font-size: 1.25rem;
+  color: var(--ifm-color-emphasis-700);
+  margin: 0 auto 1.5rem;
+  max-width: 36rem;
+}
+
+.install {
+  margin: 0 auto 1.5rem;
+  max-width: 34rem;
+  text-align: left;
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.features {
+  padding: 3rem 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  display: block;
+  padding: 1.25rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-card-border-radius);
+  color: inherit;
+  transition: border-color 0.15s ease;
+}
+
+.card:hover {
+  border-color: var(--ifm-color-primary);
+  color: inherit;
+  text-decoration: none;
+}
+
+.card h3 {
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  margin: 0;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.demo {
+  padding: 0 0 4rem;
+}
+
+.demoImages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.demoImages img {
+  width: 100%;
+  border-radius: var(--ifm-card-border-radius);
+  border: 1px solid var(--ifm-color-emphasis-200);
+}
+
+@media (max-width: 600px) {
+  .hero {
+    padding: 2.5rem 0 2rem;
+  }
+
+  .title {
+    font-size: 2.25rem;
+  }
+}

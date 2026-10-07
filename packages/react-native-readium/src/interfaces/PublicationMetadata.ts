@@ -11,7 +11,7 @@ import type { PublicationMetadata as SpecPublicationMetadata } from '../specs/Re
 
 /**
  * Publication metadata following Readium Web Publication Manifest spec.
- * Extends the Nitro spec metadata with the @type field.
+ * Extends the Nitro spec metadata with the `@type` field.
  * @see https://readium.org/webpub-manifest/
  */
 export interface PublicationMetadata extends SpecPublicationMetadata {

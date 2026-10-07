@@ -1,10 +1,8 @@
 const mockNative = {
   initialize: jest.fn(),
   setAuthenticationHandler: jest.fn(),
-  clearAuthenticationHandler: jest.fn(),
   getLicense: jest.fn(),
-  acquirePublicationFromFile: jest.fn(),
-  acquirePublicationFromJSON: jest.fn(),
+  acquirePublication: jest.fn(),
   forgetPassphrases: jest.fn(),
 };
 
@@ -75,7 +73,7 @@ describe('LCP', () => {
     expect(error).toBeInstanceOf(LcpError);
     expect(error.code).toBe('network');
     expect(error.detail).toBe('https://x/lcpl answered HTTP 404');
-    expect(mockNative.acquirePublicationFromJSON).not.toHaveBeenCalled();
+    expect(mockNative.acquirePublication).not.toHaveBeenCalled();
   });
 
   it('keeps a plain-text native detail when there is no JSON', async () => {
@@ -95,67 +93,76 @@ describe('LCP', () => {
     await expect(LCP.initialize()).rejects.toBe(original);
   });
 
-  it('converts license dates and leaves unlimited rights undefined', async () => {
-    mockNative.getLicense.mockResolvedValue({
+  it('passes the license native reports straight through', async () => {
+    const nativeLicense = {
       id: 'l1',
       provider: 'p',
-      issued: 0,
-      updated: 1000,
-      end: 2000,
+      issued: new Date(0),
+      updated: new Date(1000),
+      end: new Date(2000),
       canRenewLoan: true,
       canReturnPublication: false,
-    });
-    const license = await LCP.getLicense('/book.epub');
-    expect(mockNative.getLicense).toHaveBeenCalledWith('/book.epub', true);
-    expect(license.issued).toEqual(new Date(0));
-    expect(license.end).toEqual(new Date(2000));
-    expect(license.start).toBeUndefined();
-    expect(license.charactersToCopyLeft).toBeUndefined();
+    };
+    mockNative.getLicense.mockResolvedValue(nativeLicense);
+    const options = { allowUserInteraction: false };
+    await expect(LCP.getLicense('/book.epub', options)).resolves.toBe(
+      nativeLicense
+    );
+    expect(mockNative.getLicense).toHaveBeenCalledWith('/book.epub', options);
   });
 
-  it('maps a null handler answer to undefined for native', async () => {
-    LCP.setAuthenticationHandler(async () => null);
-    const wrapped = mockNative.setAuthenticationHandler.mock.calls[0][0];
-    await expect(
-      wrapped({ reason: 'passphraseNotFound' })
-    ).resolves.toBeUndefined();
+  it('hands the authentication handler to native, and removes it when omitted', () => {
+    const handler = async () => undefined;
+    LCP.setAuthenticationHandler(handler);
+    expect(mockNative.setAuthenticationHandler).toHaveBeenLastCalledWith(
+      handler
+    );
 
-    LCP.setAuthenticationHandler(null);
-    expect(mockNative.clearAuthenticationHandler).toHaveBeenCalled();
+    LCP.setAuthenticationHandler();
+    expect(mockNative.setAuthenticationHandler).toHaveBeenLastCalledWith(
+      undefined
+    );
   });
 
-  it('routes each LCPL source to the right native call', async () => {
-    mockNative.acquirePublicationFromFile.mockResolvedValue({});
-    mockNative.acquirePublicationFromJSON.mockResolvedValue({});
+  it('downloads a { url } license and hands native its JSON', async () => {
+    mockNative.acquirePublication.mockResolvedValue({});
+    (global as any).fetch = jest
+      .fn()
+      .mockResolvedValue({ ok: true, text: async () => '{"id":"l1"}' });
+    await LCP.acquirePublication({ url: 'https://x/lcpl' });
+    expect(mockNative.acquirePublication).toHaveBeenCalledWith(
+      { json: '{"id":"l1"}' },
+      undefined
+    );
+
     await LCP.acquirePublication({ path: '/a.lcpl' });
-    await LCP.acquirePublication({ json: '{}' });
-    expect(mockNative.acquirePublicationFromFile).toHaveBeenCalledWith(
-      '/a.lcpl',
-      true,
-      undefined
-    );
-    expect(mockNative.acquirePublicationFromJSON).toHaveBeenCalledWith(
-      '{}',
-      true,
+    expect(mockNative.acquirePublication).toHaveBeenLastCalledWith(
+      { path: '/a.lcpl' },
       undefined
     );
   });
 
-  it('checks the license status before acquiring unless told not to', async () => {
-    mockNative.acquirePublicationFromFile.mockResolvedValue({});
-    await LCP.acquirePublication({ path: '/a.lcpl' }, { checkStatus: false });
-    expect(mockNative.acquirePublicationFromFile).toHaveBeenCalledWith(
-      '/a.lcpl',
-      false,
-      undefined
+  it('passes acquisition options to native, and its rejections back as LcpErrors', async () => {
+    mockNative.acquirePublication.mockResolvedValue({});
+    const options = { checkStatus: false, onProgress: jest.fn() };
+    await LCP.acquirePublication({ path: '/a.lcpl' }, options);
+    expect(mockNative.acquirePublication).toHaveBeenCalledWith(
+      { path: '/a.lcpl' },
+      options
     );
 
-    mockNative.acquirePublicationFromFile.mockRejectedValue(
+    mockNative.acquirePublication.mockRejectedValue(
       new Error('[licenseRevoked] revoked(2026-10-01)')
     );
     await expect(
       LCP.acquirePublication({ path: '/a.lcpl' })
     ).rejects.toMatchObject({ code: 'licenseRevoked' });
+  });
+
+  it("doesn't expose Nitro's HybridObject members", () => {
+    expect('dispose' in LCP).toBe(false);
+    // @ts-expect-error `dispose` would tear down the shared native module.
+    expect(LCP.dispose).toBeUndefined();
   });
 
   it('reports forgetPassphrases as unsupported where the platform lacks it', async () => {

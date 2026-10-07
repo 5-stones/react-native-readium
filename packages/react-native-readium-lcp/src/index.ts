@@ -1,25 +1,24 @@
 import { NitroModules } from 'react-native-nitro-modules';
+import type { HybridObject } from 'react-native-nitro-modules';
 
-import type {
-  LcpAcquiredPublication,
-  LcpCapabilities,
-  LcpAuthRequest,
-  LcpErrorCode,
-  LcpInitOptions,
-  LcpLicenseInfo,
-  LcpLicenseStatus,
-  ReadiumLCP,
-} from './specs/ReadiumLCP.nitro';
+import type { LcpErrorCode, ReadiumLCP } from './specs/ReadiumLCP.nitro';
 
 export type {
+  AcquirePublicationOptions,
+  AddPassphraseOptions,
+  GetLicenseOptions,
   LcpAcquiredPublication,
-  LcpCapabilities,
   LcpAuthReason,
-  LcpErrorCode,
   LcpAuthRequest,
+  LcpCapabilities,
+  LcpErrorCode,
   LcpInitOptions,
+  LcpLicense,
+  LcpAuthHandler,
   LcpLicenseStatus,
   LcpLink,
+  LcplSource,
+  RenewLoanOptions,
 } from './specs/ReadiumLCP.nitro';
 
 /** Every `LcpErrorCode`, to recognize the codes native code sends. */
@@ -100,7 +99,10 @@ const formatDate = (date: Date) =>
     day: 'numeric',
   });
 
-/** A user-facing English message for an error. */
+/**
+ * The plain-English message an {@link LcpError} with this code carries, for a code you already
+ * have, such as a license's `restriction`.
+ */
 export function describeLcpError(
   code: LcpErrorCode,
   { date, devicesCount, maxRenewDate, detail }: LcpErrorDetails = {}
@@ -172,32 +174,6 @@ export function describeLcpError(
   }
 }
 
-/** Resolve with the passphrase (cleartext or SHA-256 hex), or null to give up. */
-export type LcpAuthHandler = (
-  request: LcpAuthRequest
-) => Promise<string | null | undefined>;
-
-export type LcplSource = { path: string } | { json: string } | { url: string };
-
-export interface LcpLicense {
-  id: string;
-  provider: string;
-  issued: Date;
-  updated: Date;
-  start?: Date;
-  end?: Date;
-  status?: LcpLicenseStatus;
-  /** Characters left to copy; undefined when unlimited. */
-  charactersToCopyLeft?: number;
-  /** Pages left to print; undefined when unlimited. */
-  pagesToPrintLeft?: number;
-  canRenewLoan: boolean;
-  maxRenewDate?: Date;
-  canReturnPublication: boolean;
-  /** Why the book can't be read with this license, if it can't; see `describeLcpError`. */
-  restriction?: LcpErrorCode;
-}
-
 let nativeLCP: ReadiumLCP | undefined;
 const native = (): ReadiumLCP => {
   nativeLCP ??= NitroModules.createHybridObject<ReadiumLCP>('ReadiumLCP');
@@ -237,7 +213,8 @@ const toLcpError = (error: unknown): unknown => {
   });
 };
 
-const bridged = async <T>(call: () => Promise<T>): Promise<T> => {
+/** Calls native, rejecting with an `LcpError` where native rejects with its coded text. */
+const lcpCall = async <T>(call: () => Promise<T>): Promise<T> => {
   try {
     return await call();
   } catch (error) {
@@ -261,117 +238,65 @@ const downloadLcpl = async (url: string): Promise<string> => {
   return response.text();
 };
 
-const toDate = (millis?: number) =>
-  millis === undefined ? undefined : new Date(millis);
+/** Native acquires from a path or JSON, so a `{ url }` license is downloaded here first. */
+const acquirePublication: ReadiumLCP['acquirePublication'] = (
+  source,
+  options
+) =>
+  lcpCall(async () =>
+    native().acquirePublication(
+      source.url === undefined
+        ? source
+        : { json: await downloadLcpl(source.url) },
+      options
+    )
+  );
 
-const toLicense = (info: LcpLicenseInfo): LcpLicense => ({
-  ...info,
-  issued: new Date(info.issued),
-  updated: new Date(info.updated),
-  start: toDate(info.start),
-  end: toDate(info.end),
-  maxRenewDate: toDate(info.maxRenewDate),
-});
-
-export const LCP = {
-  /** What this platform supports, e.g. to hide a "Forget passphrases" button where it can't work. */
-  get capabilities(): LcpCapabilities {
+/**
+ * Readium LCP for `react-native-readium`: initialize it, answer passphrase requests, acquire books
+ * and manage their licenses. See {@link LcpModule} for every method.
+ *
+ * @example
+ * ```ts
+ * import { LCP } from 'react-native-readium-lcp';
+ *
+ * await LCP.initialize();
+ * LCP.setAuthenticationHandler(({ hint }) => promptForPassphrase(hint));
+ * const { localPath } = await LCP.acquirePublication({ url: lcplUrl });
+ * ```
+ *
+ * @group Entry point
+ */
+export const LCP: LcpModule = {
+  get capabilities() {
     return native().capabilities;
   },
-
-  /**
-   * Builds the LCP service and registers it with react-native-readium. Resolves false when the
-   * app doesn't ship liblcp. Must resolve before a `ReadiumView` is given an LCP `file`.
-   */
-  initialize(options?: LcpInitOptions): Promise<boolean> {
-    return bridged(() => native().initialize(options));
-  },
-
-  /**
-   * Answers passphrase requests from JS. Without a handler, a license whose passphrase isn't
-   * already stored fails to open.
-   */
-  setAuthenticationHandler(handler: LcpAuthHandler | null): void {
-    if (!handler) {
-      native().clearAuthenticationHandler();
-      return;
-    }
-    native().setAuthenticationHandler(
-      async (request) => (await handler(request)) ?? undefined
-    );
-  },
-
-  /** Stores a passphrase so licenses it unlocks open without asking. iOS only. */
-  addPassphrase(
-    passphrase: string,
-    options: { isHashed?: boolean } = {}
-  ): Promise<void> {
-    return bridged(() =>
-      native().addPassphrase(passphrase, options.isHashed ?? false)
-    );
-  },
-
-  /**
-   * Removes every stored passphrase, so each license asks again; for signing out or switching
-   * users. Licenses and their consumed print/copy rights are kept. iOS only: rejects with
-   * `unsupported` on Android, where readium-lcp 3.3 keeps its passphrase store internal.
-   */
-  forgetPassphrases(): Promise<void> {
-    return bridged(() => native().forgetPassphrases());
-  },
-
-  /** Downloads the publication an LCPL points to and injects the license into it. */
-  async acquirePublication(
-    lcpl: LcplSource,
-    options: {
-      onProgress?: (fraction: number) => void;
-      /**
-       * Rejects a revoked, returned, cancelled or expired license before downloading anything,
-       * at the cost of one request to the license server. Defaults to true.
-       */
-      checkStatus?: boolean;
-    } = {}
-  ): Promise<LcpAcquiredPublication> {
-    const { onProgress } = options;
-    const checkStatus = options.checkStatus ?? true;
-    if ('path' in lcpl) {
-      return bridged(() =>
-        native().acquirePublicationFromFile(lcpl.path, checkStatus, onProgress)
-      );
-    }
-    const json = 'json' in lcpl ? lcpl.json : await downloadLcpl(lcpl.url);
-    return bridged(() =>
-      native().acquirePublicationFromJSON(json, checkStatus, onProgress)
-    );
-  },
-
-  /** Injects a license into a publication the app downloaded itself. */
-  injectLicense(licenseJSON: string, publicationPath: string): Promise<void> {
-    return bridged(() => native().injectLicense(licenseJSON, publicationPath));
-  },
-
-  /** Validates the license in a local publication; may call the authentication handler. */
-  async getLicense(
-    publicationPath: string,
-    options: { allowUserInteraction?: boolean } = {}
-  ): Promise<LcpLicense> {
-    const info = await bridged(() =>
-      native().getLicense(publicationPath, options.allowUserInteraction ?? true)
-    );
-    return toLicense(info);
-  },
-
-  async renewLoan(
-    publicationPath: string,
-    options: { preferredEndDate?: Date } = {}
-  ): Promise<LcpLicense> {
-    const info = await bridged(() =>
-      native().renewLoan(publicationPath, options.preferredEndDate?.getTime())
-    );
-    return toLicense(info);
-  },
-
-  returnPublication(publicationPath: string): Promise<void> {
-    return bridged(() => native().returnPublication(publicationPath));
-  },
+  initialize: (options) => lcpCall(() => native().initialize(options)),
+  setAuthenticationHandler: (handler) =>
+    native().setAuthenticationHandler(handler),
+  addPassphrase: (passphrase, options) =>
+    lcpCall(() => native().addPassphrase(passphrase, options)),
+  forgetPassphrases: () => lcpCall(() => native().forgetPassphrases()),
+  acquirePublication,
+  injectLicense: (licenseJSON, publicationPath) =>
+    lcpCall(() => native().injectLicense(licenseJSON, publicationPath)),
+  getLicense: (publicationPath, options) =>
+    lcpCall(() => native().getLicense(publicationPath, options)),
+  renewLoan: (publicationPath, options) =>
+    lcpCall(() => native().renewLoan(publicationPath, options)),
+  returnPublication: (publicationPath) =>
+    lcpCall(() => native().returnPublication(publicationPath)),
 };
+
+/**
+ * The API of {@link LCP}, the package's entry point: Readium LCP for `react-native-readium`.
+ *
+ * Every method rejects with an {@link LcpError}. Paths are absolute paths or `file://` URLs.
+ *
+ * @interface
+ * @group Entry point
+ */
+export type LcpModule = Omit<
+  ReadiumLCP,
+  keyof HybridObject<{ ios: 'swift'; android: 'kotlin' }>
+>;

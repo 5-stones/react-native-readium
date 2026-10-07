@@ -8,6 +8,12 @@
 #pragma once
 
 // Forward declarations of C++ defined types
+// Forward declaration of `AcquirePublicationOptions` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct AcquirePublicationOptions; }
+// Forward declaration of `AddPassphraseOptions` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct AddPassphraseOptions; }
+// Forward declaration of `GetLicenseOptions` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct GetLicenseOptions; }
 // Forward declaration of `HybridReadiumLCPSpec` to properly resolve imports.
 namespace margelo::nitro::readiumlcp { class HybridReadiumLCPSpec; }
 // Forward declaration of `LcpAcquiredPublication` to properly resolve imports.
@@ -20,30 +26,37 @@ namespace margelo::nitro::readiumlcp { struct LcpAuthRequest; }
 namespace margelo::nitro::readiumlcp { enum class LcpErrorCode; }
 // Forward declaration of `LcpInitOptions` to properly resolve imports.
 namespace margelo::nitro::readiumlcp { struct LcpInitOptions; }
-// Forward declaration of `LcpLicenseInfo` to properly resolve imports.
-namespace margelo::nitro::readiumlcp { struct LcpLicenseInfo; }
 // Forward declaration of `LcpLicenseStatus` to properly resolve imports.
 namespace margelo::nitro::readiumlcp { enum class LcpLicenseStatus; }
+// Forward declaration of `LcpLicense` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct LcpLicense; }
 // Forward declaration of `LcpLink` to properly resolve imports.
 namespace margelo::nitro::readiumlcp { struct LcpLink; }
+// Forward declaration of `RenewLoanOptions` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct RenewLoanOptions; }
 
 // Forward declarations of Swift defined types
 // Forward declaration of `HybridReadiumLCPSpec_cxx` to properly resolve imports.
 namespace NitroReadiumLCP { class HybridReadiumLCPSpec_cxx; }
 
 // Include C++ defined types
+#include "AcquirePublicationOptions.hpp"
+#include "AddPassphraseOptions.hpp"
+#include "GetLicenseOptions.hpp"
 #include "HybridReadiumLCPSpec.hpp"
 #include "LcpAcquiredPublication.hpp"
 #include "LcpAuthReason.hpp"
 #include "LcpAuthRequest.hpp"
 #include "LcpErrorCode.hpp"
 #include "LcpInitOptions.hpp"
-#include "LcpLicenseInfo.hpp"
+#include "LcpLicense.hpp"
 #include "LcpLicenseStatus.hpp"
 #include "LcpLink.hpp"
+#include "RenewLoanOptions.hpp"
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/PromiseHolder.hpp>
 #include <NitroModules/Result.hpp>
+#include <chrono>
 #include <exception>
 #include <functional>
 #include <memory>
@@ -260,6 +273,21 @@ namespace margelo::nitro::readiumlcp::bridge::swift {
     return Func_void_std__shared_ptr_Promise_std__optional_std__string____Wrapper(std::move(value));
   }
   
+  // pragma MARK: std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<std::optional<std::string>>>>>(const LcpAuthRequest& /* request */)>>
+  /**
+   * Specialized version of `std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<std::optional<std::string>>>>>(const LcpAuthRequest& / * request * /)>>`.
+   */
+  using std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_std__optional_std__string______const_LcpAuthRequest_____request______ = std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<std::optional<std::string>>>>>(const LcpAuthRequest& /* request */)>>;
+  inline std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<std::optional<std::string>>>>>(const LcpAuthRequest& /* request */)>> create_std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_std__optional_std__string______const_LcpAuthRequest_____request______(const std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<std::optional<std::string>>>>>(const LcpAuthRequest& /* request */)>& value) noexcept {
+    return std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<std::optional<std::string>>>>>(const LcpAuthRequest& /* request */)>>(value);
+  }
+  inline bool has_value_std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_std__optional_std__string______const_LcpAuthRequest_____request______(const std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<std::optional<std::string>>>>>(const LcpAuthRequest& /* request */)>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<std::optional<std::string>>>>>(const LcpAuthRequest& /* request */)> get_std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_std__optional_std__string______const_LcpAuthRequest_____request______(const std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<std::optional<std::string>>>>>(const LcpAuthRequest& /* request */)>>& optional) noexcept {
+    return optional.value();
+  }
+  
   // pragma MARK: std::shared_ptr<Promise<void>>
   /**
    * Specialized version of `std::shared_ptr<Promise<void>>`.
@@ -292,6 +320,36 @@ namespace margelo::nitro::readiumlcp::bridge::swift {
   Func_void create_Func_void(void* NON_NULL swiftClosureWrapper) noexcept;
   inline Func_void_Wrapper wrap_Func_void(Func_void value) noexcept {
     return Func_void_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<bool>
+  /**
+   * Specialized version of `std::optional<bool>`.
+   */
+  using std__optional_bool_ = std::optional<bool>;
+  inline std::optional<bool> create_std__optional_bool_(const bool& value) noexcept {
+    return std::optional<bool>(value);
+  }
+  inline bool has_value_std__optional_bool_(const std::optional<bool>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline bool get_std__optional_bool_(const std::optional<bool>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<AddPassphraseOptions>
+  /**
+   * Specialized version of `std::optional<AddPassphraseOptions>`.
+   */
+  using std__optional_AddPassphraseOptions_ = std::optional<AddPassphraseOptions>;
+  inline std::optional<AddPassphraseOptions> create_std__optional_AddPassphraseOptions_(const AddPassphraseOptions& value) noexcept {
+    return std::optional<AddPassphraseOptions>(value);
+  }
+  inline bool has_value_std__optional_AddPassphraseOptions_(const std::optional<AddPassphraseOptions>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline AddPassphraseOptions get_std__optional_AddPassphraseOptions_(const std::optional<AddPassphraseOptions>& optional) noexcept {
+    return optional.value();
   }
   
   // pragma MARK: std::shared_ptr<Promise<LcpAcquiredPublication>>
@@ -365,18 +423,33 @@ namespace margelo::nitro::readiumlcp::bridge::swift {
     return optional.value();
   }
   
-  // pragma MARK: std::optional<double>
+  // pragma MARK: std::optional<AcquirePublicationOptions>
   /**
-   * Specialized version of `std::optional<double>`.
+   * Specialized version of `std::optional<AcquirePublicationOptions>`.
    */
-  using std__optional_double_ = std::optional<double>;
-  inline std::optional<double> create_std__optional_double_(const double& value) noexcept {
-    return std::optional<double>(value);
+  using std__optional_AcquirePublicationOptions_ = std::optional<AcquirePublicationOptions>;
+  inline std::optional<AcquirePublicationOptions> create_std__optional_AcquirePublicationOptions_(const AcquirePublicationOptions& value) noexcept {
+    return std::optional<AcquirePublicationOptions>(value);
   }
-  inline bool has_value_std__optional_double_(const std::optional<double>& optional) noexcept {
+  inline bool has_value_std__optional_AcquirePublicationOptions_(const std::optional<AcquirePublicationOptions>& optional) noexcept {
     return optional.has_value();
   }
-  inline double get_std__optional_double_(const std::optional<double>& optional) noexcept {
+  inline AcquirePublicationOptions get_std__optional_AcquirePublicationOptions_(const std::optional<AcquirePublicationOptions>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<std::chrono::system_clock::time_point>
+  /**
+   * Specialized version of `std::optional<std::chrono::system_clock::time_point>`.
+   */
+  using std__optional_std__chrono__system_clock__time_point_ = std::optional<std::chrono::system_clock::time_point>;
+  inline std::optional<std::chrono::system_clock::time_point> create_std__optional_std__chrono__system_clock__time_point_(const std::chrono::system_clock::time_point& value) noexcept {
+    return std::optional<std::chrono::system_clock::time_point>(value);
+  }
+  inline bool has_value_std__optional_std__chrono__system_clock__time_point_(const std::optional<std::chrono::system_clock::time_point>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::chrono::system_clock::time_point get_std__optional_std__chrono__system_clock__time_point_(const std::optional<std::chrono::system_clock::time_point>& optional) noexcept {
     return optional.value();
   }
   
@@ -395,6 +468,21 @@ namespace margelo::nitro::readiumlcp::bridge::swift {
     return optional.value();
   }
   
+  // pragma MARK: std::optional<double>
+  /**
+   * Specialized version of `std::optional<double>`.
+   */
+  using std__optional_double_ = std::optional<double>;
+  inline std::optional<double> create_std__optional_double_(const double& value) noexcept {
+    return std::optional<double>(value);
+  }
+  inline bool has_value_std__optional_double_(const std::optional<double>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline double get_std__optional_double_(const std::optional<double>& optional) noexcept {
+    return optional.value();
+  }
+  
   // pragma MARK: std::optional<LcpErrorCode>
   /**
    * Specialized version of `std::optional<LcpErrorCode>`.
@@ -410,38 +498,68 @@ namespace margelo::nitro::readiumlcp::bridge::swift {
     return optional.value();
   }
   
-  // pragma MARK: std::shared_ptr<Promise<LcpLicenseInfo>>
+  // pragma MARK: std::shared_ptr<Promise<LcpLicense>>
   /**
-   * Specialized version of `std::shared_ptr<Promise<LcpLicenseInfo>>`.
+   * Specialized version of `std::shared_ptr<Promise<LcpLicense>>`.
    */
-  using std__shared_ptr_Promise_LcpLicenseInfo__ = std::shared_ptr<Promise<LcpLicenseInfo>>;
-  inline std::shared_ptr<Promise<LcpLicenseInfo>> create_std__shared_ptr_Promise_LcpLicenseInfo__() noexcept {
-    return Promise<LcpLicenseInfo>::create();
+  using std__shared_ptr_Promise_LcpLicense__ = std::shared_ptr<Promise<LcpLicense>>;
+  inline std::shared_ptr<Promise<LcpLicense>> create_std__shared_ptr_Promise_LcpLicense__() noexcept {
+    return Promise<LcpLicense>::create();
   }
-  inline PromiseHolder<LcpLicenseInfo> wrap_std__shared_ptr_Promise_LcpLicenseInfo__(std::shared_ptr<Promise<LcpLicenseInfo>> promise) noexcept {
-    return PromiseHolder<LcpLicenseInfo>(std::move(promise));
+  inline PromiseHolder<LcpLicense> wrap_std__shared_ptr_Promise_LcpLicense__(std::shared_ptr<Promise<LcpLicense>> promise) noexcept {
+    return PromiseHolder<LcpLicense>(std::move(promise));
   }
   
-  // pragma MARK: std::function<void(const LcpLicenseInfo& /* result */)>
+  // pragma MARK: std::function<void(const LcpLicense& /* result */)>
   /**
-   * Specialized version of `std::function<void(const LcpLicenseInfo&)>`.
+   * Specialized version of `std::function<void(const LcpLicense&)>`.
    */
-  using Func_void_LcpLicenseInfo = std::function<void(const LcpLicenseInfo& /* result */)>;
+  using Func_void_LcpLicense = std::function<void(const LcpLicense& /* result */)>;
   /**
-   * Wrapper class for a `std::function<void(const LcpLicenseInfo& / * result * /)>`, this can be used from Swift.
+   * Wrapper class for a `std::function<void(const LcpLicense& / * result * /)>`, this can be used from Swift.
    */
-  class Func_void_LcpLicenseInfo_Wrapper final {
+  class Func_void_LcpLicense_Wrapper final {
   public:
-    explicit Func_void_LcpLicenseInfo_Wrapper(std::function<void(const LcpLicenseInfo& /* result */)>&& func): _function(std::make_unique<std::function<void(const LcpLicenseInfo& /* result */)>>(std::move(func))) {}
-    inline void call(LcpLicenseInfo result) const noexcept {
+    explicit Func_void_LcpLicense_Wrapper(std::function<void(const LcpLicense& /* result */)>&& func): _function(std::make_unique<std::function<void(const LcpLicense& /* result */)>>(std::move(func))) {}
+    inline void call(LcpLicense result) const noexcept {
       _function->operator()(result);
     }
   private:
-    std::unique_ptr<std::function<void(const LcpLicenseInfo& /* result */)>> _function;
+    std::unique_ptr<std::function<void(const LcpLicense& /* result */)>> _function;
   } SWIFT_NONCOPYABLE;
-  Func_void_LcpLicenseInfo create_Func_void_LcpLicenseInfo(void* NON_NULL swiftClosureWrapper) noexcept;
-  inline Func_void_LcpLicenseInfo_Wrapper wrap_Func_void_LcpLicenseInfo(Func_void_LcpLicenseInfo value) noexcept {
-    return Func_void_LcpLicenseInfo_Wrapper(std::move(value));
+  Func_void_LcpLicense create_Func_void_LcpLicense(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_LcpLicense_Wrapper wrap_Func_void_LcpLicense(Func_void_LcpLicense value) noexcept {
+    return Func_void_LcpLicense_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<GetLicenseOptions>
+  /**
+   * Specialized version of `std::optional<GetLicenseOptions>`.
+   */
+  using std__optional_GetLicenseOptions_ = std::optional<GetLicenseOptions>;
+  inline std::optional<GetLicenseOptions> create_std__optional_GetLicenseOptions_(const GetLicenseOptions& value) noexcept {
+    return std::optional<GetLicenseOptions>(value);
+  }
+  inline bool has_value_std__optional_GetLicenseOptions_(const std::optional<GetLicenseOptions>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline GetLicenseOptions get_std__optional_GetLicenseOptions_(const std::optional<GetLicenseOptions>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<RenewLoanOptions>
+  /**
+   * Specialized version of `std::optional<RenewLoanOptions>`.
+   */
+  using std__optional_RenewLoanOptions_ = std::optional<RenewLoanOptions>;
+  inline std::optional<RenewLoanOptions> create_std__optional_RenewLoanOptions_(const RenewLoanOptions& value) noexcept {
+    return std::optional<RenewLoanOptions>(value);
+  }
+  inline bool has_value_std__optional_RenewLoanOptions_(const std::optional<RenewLoanOptions>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline RenewLoanOptions get_std__optional_RenewLoanOptions_(const std::optional<RenewLoanOptions>& optional) noexcept {
+    return optional.value();
   }
   
   // pragma MARK: std::shared_ptr<HybridReadiumLCPSpec>
@@ -492,13 +610,13 @@ namespace margelo::nitro::readiumlcp::bridge::swift {
     return Result<std::shared_ptr<Promise<LcpAcquiredPublication>>>::withError(error);
   }
   
-  // pragma MARK: Result<std::shared_ptr<Promise<LcpLicenseInfo>>>
-  using Result_std__shared_ptr_Promise_LcpLicenseInfo___ = Result<std::shared_ptr<Promise<LcpLicenseInfo>>>;
-  inline Result_std__shared_ptr_Promise_LcpLicenseInfo___ create_Result_std__shared_ptr_Promise_LcpLicenseInfo___(const std::shared_ptr<Promise<LcpLicenseInfo>>& value) noexcept {
-    return Result<std::shared_ptr<Promise<LcpLicenseInfo>>>::withValue(value);
+  // pragma MARK: Result<std::shared_ptr<Promise<LcpLicense>>>
+  using Result_std__shared_ptr_Promise_LcpLicense___ = Result<std::shared_ptr<Promise<LcpLicense>>>;
+  inline Result_std__shared_ptr_Promise_LcpLicense___ create_Result_std__shared_ptr_Promise_LcpLicense___(const std::shared_ptr<Promise<LcpLicense>>& value) noexcept {
+    return Result<std::shared_ptr<Promise<LcpLicense>>>::withValue(value);
   }
-  inline Result_std__shared_ptr_Promise_LcpLicenseInfo___ create_Result_std__shared_ptr_Promise_LcpLicenseInfo___(const std::exception_ptr& error) noexcept {
-    return Result<std::shared_ptr<Promise<LcpLicenseInfo>>>::withError(error);
+  inline Result_std__shared_ptr_Promise_LcpLicense___ create_Result_std__shared_ptr_Promise_LcpLicense___(const std::exception_ptr& error) noexcept {
+    return Result<std::shared_ptr<Promise<LcpLicense>>>::withError(error);
   }
 
 } // namespace margelo::nitro::readiumlcp::bridge::swift

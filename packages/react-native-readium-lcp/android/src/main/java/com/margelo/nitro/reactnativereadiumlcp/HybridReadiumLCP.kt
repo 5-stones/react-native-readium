@@ -6,7 +6,7 @@ import com.reactnativereadium.reader.ReaderContentProtectionRegistry
 import com.reactnativereadium.utils.fileFromPath
 import java.io.File
 import org.readium.r2.lcp.LcpError
-import org.readium.r2.lcp.LcpLicense
+import org.readium.r2.lcp.LcpLicense as ReadiumLcpLicense
 import org.readium.r2.lcp.LcpService
 import org.readium.r2.lcp.license.model.LicenseDocument
 import kotlin.time.Instant
@@ -53,16 +53,12 @@ class HybridReadiumLCP : HybridReadiumLCPSpec() {
   }
 
   override fun setAuthenticationHandler(
-    handler: (request: LcpAuthRequest) -> Promise<Promise<String?>>
+    handler: ((request: LcpAuthRequest) -> Promise<Promise<String?>>)?
   ) {
     authentication.handler = handler
   }
 
-  override fun clearAuthenticationHandler() {
-    authentication.handler = null
-  }
-
-  override fun addPassphrase(passphrase: String, isHashed: Boolean): Promise<Unit> =
+  override fun addPassphrase(passphrase: String, options: AddPassphraseOptions?): Promise<Unit> =
     Promise.async {
       // readium-lcp 3.3 keeps its passphrase store internal; answer from the handler instead.
       throw LcpBridgeException(LcpErrorCode.UNSUPPORTED, "addPassphrase is not available on Android.")
@@ -75,36 +71,36 @@ class HybridReadiumLCP : HybridReadiumLCPSpec() {
 
   // MARK: - Acquisition
 
-  override fun acquirePublicationFromFile(
-    lcplPath: String,
-    checkStatus: Boolean,
-    onProgress: ((fraction: Double) -> Unit)?,
+  /** `url` sources are downloaded by the JS layer and arrive here as `json`. */
+  override fun acquirePublication(
+    source: LcplSource,
+    options: AcquirePublicationOptions?,
   ): Promise<LcpAcquiredPublication> = Promise.async {
-    val lcpl = file(lcplPath)
-    if (checkStatus) ensureLicenseIsUsable(lcpl)
-    requireService()
-      .acquirePublication(lcpl, progressReporter(onProgress))
-      .getOrElse { throw it.toException() }
-      .toNitro()
-  }
+    val checkStatus = options?.checkStatus ?: true
+    val progress = progressReporter(options?.onProgress)
+    source.path?.let { path ->
+      val lcpl = file(path)
+      if (checkStatus) ensureLicenseIsUsable(lcpl)
+      return@async requireService()
+        .acquirePublication(lcpl, progress)
+        .getOrElse { throw it.toException() }
+        .toNitro()
+    }
 
-  override fun acquirePublicationFromJSON(
-    lcplJSON: String,
-    checkStatus: Boolean,
-    onProgress: ((fraction: Double) -> Unit)?,
-  ): Promise<LcpAcquiredPublication> = Promise.async {
+    val json = source.json
+      ?: throw LcpBridgeException(LcpErrorCode.OPENFAILED, "The license source needs a path or JSON.")
     if (checkStatus) {
       // Validation reads a license from a file, so check a temporary copy.
       val lcpl = File.createTempFile("acquire-", ".lcpl")
       try {
-        lcpl.writeText(lcplJSON)
+        lcpl.writeText(json)
         ensureLicenseIsUsable(lcpl)
       } finally {
         lcpl.delete()
       }
     }
     requireService()
-      .acquirePublication(lcplJSON.toByteArray(), progressReporter(onProgress))
+      .acquirePublication(json.toByteArray(), progress)
       .getOrElse { throw it.toException() }
       .toNitro()
   }
@@ -139,10 +135,11 @@ class HybridReadiumLCP : HybridReadiumLCPSpec() {
 
   override fun getLicense(
     publicationPath: String,
-    allowUserInteraction: Boolean,
-  ): Promise<LcpLicenseInfo> = Promise.async {
+    options: GetLicenseOptions?,
+  ): Promise<LcpLicense> = Promise.async {
     val lcp = requireService()
     val asset = retrieveAsset(publicationPath)
+    val allowUserInteraction = options?.allowUserInteraction ?: true
     val result = lcp.retrieveLicense(asset, authentication, allowUserInteraction)
     result.getOrNull()?.let { return@async it.toNitro() }
 
@@ -158,12 +155,12 @@ class HybridReadiumLCP : HybridReadiumLCPSpec() {
 
   override fun renewLoan(
     publicationPath: String,
-    preferredEndDate: Double?,
-  ): Promise<LcpLicenseInfo> = Promise.async {
+    options: RenewLoanOptions?,
+  ): Promise<LcpLicense> = Promise.async {
     val license = retrieveLicense(publicationPath, allowUserInteraction = true)
-    val listener = object : LcpLicense.RenewListener {
+    val listener = object : ReadiumLcpLicense.RenewListener {
       override suspend fun preferredEndDate(maximumDate: Instant?): Instant? =
-        preferredEndDate?.let { Instant.fromEpochMilliseconds(it.toLong()) }
+        options?.preferredEndDate?.toKotlin()
 
       override suspend fun openWebPage(url: Url) {
         throw LcpBridgeException(
@@ -200,13 +197,13 @@ class HybridReadiumLCP : HybridReadiumLCPSpec() {
       .getOrElse { throw LcpBridgeException(LcpErrorCode.OPENFAILED, it.message) }
   }
 
-  private suspend fun retrieveLicense(path: String, allowUserInteraction: Boolean): LcpLicense =
+  private suspend fun retrieveLicense(path: String, allowUserInteraction: Boolean): ReadiumLcpLicense =
     requireService()
       .retrieveLicense(retrieveAsset(path), authentication, allowUserInteraction)
       .getOrElse { throw it.toException() }
 
   /** Throttles progress to whole percents, so a fast download doesn't flood the JS thread. */
-  private fun progressReporter(onProgress: ((Double) -> Unit)?): (Double) -> Unit {
+  private fun progressReporter(onProgress: Func_void_double?): (Double) -> Unit {
     if (onProgress == null) return {}
     var lastPercent = -1
     return { fraction ->
@@ -226,34 +223,39 @@ private fun LcpService.AcquiredPublication.toNitro(): LcpAcquiredPublication =
     licenseId = licenseDocument.id,
   )
 
-private fun LcpLicense.toNitro(): LcpLicenseInfo {
+/** Nitro's dates are java.time; Readium's are kotlin.time. */
+private fun Instant.toJava(): java.time.Instant = java.time.Instant.ofEpochMilli(toEpochMilliseconds())
+
+private fun java.time.Instant.toKotlin(): Instant = Instant.fromEpochMilliseconds(toEpochMilli())
+
+private fun ReadiumLcpLicense.toNitro(): LcpLicense {
   val document = license
-  return LcpLicenseInfo(
+  return LcpLicense(
     id = document.id,
     provider = document.provider,
-    issued = document.issued.toEpochMilliseconds().toDouble(),
-    updated = document.updated.toEpochMilliseconds().toDouble(),
-    start = document.rights.start?.toEpochMilliseconds()?.toDouble(),
-    end = document.rights.end?.toEpochMilliseconds()?.toDouble(),
+    issued = document.issued.toJava(),
+    updated = document.updated.toJava(),
+    start = document.rights.start?.toJava(),
+    end = document.rights.end?.toJava(),
     status = status?.status?.let { LcpLicenseStatus.valueOf(it.name.uppercase()) },
     charactersToCopyLeft = charactersToCopyLeft.value?.toDouble(),
     pagesToPrintLeft = pagesToPrintLeft.value?.toDouble(),
     canRenewLoan = canRenewLoan,
-    maxRenewDate = maxRenewDate?.toEpochMilliseconds()?.toDouble(),
+    maxRenewDate = maxRenewDate?.toJava(),
     canReturnPublication = canReturnPublication,
     restriction = null,
   )
 }
 
 /** A license readium-lcp refused, described from its document: nothing can be done with it. */
-private fun LicenseDocument.toNitro(restriction: LcpError): LcpLicenseInfo =
-  LcpLicenseInfo(
+private fun LicenseDocument.toNitro(restriction: LcpError): LcpLicense =
+  LcpLicense(
     id = id,
     provider = provider,
-    issued = issued.toEpochMilliseconds().toDouble(),
-    updated = updated.toEpochMilliseconds().toDouble(),
-    start = rights.start?.toEpochMilliseconds()?.toDouble(),
-    end = rights.end?.toEpochMilliseconds()?.toDouble(),
+    issued = issued.toJava(),
+    updated = updated.toJava(),
+    start = rights.start?.toJava(),
+    end = rights.end?.toJava(),
     status = when (restriction) {
       is LcpError.LicenseStatus.Revoked -> LcpLicenseStatus.REVOKED
       is LcpError.LicenseStatus.Returned -> LcpLicenseStatus.RETURNED

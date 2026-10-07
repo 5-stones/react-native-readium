@@ -19,10 +19,20 @@ namespace margelo::nitro::readiumlcp { struct LcpCapabilities; }
 namespace margelo::nitro::readiumlcp { struct LcpInitOptions; }
 // Forward declaration of `LcpAuthRequest` to properly resolve imports.
 namespace margelo::nitro::readiumlcp { struct LcpAuthRequest; }
+// Forward declaration of `AddPassphraseOptions` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct AddPassphraseOptions; }
 // Forward declaration of `LcpAcquiredPublication` to properly resolve imports.
 namespace margelo::nitro::readiumlcp { struct LcpAcquiredPublication; }
-// Forward declaration of `LcpLicenseInfo` to properly resolve imports.
-namespace margelo::nitro::readiumlcp { struct LcpLicenseInfo; }
+// Forward declaration of `LcplSource` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct LcplSource; }
+// Forward declaration of `AcquirePublicationOptions` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct AcquirePublicationOptions; }
+// Forward declaration of `LcpLicense` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct LcpLicense; }
+// Forward declaration of `GetLicenseOptions` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct GetLicenseOptions; }
+// Forward declaration of `RenewLoanOptions` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct RenewLoanOptions; }
 
 #include "LcpCapabilities.hpp"
 #include <NitroModules/Promise.hpp>
@@ -31,8 +41,13 @@ namespace margelo::nitro::readiumlcp { struct LcpLicenseInfo; }
 #include <string>
 #include "LcpAuthRequest.hpp"
 #include <functional>
+#include "AddPassphraseOptions.hpp"
 #include "LcpAcquiredPublication.hpp"
-#include "LcpLicenseInfo.hpp"
+#include "LcplSource.hpp"
+#include "AcquirePublicationOptions.hpp"
+#include "LcpLicense.hpp"
+#include "GetLicenseOptions.hpp"
+#include "RenewLoanOptions.hpp"
 
 namespace margelo::nitro::readiumlcp {
 
@@ -66,15 +81,13 @@ namespace margelo::nitro::readiumlcp {
     public:
       // Methods
       virtual std::shared_ptr<Promise<bool>> initialize(const std::optional<LcpInitOptions>& options) = 0;
-      virtual void setAuthenticationHandler(const std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<std::optional<std::string>>>>>(const LcpAuthRequest& /* request */)>& handler) = 0;
-      virtual void clearAuthenticationHandler() = 0;
-      virtual std::shared_ptr<Promise<void>> addPassphrase(const std::string& passphrase, bool isHashed) = 0;
+      virtual void setAuthenticationHandler(const std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<std::optional<std::string>>>>>(const LcpAuthRequest& /* request */)>>& handler) = 0;
+      virtual std::shared_ptr<Promise<void>> addPassphrase(const std::string& passphrase, const std::optional<AddPassphraseOptions>& options) = 0;
       virtual std::shared_ptr<Promise<void>> forgetPassphrases() = 0;
-      virtual std::shared_ptr<Promise<LcpAcquiredPublication>> acquirePublicationFromFile(const std::string& lcplPath, bool checkStatus, const std::optional<std::function<void(double /* fraction */)>>& onProgress) = 0;
-      virtual std::shared_ptr<Promise<LcpAcquiredPublication>> acquirePublicationFromJSON(const std::string& lcplJSON, bool checkStatus, const std::optional<std::function<void(double /* fraction */)>>& onProgress) = 0;
+      virtual std::shared_ptr<Promise<LcpAcquiredPublication>> acquirePublication(const LcplSource& source, const std::optional<AcquirePublicationOptions>& options) = 0;
       virtual std::shared_ptr<Promise<void>> injectLicense(const std::string& licenseJSON, const std::string& publicationPath) = 0;
-      virtual std::shared_ptr<Promise<LcpLicenseInfo>> getLicense(const std::string& publicationPath, bool allowUserInteraction) = 0;
-      virtual std::shared_ptr<Promise<LcpLicenseInfo>> renewLoan(const std::string& publicationPath, std::optional<double> preferredEndDate) = 0;
+      virtual std::shared_ptr<Promise<LcpLicense>> getLicense(const std::string& publicationPath, const std::optional<GetLicenseOptions>& options) = 0;
+      virtual std::shared_ptr<Promise<LcpLicense>> renewLoan(const std::string& publicationPath, const std::optional<RenewLoanOptions>& options) = 0;
       virtual std::shared_ptr<Promise<void>> returnPublication(const std::string& publicationPath) = 0;
 
     protected:

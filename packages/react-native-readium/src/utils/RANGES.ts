@@ -1,3 +1,4 @@
+/** The range of each numeric preference, as `[min, max]`, e.g. for a slider. */
 export const RANGES = {
   fontSize: [1.0, 3.0],
   wordSpacing: [0.0, 0.5],

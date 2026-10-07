@@ -55,15 +55,13 @@ namespace margelo::nitro::readiumlcp {
   public:
     // Methods
     std::shared_ptr<Promise<bool>> initialize(const std::optional<LcpInitOptions>& options) override;
-    void setAuthenticationHandler(const std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<std::optional<std::string>>>>>(const LcpAuthRequest& /* request */)>& handler) override;
-    void clearAuthenticationHandler() override;
-    std::shared_ptr<Promise<void>> addPassphrase(const std::string& passphrase, bool isHashed) override;
+    void setAuthenticationHandler(const std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<std::optional<std::string>>>>>(const LcpAuthRequest& /* request */)>>& handler) override;
+    std::shared_ptr<Promise<void>> addPassphrase(const std::string& passphrase, const std::optional<AddPassphraseOptions>& options) override;
     std::shared_ptr<Promise<void>> forgetPassphrases() override;
-    std::shared_ptr<Promise<LcpAcquiredPublication>> acquirePublicationFromFile(const std::string& lcplPath, bool checkStatus, const std::optional<std::function<void(double /* fraction */)>>& onProgress) override;
-    std::shared_ptr<Promise<LcpAcquiredPublication>> acquirePublicationFromJSON(const std::string& lcplJSON, bool checkStatus, const std::optional<std::function<void(double /* fraction */)>>& onProgress) override;
+    std::shared_ptr<Promise<LcpAcquiredPublication>> acquirePublication(const LcplSource& source, const std::optional<AcquirePublicationOptions>& options) override;
     std::shared_ptr<Promise<void>> injectLicense(const std::string& licenseJSON, const std::string& publicationPath) override;
-    std::shared_ptr<Promise<LcpLicenseInfo>> getLicense(const std::string& publicationPath, bool allowUserInteraction) override;
-    std::shared_ptr<Promise<LcpLicenseInfo>> renewLoan(const std::string& publicationPath, std::optional<double> preferredEndDate) override;
+    std::shared_ptr<Promise<LcpLicense>> getLicense(const std::string& publicationPath, const std::optional<GetLicenseOptions>& options) override;
+    std::shared_ptr<Promise<LcpLicense>> renewLoan(const std::string& publicationPath, const std::optional<RenewLoanOptions>& options) override;
     std::shared_ptr<Promise<void>> returnPublication(const std::string& publicationPath) override;
 
   private:

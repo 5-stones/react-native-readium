@@ -79,10 +79,10 @@ namespace margelo::nitro::readiumlcp::bridge::swift {
     };
   }
   
-  // pragma MARK: std::function<void(const LcpLicenseInfo& /* result */)>
-  Func_void_LcpLicenseInfo create_Func_void_LcpLicenseInfo(void* NON_NULL swiftClosureWrapper) noexcept {
-    auto swiftClosure = NitroReadiumLCP::Func_void_LcpLicenseInfo::fromUnsafe(swiftClosureWrapper);
-    return [swiftClosure = std::move(swiftClosure)](const LcpLicenseInfo& result) mutable -> void {
+  // pragma MARK: std::function<void(const LcpLicense& /* result */)>
+  Func_void_LcpLicense create_Func_void_LcpLicense(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroReadiumLCP::Func_void_LcpLicense::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const LcpLicense& result) mutable -> void {
       swiftClosure.call(result);
     };
   }

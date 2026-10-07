@@ -3,7 +3,6 @@ import { View, Text, Platform, StyleSheet } from 'react-native';
 import { ReadiumView, useSearch } from 'react-native-readium';
 import type {
   ReadiumViewRef,
-  ReadiumProps,
   Link,
   Locator,
   Decoration,
@@ -15,6 +14,7 @@ import type {
   ReadiumFile,
   ZoomEvent,
   Capabilities,
+  Preferences,
 } from 'react-native-readium';
 
 import { ReaderButton } from './ReaderButton';
@@ -38,8 +38,8 @@ const selectionActions: SelectionAction[] = [
 export interface ReaderHandle {
   toc: Link[] | null;
   location: Locator | undefined;
-  preferences: ReadiumProps['preferences'];
-  setPreferences: (prefs: ReadiumProps['preferences']) => void;
+  preferences: Preferences;
+  setPreferences: (prefs: Preferences) => void;
   navigateToLocator: (locator: Locator) => void;
   navigateToTocItem: (item: Link) => void;
   highlights: Decoration[];
@@ -63,8 +63,8 @@ export interface ReaderHandle {
 
 interface ReaderProps extends BaseReaderProps {
   onReaderReady?: (handle: ReaderHandle) => void;
-  initialPreferences?: ReadiumProps['preferences'];
-  onPreferencesChange?: (preferences: ReadiumProps['preferences']) => void;
+  initialPreferences?: Preferences;
+  onPreferencesChange?: (preferences: Preferences) => void;
 }
 
 export const Reader: React.FC<ReaderProps> = ({

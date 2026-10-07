@@ -14,15 +14,13 @@ public protocol HybridReadiumLCPSpec_protocol: HybridObject {
 
   // Methods
   func initialize(options: LcpInitOptions?) throws -> Promise<Bool>
-  func setAuthenticationHandler(handler: @escaping (_ request: LcpAuthRequest) -> Promise<Promise<String?>>) throws -> Void
-  func clearAuthenticationHandler() throws -> Void
-  func addPassphrase(passphrase: String, isHashed: Bool) throws -> Promise<Void>
+  func setAuthenticationHandler(handler: ((_ request: LcpAuthRequest) -> Promise<Promise<String?>>)?) throws -> Void
+  func addPassphrase(passphrase: String, options: AddPassphraseOptions?) throws -> Promise<Void>
   func forgetPassphrases() throws -> Promise<Void>
-  func acquirePublicationFromFile(lcplPath: String, checkStatus: Bool, onProgress: ((_ fraction: Double) -> Void)?) throws -> Promise<LcpAcquiredPublication>
-  func acquirePublicationFromJSON(lcplJSON: String, checkStatus: Bool, onProgress: ((_ fraction: Double) -> Void)?) throws -> Promise<LcpAcquiredPublication>
+  func acquirePublication(source: LcplSource, options: AcquirePublicationOptions?) throws -> Promise<LcpAcquiredPublication>
   func injectLicense(licenseJSON: String, publicationPath: String) throws -> Promise<Void>
-  func getLicense(publicationPath: String, allowUserInteraction: Bool) throws -> Promise<LcpLicenseInfo>
-  func renewLoan(publicationPath: String, preferredEndDate: Double?) throws -> Promise<LcpLicenseInfo>
+  func getLicense(publicationPath: String, options: GetLicenseOptions?) throws -> Promise<LcpLicense>
+  func renewLoan(publicationPath: String, options: RenewLoanOptions?) throws -> Promise<LcpLicense>
   func returnPublication(publicationPath: String) throws -> Promise<Void>
 }
 

@@ -22,14 +22,24 @@ namespace margelo::nitro::readiumlcp { struct LcpAuthRequest; }
 namespace margelo::nitro::readiumlcp { enum class LcpAuthReason; }
 // Forward declaration of `LcpLink` to properly resolve imports.
 namespace margelo::nitro::readiumlcp { struct LcpLink; }
+// Forward declaration of `AddPassphraseOptions` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct AddPassphraseOptions; }
 // Forward declaration of `LcpAcquiredPublication` to properly resolve imports.
 namespace margelo::nitro::readiumlcp { struct LcpAcquiredPublication; }
-// Forward declaration of `LcpLicenseInfo` to properly resolve imports.
-namespace margelo::nitro::readiumlcp { struct LcpLicenseInfo; }
+// Forward declaration of `LcplSource` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct LcplSource; }
+// Forward declaration of `AcquirePublicationOptions` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct AcquirePublicationOptions; }
+// Forward declaration of `LcpLicense` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct LcpLicense; }
 // Forward declaration of `LcpLicenseStatus` to properly resolve imports.
 namespace margelo::nitro::readiumlcp { enum class LcpLicenseStatus; }
 // Forward declaration of `LcpErrorCode` to properly resolve imports.
 namespace margelo::nitro::readiumlcp { enum class LcpErrorCode; }
+// Forward declaration of `GetLicenseOptions` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct GetLicenseOptions; }
+// Forward declaration of `RenewLoanOptions` to properly resolve imports.
+namespace margelo::nitro::readiumlcp { struct RenewLoanOptions; }
 
 #include "LcpCapabilities.hpp"
 #include <NitroModules/Promise.hpp>
@@ -41,10 +51,16 @@ namespace margelo::nitro::readiumlcp { enum class LcpErrorCode; }
 #include "LcpAuthReason.hpp"
 #include "LcpLink.hpp"
 #include <vector>
+#include "AddPassphraseOptions.hpp"
 #include "LcpAcquiredPublication.hpp"
-#include "LcpLicenseInfo.hpp"
+#include "LcplSource.hpp"
+#include "AcquirePublicationOptions.hpp"
+#include "LcpLicense.hpp"
+#include <chrono>
 #include "LcpLicenseStatus.hpp"
 #include "LcpErrorCode.hpp"
+#include "GetLicenseOptions.hpp"
+#include "RenewLoanOptions.hpp"
 
 #include "NitroReadiumLCP-Swift-Cxx-Umbrella.hpp"
 
@@ -106,20 +122,14 @@ namespace margelo::nitro::readiumlcp {
       auto __value = std::move(__result.value());
       return __value;
     }
-    inline void setAuthenticationHandler(const std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<std::optional<std::string>>>>>(const LcpAuthRequest& /* request */)>& handler) override {
+    inline void setAuthenticationHandler(const std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<std::optional<std::string>>>>>(const LcpAuthRequest& /* request */)>>& handler) override {
       auto __result = _swiftPart.setAuthenticationHandler(handler);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
     }
-    inline void clearAuthenticationHandler() override {
-      auto __result = _swiftPart.clearAuthenticationHandler();
-      if (__result.hasError()) [[unlikely]] {
-        std::rethrow_exception(__result.error());
-      }
-    }
-    inline std::shared_ptr<Promise<void>> addPassphrase(const std::string& passphrase, bool isHashed) override {
-      auto __result = _swiftPart.addPassphrase(passphrase, std::forward<decltype(isHashed)>(isHashed));
+    inline std::shared_ptr<Promise<void>> addPassphrase(const std::string& passphrase, const std::optional<AddPassphraseOptions>& options) override {
+      auto __result = _swiftPart.addPassphrase(passphrase, options);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
@@ -134,16 +144,8 @@ namespace margelo::nitro::readiumlcp {
       auto __value = std::move(__result.value());
       return __value;
     }
-    inline std::shared_ptr<Promise<LcpAcquiredPublication>> acquirePublicationFromFile(const std::string& lcplPath, bool checkStatus, const std::optional<std::function<void(double /* fraction */)>>& onProgress) override {
-      auto __result = _swiftPart.acquirePublicationFromFile(lcplPath, std::forward<decltype(checkStatus)>(checkStatus), onProgress);
-      if (__result.hasError()) [[unlikely]] {
-        std::rethrow_exception(__result.error());
-      }
-      auto __value = std::move(__result.value());
-      return __value;
-    }
-    inline std::shared_ptr<Promise<LcpAcquiredPublication>> acquirePublicationFromJSON(const std::string& lcplJSON, bool checkStatus, const std::optional<std::function<void(double /* fraction */)>>& onProgress) override {
-      auto __result = _swiftPart.acquirePublicationFromJSON(lcplJSON, std::forward<decltype(checkStatus)>(checkStatus), onProgress);
+    inline std::shared_ptr<Promise<LcpAcquiredPublication>> acquirePublication(const LcplSource& source, const std::optional<AcquirePublicationOptions>& options) override {
+      auto __result = _swiftPart.acquirePublication(std::forward<decltype(source)>(source), options);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
@@ -158,16 +160,16 @@ namespace margelo::nitro::readiumlcp {
       auto __value = std::move(__result.value());
       return __value;
     }
-    inline std::shared_ptr<Promise<LcpLicenseInfo>> getLicense(const std::string& publicationPath, bool allowUserInteraction) override {
-      auto __result = _swiftPart.getLicense(publicationPath, std::forward<decltype(allowUserInteraction)>(allowUserInteraction));
+    inline std::shared_ptr<Promise<LcpLicense>> getLicense(const std::string& publicationPath, const std::optional<GetLicenseOptions>& options) override {
+      auto __result = _swiftPart.getLicense(publicationPath, options);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
       auto __value = std::move(__result.value());
       return __value;
     }
-    inline std::shared_ptr<Promise<LcpLicenseInfo>> renewLoan(const std::string& publicationPath, std::optional<double> preferredEndDate) override {
-      auto __result = _swiftPart.renewLoan(publicationPath, preferredEndDate);
+    inline std::shared_ptr<Promise<LcpLicense>> renewLoan(const std::string& publicationPath, const std::optional<RenewLoanOptions>& options) override {
+      auto __result = _swiftPart.renewLoan(publicationPath, options);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

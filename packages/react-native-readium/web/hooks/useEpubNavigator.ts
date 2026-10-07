@@ -22,8 +22,10 @@ import { toPublicationErrorEvent } from '../../src/utils/publicationError';
 interface RefProps
   extends Pick<
     ReadiumProps,
-    'file' | 'onLocationChange' | 'onPublicationReady' | 'onPreferencesChanged' | 'onPublicationError' | 'preferences'
+    'file' | 'onLocationChange' | 'onPublicationReady' | 'onPreferencesChanged' | 'onPublicationError'
   > {
+  /** Always set: ReadiumView defaults it. */
+  preferences: NonNullable<ReadiumProps['preferences']>;
   container: HTMLElement | null;
   onPositionChange?: (position: number | null) => void;
 }

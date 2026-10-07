@@ -8,6 +8,7 @@ import {
   useDecorationsObserver,
 } from '../../web/hooks';
 import { convertToNavigatorLocator } from '../../web/utils/locationNormalizer';
+import type { Preferences } from '../interfaces';
 import type {
   ReadiumProps as BaseReadiumProps,
   ReadiumViewRef as BaseReadiumViewRef,
@@ -25,11 +26,14 @@ export type ReadiumViewRef = BaseReadiumViewRef & {
   prevPage: () => void;
 };
 
+/** One object for every render, so effects that depend on `preferences` don't rerun. */
+const NO_PREFERENCES: Preferences = {};
+
 export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
   (
     {
       file,
-      preferences,
+      preferences = NO_PREFERENCES,
       decorations,
       onLocationChange,
       onPublicationReady,

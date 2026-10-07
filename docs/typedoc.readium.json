@@ -1,0 +1,9 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "extends": ["./typedoc.base.json"],
+  "entryPoints": ["../packages/react-native-readium/src/index.tsx"],
+  "tsconfig": "../packages/react-native-readium/tsconfig.json",
+  "out": "./core/api",
+  "docsPath": "./core",
+  "groupOrder": ["Components", "Hooks", "*"]
+}

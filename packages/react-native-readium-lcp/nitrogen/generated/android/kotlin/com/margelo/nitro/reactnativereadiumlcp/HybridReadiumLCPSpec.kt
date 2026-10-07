@@ -35,44 +35,26 @@ abstract class HybridReadiumLCPSpec: HybridObject() {
   @Keep
   abstract fun initialize(options: LcpInitOptions?): Promise<Boolean>
   
-  abstract fun setAuthenticationHandler(handler: (request: LcpAuthRequest) -> Promise<Promise<String?>>): Unit
+  abstract fun setAuthenticationHandler(handler: ((request: LcpAuthRequest) -> Promise<Promise<String?>>)?): Unit
   
   @DoNotStrip
   @Keep
-  private fun setAuthenticationHandler_cxx(handler: Func_std__shared_ptr_Promise_std__shared_ptr_Promise_std__optional_std__string______LcpAuthRequest): Unit {
-    val __result = setAuthenticationHandler(handler)
+  private fun setAuthenticationHandler_cxx(handler: Func_std__shared_ptr_Promise_std__shared_ptr_Promise_std__optional_std__string______LcpAuthRequest?): Unit {
+    val __result = setAuthenticationHandler(handler?.let { it })
     return __result
   }
   
   @DoNotStrip
   @Keep
-  abstract fun clearAuthenticationHandler(): Unit
-  
-  @DoNotStrip
-  @Keep
-  abstract fun addPassphrase(passphrase: String, isHashed: Boolean): Promise<Unit>
+  abstract fun addPassphrase(passphrase: String, options: AddPassphraseOptions?): Promise<Unit>
   
   @DoNotStrip
   @Keep
   abstract fun forgetPassphrases(): Promise<Unit>
   
-  abstract fun acquirePublicationFromFile(lcplPath: String, checkStatus: Boolean, onProgress: ((fraction: Double) -> Unit)?): Promise<LcpAcquiredPublication>
-  
   @DoNotStrip
   @Keep
-  private fun acquirePublicationFromFile_cxx(lcplPath: String, checkStatus: Boolean, onProgress: Func_void_double?): Promise<LcpAcquiredPublication> {
-    val __result = acquirePublicationFromFile(lcplPath, checkStatus, onProgress?.let { it })
-    return __result
-  }
-  
-  abstract fun acquirePublicationFromJSON(lcplJSON: String, checkStatus: Boolean, onProgress: ((fraction: Double) -> Unit)?): Promise<LcpAcquiredPublication>
-  
-  @DoNotStrip
-  @Keep
-  private fun acquirePublicationFromJSON_cxx(lcplJSON: String, checkStatus: Boolean, onProgress: Func_void_double?): Promise<LcpAcquiredPublication> {
-    val __result = acquirePublicationFromJSON(lcplJSON, checkStatus, onProgress?.let { it })
-    return __result
-  }
+  abstract fun acquirePublication(source: LcplSource, options: AcquirePublicationOptions?): Promise<LcpAcquiredPublication>
   
   @DoNotStrip
   @Keep
@@ -80,11 +62,11 @@ abstract class HybridReadiumLCPSpec: HybridObject() {
   
   @DoNotStrip
   @Keep
-  abstract fun getLicense(publicationPath: String, allowUserInteraction: Boolean): Promise<LcpLicenseInfo>
+  abstract fun getLicense(publicationPath: String, options: GetLicenseOptions?): Promise<LcpLicense>
   
   @DoNotStrip
   @Keep
-  abstract fun renewLoan(publicationPath: String, preferredEndDate: Double?): Promise<LcpLicenseInfo>
+  abstract fun renewLoan(publicationPath: String, options: RenewLoanOptions?): Promise<LcpLicense>
   
   @DoNotStrip
   @Keep

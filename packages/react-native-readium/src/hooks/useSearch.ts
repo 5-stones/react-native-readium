@@ -9,6 +9,11 @@ import type { SearchOptions, SearchResult } from '../interfaces';
 // publication format and is unknown until a search runs, so we assume `true`.
 const DEFAULT_IS_SUPPORTED = Platform.OS !== 'web';
 
+/**
+ * What {@link useSearch} returns: the accumulated results, their state, and the actions.
+ *
+ * @group Hooks
+ */
 export interface UseSearchResult {
   /** The most recent (trimmed) query passed to `search`. */
   query: string;
@@ -46,6 +51,8 @@ export interface UseSearchResult {
  * The hook serialises page requests internally so a single Readium
  * `SearchIterator` is never advanced concurrently, and ignores responses from a
  * search that has since been superseded or cleared.
+ *
+ * @group Hooks
  */
 export const useSearch = (
   ref: RefObject<ReadiumViewRef | null>

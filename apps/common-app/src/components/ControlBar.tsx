@@ -7,7 +7,6 @@ import {
   Platform,
 } from 'react-native';
 import type {
-  ReadiumProps,
   Link,
   Decoration,
   Locator,
@@ -15,6 +14,7 @@ import type {
   SearchOptions,
   ZoomEvent,
   Capabilities,
+  Preferences,
 } from 'react-native-readium';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -25,8 +25,8 @@ import { HighlightManager } from './highlights';
 import { SearchPanel } from './SearchPanel';
 
 interface ControlBarProps {
-  preferences: ReadiumProps['preferences'];
-  onPreferencesChange: (preferences: ReadiumProps['preferences']) => void;
+  preferences: Preferences;
+  onPreferencesChange: (preferences: Preferences) => void;
   toc: Link[] | null;
   onNavigateToTocItem: (item: Link) => void;
   highlights: Decoration[];
