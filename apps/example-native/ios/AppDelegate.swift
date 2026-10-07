@@ -2,12 +2,6 @@ import UIKit
 import React
 import React_RCTAppDelegate
 import ReactAppDependencyProvider
-#if canImport(R2LCPClient)
-import R2LCPClient
-#endif
-#if canImport(R2LCPClient) || DEBUG
-import ReadiumLCP
-#endif
 
 @main
 class AppDelegate: RCTAppDelegate {
@@ -19,8 +13,7 @@ class AppDelegate: RCTAppDelegate {
     var lcpClient = "none"
 
 #if canImport(R2LCPClient)
-    // Hands react-native-readium-lcp the liblcp it can't link itself.
-    RNRLCPClientRegistry.registerClient(LiblcpClient())
+    // Linked by readium_lcp_pods; react-native-readium-lcp adapts and registers it itself.
     lcpClient = "liblcp"
 #elseif DEBUG
     // Without liblcp, debug builds open LCP's basic-profile test books (passphrase "test").
@@ -48,20 +41,3 @@ class AppDelegate: RCTAppDelegate {
 #endif
   }
 }
-
-#if canImport(R2LCPClient)
-/// Facade to EDRLab's proprietary R2LCPClient, as the Readium LCP guide describes.
-final class LiblcpClient: ReadiumLCP.LCPClient {
-  func createContext(jsonLicense: String, hashedPassphrase: LCPPassphraseHash, pemCrl: String) throws -> LCPClientContext {
-    try R2LCPClient.createContext(jsonLicense: jsonLicense, hashedPassphrase: hashedPassphrase, pemCrl: pemCrl)
-  }
-
-  func decrypt(data: Data, using context: LCPClientContext) -> Data? {
-    R2LCPClient.decrypt(data: data, using: context as! DRMContext)
-  }
-
-  func findOneValidPassphrase(jsonLicense: String, hashedPassphrases: [LCPPassphraseHash]) -> LCPPassphraseHash? {
-    R2LCPClient.findOneValidPassphrase(jsonLicense: jsonLicense, hashedPassphrases: hashedPassphrases)
-  }
-}
-#endif

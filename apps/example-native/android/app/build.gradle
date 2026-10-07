@@ -121,24 +121,19 @@ android {
     }
 }
 
-// Opt-in LCP: liblcp is private and licensed per app by EDRLab, so point READIUM_LCP_AAR (or
-// -PreadiumLcpAar) at the .aar they gave you. LCP also needs cleartext traffic, which debug
-// builds already allow.
-def liblcpAar = System.getenv('READIUM_LCP_AAR') ?: project.findProperty('readiumLcpAar')
+// Opt-in LCP: links EDRLab's liblcp when READIUM_LCP_ANDROID_AAR is set, here in ../../.env
+// (gitignored; see ../../.env.default). Sets readiumLcpLinked.
+apply from: "../../../../node_modules/react-native-readium-lcp/android/liblcp.gradle"
 
-if (!liblcpAar) {
+if (!readiumLcpLinked) {
     // Without liblcp, debug builds open LCP's basic-profile test books (passphrase "test").
     android.sourceSets.debug.java.srcDirs += "src/lcpTestClient/java"
 }
 // Tells the app which LCP client it was built with, to show it in the LCP tab.
 android.buildFeatures.buildConfig = true
-android.defaultConfig.buildConfigField("boolean", "LIBLCP", liblcpAar ? "true" : "false")
+android.defaultConfig.buildConfigField("boolean", "LIBLCP", readiumLcpLinked ? "true" : "false")
 
 dependencies {
-    if (liblcpAar) {
-        implementation files(liblcpAar)
-    }
-
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 

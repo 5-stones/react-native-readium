@@ -47,21 +47,31 @@ Thats it! :tada:, you should now be running the example project.
 The app always includes `react-native-readium-lcp`. Debug builds without liblcp use a
 stand-in client that only opens test licenses (see [Testing LCP without liblcp](#4-testing-lcp-without-liblcp));
 release builds without liblcp report "Unavailable" on the LCP tab, whose **Client** line shows
-which one you have. liblcp itself is private and licensed per app by
-[EDRLab](https://www.edrlab.org/contact/), so point the build at what they gave you:
+which one you have.
 
-**iOS:** install pods with the `R2LCPClient` podspec URL:
+To use EDRLab's liblcp instead, test or production, configure it in `apps/example-native/.env`.
+liblcp and its integration instructions are private to EDRLab's partners, so none of it is in this
+repo: copy `.env.default` to `.env` (gitignored) and fill in the values from EDRLab's instructions.
+Variables set in the shell override the file. These are `react-native-readium-lcp`'s own settings,
+read by its `readium_lcp_pods` and `liblcp.gradle`; see its README.
 
-```sh
-cd apps/example-native/ios
-READIUM_LCP_PODSPEC=https://… pod install
-```
+| Variable | Platform | Value |
+| --- | --- | --- |
+| `READIUM_LCP_IOS_PODSPEC` | iOS | The `R2LCPClient` podspec URL |
+| `READIUM_LCP_ANDROID_AAR` | Android | Path to the liblcp `.aar`, absolute or relative to this folder |
 
-**Android:** point Gradle at the liblcp AAR:
+On iOS, rerun `pod install` after changing `.env`. Android picks up changes on the next build.
 
-```sh
-READIUM_LCP_AAR=/path/to/liblcp.aar yarn example android
-```
+Linking liblcp is local to you: with it linked, `Podfile.lock` and the Xcode project list
+`R2LCPClient` (the podspec URL itself is redacted), so don't commit them. A pre-commit hook
+(`scripts/check-liblcp-leaks.js`, installed by `yarn`) refuses commits that include them or your
+podspec URL, and CI runs the same check. To commit iOS project changes, rerun `pod install` with
+`READIUM_LCP_IOS_PODSPEC` unset first.
+
+To switch between the test and production libs, change the values in `.env` and rebuild.
+
+A test build of liblcp opens only test licenses, such as the bundled Daisy book and front-test
+purchases; the generated Moby Dick has no valid signature, so it fails with `licenseIntegrity`.
 
 In the app's **LCP** tab, paste an LCPL URL (or an absolute path to an `.lcpl` on the device)
 and tap **Acquire publication**. The book joins the tab's list; tap it to read, entering its
@@ -84,7 +94,7 @@ If opening fails:
 | Error | Cause |
 | --- | --- |
 | `restricted: crlFetching` (iOS) | The app can't download EDRLab's revocation list over HTTP; the app's `Info.plist` must allow `crl.edrlab.telesec.de` |
-| `restricted: licenseProfileNotSupported` | Not a basic-profile license, so the debug stand-in can't open it; build with EDRLab's liblcp |
+| `restricted: licenseProfileNotSupported` | A production license: neither the debug stand-in nor EDRLab's test lib opens it; it needs a production lib |
 | `protectionNotSupported` | No LCP client at all (**Client: None**) |
 | `restricted` after cancelling the prompt | Expected: no passphrase, no book |
 
