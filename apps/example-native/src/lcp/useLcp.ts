@@ -9,14 +9,36 @@ export type LcpStatus = 'initializing' | 'ready' | 'unavailable' | 'failed';
 
 /** Books acquired from an LCPL, kept across launches. */
 const libraryPath = `${RNFS.DocumentDirectoryPath}/lcp-library.json`;
+/** Where acquired books are kept, apart from the bundled ones. */
+const booksDir = `${RNFS.DocumentDirectoryPath}/lcp-books`;
+
+/**
+ * A library entry on disk. It keeps the file's name, not its path: iOS can move the app's
+ * Documents folder between installs. Entries saved before that keep their absolute `asset`.
+ */
+type StoredBook = Omit<BookOption, 'asset'> & {
+  fileName?: string;
+  asset?: string;
+};
 
 async function loadLibrary(): Promise<BookOption[]> {
   if (!(await RNFS.exists(libraryPath))) return [];
-  return JSON.parse(await RNFS.readFile(libraryPath, 'utf8'));
+  const stored: StoredBook[] = JSON.parse(
+    await RNFS.readFile(libraryPath, 'utf8')
+  );
+  return stored.map(({ fileName, asset, ...book }) => ({
+    ...book,
+    asset: fileName ? `${booksDir}/${fileName}` : asset ?? '',
+  }));
 }
 
 async function saveLibrary(books: BookOption[]): Promise<void> {
-  await RNFS.writeFile(libraryPath, JSON.stringify(books), 'utf8');
+  const stored: StoredBook[] = books.map(({ asset, ...book }) =>
+    asset.startsWith(`${booksDir}/`)
+      ? { ...book, fileName: asset.slice(booksDir.length + 1) }
+      : { ...book, asset }
+  );
+  await RNFS.writeFile(libraryPath, JSON.stringify(stored), 'utf8');
 }
 
 /**
@@ -75,8 +97,11 @@ export function useLcp() {
         lcpl.startsWith('/') ? { path: lcpl } : { url: lcpl },
         { onProgress: setProgress }
       );
-      // The library picks a temporary location; keep the book where the app can find it.
-      const path = `${RNFS.DocumentDirectoryPath}/${acquired.suggestedFilename}`;
+      // The library picks a temporary location; keep the book where the app can find it,
+      // named by its license so two licenses for the same publication don't share a file.
+      const licenseId = acquired.licenseId.replace(/[^\w.-]/g, '_');
+      const path = `${booksDir}/${licenseId}-${acquired.suggestedFilename}`;
+      await RNFS.mkdir(booksDir);
       if (await RNFS.exists(path)) await RNFS.unlink(path);
       await RNFS.moveFile(acquired.localPath, path);
 
