@@ -85,11 +85,20 @@ describe('isSupportedPublicationURL', () => {
  */
 describe('agreement with normalizePublicationURL', () => {
   it.each([
-    ['https://example.com/book_epub/manifest.json', 'https://example.com/book_epub/'],
+    [
+      'https://example.com/book_epub/manifest.json',
+      'https://example.com/book_epub/',
+    ],
     // Case is not the filename's business for either of them.
-    ['https://example.com/book_epub/MANIFEST.JSON', 'https://example.com/book_epub/'],
+    [
+      'https://example.com/book_epub/MANIFEST.JSON',
+      'https://example.com/book_epub/',
+    ],
     // The base is read off the path, so a '/' in the query is not a separator.
-    ['https://example.com/book_epub/manifest.json?p=a/b', 'https://example.com/book_epub/'],
+    [
+      'https://example.com/book_epub/manifest.json?p=a/b',
+      'https://example.com/book_epub/',
+    ],
   ])('derives the directory of %s', (url, expected) => {
     expect(isEpubURL(url)).toBe(true);
     expect(normalizePublicationURL(url)).toBe(expected);

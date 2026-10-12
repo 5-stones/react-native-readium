@@ -36,9 +36,7 @@ export const useHighlights = () => {
 
     if (existing) {
       return groups.map((g) =>
-        g.name === 'highlights'
-          ? { ...g, decorations: newHighlights }
-          : g
+        g.name === 'highlights' ? { ...g, decorations: newHighlights } : g
       );
     }
     return [...groups, { name: 'highlights', decorations: newHighlights }];

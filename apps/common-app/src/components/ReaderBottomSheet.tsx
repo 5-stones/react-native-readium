@@ -1,5 +1,12 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -40,10 +47,10 @@ const BookDetails: React.FC<{
       <Text style={styles.detailsAuthor}>{book.author}</Text>
 
       <Text style={styles.detailsDescription}>
-        This view demonstrates that the ReadiumView native Fragment is
-        properly removed when React unmounts the Reader component. If the
-        Fragment cleanup is broken, this view will be covered by the stale
-        WebView and the button below will not be pressable.
+        This view demonstrates that the ReadiumView native Fragment is properly
+        removed when React unmounts the Reader component. If the Fragment
+        cleanup is broken, this view will be covered by the stale WebView and
+        the button below will not be pressable.
       </Text>
 
       <TouchableOpacity style={styles.openReaderButton} onPress={onOpenReader}>

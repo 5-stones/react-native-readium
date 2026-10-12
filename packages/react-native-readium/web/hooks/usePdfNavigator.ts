@@ -17,7 +17,7 @@ import type {
   PublicationErrorEvent,
 } from '../../src/interfaces';
 import { assessCapabilities, pdfCapabilities } from '../utils/capabilities';
-import { PdfNavigator } from '../classes'
+import { PdfNavigator } from '../classes';
 import { isPdfURL, mapPdfPreferences } from '../utils';
 import { toPublicationErrorEvent } from '../../src/utils/publicationError';
 
@@ -157,7 +157,9 @@ export const usePdfNavigator = ({
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
-    const target = wrapper.querySelector<HTMLElement>(`[data-page-number="${n}"]`);
+    const target = wrapper.querySelector<HTMLElement>(
+      `[data-page-number="${n}"]`
+    );
     if (!target) return;
 
     isNavigatingRef.current = true;
@@ -228,7 +230,7 @@ export const usePdfNavigator = ({
           break;
       }
       if (!onPreferencesChanged) return;
-      onPreferencesChanged({capabilities: pdfCapabilities(preferences)});
+      onPreferencesChanged({ capabilities: pdfCapabilities(preferences) });
     },
     [fitWidth, fitHeight, fitContain, fitCover]
   );
@@ -255,7 +257,8 @@ export const usePdfNavigator = ({
       const result: Link[] = [];
       for (const node of nodes) {
         const pageNum = await resolveDestToPageNumber(node.dest);
-        const href = pageNum != null ? `${PDF_PUBLICATION_HREF}#page=${pageNum}` : '';
+        const href =
+          pageNum != null ? `${PDF_PUBLICATION_HREF}#page=${pageNum}` : '';
 
         const children = node.items?.length
           ? await flattenOutline(node.items, depth + 1)
@@ -304,8 +307,14 @@ export const usePdfNavigator = ({
     [pageCount, scrollToPage]
   );
 
-  const goForward = useCallback(() => goToPage(pageNumber + 1), [goToPage, pageNumber]);
-  const goBackward = useCallback(() => goToPage(pageNumber - 1), [goToPage, pageNumber]);
+  const goForward = useCallback(
+    () => goToPage(pageNumber + 1),
+    [goToPage, pageNumber]
+  );
+  const goBackward = useCallback(
+    () => goToPage(pageNumber - 1),
+    [goToPage, pageNumber]
+  );
 
   const goToLocator = useCallback(
     (locator: Locator) => {
@@ -319,8 +328,14 @@ export const usePdfNavigator = ({
     [goToPage]
   );
 
-  const zoomIn = useCallback(() => setZoom(zoomRef.current * ZOOM_STEP), [setZoom]);
-  const zoomOut = useCallback(() => setZoom(zoomRef.current / ZOOM_STEP), [setZoom]);
+  const zoomIn = useCallback(
+    () => setZoom(zoomRef.current * ZOOM_STEP),
+    [setZoom]
+  );
+  const zoomOut = useCallback(
+    () => setZoom(zoomRef.current / ZOOM_STEP),
+    [setZoom]
+  );
   const resetZoom = useCallback(() => setZoom(1), [setZoom]);
 
   // ── Build the strip ────────────────────────────────────────────────────────
@@ -417,7 +432,11 @@ export const usePdfNavigator = ({
             canvas.width = Math.max(1, Math.floor(viewport.width));
             canvas.height = Math.max(1, Math.floor(viewport.height));
 
-            const task = page.render({ canvasContext: context, viewport, canvas });
+            const task = page.render({
+              canvasContext: context,
+              viewport,
+              canvas,
+            });
             renderTasks.set(pageNumber, task);
             await task.promise;
           } catch (err: any) {
@@ -487,7 +506,11 @@ export const usePdfNavigator = ({
 
         // Measured in parallel: `getPage` is a round trip to the worker, and
         // doing them one after another delays the strip by the whole document.
-        for (let start = 1; start <= pdf.numPages; start += VIEWPORT_CONCURRENCY) {
+        for (
+          let start = 1;
+          start <= pdf.numPages;
+          start += VIEWPORT_CONCURRENCY
+        ) {
           if (cancelled) return;
 
           const batch: Promise<void>[] = [];
@@ -600,7 +623,13 @@ export const usePdfNavigator = ({
         if (!cancelled) {
           setIsReady(false);
           onError(error);
-          onPublicationError?.(toPublicationErrorEvent({ url, code: 'openFailed', message: String((error as any)?.message ?? error) }));
+          onPublicationError?.(
+            toPublicationErrorEvent({
+              url,
+              code: 'openFailed',
+              message: String((error as any)?.message ?? error),
+            })
+          );
         }
       }
     })();
@@ -635,7 +664,15 @@ export const usePdfNavigator = ({
     appliedInitialLocationFor.current = url;
     if (initialLocation) goToLocator(initialLocation);
     else if (initialPage > 1) goToPage(initialPage);
-  }, [isPdf, isReady, url, initialLocation, initialPage, goToLocator, goToPage]);
+  }, [
+    isPdf,
+    isReady,
+    url,
+    initialLocation,
+    initialPage,
+    goToLocator,
+    goToPage,
+  ]);
 
   useEffect(() => {
     appliedInitialLocationFor.current = null;
@@ -688,7 +725,8 @@ export const usePdfNavigator = ({
   // ── Zoom gestures ──────────────────────────────────────────────────────────
 
   useEffect(() => {
-    if (!isPdf || !isReady || !container || typeof window === 'undefined') return;
+    if (!isPdf || !isReady || !container || typeof window === 'undefined')
+      return;
 
     /**
      * Shows a zoom before the pages have been re-rasterised for it.
@@ -736,7 +774,9 @@ export const usePdfNavigator = ({
       // Exponential, so a given amount of finger travel changes the zoom by the
       // same proportion wherever it starts from, and zooming out retraces
       // zooming in exactly.
-      showPreview((preview ?? zoomRef.current) * Math.exp(-event.deltaY * 0.01));
+      showPreview(
+        (preview ?? zoomRef.current) * Math.exp(-event.deltaY * 0.01)
+      );
 
       // Wheel events have no end, so the gesture is over once they stop.
       if (wheelTimer) clearTimeout(wheelTimer);
@@ -836,8 +876,6 @@ export const usePdfNavigator = ({
     };
   }, [isPdf, isReady, container, setZoom, restyleInPlace]);
 
-
-
   const pdfNavigator = useMemo(() => {
     if (!isPdf) return undefined;
     setNavigatorId((prev) => prev + 1);
@@ -875,18 +913,18 @@ export const usePdfNavigator = ({
     submitPreferences,
   ]);
 
-    useDeepCompareEffect(() => {
-      if (!pdfNavigator || !preferences) return;
+  useDeepCompareEffect(() => {
+    if (!pdfNavigator || !preferences) return;
 
-      const mappedPreferences = mapPdfPreferences(preferences);
-      Promise.resolve(
-        pdfNavigator.submitPreferences(mappedPreferences as Preferences)
-      ).then(() => {
-        onPreferencesChanged?.({
-          capabilities: assessCapabilities(pdfNavigator, mappedPreferences),
-        });
+    const mappedPreferences = mapPdfPreferences(preferences);
+    Promise.resolve(
+      pdfNavigator.submitPreferences(mappedPreferences as Preferences)
+    ).then(() => {
+      onPreferencesChanged?.({
+        capabilities: assessCapabilities(pdfNavigator, mappedPreferences),
       });
-    }, [preferences, navigatorId]);
+    });
+  }, [preferences, navigatorId]);
 
   return pdfNavigator;
 };

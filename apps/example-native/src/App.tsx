@@ -6,12 +6,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { HomeScreen, ReaderBottomSheet } from 'common-app';
 import type { BookOption } from 'common-app';
 
-import {
-  LcpPanel,
-  LicenseModal,
-  PassphrasePrompt,
-  useLcp,
-} from './lcp';
+import { LcpPanel, LicenseModal, PassphrasePrompt, useLcp } from './lcp';
 import { TabBar } from './TabBar';
 import type { Tab } from './TabBar';
 import type { LcpClientKind } from './lcp';

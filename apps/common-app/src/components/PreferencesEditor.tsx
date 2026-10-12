@@ -69,17 +69,20 @@ export const PreferencesEditor = ({
     });
   };
 
-  const nextFit = useCallback((fit?: 'cover' | 'contain' | 'width' | 'height') => {
-    if (fit === FIT.contain) {
-      return FIT.cover;
-    } else if (fit === FIT.cover) {
-      return FIT.height;
-    } else if (fit === FIT.height) {
-      return FIT.width;
-    } else {
-      return FIT.contain;
-    }
-  }, []);
+  const nextFit = useCallback(
+    (fit?: 'cover' | 'contain' | 'width' | 'height') => {
+      if (fit === FIT.contain) {
+        return FIT.cover;
+      } else if (fit === FIT.cover) {
+        return FIT.height;
+      } else if (fit === FIT.height) {
+        return FIT.width;
+      } else {
+        return FIT.contain;
+      }
+    },
+    []
+  );
 
   const handleFitChange = () => {
     onChange({
@@ -107,15 +110,18 @@ export const PreferencesEditor = ({
 
   type ColumnCount = 'auto' | '1' | '2';
 
-  const nextColumnCount = useCallback((columnCount?: ColumnCount ): ColumnCount => {
-    if (columnCount === 'auto') {
-      return '1';
-    } else if (columnCount === '1') {
-      return '2';
-    } else {
-      return 'auto';
-    }
-  }, []);
+  const nextColumnCount = useCallback(
+    (columnCount?: ColumnCount): ColumnCount => {
+      if (columnCount === 'auto') {
+        return '1';
+      } else if (columnCount === '1') {
+        return '2';
+      } else {
+        return 'auto';
+      }
+    },
+    []
+  );
 
   const handleColumnCountChange = () => {
     onChange({
@@ -128,15 +134,16 @@ export const PreferencesEditor = ({
     onChange({
       ...preferences,
       scroll: !preferences.scroll,
-    })
-  }
+    });
+  };
 
   const handleScrollAxisChange = () => {
     onChange({
       ...preferences,
-      scrollAxis: preferences.scrollAxis === "vertical" ? "horizontal" : "vertical",
-    })
-  }
+      scrollAxis:
+        preferences.scrollAxis === 'vertical' ? 'horizontal' : 'vertical',
+    });
+  };
 
   return (
     <>
@@ -237,9 +244,7 @@ export const PreferencesEditor = ({
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styles.settingDescription}>
-              Change the fit
-            </Text>
+            <Text style={styles.settingDescription}>Change the fit</Text>
           </View>
         )}
 
@@ -258,9 +263,7 @@ export const PreferencesEditor = ({
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styles.settingDescription}>
-              Change the spread
-            </Text>
+            <Text style={styles.settingDescription}>Change the spread</Text>
           </View>
         )}
 
@@ -296,13 +299,11 @@ export const PreferencesEditor = ({
                 activeOpacity={0.7}
               >
                 <Text style={styles.themeButtonText}>
-                  {preferences.scroll ? "Scrolling" : "Paginated"}
+                  {preferences.scroll ? 'Scrolling' : 'Paginated'}
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styles.settingDescription}>
-              Scroll or Paginate
-            </Text>
+            <Text style={styles.settingDescription}>Scroll or Paginate</Text>
           </View>
         )}
 
@@ -320,9 +321,7 @@ export const PreferencesEditor = ({
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styles.settingDescription}>
-              Scroll or Paginate
-            </Text>
+            <Text style={styles.settingDescription}>Scroll or Paginate</Text>
           </View>
         )}
       </BaseModal>

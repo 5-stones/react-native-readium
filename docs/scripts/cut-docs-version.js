@@ -23,7 +23,11 @@ const docSets = {
   },
   lcp: {
     command: 'docs:version:lcp',
-    files: ['lcp_versions.json', 'lcp_versioned_docs', 'lcp_versioned_sidebars'],
+    files: [
+      'lcp_versions.json',
+      'lcp_versioned_docs',
+      'lcp_versioned_sidebars',
+    ],
   },
 };
 
@@ -41,7 +45,9 @@ if (!match) {
 }
 const [, major, minor, patch] = match;
 if (patch !== '0') {
-  console.log(`[docs] ${version} is a patch release; not cutting a docs version.`);
+  console.log(
+    `[docs] ${version} is a patch release; not cutting a docs version.`
+  );
   process.exit(0);
 }
 
@@ -51,7 +57,9 @@ const versions = fs.existsSync(versionsFile)
   ? JSON.parse(fs.readFileSync(versionsFile, 'utf8'))
   : [];
 if (versions.includes(name)) {
-  console.log(`[docs] ${docSetName} ${name} already exists; not cutting it again.`);
+  console.log(
+    `[docs] ${docSetName} ${name} already exists; not cutting it again.`
+  );
   process.exit(0);
 }
 

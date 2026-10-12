@@ -137,7 +137,11 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
       [navigator, pdfNavigator]
     );
 
-    useDecorationsObserver(epubNavigator, decorationsRecord, onDecorationActivated);
+    useDecorationsObserver(
+      epubNavigator,
+      decorationsRecord,
+      onDecorationActivated
+    );
 
     // Each navigator decides whether a publication is its own by reading the
     // url, and bails quietly when it isn't. A url neither of them claims would
@@ -242,7 +246,9 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
     if (pdfNavigator) {
       return (
         <View style={styles.container} id="wrapper">
-          {!pdfNavigator.isReady && <div style={loaderStyle}>Loading reader...</div>}
+          {!pdfNavigator.isReady && (
+            <div style={loaderStyle}>Loading reader...</div>
+          )}
           <main
             ref={setContainer}
             style={styles.readiumContainer}

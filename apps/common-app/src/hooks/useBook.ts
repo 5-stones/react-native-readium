@@ -114,7 +114,9 @@ export const useBook = ({ asset, initialLocation }: UseBookOptions) => {
         }
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err : new Error('Failed to load file'));
+          setError(
+            err instanceof Error ? err : new Error('Failed to load file')
+          );
         }
       } finally {
         if (!cancelled) {

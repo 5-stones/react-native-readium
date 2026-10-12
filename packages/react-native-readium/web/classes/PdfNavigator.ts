@@ -1,7 +1,4 @@
-import type {
-  Locator,
-  Preferences,
-} from '../../src/interfaces';
+import type { Locator, Preferences } from '../../src/interfaces';
 
 export class PdfNavigator {
   readonly type = 'pdf' as const;

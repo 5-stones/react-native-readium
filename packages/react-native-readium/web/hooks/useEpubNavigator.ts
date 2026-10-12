@@ -5,7 +5,7 @@ import { EpubNavigator, EpubPreferences } from '@readium/navigator';
 import { Locator, Publication } from '@readium/shared';
 
 import type { ReadiumProps } from '../../src/components/ReadiumView';
-import type { Preferences } from '../../src/interfaces/Preferences'
+import type { Preferences } from '../../src/interfaces/Preferences';
 import {
   assessCapabilities,
   createNavigatorListeners,
@@ -23,7 +23,11 @@ import { toPublicationErrorEvent } from '../../src/utils/publicationError';
 interface RefProps
   extends Pick<
     ReadiumProps,
-    'file' | 'onLocationChange' | 'onPublicationReady' | 'onPreferencesChanged' | 'onPublicationError'
+    | 'file'
+    | 'onLocationChange'
+    | 'onPublicationReady'
+    | 'onPreferencesChanged'
+    | 'onPublicationError'
   > {
   /** Always set: ReadiumView defaults it. */
   preferences: NonNullable<ReadiumProps['preferences']>;
@@ -120,9 +124,10 @@ export const useEpubNavigator = ({
       let positionsArray: Locator[];
       try {
         const manifestPositions = await publication.positionsFromManifest();
-        positionsArray = manifestPositions.length > 0
-          ? manifestPositions
-          : createPositions(publication);
+        positionsArray =
+          manifestPositions.length > 0
+            ? manifestPositions
+            : createPositions(publication);
       } catch {
         positionsArray = createPositions(publication);
       }
@@ -179,13 +184,19 @@ export const useEpubNavigator = ({
 
       navigatorRef.current = nav;
       setNavigator(nav);
-      setNavigatorId((prev) => prev + 1)
+      setNavigatorId((prev) => prev + 1);
     }
 
     initializeNavigator().catch((error) => {
       if (cancelled) return;
       console.error('[react-native-readium] failed to open EPUB', error);
-      onPublicationError?.(toPublicationErrorEvent({ url: file.url, code: 'openFailed', message: String(error?.message ?? error) }));
+      onPublicationError?.(
+        toPublicationErrorEvent({
+          url: file.url,
+          code: 'openFailed',
+          message: String(error?.message ?? error),
+        })
+      );
     });
 
     return () => {
@@ -204,7 +215,10 @@ export const useEpubNavigator = ({
       navigator.submitPreferences(mappedPreferences as EpubPreferences)
     ).then(() => {
       onPreferencesChanged?.({
-        capabilities: assessCapabilities(navigator, mappedPreferences as Preferences),
+        capabilities: assessCapabilities(
+          navigator,
+          mappedPreferences as Preferences
+        ),
       });
     });
   }, [preferences, navigatorId]);

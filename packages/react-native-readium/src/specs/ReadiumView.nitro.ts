@@ -96,7 +96,7 @@ export interface PdfPreferences {
   visibleScrollbar?: boolean;
 }
 
-export interface Preferences extends EpubPreferences, PdfPreferences {};
+export interface Preferences extends EpubPreferences, PdfPreferences {}
 
 // ── Capabilities ─────────────────────────────────────────────────────────────
 
@@ -152,7 +152,6 @@ export type Capabilities = {
   decorations: boolean;
   selection: boolean;
 };
-
 
 // ── Decoration ───────────────────────────────────────────────────────────────
 

@@ -39,9 +39,12 @@ export const useReaderState = (options?: UseReaderStateOptions) => {
     setCapabilities(event.capabilities);
   }, []);
 
-  const handlePreferencesChanged = useCallback((event: PreferencesChangedEvent) => {
-    setCapabilities(event.capabilities);
-  }, [])
+  const handlePreferencesChanged = useCallback(
+    (event: PreferencesChangedEvent) => {
+      setCapabilities(event.capabilities);
+    },
+    []
+  );
 
   return {
     // State

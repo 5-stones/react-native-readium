@@ -17,7 +17,13 @@ export function buildLinkTree(flatLinks: SpecLink[]): Link[] {
   // First pass: create Link nodes (stripping bridge-internal fields)
   const nodes: { link: Link; parentHref?: string; position: number }[] = [];
   for (const flat of flatLinks) {
-    const { depth: _d, hasChildren: _h, parentHref: _p, position: _pos, ...rest } = flat;
+    const {
+      depth: _d,
+      hasChildren: _h,
+      parentHref: _p,
+      position: _pos,
+      ...rest
+    } = flat;
     const link: Link = { ...rest };
     linksByHref.set(link.href, link);
     positionOf.set(link, flat.position ?? 0);

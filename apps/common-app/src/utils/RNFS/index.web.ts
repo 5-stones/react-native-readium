@@ -18,7 +18,8 @@ const RNFSStub = {
   readDir: () => Promise.reject(new Error('RNFS is not supported on web')),
   stat: () => Promise.reject(new Error('RNFS is not supported on web')),
   copyFile: () => Promise.reject(new Error('RNFS is not supported on web')),
-  copyFileAssets: () => Promise.reject(new Error('RNFS is not supported on web')),
+  copyFileAssets: () =>
+    Promise.reject(new Error('RNFS is not supported on web')),
   moveFile: () => Promise.reject(new Error('RNFS is not supported on web')),
   downloadFile: () => ({
     promise: Promise.reject(new Error('RNFS is not supported on web')),
