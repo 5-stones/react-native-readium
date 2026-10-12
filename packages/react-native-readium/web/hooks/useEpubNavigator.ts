@@ -12,6 +12,7 @@ import {
   createPositions,
   extractTableOfContents,
   fetchManifest,
+  isEpubURL,
   mapEpubPreferences,
   normalizeMetadata,
   normalizePublicationURL,
@@ -46,8 +47,7 @@ export const useEpubNavigator = ({
   const [positions, setPositions] = useState<Locator[]>([]);
   const readingOrder = useRef<Locator[]>([]);
 
-  const isEpubUrl = (url: string) => url.toLowerCase().endsWith('manifest.json');
-  const isEpub = !!file?.url && isEpubUrl(file.url);
+  const isEpub = !!file?.url && isEpubURL(file.url);
 
   const onLocationChangeWithTotalProgression = useCallback(
     (newLocation: Locator) => {
