@@ -1,4 +1,4 @@
-import React, { useEffect, useImperativeHandle, useState } from 'react';
+import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { View, StyleSheet } from 'react-native';
 
@@ -8,6 +8,8 @@ import {
   useDecorationsObserver,
 } from '../../web/hooks';
 import { convertToNavigatorLocator } from '../../web/utils/locationNormalizer';
+import { isSupportedPublicationURL } from '../../web/utils/publicationFormat';
+import { toPublicationErrorEvent } from '../utils/publicationError';
 import type { Preferences } from '../interfaces';
 import type {
   ReadiumProps as BaseReadiumProps,
@@ -136,6 +138,47 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
     );
 
     useDecorationsObserver(epubNavigator, decorationsRecord, onDecorationActivated);
+
+    // Each navigator decides whether a publication is its own by reading the
+    // url, and bails quietly when it isn't. A url neither of them claims would
+    // otherwise leave the view on its loading state for good, with nothing
+    // reported — so say so here, where both answers are known.
+    const url = file?.url;
+    // The url already reported for. Keyed on the url rather than left to the
+    // effect's dependencies so that `onPublicationError` can be in them: a
+    // consumer that attaches its handler a render late (one derived from state,
+    // say) would otherwise have had its only notification delivered to
+    // undefined, and the view would wait forever — the failure this reports.
+    // It also keeps a development double-invoke to a single event.
+    const reportedURL = useRef<string | undefined>(undefined);
+
+    useEffect(() => {
+      // No url yet is "nothing to open", not a failure.
+      if (url === undefined || isSupportedPublicationURL(url)) {
+        reportedURL.current = undefined;
+        return;
+      }
+
+      if (!onPublicationError || reportedURL.current === url) return;
+      reportedURL.current = url;
+
+      // An empty url is a missing file, which is how both native platforms
+      // report it; a non-empty one no navigator claims is a format we can't
+      // open at all.
+      const report = url
+        ? {
+            code: 'formatNotSupported' as const,
+            message:
+              `Expected a url ending in 'manifest.json' for an unpacked EPUB, ` +
+              `or in '.pdf' for a PDF. Got '${url}'.`,
+          }
+        : {
+            code: 'fileNotFound' as const,
+            message: 'No url was given for the publication.',
+          };
+
+      onPublicationError(toPublicationErrorEvent({ url, ...report }));
+    }, [url, onPublicationError]);
 
     // Generate position label text
     const positionLabel =

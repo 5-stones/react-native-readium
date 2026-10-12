@@ -5,14 +5,23 @@ import {
   Publication,
 } from '@readium/shared';
 import type { Link } from '../../src/interfaces/Link';
+import { isEpubURL } from './publicationFormat';
 
 /**
  * Normalizes a publication URL to ensure it ends with /
  * If URL ends with manifest.json, extracts the base directory
+ *
+ * `isEpubURL` decides what counts as a manifest, so this stays in step with the
+ * check that chose the EPUB navigator in the first place — it used to test the
+ * suffix itself, case sensitively, and so derived a directory of its own for a
+ * url like `MANIFEST.JSON` that the navigator had already accepted.
  */
 export function normalizePublicationURL(url: string): string {
-  if (url.endsWith('manifest.json')) {
-    return url.substring(0, url.lastIndexOf('/') + 1);
+  if (isEpubURL(url)) {
+    // The directory the manifest sits in, taken from the path alone so that a
+    // '/' inside a query or fragment is not mistaken for the last separator.
+    const [path] = url.split(/[?#]/);
+    return path.substring(0, path.lastIndexOf('/') + 1);
   }
   return url.endsWith('/') ? url : `${url}/`;
 }

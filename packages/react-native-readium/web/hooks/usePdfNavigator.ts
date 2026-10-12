@@ -18,7 +18,7 @@ import type {
 } from '../../src/interfaces';
 import { assessCapabilities, pdfCapabilities } from '../utils/capabilities';
 import { PdfNavigator } from '../classes'
-import { mapPdfPreferences } from '../utils';
+import { isPdfURL, mapPdfPreferences } from '../utils';
 import { toPublicationErrorEvent } from '../../src/utils/publicationError';
 
 interface UsePdfNavigatorProps {
@@ -143,8 +143,7 @@ export const usePdfNavigator = ({
   const pageNumberRef = useRef(pageNumber);
   pageNumberRef.current = pageNumber;
 
-  const isPdfUrl = (url: string) => url.toLowerCase().split('?')[0].endsWith('.pdf');
-  const isPdf = !!file?.url && isPdfUrl(file.url);
+  const isPdf = !!file?.url && isPdfURL(file.url);
   const url = file?.url;
 
   const setZoom = useCallback((scale: number) => {
