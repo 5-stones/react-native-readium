@@ -11,7 +11,11 @@ import {
   Platform,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import type { Locator, SearchResult, SearchOptions } from 'react-native-readium';
+import type {
+  Locator,
+  SearchResult,
+  SearchOptions,
+} from 'react-native-readium';
 import { ReaderButton } from './ReaderButton';
 
 export interface SearchPanelProps {
@@ -68,7 +72,9 @@ export const SearchPanel: React.FC<SearchPanelProps> = ({
       const normalize = (s: string) =>
         s.replace(/[\r\n]+/g, ' ').replace(/\s{2,}/g, ' ');
 
-      const rawBefore = item.before ? normalize(item.before).trimStart() : undefined;
+      const rawBefore = item.before
+        ? normalize(item.before).trimStart()
+        : undefined;
       const rawAfter = item.after ? normalize(item.after).trimEnd() : undefined;
 
       const before = rawBefore
@@ -130,7 +136,9 @@ export const SearchPanel: React.FC<SearchPanelProps> = ({
 
   const keyExtractor = useCallback(
     (item: SearchResult, index: number) =>
-      `${item.locator.href}-${item.locator.locations?.progression ?? ''}-${index}`,
+      `${item.locator.href}-${
+        item.locator.locations?.progression ?? ''
+      }-${index}`,
     []
   );
 

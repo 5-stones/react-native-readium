@@ -18,10 +18,7 @@ import type {
 } from 'react-native-readium';
 
 import { ReaderButton } from './ReaderButton';
-import {
-  HighlightColorPicker,
-  HighlightEditDialog,
-} from './highlights';
+import { HighlightColorPicker, HighlightEditDialog } from './highlights';
 
 import { useBook } from '../hooks/useBook';
 import { useReaderState } from '../hooks/useReaderState';
@@ -222,7 +219,9 @@ export const Reader: React.FC<ReaderProps> = ({
   if (error) {
     return (
       <View style={styles.loadingContainer}>
-        <Text>Error loading {fileTypeLabel}: {error.message}</Text>
+        <Text>
+          Error loading {fileTypeLabel}: {error.message}
+        </Text>
       </View>
     );
   }

@@ -51,9 +51,7 @@ export function useLcp() {
   const [books, setBooks] = useState<BookOption[]>([]);
   const [progress, setProgress] = useState<number>();
   const [prompt, setPrompt] = useState<LcpAuthRequest | null>(null);
-  const answer = useRef<((passphrase?: string) => void) | undefined>(
-    undefined
-  );
+  const answer = useRef<((passphrase?: string) => void) | undefined>(undefined);
 
   useEffect(() => {
     LCP.setAuthenticationHandler(

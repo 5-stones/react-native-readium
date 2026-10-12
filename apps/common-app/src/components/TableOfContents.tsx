@@ -45,9 +45,7 @@ const TocItem: React.FC<TocItemProps> = ({
               }}
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             >
-              <Text style={styles.toggleIcon}>
-                {isExpanded ? '▼' : '▶'}
-              </Text>
+              <Text style={styles.toggleIcon}>{isExpanded ? '▼' : '▶'}</Text>
             </TouchableOpacity>
           ) : (
             <View style={styles.togglePlaceholder} />
@@ -58,7 +56,8 @@ const TocItem: React.FC<TocItemProps> = ({
           <Text style={styles.chevron}>›</Text>
         </View>
       </TouchableOpacity>
-      {hasChildren && isExpanded &&
+      {hasChildren &&
+        isExpanded &&
         item.children!.map((child, idx) => (
           <TocItem
             key={child.href + idx}
