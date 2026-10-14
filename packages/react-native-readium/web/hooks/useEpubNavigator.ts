@@ -15,10 +15,10 @@ import {
   isEpubURL,
   mapEpubPreferences,
   normalizeMetadata,
-  normalizePublicationURL,
   sanitizeInitialLocation,
 } from '../utils';
 import { toPublicationErrorEvent } from '../../src/utils/publicationError';
+import { useEpubSource } from './useEpubSource';
 
 interface RefProps
   extends Pick<
@@ -28,6 +28,8 @@ interface RefProps
     | 'onPublicationReady'
     | 'onPreferencesChanged'
     | 'onPublicationError'
+    | 'resolveSource'
+    | 'shouldRefreshSource'
   > {
   /** Always set: ReadiumView defaults it. */
   preferences: NonNullable<ReadiumProps['preferences']>;
@@ -42,12 +44,29 @@ export const useEpubNavigator = ({
   onPublicationReady,
   onPreferencesChanged,
   onPublicationError,
+  resolveSource,
+  shouldRefreshSource,
   container,
   onPositionChange,
 }: RefProps) => {
   const [navigator, setNavigator] = useState<EpubNavigator | null>(null);
   const [navigatorId, setNavigatorId] = useState(0);
+  /**
+   * Bumped to open again with a freshly resolved location — the only way back
+   * from a failed first open, since there is nothing yet to re-point.
+   */
   const navigatorRef = useRef<EpubNavigator | null>(null);
+  /** Retained so a refresh can re-point the open publication's self link. */
+  const publicationRef = useRef<Publication | null>(null);
+  /** Where the publication is read from, and how that is kept readable. */
+  const source = useEpubSource({
+    identity: file.url,
+    resolveSource,
+    shouldRefreshSource,
+    onPublicationError,
+    navigatorRef,
+    publicationRef,
+  });
   const [positions, setPositions] = useState<Locator[]>([]);
   const readingOrder = useRef<Locator[]>([]);
 
@@ -108,15 +127,25 @@ export const useEpubNavigator = ({
     let cancelled = false;
 
     async function initializeNavigator() {
-      // 1. Normalize the publication URL
-      const publicationURL = normalizePublicationURL(file.url);
+      // 1. Normalize the publication URL. `file.url` identifies the book;
+      // `resolveSource` supplies the (expirable) location actually fetched.
+      // A re-open follows a failure, so the location is asked for as a
+      // refresh: a consumer may serve `'open'` from a cache, which would hand
+      // back the one that just failed.
+      const { base: publicationURL } = await source.openAt();
+      if (cancelled) return;
 
       // 2. Fetch and deserialize the manifest
-      const { manifest, fetcher } = await fetchManifest(publicationURL);
+      const { manifest, fetcher } = await fetchManifest(
+        publicationURL,
+        source.fetch,
+        source.baseURL
+      );
       if (cancelled) return;
 
       // 3. Create the publication
       const publication = new Publication({ manifest, fetcher });
+      publicationRef.current = publication;
 
       // 4. Create positions array for navigation
       // Try loading granular positions from manifest (generated server-side),
@@ -194,7 +223,8 @@ export const useEpubNavigator = ({
         toPublicationErrorEvent({
           url: file.url,
           code: 'openFailed',
-          message: String(error?.message ?? error),
+          stage: 'open',
+          detail: String(error?.message ?? error),
         })
       );
     });
@@ -203,8 +233,10 @@ export const useEpubNavigator = ({
       cancelled = true;
       navigatorRef.current?.destroy();
       navigatorRef.current = null;
+      publicationRef.current = null;
       setNavigator(null);
     };
+    // `file.url`, not the resolved location: only a *different* book re-opens.
   }, [isEpub, file.url, container]);
 
   useDeepCompareEffect(() => {
@@ -224,7 +256,10 @@ export const useEpubNavigator = ({
   }, [preferences, navigatorId]);
 
   if (!isEpub) {
-    return { navigator: undefined, positions: [] };
+    return {
+      navigator: undefined,
+      positions: [],
+    };
   }
 
   return { navigator, positions };

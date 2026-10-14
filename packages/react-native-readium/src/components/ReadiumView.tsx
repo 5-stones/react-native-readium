@@ -13,7 +13,7 @@ import type { Dimensions, Preferences } from '../interfaces';
 import type {
   PublicationErrorEvent as NativePublicationErrorEvent,
   PublicationReadyEvent as SpecPublicationReadyEvent,
-} from '../specs/ReadiumView.nitro';
+} from '../specs';
 import { buildLinkTree } from '../utils/buildLinkTree';
 import { toPublicationErrorEvent } from '../utils/publicationError';
 import { NitroReadiumView } from './NitroReadiumView';
@@ -50,6 +50,12 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
       preferences = NO_PREFERENCES,
       decorations,
       selectionActions,
+      resolveSource,
+      shouldRefreshSource,
+      // Taken out of the props spread rather than passed on: the native PDF
+      // viewers zoom by themselves and report nothing, so there is nothing to
+      // relay and nothing to wrap for the bridge.
+      onZoomChange: _onZoomChange,
       ...props
     },
     forwardedRef
@@ -110,10 +116,12 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
             isSupported: false,
           }),
         cancelSearch: () => hybridRef.current?.cancelSearch(),
-        zoomIn: () => {},
-        zoomOut: () => {},
-        setZoom: () => {},
-        resetZoom: () => {},
+        // Forwarded rather than stubbed here: the view is where doing nothing
+        // is decided, and it says so in its own declaration.
+        zoomIn: () => hybridRef.current?.zoomIn(),
+        zoomOut: () => hybridRef.current?.zoomOut(),
+        setZoom: (scale) => hybridRef.current?.setZoom(scale),
+        resetZoom: () => hybridRef.current?.resetZoom(),
       }),
       []
     );
@@ -124,7 +132,7 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
       };
     }, []);
 
-    const isReady = width > 0 && height > 0;
+    const isReady = width > 0 && height > 0 && !!props.file;
 
     return (
       <View style={styles.container} onLayout={onLayout}>
@@ -139,8 +147,15 @@ export const ReadiumView = forwardRef<ReadiumViewRef, ReadiumProps>(
             onPublicationReady={callback(handlePublicationReady)}
             onPreferencesChanged={callback(onPreferencesChanged)}
             onPublicationError={callback((event: NativePublicationErrorEvent) =>
+              // The wording is all JS adds; everything else the view reported.
               onPublicationError?.(toPublicationErrorEvent(event))
             )}
+            {...(resolveSource
+              ? { resolveSource: callback(resolveSource) }
+              : {})}
+            {...(shouldRefreshSource
+              ? { shouldRefreshSource: callback(shouldRefreshSource) }
+              : {})}
             onDecorationActivated={callback(onDecorationActivated ?? noop)}
             onSelectionChange={callback(onSelectionChange ?? noop)}
             onSelectionAction={callback(onSelectionAction ?? noop)}

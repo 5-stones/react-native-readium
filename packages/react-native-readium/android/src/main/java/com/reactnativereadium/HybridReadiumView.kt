@@ -11,6 +11,7 @@ import com.reactnativereadium.reader.BaseReaderFragment
 import com.reactnativereadium.reader.EpubReaderFragment
 import com.reactnativereadium.reader.PdfReaderFragment
 import com.reactnativereadium.reader.ReaderService
+import com.reactnativereadium.reader.SourceRecovery
 import com.reactnativereadium.reader.ReaderViewModel
 import com.reactnativereadium.reader.SearchPageData
 import com.reactnativereadium.reader.SelectionAction as FragmentSelectionAction
@@ -19,7 +20,6 @@ import com.reactnativereadium.utils.nitroPreferencesToPdf
 import com.reactnativereadium.utils.nitroLocatorToReadium
 import com.reactnativereadium.utils.nitroDecorationToReadium
 import com.reactnativereadium.utils.readiumLocatorToNitro
-import com.reactnativereadium.utils.readiumLinkToNitro
 import com.reactnativereadium.utils.flattenReadiumLinks
 import com.reactnativereadium.utils.readiumDecorationToNitro
 import com.reactnativereadium.utils.readiumCapabilities
@@ -35,6 +35,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import org.readium.r2.shared.util.AbsoluteUrl
 
 class HybridReadiumView(private val context: android.content.Context) : HybridReadiumViewSpec() {
   companion object {
@@ -94,7 +95,9 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
       if (isFragmentAdded && value.url == openedKey?.url) return
       // Supersede whatever is showing or still opening.
       if (isFragmentAdded || isBuilding) teardownFragment()
-      buildForViewIfReady()
+      // Opening waits for `afterUpdate`: `resolveSource` is a prop too, and a
+      // publication opened before it arrived would be fetched from its
+      // identity url rather than from a location that works.
     }
 
   override var preferences: Preferences? = null
@@ -119,15 +122,95 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
   override var onPublicationReady: ((event: PublicationReadyEvent) -> Unit)? = null
   override var onPreferencesChanged: ((event: PreferencesChangedEvent) -> Unit)? = null
   override var onPublicationError: ((event: PublicationErrorEvent) -> Unit)? = null
+  override var shouldRefreshSource:
+    ((failure: SourceRequestFailure) -> Promise<Promise<Boolean>>)? = null
+    set(value) {
+      field = value
+      // Awaiting an answer from JS, and surviving one that never comes, is
+      // the view's side of the bridge.
+      recovery.shouldRefresh = value?.let { decide ->
+        { failure -> runCatching { decide(failure).await().await() }.getOrDefault(false) }
+      }
+    }
+  override var resolveSource:
+    ((request: ResolveSourceRequest) -> Promise<Promise<PublicationSource>>)? = null
+    set(value) {
+      field = value
+      recovery.resolveLocation = value?.let { resolve ->
+        { identity ->
+          runCatching {
+            resolve(
+              ResolveSourceRequest(url = identity, reason = SourceRequestReason.REFRESH)
+            ).await().await().url
+          }.getOrNull()
+        }
+      }
+    }
+
+  /**
+   * Answers a failed read by moving the publication. See [SourceRecovery],
+   * which holds the policy, the budget and the one-at-a-time rule.
+   */
+  private val recovery = SourceRecovery(
+    identity = { file?.url },
+    currentLocation = { svc?.sourceLocation?.toString() },
+    apply = { url ->
+      val parsed = runCatching { AbsoluteUrl(url) }.getOrNull()
+      if (parsed != null) svc?.setSourceLocation(parsed)
+      parsed != null
+    },
+    report = { failure ->
+      // The same callback an open failure goes through: what tells the two
+      // apart is the code, and JS turns that into the event's `stage`.
+      onPublicationError?.invoke(
+        PublicationErrorEvent(
+          url = failure.url,
+          code = PublicationErrorCode.READFAILED,
+          stage = PublicationErrorStage.READ,
+          // The wording that goes with `code` is JS's to fill in.
+          message = "",
+          detail = failure.detail,
+          protectionScheme = null,
+          status = failure.status,
+          kind = failure.kind
+        )
+      )
+    }
+  )
+
   override var onDecorationActivated: ((event: DecorationActivatedEvent) -> Unit)? = null
   override var onSelectionChange: ((event: SelectionEvent) -> Unit)? = null
   override var onSelectionAction: ((event: SelectionActionEvent) -> Unit)? = null
+  /**
+   * Never called here. AndroidPdfViewer zooms on a pinch by itself and reports
+   * nothing back, so there is nothing to relay — the prop exists because the
+   * view has one definition, and web does have something to say.
+   */
+  override var onZoomChange: ((event: ZoomEvent) -> Unit)? = null
+
+  /**
+   * Every prop for this render has arrived.
+   *
+   * Props are set one at a time and in no order this view controls, so
+   * opening from any single setter risks opening without the others —
+   * `resolveSource` above all, whose absence means fetching the identity url
+   * itself.
+   */
+  override fun afterUpdate() {
+    buildForViewIfReady()
+  }
 
   private fun ensureService() {
     if (svc == null) {
       val reactContext = (context as? com.facebook.react.uimanager.ThemedReactContext)?.reactApplicationContext
       if (reactContext != null) {
-        svc = ReaderService(reactContext)
+        svc = ReaderService(reactContext).also {
+          it.recoverRead = { url, error -> recovery.answer(url.toString(), error) }
+          it.onReadSucceeded = recovery::noteReadSucceeded
+          // A new publication starts with a whole budget: what the last one
+          // spent says nothing about this one.
+          it.onPublicationOpening = recovery::noteReadSucceeded
+        }
       }
     }
   }
@@ -225,6 +308,16 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
     (fragment as? EpubReaderFragment)?.let { frag -> hostView.post { frag.cancelSearch() } }
   }
 
+  // AndroidPdfViewer owns its own magnification: it zooms on a pinch and takes
+  // no instruction, so these are declared and do nothing. Web implements them.
+  override fun zoomIn() {}
+
+  override fun zoomOut() {}
+
+  override fun setZoom(scale: Double) {}
+
+  override fun resetZoom() {}
+
   private fun unsupportedSearchPage(): SearchPage =
     SearchPage(results = emptyArray(), hasMore = false, totalCount = null, isSupported = false)
 
@@ -288,6 +381,8 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
     isDestroyed = true
 
     teardownFragment()
+    // Nothing is waiting on a relocation for a view that is gone.
+    recovery.close()
     (hostView.parent as? ViewGroup)?.removeView(hostView)
   }
 
@@ -312,9 +407,39 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
     }
 
     scope.launch {
+      // `file.url` names the publication; where its bytes are is something
+      // else, and only the consumer knows. Asked once here, and again by
+      // `recoverRead` when a location stops working.
+      val location = resolveSource?.let { resolve ->
+        val answer = runCatching {
+          resolve(
+            ResolveSourceRequest(url = fileUrl, reason = SourceRequestReason.OPEN)
+          ).await().await().url
+        }
+
+        answer.getOrNull()?.takeIf { it.isNotEmpty() } ?: run {
+          isBuilding = false
+          if (generation == openGeneration) {
+            onPublicationError?.invoke(PublicationErrorEvent(
+              url = fileUrl,
+              code = PublicationErrorCode.OPENFAILED,
+              stage = PublicationErrorStage.OPEN,
+              // The wording that goes with `code` is JS's to fill in.
+              message = "",
+              detail = answer.exceptionOrNull()?.message
+                ?: "resolveSource gave no location for this publication.",
+              protectionScheme = null,
+              status = null,
+              kind = null
+            ))
+          }
+          return@launch
+        }
+      } ?: fileUrl
+
       // A path or a file:// URL as given: fileFromPath decodes the URL's percent-escapes.
       service.openPublication(
-        fileUrl,
+        location,
         initialLocator,
         currentFile.credentials,
         onError = onError@{ error ->
@@ -324,8 +449,14 @@ class HybridReadiumView(private val context: android.content.Context) : HybridRe
           onPublicationError?.invoke(PublicationErrorEvent(
             url = fileUrl,
             code = error.code,
-            message = error.message,
-            protectionScheme = error.protectionScheme
+            stage = PublicationErrorStage.OPEN,
+            // The wording that goes with `code` is JS's to fill in.
+            message = "",
+            detail = error.message,
+            protectionScheme = error.protectionScheme,
+            // Only a failed read has either.
+            status = null,
+            kind = null
           ))
         }
       ) { frag ->

@@ -27,6 +27,7 @@
   ],
   "scripts": {
     "test": "jest",
+    "test:android": "cd ../../apps/example-native/android && ./gradlew :react-native-readium:testDebugUnitTest",
     "typescript": "tsc --noEmit",
     "prepare": "rimraf lib && tsc",
     "nitrogen": "nitrogen",

@@ -22,7 +22,9 @@ class HybridReadiumView: HybridReadiumViewSpec {
       if pendingKey == nil, readerViewController != nil, file.url == loadedKey?.url { return }
       pendingKey = key
       pendingInitialLocation = file.initialLocation
-      tryLoadBook()
+      // Opening waits for `afterUpdate`: `resolveSource` is a prop too, and a
+      // publication opened before it arrived would be fetched from its
+      // identity url rather than from a location that works.
     }
   }
 
@@ -43,22 +45,95 @@ class HybridReadiumView: HybridReadiumViewSpec {
   var selectionActions: [SelectionAction]? = nil {
     didSet {
       selectionActionsReceived = true
-      tryLoadBook()
     }
+  }
+
+  /**
+   Every prop for this render has arrived.
+
+   Props are set one at a time and in no order this view controls, so opening
+   from any single setter risks opening without the others — `resolveSource`
+   above all, whose absence means fetching the identity url itself.
+   */
+  func afterUpdate() {
+    tryLoadBook()
   }
 
   var onLocationChange: ((Locator) -> Void)? = nil
   var onPublicationReady: ((PublicationReadyEvent) -> Void)? = nil
   var onPreferencesChanged: ((PreferencesChangedEvent) -> Void)? = nil
   var onPublicationError: ((PublicationErrorEvent) -> Void)? = nil
+  /// Whether a failed read earns a new location. Left unset, the platform
+  /// decides — see ``looksRefreshable(_:)``.
+  var shouldRefreshSource: ((_ failure: SourceRequestFailure) -> Promise<Promise<Bool>>)? = nil {
+    didSet {
+      recovery.shouldRefresh = shouldRefreshSource.map { decide in
+        { failure in (try? await decide(failure).await().await()) ?? false }
+      }
+    }
+  }
+  /// Asked for a location to retry a failed read against. An empty string
+  /// declines.
+  var resolveSource: ((_ request: ResolveSourceRequest) -> Promise<Promise<PublicationSource>>)? = nil {
+    didSet {
+      // Awaiting an answer from JS, and surviving one that never comes, is
+      // the view's side of the bridge.
+      recovery.resolveLocation = resolveSource.map { resolve in
+        { identity in
+          let request = ResolveSourceRequest(url: identity, reason: .refresh)
+          return try? await resolve(request).await().await().url
+        }
+      }
+    }
+  }
   var onDecorationActivated: ((DecorationActivatedEvent) -> Void)? = nil
   var onSelectionChange: ((SelectionEvent) -> Void)? = nil
   var onSelectionAction: ((SelectionActionEvent) -> Void)? = nil
+  /// Never called here. PDFKit zooms on a pinch by itself and reports nothing
+  /// back, so there is nothing to relay — the prop exists because the view has
+  /// one definition, and web does have something to say.
+  var onZoomChange: ((ZoomEvent) -> Void)? = nil
 
   // MARK: - Private state
 
-  private let hostView = UIView()
-  private var readerService = ReaderService()
+  /**
+   The view handed to React, which reports when it is put on screen.
+
+   An open needs something to present from, and early in a render there may be
+   nothing yet. Android retries from `onViewAttachedToWindow`; this is the
+   same signal.
+   */
+  private final class HostView: UIView {
+    var onAttached: (() -> Void)?
+
+    override func didMoveToWindow() {
+      super.didMoveToWindow()
+      if window != nil { onAttached?() }
+    }
+  }
+
+  private lazy var hostView: HostView = {
+    let view = HostView()
+    view.onAttached = { [weak self] in self?.tryLoadBook() }
+    return view
+  }()
+
+  /// What a reader is presented from, when there is one yet.
+  private var presenter: UIViewController? {
+    UIApplication.shared.delegate?.window??.rootViewController
+  }
+  // Lazy so the service can be handed this view's recovery policy.
+  private lazy var readerService: ReaderService = {
+    let service = ReaderService()
+    service.recoverRead = { [weak self] url, error in
+      await self?.recovery.answer(observed: url.string, error: error) ?? false
+    }
+    service.onReadSucceeded = { [weak self] in self?.recovery.noteReadSucceeded() }
+    // A new publication starts with a whole budget: what the last one spent
+    // says nothing about this one.
+    service.onPublicationOpening = { [weak self] in self?.recovery.noteReadSucceeded() }
+    return service
+  }()
   private var readerViewController: ReaderViewController?
   /// Iterator for the in-flight search, kept alive so results can be paged lazily.
   private var searchIterator: SearchIterator?
@@ -93,6 +168,11 @@ class HybridReadiumView: HybridReadiumViewSpec {
       return
     }
 
+    // Nothing to present from yet. The open stays pending, and attaching to a
+    // window — or the next prop update — tries again; consuming it here would
+    // lose the book with the view believing it had opened.
+    guard presenter != nil else { return }
+
     let initialLoc = pendingInitialLocation
     pendingKey = nil
     pendingInitialLocation = nil
@@ -104,11 +184,58 @@ class HybridReadiumView: HybridReadiumViewSpec {
     loadBook(url: key.url, location: initialLoc, credentials: key.credentials)
   }
 
+  /**
+   `file.url` names the publication; where its bytes are is something else, and
+   only the consumer knows. Asked once here, and again by ``recoverRead`` when
+   a location stops working.
+   */
   private func loadBook(url: String, location: Locator?, credentials: String?) {
     loadGeneration += 1
     let generation = loadGeneration
 
-    guard let rootViewController = UIApplication.shared.delegate?.window??.rootViewController else { return }
+    guard let resolve = resolveSource else {
+      openBook(url: url, location: location, credentials: credentials, generation: generation)
+      return
+    }
+
+    Task { @MainActor [weak self] in
+      guard let self, generation == self.loadGeneration else { return }
+
+      let request = ResolveSourceRequest(url: url, reason: .open)
+      let resolved = try? await resolve(request).await().await().url
+      guard generation == self.loadGeneration else { return }
+
+      guard let resolved, !resolved.isEmpty else {
+        self.onPublicationError?(PublicationErrorEvent(
+          url: url,
+          code: .openfailed,
+          stage: .open,
+          // The wording that goes with `code` is JS's to fill in.
+          message: "",
+          detail: "resolveSource gave no location for this publication.",
+          protectionScheme: nil,
+          status: nil,
+          kind: nil
+        ))
+        return
+      }
+
+      self.openBook(
+        url: resolved,
+        location: location,
+        credentials: credentials,
+        generation: generation
+      )
+    }
+  }
+
+  private func openBook(
+    url: String,
+    location: Locator?,
+    credentials: String?,
+    generation: Int
+  ) {
+    guard let rootViewController = presenter else { return }
 
     // Convert Nitro Locator directly to Readium Locator
     let readiumLocator: RLocator? = location.flatMap { nitroLocatorToReadium($0) }
@@ -140,8 +267,14 @@ class HybridReadiumView: HybridReadiumViewSpec {
           self.onPublicationError?(PublicationErrorEvent(
             url: url,
             code: error.code,
-            message: error.localizedDescription,
-            protectionScheme: error.protectionScheme
+            stage: .open,
+            // The wording that goes with `code` is JS's to fill in.
+            message: "",
+            detail: error.localizedDescription,
+            protectionScheme: error.protectionScheme,
+            // Only a failed read has either.
+            status: nil,
+            kind: nil
           ))
         }
       }
@@ -215,13 +348,6 @@ class HybridReadiumView: HybridReadiumViewSpec {
         }
       }
     }
-  }
-
-  // MARK: - Selection Actions
-
-  private func updateSelectionActions() {
-    guard let actions = selectionActions, !actions.isEmpty else { return }
-    // Selection actions are applied during fragment setup
   }
 
   // MARK: - View lifecycle
@@ -299,6 +425,39 @@ class HybridReadiumView: HybridReadiumViewSpec {
     }
   }
 
+  // MARK: - Source recovery
+
+  /**
+   Answers a failed read by moving the publication. See ``SourceRecovery``,
+   which holds the policy, the budget and the one-at-a-time rule.
+   */
+  private lazy var recovery: SourceRecovery = SourceRecovery(
+    identity: { [weak self] in self?.file?.url },
+    currentLocation: { [weak self] in self?.readerService.sourceLocation?.string },
+    apply: { [weak self] url in
+      guard let parsed = AnyURL(string: url)?.absoluteURL else { return false }
+      self?.readerService.setSourceLocation(parsed)
+      return true
+    },
+    report: { [weak self] failure in
+      // The same callback an open failure goes through: what tells the two
+      // apart is the code, and JS turns that into the event's `stage`.
+      self?.onPublicationError?(
+        PublicationErrorEvent(
+          url: failure.url,
+          code: .readfailed,
+          stage: .read,
+          // The wording that goes with `code` is JS's to fill in.
+          message: "",
+          detail: failure.detail,
+          protectionScheme: nil,
+          status: failure.status,
+          kind: failure.kind
+        )
+      )
+    }
+  )
+
   // MARK: - Imperative navigation
 
   func goTo(locator: Locator) {
@@ -362,6 +521,16 @@ class HybridReadiumView: HybridReadiumViewSpec {
       self.searchIterator = nil
     }
   }
+
+  // PDFKit owns its own magnification: it zooms on a pinch and takes no
+  // instruction, so these are declared and do nothing. Web implements them.
+  func zoomIn() throws {}
+
+  func zoomOut() throws {}
+
+  func setZoom(scale: Double) throws {}
+
+  func resetZoom() throws {}
 
   @MainActor
   private func startSearch(
