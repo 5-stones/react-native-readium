@@ -17,7 +17,9 @@ export function createNavigatorListeners(
 ): EpubNavigatorListeners {
   return {
     frameLoaded: function (_wnd: Window): void {
-      // noop
+      // Deliberately unused: the navigator always passes `_cframes[0]`, not
+      // the frame that loaded, so the argument is only right in a
+      // single-column layout. Nothing can be keyed on it.
     },
     positionChanged: function (_locator: Locator): void {
       onLocationChangeWithTotalProgression(_locator);

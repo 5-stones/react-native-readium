@@ -17,7 +17,6 @@ class ReaderViewController: UIViewController, Loggable {
 
   private(set) var stackView: UIStackView!
   private lazy var positionLabel = UILabel()
-  private var subscriptions = Set<AnyCancellable>()
   private var subject = PassthroughSubject<ReadiumShared.Locator, Never>()
   lazy var publisher = subject.eraseToAnyPublisher()
   private var positionsCount: Int?

@@ -69,17 +69,12 @@ export const useDecorationsObserver = (
     });
   }, [navigator, decorations, onDecorationActivated]);
 
-  // Clean up listeners when component unmounts
+  // Forget which groups were registered when the navigator goes away. Its own
+  // listeners go with it: the navigator exposes no way to remove one, so there
+  // is nothing else to undo here.
   useEffect(() => {
     return () => {
-      if (navigator) {
-        activeGroupsRef.current.forEach((group) => {
-          // Remove decoration listener for each group
-          // Note: This depends on navigator API having a removeDecorationListener method
-          // If not available, listeners will be cleaned up when navigator is destroyed
-        });
-        activeGroupsRef.current.clear();
-      }
+      activeGroupsRef.current.clear();
     };
   }, [navigator]);
 };
