@@ -126,8 +126,8 @@ That runs [release-it](https://github.com/release-it/release-it), which:
 2. snapshots the documentation for a new major or minor, via the `after:bump` hook
    (`docs/scripts/cut-docs-version.js`) — `X.Y.0` becomes docs version `X.Y`, and the snapshot is
    staged so it lands in the release commit. Patches and prereleases don't cut one;
-3. commits as `chore: release X.Y.Z`, tags `vX.Y.Z`, publishes to npm, and opens a GitHub
-   release.
+3. commits as `chore: release X.Y.Z`, tags `vX.Y.Z`, and publishes to npm. It does not create a
+   GitHub release; the tag is the record.
 
 Nothing else needs doing by hand: the package's `prepare` script builds `lib/` before publishing,
 and the tag is what the docs site builds from.
