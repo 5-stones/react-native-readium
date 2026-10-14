@@ -7,19 +7,15 @@
 package com.reactnativereadium.reader
 
 import android.os.Bundle
+import androidx.annotation.DimenRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowInsets
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.reactnativereadium.R
 import com.reactnativereadium.databinding.FragmentReaderBinding
-import com.reactnativereadium.utils.clearPadding
-import com.reactnativereadium.utils.hideSystemUi
-import com.reactnativereadium.utils.padSystemUi
-import com.reactnativereadium.utils.showSystemUi
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -28,7 +24,6 @@ import kotlinx.coroutines.flow.onEach
  */
 abstract class VisualReaderFragment : BaseReaderFragment() {
 
-    private lateinit var navigatorFragment: Fragment
 
     private var _binding: FragmentReaderBinding? = null
     val binding get() = _binding!!
@@ -46,11 +41,9 @@ abstract class VisualReaderFragment : BaseReaderFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        navigatorFragment = navigator as Fragment
 
-        // Initialize position label manager - simple overlay, matching iOS approach
         positionLabelManager = PositionLabelManager(
-            containerView = binding.fragmentReaderContainer,
+            label = binding.positionLabel,
             publication = model.publication,
             lifecycleScope = viewLifecycleOwner.lifecycleScope
         )
@@ -65,13 +58,6 @@ abstract class VisualReaderFragment : BaseReaderFragment() {
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
 
-        childFragmentManager.addOnBackStackChangedListener {
-            updateSystemUiVisibility()
-        }
-        binding.fragmentReaderContainer.setOnApplyWindowInsetsListener { container, insets ->
-            updateSystemUiPadding(container, insets)
-            insets
-        }
     }
 
     override fun onDestroyView() {
@@ -82,27 +68,31 @@ abstract class VisualReaderFragment : BaseReaderFragment() {
     }
 
     /**
-     * Update the text color of the position label.
-     * @param color Android color integer
+     * Sets the reader's colours, which follow the publication's theme.
+     *
+     * One surface and one label: the background belongs to the root view, so
+     * the page's margin, the area behind the label and the label itself all
+     * change in the same breath.
+     *
+     * @param textColor Android color integer for the position label.
+     * @param backgroundColor Android color integer for everything behind the page.
      */
-    fun setPositionLabelColor(color: Int) {
-        positionLabelManager?.setTextColor(color)
+    fun setReaderColors(textColor: Int, backgroundColor: Int) {
+        _binding?.readerRoot?.setBackgroundColor(backgroundColor)
+        positionLabelManager?.setTextColor(textColor)
     }
 
-    fun updateSystemUiVisibility() {
-        if (navigatorFragment.isHidden)
-            requireActivity().showSystemUi()
-        else
-            requireActivity().hideSystemUi()
-
-        requireView().requestApplyInsets()
+    /**
+     * Insets the page by its reading margin.
+     *
+     * The label floats in the bottom one, so this is also what keeps the page
+     * from being laid out underneath it. Applied by the subclass, because a
+     * PDF wants its page edge to edge where a reflowable publication wants a
+     * margin.
+     */
+    protected fun applyReadingMargin(@DimenRes dimen: Int) {
+        val padding = resources.getDimensionPixelSize(dimen)
+        binding.fragmentReaderContainer.setPadding(0, padding, 0, padding)
     }
 
-    private fun updateSystemUiPadding(container: View, insets: WindowInsets) {
-        if (navigatorFragment.isHidden) {
-            container.padSystemUi(insets, requireActivity())
-        } else {
-            container.clearPadding()
-        }
-    }
 }

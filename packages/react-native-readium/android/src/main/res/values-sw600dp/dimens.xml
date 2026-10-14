@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Matching iOS's regular size class, which a tablet corresponds to. -->
+    <dimen name="rnr_reader_vertical_padding">62dp</dimen>
+</resources>

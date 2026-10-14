@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      The reading margin above and below the page.
+
+      Ours rather than the navigator's. Readium's Android navigator applies its
+      own vertical padding, but only when something re-triggers the
+      calculation — which in a React Native host may never happen — and the
+      same calculation adds the display cutout's insets, which are the app's
+      concern, not the reader's. So `shouldApplyInsetsPadding` is off and this
+      stands in for it.
+
+      The value matches iOS, where the navigator insets content by 34 points on
+      a compact size class, so a page reads the same on both platforms. An app
+      that wants a different margin can override this dimension.
+    -->
+    <dimen name="rnr_reader_vertical_padding">34dp</dimen>
+</resources>

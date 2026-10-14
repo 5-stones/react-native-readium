@@ -14,7 +14,10 @@ import androidx.fragment.app.commitNow
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.reactnativereadium.R
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.yield
 import org.readium.r2.navigator.DecorableNavigator
 import org.readium.r2.navigator.SelectableNavigator
 import org.readium.r2.navigator.epub.EpubNavigatorFragment
@@ -102,23 +105,9 @@ class EpubReaderFragment : VisualReaderFragment() {
       if (this::navigator.isInitialized && navigator is EpubNavigatorFragment) {
         (navigator as EpubNavigatorFragment).submitPreferences(userPreferences)
         pendingPreferences = null
-
-        // Update position label color to match theme, similar to iOS implementation
-        updatePositionLabelColor()
       } else {
         pendingPreferences = epubPreferences
       }
-    }
-
-    private fun updatePositionLabelColor() {
-      // Priority 1: Use explicit textColor if set
-      val color = userPreferences.textColor?.int
-      // Priority 2: Use theme's content color
-      ?: userPreferences.theme?.contentColor
-      // Priority 3: Default to dark gray
-      ?: android.graphics.Color.DKGRAY
-
-      setPositionLabelColor(color)
     }
 
     fun updateSelectionActions(actions: List<SelectionAction>) {
@@ -221,6 +210,17 @@ class EpubReaderFragment : VisualReaderFragment() {
                 if (selectionActions.isNotEmpty()) {
                   selectionActionModeCallback = customSelectionActionModeCallback
                 }
+
+                // Safe areas are the host app's concern, not the reader's.
+                //
+                // Left on, the navigator adds the display cutout's insets to
+                // the page's own margins, inside a view the app has already
+                // positioned — so the reading margins vary with the device's
+                // notch, and change again on rotation, while the app's own
+                // insets are applied too. The page keeps its reading margin
+                // (40dp portrait, 20dp landscape, Readium's own dimension);
+                // what it no longer does is guess at the window.
+                shouldApplyInsetsPadding = false
               }
             )
 
@@ -248,9 +248,67 @@ class EpubReaderFragment : VisualReaderFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        applyReadingMargin(R.dimen.rnr_reader_vertical_padding)
+        viewLifecycleOwner.lifecycleScope.launch { followNavigatorColors() }
+    }
 
-        // Set initial position label color based on current preferences
-        updatePositionLabelColor()
+    /**
+     * Keeps the position label's colours in step with the page.
+     *
+     * Driven by the navigator's own `settings` flow rather than by the
+     * preferences we submit, because that is what the navigator reacts to, and
+     * because it is the more truthful value: what Readium resolved from the
+     * preferences, the publication and its defaults.
+     *
+     * The page itself changes later than that, though. A theme reaches the
+     * page as a *second* emission — Readium turns the new Readium CSS into
+     * `readium.setCSSProperties(…)` and sends it to the web views through a
+     * channel — so a label repainted on the settings emission changes a beat
+     * before the page does, which reads as two surfaces changing one after the
+     * other.
+     *
+     * So the label waits for the page: a script of our own, queued behind
+     * Readium's, cannot run until that one has. The wait is bounded because a
+     * web view that never answers must not leave the label the wrong colour
+     * for the rest of the session, and the first emission is applied at once,
+     * there being no page on screen yet to be out of step with.
+     */
+    private suspend fun followNavigatorColors() {
+      val configurable = navigator as? EpubNavigatorFragment ?: return
+      var applied: Pair<Int, Int>? = null
+
+      configurable.settings
+        // `collectLatest`, because waiting on the page suspends: a newer
+        // emission abandons a stale wait rather than queueing behind it.
+        .collectLatest { settings ->
+          val colors = Pair(
+            settings.textColor?.int ?: settings.theme.contentColor,
+            settings.backgroundColor?.int ?: settings.theme.backgroundColor
+          )
+
+          // `settings` emits for every preference, most of which leave the
+          // colours alone — and a page that is not repainting is not worth
+          // waiting for.
+          if (colors == applied) return@collectLatest
+
+          if (applied != null) {
+            // Yield first, so Readium's script is queued ahead of ours.
+            yield()
+            withTimeoutOrNull(PAGE_REPAINT_TIMEOUT_MS) {
+              // Reading a layout property forces style recalculation in the
+              // same task, so this returns after the new colours have been
+              // applied rather than merely after the script that set them.
+              runCatching {
+                configurable.evaluateJavascript(
+                  "document.documentElement.offsetHeight"
+                )
+              }
+            }
+          }
+
+          applied = colors
+          setReaderColors(colors.first, colors.second)
+        }
     }
 
     override fun onResume() {
@@ -343,6 +401,12 @@ class EpubReaderFragment : VisualReaderFragment() {
     }
 
     companion object {
+        /**
+         * How long the position label waits for the page to repaint before
+         * changing colour anyway. A web view that never answers must not leave
+         * the label the wrong colour for the rest of the session.
+         */
+        private const val PAGE_REPAINT_TIMEOUT_MS = 500L
 
         fun newInstance(): EpubReaderFragment {
             return EpubReaderFragment()
