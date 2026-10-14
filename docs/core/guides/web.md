@@ -19,11 +19,13 @@ The web reader fetches a publication over HTTP instead of opening a file:
 
 ## What differs from native
 
-| Feature                 | Web                                                           |
-| ----------------------- | ------------------------------------------------------------- |
-| Search                  | Not supported (`capabilities.search` is false)                |
-| Zoom                    | PDF only; `onZoomChange` reports the scale, including pinches |
-| `file.credentials`, LCP | Not supported: LCP is native only                             |
+| Feature                 | Web                                                                                                                               |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Search                  | Not supported (`capabilities.search` is false)                                                                                    |
+| Text selection          | Not supported (`capabilities.selection` is false): `selectionActions`, `onSelectionChange` and `onSelectionAction` have no effect |
+| `textAlign`             | `start`, `left`, `right` and `justify` only — Readium CSS has no value for `center` or `end`                                      |
+| Zoom                    | PDF only; `onZoomChange` reports the scale, including pinches                                                                     |
+| `file.credentials`, LCP | Not supported: LCP is native only                                                                                                 |
 
 Use `capabilities` from `onPublicationReady` to adapt the UI rather than checking the platform.
 
