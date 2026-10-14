@@ -30,10 +30,16 @@
 
 // Forward declaration of `PublicationErrorCode` to properly resolve imports.
 namespace margelo::nitro::readium { enum class PublicationErrorCode; }
+// Forward declaration of `PublicationErrorStage` to properly resolve imports.
+namespace margelo::nitro::readium { enum class PublicationErrorStage; }
+// Forward declaration of `PublicationErrorKind` to properly resolve imports.
+namespace margelo::nitro::readium { enum class PublicationErrorKind; }
 
 #include <string>
 #include "PublicationErrorCode.hpp"
+#include "PublicationErrorStage.hpp"
 #include <optional>
+#include "PublicationErrorKind.hpp"
 
 namespace margelo::nitro::readium {
 
@@ -44,12 +50,16 @@ namespace margelo::nitro::readium {
   public:
     std::string url     SWIFT_PRIVATE;
     PublicationErrorCode code     SWIFT_PRIVATE;
+    PublicationErrorStage stage     SWIFT_PRIVATE;
     std::string message     SWIFT_PRIVATE;
+    std::optional<std::string> detail     SWIFT_PRIVATE;
     std::optional<std::string> protectionScheme     SWIFT_PRIVATE;
+    std::optional<double> status     SWIFT_PRIVATE;
+    std::optional<PublicationErrorKind> kind     SWIFT_PRIVATE;
 
   public:
     PublicationErrorEvent() = default;
-    explicit PublicationErrorEvent(std::string url, PublicationErrorCode code, std::string message, std::optional<std::string> protectionScheme): url(url), code(code), message(message), protectionScheme(protectionScheme) {}
+    explicit PublicationErrorEvent(std::string url, PublicationErrorCode code, PublicationErrorStage stage, std::string message, std::optional<std::string> detail, std::optional<std::string> protectionScheme, std::optional<double> status, std::optional<PublicationErrorKind> kind): url(url), code(code), stage(stage), message(message), detail(detail), protectionScheme(protectionScheme), status(status), kind(kind) {}
 
   public:
     friend bool operator==(const PublicationErrorEvent& lhs, const PublicationErrorEvent& rhs) = default;
@@ -67,16 +77,24 @@ namespace margelo::nitro {
       return margelo::nitro::readium::PublicationErrorEvent(
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "url"))),
         JSIConverter<margelo::nitro::readium::PublicationErrorCode>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "code"))),
+        JSIConverter<margelo::nitro::readium::PublicationErrorStage>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "stage"))),
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "message"))),
-        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "protectionScheme")))
+        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "detail"))),
+        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "protectionScheme"))),
+        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "status"))),
+        JSIConverter<std::optional<margelo::nitro::readium::PublicationErrorKind>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "kind")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::readium::PublicationErrorEvent& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "url"), JSIConverter<std::string>::toJSI(runtime, arg.url));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "code"), JSIConverter<margelo::nitro::readium::PublicationErrorCode>::toJSI(runtime, arg.code));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "stage"), JSIConverter<margelo::nitro::readium::PublicationErrorStage>::toJSI(runtime, arg.stage));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "message"), JSIConverter<std::string>::toJSI(runtime, arg.message));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "detail"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.detail));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "protectionScheme"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.protectionScheme));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "status"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.status));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "kind"), JSIConverter<std::optional<margelo::nitro::readium::PublicationErrorKind>>::toJSI(runtime, arg.kind));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -89,8 +107,12 @@ namespace margelo::nitro {
       }
       if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "url")))) return false;
       if (!JSIConverter<margelo::nitro::readium::PublicationErrorCode>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "code")))) return false;
+      if (!JSIConverter<margelo::nitro::readium::PublicationErrorStage>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "stage")))) return false;
       if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "message")))) return false;
+      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "detail")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "protectionScheme")))) return false;
+      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "status")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::readium::PublicationErrorKind>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "kind")))) return false;
       return true;
     }
   };

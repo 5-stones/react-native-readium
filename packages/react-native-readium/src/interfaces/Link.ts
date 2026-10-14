@@ -1,4 +1,4 @@
-import type { Link as SpecLink } from '../specs/ReadiumView.nitro';
+import type { Link as SpecLink } from '../specs';
 
 /**
  * An interface representing the Readium Link object.

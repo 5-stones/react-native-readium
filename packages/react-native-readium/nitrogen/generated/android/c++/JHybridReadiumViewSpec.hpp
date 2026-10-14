@@ -66,12 +66,18 @@ namespace margelo::nitro::readium {
     void setOnPreferencesChanged(const std::optional<std::function<void(const PreferencesChangedEvent& /* event */)>>& onPreferencesChanged) override;
     std::optional<std::function<void(const PublicationErrorEvent& /* event */)>> getOnPublicationError() override;
     void setOnPublicationError(const std::optional<std::function<void(const PublicationErrorEvent& /* event */)>>& onPublicationError) override;
+    std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>> getShouldRefreshSource() override;
+    void setShouldRefreshSource(const std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>>& shouldRefreshSource) override;
+    std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>> getResolveSource() override;
+    void setResolveSource(const std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>>& resolveSource) override;
     std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>> getOnDecorationActivated() override;
     void setOnDecorationActivated(const std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>& onDecorationActivated) override;
     std::optional<std::function<void(const SelectionEvent& /* event */)>> getOnSelectionChange() override;
     void setOnSelectionChange(const std::optional<std::function<void(const SelectionEvent& /* event */)>>& onSelectionChange) override;
     std::optional<std::function<void(const SelectionActionEvent& /* event */)>> getOnSelectionAction() override;
     void setOnSelectionAction(const std::optional<std::function<void(const SelectionActionEvent& /* event */)>>& onSelectionAction) override;
+    std::optional<std::function<void(const ZoomEvent& /* event */)>> getOnZoomChange() override;
+    void setOnZoomChange(const std::optional<std::function<void(const ZoomEvent& /* event */)>>& onZoomChange) override;
 
   public:
     // Methods
@@ -82,6 +88,10 @@ namespace margelo::nitro::readium {
     std::shared_ptr<Promise<SearchPage>> search(const std::string& query, const std::optional<SearchOptions>& options) override;
     std::shared_ptr<Promise<SearchPage>> loadMoreSearchResults() override;
     void cancelSearch() override;
+    void zoomIn() override;
+    void zoomOut() override;
+    void setZoom(double scale) override;
+    void resetZoom() override;
 
   private:
     jni::global_ref<JHybridReadiumViewSpec::JavaPart> _javaPart;

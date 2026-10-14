@@ -29,12 +29,20 @@ namespace margelo::nitro::readium { struct PublicationReadyEvent; }
 namespace margelo::nitro::readium { struct PreferencesChangedEvent; }
 // Forward declaration of `PublicationErrorEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct PublicationErrorEvent; }
+// Forward declaration of `SourceRequestFailure` to properly resolve imports.
+namespace margelo::nitro::readium { struct SourceRequestFailure; }
+// Forward declaration of `PublicationSource` to properly resolve imports.
+namespace margelo::nitro::readium { struct PublicationSource; }
+// Forward declaration of `ResolveSourceRequest` to properly resolve imports.
+namespace margelo::nitro::readium { struct ResolveSourceRequest; }
 // Forward declaration of `DecorationActivatedEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct DecorationActivatedEvent; }
 // Forward declaration of `SelectionEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct SelectionEvent; }
 // Forward declaration of `SelectionActionEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct SelectionActionEvent; }
+// Forward declaration of `ZoomEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct ZoomEvent; }
 // Forward declaration of `SearchPage` to properly resolve imports.
 namespace margelo::nitro::readium { struct SearchPage; }
 // Forward declaration of `SearchOptions` to properly resolve imports.
@@ -51,11 +59,15 @@ namespace margelo::nitro::readium { struct SearchOptions; }
 #include "PublicationReadyEvent.hpp"
 #include "PreferencesChangedEvent.hpp"
 #include "PublicationErrorEvent.hpp"
+#include <NitroModules/Promise.hpp>
+#include "SourceRequestFailure.hpp"
+#include "PublicationSource.hpp"
+#include "ResolveSourceRequest.hpp"
 #include "DecorationActivatedEvent.hpp"
 #include "SelectionEvent.hpp"
 #include "SelectionActionEvent.hpp"
+#include "ZoomEvent.hpp"
 #include "SearchPage.hpp"
-#include <NitroModules/Promise.hpp>
 #include <string>
 #include "SearchOptions.hpp"
 
@@ -102,12 +114,18 @@ namespace margelo::nitro::readium {
       virtual void setOnPreferencesChanged(const std::optional<std::function<void(const PreferencesChangedEvent& /* event */)>>& onPreferencesChanged) = 0;
       virtual std::optional<std::function<void(const PublicationErrorEvent& /* event */)>> getOnPublicationError() = 0;
       virtual void setOnPublicationError(const std::optional<std::function<void(const PublicationErrorEvent& /* event */)>>& onPublicationError) = 0;
+      virtual std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>> getShouldRefreshSource() = 0;
+      virtual void setShouldRefreshSource(const std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>>& shouldRefreshSource) = 0;
+      virtual std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>> getResolveSource() = 0;
+      virtual void setResolveSource(const std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>>& resolveSource) = 0;
       virtual std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>> getOnDecorationActivated() = 0;
       virtual void setOnDecorationActivated(const std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>& onDecorationActivated) = 0;
       virtual std::optional<std::function<void(const SelectionEvent& /* event */)>> getOnSelectionChange() = 0;
       virtual void setOnSelectionChange(const std::optional<std::function<void(const SelectionEvent& /* event */)>>& onSelectionChange) = 0;
       virtual std::optional<std::function<void(const SelectionActionEvent& /* event */)>> getOnSelectionAction() = 0;
       virtual void setOnSelectionAction(const std::optional<std::function<void(const SelectionActionEvent& /* event */)>>& onSelectionAction) = 0;
+      virtual std::optional<std::function<void(const ZoomEvent& /* event */)>> getOnZoomChange() = 0;
+      virtual void setOnZoomChange(const std::optional<std::function<void(const ZoomEvent& /* event */)>>& onZoomChange) = 0;
 
     public:
       // Methods
@@ -118,6 +136,10 @@ namespace margelo::nitro::readium {
       virtual std::shared_ptr<Promise<SearchPage>> search(const std::string& query, const std::optional<SearchOptions>& options) = 0;
       virtual std::shared_ptr<Promise<SearchPage>> loadMoreSearchResults() = 0;
       virtual void cancelSearch() = 0;
+      virtual void zoomIn() = 0;
+      virtual void zoomOut() = 0;
+      virtual void setZoom(double scale) = 0;
+      virtual void resetZoom() = 0;
 
     protected:
       // Hybrid Setup

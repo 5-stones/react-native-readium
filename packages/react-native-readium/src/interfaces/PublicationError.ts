@@ -1,19 +1,17 @@
-import type {
-  PublicationErrorCode,
-  PublicationErrorEvent as NativePublicationErrorEvent,
-} from '../specs/ReadiumView.nitro';
+import type { PublicationErrorCode } from '../specs';
 
 /**
- * The publication could not be opened. `url`, `code` and `protectionScheme` are as native reports
- * them; `message` and `detail` are described below.
+ * Something went wrong with a publication.
+ *
+ * The view's own event, declared in `src/specs/ReadiumView.nitro.ts` and
+ * delivered as it is — `message` filled in from `code` on the way out. Branch
+ * on `stage` before deciding how bad it is: an `'open'` failure means there is
+ * nothing to read, while a `'read'` failure leaves the publication open and
+ * the reader where they were.
  */
-export interface PublicationErrorEvent
-  extends Omit<NativePublicationErrorEvent, 'message'> {
-  /** A default English description of `code`, the same on every platform. */
-  message: string;
-  /** The platform's own description of what went wrong, for logs. Varies by platform. */
-  detail?: string;
-}
+// The event is declared in `src/specs/errors.nitro.ts`, and documented there:
+// a re-export carries no documentation of its own.
+export type { PublicationErrorEvent } from '../specs';
 
 /** The default English description of a `PublicationErrorCode`, as `message` reports it. */
 export function describePublicationError(code: PublicationErrorCode): string {
@@ -30,5 +28,10 @@ export function describePublicationError(code: PublicationErrorCode): string {
       return 'Access to this publication was refused.';
     case 'cancelled':
       return 'Opening the publication was cancelled.';
+    case 'readFailed':
+      // Deliberately not phrased as a failure to open: a consumer that shows
+      // this verbatim, without branching on `stage`, should still be telling
+      // the truth.
+      return "Part of this publication couldn't be loaded.";
   }
 }

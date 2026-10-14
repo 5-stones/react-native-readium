@@ -106,6 +106,26 @@ namespace margelo::nitro::readium::views {
         throw std::runtime_error(std::string("ReadiumView.onPublicationError: ") + exc.what());
       }
     }()),
+    shouldRefreshSource([&]() -> CachedProp<std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>>> {
+      try {
+        const react::RawValue* rawValue = rawProps.at("shouldRefreshSource", nullptr, nullptr);
+        if (rawValue == nullptr) return sourceProps.shouldRefreshSource;
+        const auto& [runtime, value] = (std::pair<jsi::Runtime*, jsi::Value>)*rawValue;
+        return CachedProp<std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.shouldRefreshSource);
+      } catch (const std::exception& exc) {
+        throw std::runtime_error(std::string("ReadiumView.shouldRefreshSource: ") + exc.what());
+      }
+    }()),
+    resolveSource([&]() -> CachedProp<std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>>> {
+      try {
+        const react::RawValue* rawValue = rawProps.at("resolveSource", nullptr, nullptr);
+        if (rawValue == nullptr) return sourceProps.resolveSource;
+        const auto& [runtime, value] = (std::pair<jsi::Runtime*, jsi::Value>)*rawValue;
+        return CachedProp<std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.resolveSource);
+      } catch (const std::exception& exc) {
+        throw std::runtime_error(std::string("ReadiumView.resolveSource: ") + exc.what());
+      }
+    }()),
     onDecorationActivated([&]() -> CachedProp<std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>> {
       try {
         const react::RawValue* rawValue = rawProps.at("onDecorationActivated", nullptr, nullptr);
@@ -136,6 +156,16 @@ namespace margelo::nitro::readium::views {
         throw std::runtime_error(std::string("ReadiumView.onSelectionAction: ") + exc.what());
       }
     }()),
+    onZoomChange([&]() -> CachedProp<std::optional<std::function<void(const ZoomEvent& /* event */)>>> {
+      try {
+        const react::RawValue* rawValue = rawProps.at("onZoomChange", nullptr, nullptr);
+        if (rawValue == nullptr) return sourceProps.onZoomChange;
+        const auto& [runtime, value] = (std::pair<jsi::Runtime*, jsi::Value>)*rawValue;
+        return CachedProp<std::optional<std::function<void(const ZoomEvent& /* event */)>>>::fromRawValue(*runtime, value.asObject(*runtime).getProperty(*runtime, PropNameIDCache::get(*runtime, "f")), sourceProps.onZoomChange);
+      } catch (const std::exception& exc) {
+        throw std::runtime_error(std::string("ReadiumView.onZoomChange: ") + exc.what());
+      }
+    }()),
     hybridRef([&]() -> CachedProp<std::optional<std::function<void(const std::shared_ptr<HybridReadiumViewSpec>& /* ref */)>>> {
       try {
         const react::RawValue* rawValue = rawProps.at("hybridRef", nullptr, nullptr);
@@ -157,9 +187,12 @@ namespace margelo::nitro::readium::views {
       case hashString("onPublicationReady"): return true;
       case hashString("onPreferencesChanged"): return true;
       case hashString("onPublicationError"): return true;
+      case hashString("shouldRefreshSource"): return true;
+      case hashString("resolveSource"): return true;
       case hashString("onDecorationActivated"): return true;
       case hashString("onSelectionChange"): return true;
       case hashString("onSelectionAction"): return true;
+      case hashString("onZoomChange"): return true;
       case hashString("hybridRef"): return true;
       default: return false;
     }

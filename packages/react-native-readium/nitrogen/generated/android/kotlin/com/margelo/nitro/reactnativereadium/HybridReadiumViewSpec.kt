@@ -107,6 +107,34 @@ abstract class HybridReadiumViewSpec: HybridView() {
       onPublicationError = value?.let { it }
     }
   
+  abstract var shouldRefreshSource: ((failure: SourceRequestFailure) -> Promise<Promise<Boolean>>)?
+  
+  private var shouldRefreshSource_cxx: Func_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure?
+    @Keep
+    @DoNotStrip
+    get() {
+      return shouldRefreshSource?.let { Func_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure_java(it) }
+    }
+    @Keep
+    @DoNotStrip
+    set(value) {
+      shouldRefreshSource = value?.let { it }
+    }
+  
+  abstract var resolveSource: ((request: ResolveSourceRequest) -> Promise<Promise<PublicationSource>>)?
+  
+  private var resolveSource_cxx: Func_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest?
+    @Keep
+    @DoNotStrip
+    get() {
+      return resolveSource?.let { Func_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest_java(it) }
+    }
+    @Keep
+    @DoNotStrip
+    set(value) {
+      resolveSource = value?.let { it }
+    }
+  
   abstract var onDecorationActivated: ((event: DecorationActivatedEvent) -> Unit)?
   
   private var onDecorationActivated_cxx: Func_void_DecorationActivatedEvent?
@@ -148,6 +176,20 @@ abstract class HybridReadiumViewSpec: HybridView() {
     set(value) {
       onSelectionAction = value?.let { it }
     }
+  
+  abstract var onZoomChange: ((event: ZoomEvent) -> Unit)?
+  
+  private var onZoomChange_cxx: Func_void_ZoomEvent?
+    @Keep
+    @DoNotStrip
+    get() {
+      return onZoomChange?.let { Func_void_ZoomEvent_java(it) }
+    }
+    @Keep
+    @DoNotStrip
+    set(value) {
+      onZoomChange = value?.let { it }
+    }
 
   // Methods
   @DoNotStrip
@@ -177,6 +219,22 @@ abstract class HybridReadiumViewSpec: HybridView() {
   @DoNotStrip
   @Keep
   abstract fun cancelSearch(): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun zoomIn(): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun zoomOut(): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun setZoom(scale: Double): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun resetZoom(): Unit
 
   // Default implementation of `HybridObject.toString()`
   override fun toString(): String {

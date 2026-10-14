@@ -11,7 +11,11 @@
 #include "PublicationErrorEvent.hpp"
 
 #include "JPublicationErrorCode.hpp"
+#include "JPublicationErrorKind.hpp"
+#include "JPublicationErrorStage.hpp"
 #include "PublicationErrorCode.hpp"
+#include "PublicationErrorKind.hpp"
+#include "PublicationErrorStage.hpp"
 #include <optional>
 #include <string>
 
@@ -38,15 +42,27 @@ namespace margelo::nitro::readium {
       jni::local_ref<jni::JString> url = this->getFieldValue(fieldUrl);
       static const auto fieldCode = clazz->getField<JPublicationErrorCode>("code");
       jni::local_ref<JPublicationErrorCode> code = this->getFieldValue(fieldCode);
+      static const auto fieldStage = clazz->getField<JPublicationErrorStage>("stage");
+      jni::local_ref<JPublicationErrorStage> stage = this->getFieldValue(fieldStage);
       static const auto fieldMessage = clazz->getField<jni::JString>("message");
       jni::local_ref<jni::JString> message = this->getFieldValue(fieldMessage);
+      static const auto fieldDetail = clazz->getField<jni::JString>("detail");
+      jni::local_ref<jni::JString> detail = this->getFieldValue(fieldDetail);
       static const auto fieldProtectionScheme = clazz->getField<jni::JString>("protectionScheme");
       jni::local_ref<jni::JString> protectionScheme = this->getFieldValue(fieldProtectionScheme);
+      static const auto fieldStatus = clazz->getField<jni::JDouble>("status");
+      jni::local_ref<jni::JDouble> status = this->getFieldValue(fieldStatus);
+      static const auto fieldKind = clazz->getField<JPublicationErrorKind>("kind");
+      jni::local_ref<JPublicationErrorKind> kind = this->getFieldValue(fieldKind);
       return PublicationErrorEvent(
         url->toStdString(),
         code->toCpp(),
+        stage->toCpp(),
         message->toStdString(),
-        protectionScheme != nullptr ? std::make_optional(protectionScheme->toStdString()) : std::nullopt
+        detail != nullptr ? std::make_optional(detail->toStdString()) : std::nullopt,
+        protectionScheme != nullptr ? std::make_optional(protectionScheme->toStdString()) : std::nullopt,
+        status != nullptr ? std::make_optional(status->value()) : std::nullopt,
+        kind != nullptr ? std::make_optional(kind->toCpp()) : std::nullopt
       );
     }
 
@@ -56,15 +72,19 @@ namespace margelo::nitro::readium {
      */
     [[maybe_unused]]
     static jni::local_ref<JPublicationErrorEvent::javaobject> fromCpp(const PublicationErrorEvent& value) {
-      using JSignature = JPublicationErrorEvent(jni::alias_ref<jni::JString>, jni::alias_ref<JPublicationErrorCode>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>);
+      using JSignature = JPublicationErrorEvent(jni::alias_ref<jni::JString>, jni::alias_ref<JPublicationErrorCode>, jni::alias_ref<JPublicationErrorStage>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JPublicationErrorKind>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         jni::make_jstring(value.url),
         JPublicationErrorCode::fromCpp(value.code),
+        JPublicationErrorStage::fromCpp(value.stage),
         jni::make_jstring(value.message),
-        value.protectionScheme.has_value() ? jni::make_jstring(value.protectionScheme.value()) : nullptr
+        value.detail.has_value() ? jni::make_jstring(value.detail.value()) : nullptr,
+        value.protectionScheme.has_value() ? jni::make_jstring(value.protectionScheme.value()) : nullptr,
+        value.status.has_value() ? jni::JDouble::valueOf(value.status.value()) : nullptr,
+        value.kind.has_value() ? JPublicationErrorKind::fromCpp(value.kind.value()) : nullptr
       );
     }
   };

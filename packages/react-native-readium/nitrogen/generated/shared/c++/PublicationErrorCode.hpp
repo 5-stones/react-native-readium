@@ -35,6 +35,7 @@ namespace margelo::nitro::readium {
     PROTECTIONNOTSUPPORTED      SWIFT_NAME(protectionnotsupported) = 3,
     RESTRICTED      SWIFT_NAME(restricted) = 4,
     CANCELLED      SWIFT_NAME(cancelled) = 5,
+    READFAILED      SWIFT_NAME(readfailed) = 6,
   } CLOSED_ENUM;
 
 } // namespace margelo::nitro::readium
@@ -53,6 +54,7 @@ namespace margelo::nitro {
         case hashString("protectionNotSupported"): return margelo::nitro::readium::PublicationErrorCode::PROTECTIONNOTSUPPORTED;
         case hashString("restricted"): return margelo::nitro::readium::PublicationErrorCode::RESTRICTED;
         case hashString("cancelled"): return margelo::nitro::readium::PublicationErrorCode::CANCELLED;
+        case hashString("readFailed"): return margelo::nitro::readium::PublicationErrorCode::READFAILED;
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert \"" + unionValue + "\" to enum PublicationErrorCode - invalid value!");
       }
@@ -65,6 +67,7 @@ namespace margelo::nitro {
         case margelo::nitro::readium::PublicationErrorCode::PROTECTIONNOTSUPPORTED: return JSIConverter<std::string>::toJSI(runtime, "protectionNotSupported");
         case margelo::nitro::readium::PublicationErrorCode::RESTRICTED: return JSIConverter<std::string>::toJSI(runtime, "restricted");
         case margelo::nitro::readium::PublicationErrorCode::CANCELLED: return JSIConverter<std::string>::toJSI(runtime, "cancelled");
+        case margelo::nitro::readium::PublicationErrorCode::READFAILED: return JSIConverter<std::string>::toJSI(runtime, "readFailed");
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert PublicationErrorCode to JS - invalid value: "
                                     + std::to_string(static_cast<int>(arg)) + "!");
@@ -82,6 +85,7 @@ namespace margelo::nitro {
         case hashString("protectionNotSupported"):
         case hashString("restricted"):
         case hashString("cancelled"):
+        case hashString("readFailed"):
           return true;
         default:
           return false;

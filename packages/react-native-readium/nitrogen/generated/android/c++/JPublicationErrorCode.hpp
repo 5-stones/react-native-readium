@@ -60,6 +60,9 @@ namespace margelo::nitro::readium {
         case PublicationErrorCode::CANCELLED:
           static const auto fieldCANCELLED = clazz->getStaticField<JPublicationErrorCode>("CANCELLED");
           return clazz->getStaticFieldValue(fieldCANCELLED);
+        case PublicationErrorCode::READFAILED:
+          static const auto fieldREADFAILED = clazz->getStaticField<JPublicationErrorCode>("READFAILED");
+          return clazz->getStaticFieldValue(fieldREADFAILED);
         default:
           std::string stringValue = std::to_string(static_cast<int>(value));
           throw std::invalid_argument("Invalid enum value (" + stringValue + "!");

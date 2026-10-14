@@ -12,9 +12,12 @@
     "onPublicationReady": true,
     "onPreferencesChanged": true,
     "onPublicationError": true,
+    "shouldRefreshSource": true,
+    "resolveSource": true,
     "onDecorationActivated": true,
     "onSelectionChange": true,
     "onSelectionAction": true,
+    "onZoomChange": true,
     "hybridRef": true
   }
 }

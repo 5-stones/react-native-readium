@@ -17,6 +17,20 @@ namespace margelo::nitro::readium { struct LocatorLocations; }
 namespace margelo::nitro::readium { struct LocatorText; }
 // Forward declaration of `Preferences` to properly resolve imports.
 namespace margelo::nitro::readium { struct Preferences; }
+// Forward declaration of `ReaderImageFilter` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderImageFilter; }
+// Forward declaration of `ReaderReadingProgression` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderReadingProgression; }
+// Forward declaration of `ReaderSpread` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderSpread; }
+// Forward declaration of `ReaderTextAlign` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderTextAlign; }
+// Forward declaration of `ReaderTheme` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderTheme; }
+// Forward declaration of `ReaderFit` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderFit; }
+// Forward declaration of `ReaderScrollAxis` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderScrollAxis; }
 // Forward declaration of `DecorationGroup` to properly resolve imports.
 namespace margelo::nitro::readium { struct DecorationGroup; }
 // Forward declaration of `Decoration` to properly resolve imports.
@@ -51,6 +65,18 @@ namespace margelo::nitro::readium { struct PreferencesChangedEvent; }
 namespace margelo::nitro::readium { struct PublicationErrorEvent; }
 // Forward declaration of `PublicationErrorCode` to properly resolve imports.
 namespace margelo::nitro::readium { enum class PublicationErrorCode; }
+// Forward declaration of `PublicationErrorStage` to properly resolve imports.
+namespace margelo::nitro::readium { enum class PublicationErrorStage; }
+// Forward declaration of `PublicationErrorKind` to properly resolve imports.
+namespace margelo::nitro::readium { enum class PublicationErrorKind; }
+// Forward declaration of `SourceRequestFailure` to properly resolve imports.
+namespace margelo::nitro::readium { struct SourceRequestFailure; }
+// Forward declaration of `PublicationSource` to properly resolve imports.
+namespace margelo::nitro::readium { struct PublicationSource; }
+// Forward declaration of `ResolveSourceRequest` to properly resolve imports.
+namespace margelo::nitro::readium { struct ResolveSourceRequest; }
+// Forward declaration of `SourceRequestReason` to properly resolve imports.
+namespace margelo::nitro::readium { enum class SourceRequestReason; }
 // Forward declaration of `DecorationActivatedEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct DecorationActivatedEvent; }
 // Forward declaration of `Rect` to properly resolve imports.
@@ -61,6 +87,8 @@ namespace margelo::nitro::readium { struct Point; }
 namespace margelo::nitro::readium { struct SelectionEvent; }
 // Forward declaration of `SelectionActionEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct SelectionActionEvent; }
+// Forward declaration of `ZoomEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct ZoomEvent; }
 // Forward declaration of `SearchPage` to properly resolve imports.
 namespace margelo::nitro::readium { struct SearchPage; }
 // Forward declaration of `SearchResult` to properly resolve imports.
@@ -80,6 +108,20 @@ namespace margelo::nitro::readium { struct SearchOptions; }
 #include "JLocatorText.hpp"
 #include "Preferences.hpp"
 #include "JPreferences.hpp"
+#include "ReaderImageFilter.hpp"
+#include "JReaderImageFilter.hpp"
+#include "ReaderReadingProgression.hpp"
+#include "JReaderReadingProgression.hpp"
+#include "ReaderSpread.hpp"
+#include "JReaderSpread.hpp"
+#include "ReaderTextAlign.hpp"
+#include "JReaderTextAlign.hpp"
+#include "ReaderTheme.hpp"
+#include "JReaderTheme.hpp"
+#include "ReaderFit.hpp"
+#include "JReaderFit.hpp"
+#include "ReaderScrollAxis.hpp"
+#include "JReaderScrollAxis.hpp"
 #include "DecorationGroup.hpp"
 #include <vector>
 #include "JDecorationGroup.hpp"
@@ -122,6 +164,22 @@ namespace margelo::nitro::readium { struct SearchOptions; }
 #include "JPublicationErrorEvent.hpp"
 #include "PublicationErrorCode.hpp"
 #include "JPublicationErrorCode.hpp"
+#include "PublicationErrorStage.hpp"
+#include "JPublicationErrorStage.hpp"
+#include "PublicationErrorKind.hpp"
+#include "JPublicationErrorKind.hpp"
+#include <NitroModules/Promise.hpp>
+#include "SourceRequestFailure.hpp"
+#include "JFunc_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure.hpp"
+#include <NitroModules/JPromise.hpp>
+#include "JSourceRequestFailure.hpp"
+#include "PublicationSource.hpp"
+#include "ResolveSourceRequest.hpp"
+#include "JFunc_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest.hpp"
+#include "JPublicationSource.hpp"
+#include "JResolveSourceRequest.hpp"
+#include "SourceRequestReason.hpp"
+#include "JSourceRequestReason.hpp"
 #include "DecorationActivatedEvent.hpp"
 #include "JFunc_void_DecorationActivatedEvent.hpp"
 #include "JDecorationActivatedEvent.hpp"
@@ -135,9 +193,10 @@ namespace margelo::nitro::readium { struct SearchOptions; }
 #include "SelectionActionEvent.hpp"
 #include "JFunc_void_SelectionActionEvent.hpp"
 #include "JSelectionActionEvent.hpp"
+#include "ZoomEvent.hpp"
+#include "JFunc_void_ZoomEvent.hpp"
+#include "JZoomEvent.hpp"
 #include "SearchPage.hpp"
-#include <NitroModules/Promise.hpp>
-#include <NitroModules/JPromise.hpp>
 #include "JSearchPage.hpp"
 #include "SearchResult.hpp"
 #include "JSearchResult.hpp"
@@ -314,6 +373,40 @@ namespace margelo::nitro::readium {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_PublicationErrorEvent::javaobject> /* onPublicationError */)>("setOnPublicationError_cxx");
     method(_javaPart, onPublicationError.has_value() ? JFunc_void_PublicationErrorEvent_cxx::fromCpp(onPublicationError.value()) : nullptr);
   }
+  std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>> JHybridReadiumViewSpec::getShouldRefreshSource() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure::javaobject>()>("getShouldRefreshSource_cxx");
+    auto __result = method(_javaPart);
+    return __result != nullptr ? std::make_optional([&]() -> std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)> {
+      if (__result->isInstanceOf(JFunc_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure_cxx::javaClassStatic())) [[likely]] {
+        auto downcast = jni::static_ref_cast<JFunc_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure_cxx::javaobject>(__result);
+        return downcast->cthis()->getFunction();
+      } else {
+        auto __resultRef = jni::make_global(__result);
+        return JNICallable<JFunc_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure, std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(SourceRequestFailure)>(std::move(__resultRef));
+      }
+    }()) : std::nullopt;
+  }
+  void JHybridReadiumViewSpec::setShouldRefreshSource(const std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>>& shouldRefreshSource) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure::javaobject> /* shouldRefreshSource */)>("setShouldRefreshSource_cxx");
+    method(_javaPart, shouldRefreshSource.has_value() ? JFunc_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure_cxx::fromCpp(shouldRefreshSource.value()) : nullptr);
+  }
+  std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>> JHybridReadiumViewSpec::getResolveSource() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest::javaobject>()>("getResolveSource_cxx");
+    auto __result = method(_javaPart);
+    return __result != nullptr ? std::make_optional([&]() -> std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)> {
+      if (__result->isInstanceOf(JFunc_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest_cxx::javaClassStatic())) [[likely]] {
+        auto downcast = jni::static_ref_cast<JFunc_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest_cxx::javaobject>(__result);
+        return downcast->cthis()->getFunction();
+      } else {
+        auto __resultRef = jni::make_global(__result);
+        return JNICallable<JFunc_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest, std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(ResolveSourceRequest)>(std::move(__resultRef));
+      }
+    }()) : std::nullopt;
+  }
+  void JHybridReadiumViewSpec::setResolveSource(const std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>>& resolveSource) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest::javaobject> /* resolveSource */)>("setResolveSource_cxx");
+    method(_javaPart, resolveSource.has_value() ? JFunc_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest_cxx::fromCpp(resolveSource.value()) : nullptr);
+  }
   std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>> JHybridReadiumViewSpec::getOnDecorationActivated() {
     static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void_DecorationActivatedEvent::javaobject>()>("getOnDecorationActivated_cxx");
     auto __result = method(_javaPart);
@@ -364,6 +457,23 @@ namespace margelo::nitro::readium {
   void JHybridReadiumViewSpec::setOnSelectionAction(const std::optional<std::function<void(const SelectionActionEvent& /* event */)>>& onSelectionAction) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_SelectionActionEvent::javaobject> /* onSelectionAction */)>("setOnSelectionAction_cxx");
     method(_javaPart, onSelectionAction.has_value() ? JFunc_void_SelectionActionEvent_cxx::fromCpp(onSelectionAction.value()) : nullptr);
+  }
+  std::optional<std::function<void(const ZoomEvent& /* event */)>> JHybridReadiumViewSpec::getOnZoomChange() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void_ZoomEvent::javaobject>()>("getOnZoomChange_cxx");
+    auto __result = method(_javaPart);
+    return __result != nullptr ? std::make_optional([&]() -> std::function<void(const ZoomEvent& /* event */)> {
+      if (__result->isInstanceOf(JFunc_void_ZoomEvent_cxx::javaClassStatic())) [[likely]] {
+        auto downcast = jni::static_ref_cast<JFunc_void_ZoomEvent_cxx::javaobject>(__result);
+        return downcast->cthis()->getFunction();
+      } else {
+        auto __resultRef = jni::make_global(__result);
+        return JNICallable<JFunc_void_ZoomEvent, void(ZoomEvent)>(std::move(__resultRef));
+      }
+    }()) : std::nullopt;
+  }
+  void JHybridReadiumViewSpec::setOnZoomChange(const std::optional<std::function<void(const ZoomEvent& /* event */)>>& onZoomChange) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_ZoomEvent::javaobject> /* onZoomChange */)>("setOnZoomChange_cxx");
+    method(_javaPart, onZoomChange.has_value() ? JFunc_void_ZoomEvent_cxx::fromCpp(onZoomChange.value()) : nullptr);
   }
 
   // Methods
@@ -417,6 +527,22 @@ namespace margelo::nitro::readium {
   }
   void JHybridReadiumViewSpec::cancelSearch() {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void()>("cancelSearch");
+    method(_javaPart);
+  }
+  void JHybridReadiumViewSpec::zoomIn() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void()>("zoomIn");
+    method(_javaPart);
+  }
+  void JHybridReadiumViewSpec::zoomOut() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void()>("zoomOut");
+    method(_javaPart);
+  }
+  void JHybridReadiumViewSpec::setZoom(double scale) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(double /* scale */)>("setZoom");
+    method(_javaPart, scale);
+  }
+  void JHybridReadiumViewSpec::resetZoom() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void()>("resetZoom");
     method(_javaPart);
   }
 

@@ -28,10 +28,30 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-
+// Forward declaration of `ReaderImageFilter` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderImageFilter; }
+// Forward declaration of `ReaderReadingProgression` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderReadingProgression; }
+// Forward declaration of `ReaderSpread` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderSpread; }
+// Forward declaration of `ReaderTextAlign` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderTextAlign; }
+// Forward declaration of `ReaderTheme` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderTheme; }
+// Forward declaration of `ReaderFit` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderFit; }
+// Forward declaration of `ReaderScrollAxis` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderScrollAxis; }
 
 #include <string>
 #include <optional>
+#include "ReaderImageFilter.hpp"
+#include "ReaderReadingProgression.hpp"
+#include "ReaderSpread.hpp"
+#include "ReaderTextAlign.hpp"
+#include "ReaderTheme.hpp"
+#include "ReaderFit.hpp"
+#include "ReaderScrollAxis.hpp"
 
 namespace margelo::nitro::readium {
 
@@ -46,7 +66,7 @@ namespace margelo::nitro::readium {
     std::optional<double> fontSize     SWIFT_PRIVATE;
     std::optional<double> fontWeight     SWIFT_PRIVATE;
     std::optional<bool> hyphens     SWIFT_PRIVATE;
-    std::optional<std::string> imageFilter     SWIFT_PRIVATE;
+    std::optional<ReaderImageFilter> imageFilter     SWIFT_PRIVATE;
     std::optional<std::string> language     SWIFT_PRIVATE;
     std::optional<double> letterSpacing     SWIFT_PRIVATE;
     std::optional<bool> ligatures     SWIFT_PRIVATE;
@@ -55,25 +75,25 @@ namespace margelo::nitro::readium {
     std::optional<double> paragraphIndent     SWIFT_PRIVATE;
     std::optional<double> paragraphSpacing     SWIFT_PRIVATE;
     std::optional<bool> publisherStyles     SWIFT_PRIVATE;
-    std::optional<std::string> readingProgression     SWIFT_PRIVATE;
+    std::optional<ReaderReadingProgression> readingProgression     SWIFT_PRIVATE;
     std::optional<bool> scroll     SWIFT_PRIVATE;
-    std::optional<std::string> spread     SWIFT_PRIVATE;
-    std::optional<std::string> textAlign     SWIFT_PRIVATE;
+    std::optional<ReaderSpread> spread     SWIFT_PRIVATE;
+    std::optional<ReaderTextAlign> textAlign     SWIFT_PRIVATE;
     std::optional<std::string> textColor     SWIFT_PRIVATE;
     std::optional<bool> textNormalization     SWIFT_PRIVATE;
-    std::optional<std::string> theme     SWIFT_PRIVATE;
+    std::optional<ReaderTheme> theme     SWIFT_PRIVATE;
     std::optional<double> typeScale     SWIFT_PRIVATE;
     std::optional<bool> verticalText     SWIFT_PRIVATE;
     std::optional<double> wordSpacing     SWIFT_PRIVATE;
-    std::optional<std::string> fit     SWIFT_PRIVATE;
+    std::optional<ReaderFit> fit     SWIFT_PRIVATE;
     std::optional<bool> offsetFirstPage     SWIFT_PRIVATE;
     std::optional<double> pageSpacing     SWIFT_PRIVATE;
-    std::optional<std::string> scrollAxis     SWIFT_PRIVATE;
+    std::optional<ReaderScrollAxis> scrollAxis     SWIFT_PRIVATE;
     std::optional<bool> visibleScrollbar     SWIFT_PRIVATE;
 
   public:
     Preferences() = default;
-    explicit Preferences(std::optional<std::string> backgroundColor, std::optional<std::string> columnCount, std::optional<std::string> fontFamily, std::optional<double> fontSize, std::optional<double> fontWeight, std::optional<bool> hyphens, std::optional<std::string> imageFilter, std::optional<std::string> language, std::optional<double> letterSpacing, std::optional<bool> ligatures, std::optional<double> lineHeight, std::optional<double> pageMargins, std::optional<double> paragraphIndent, std::optional<double> paragraphSpacing, std::optional<bool> publisherStyles, std::optional<std::string> readingProgression, std::optional<bool> scroll, std::optional<std::string> spread, std::optional<std::string> textAlign, std::optional<std::string> textColor, std::optional<bool> textNormalization, std::optional<std::string> theme, std::optional<double> typeScale, std::optional<bool> verticalText, std::optional<double> wordSpacing, std::optional<std::string> fit, std::optional<bool> offsetFirstPage, std::optional<double> pageSpacing, std::optional<std::string> scrollAxis, std::optional<bool> visibleScrollbar): backgroundColor(backgroundColor), columnCount(columnCount), fontFamily(fontFamily), fontSize(fontSize), fontWeight(fontWeight), hyphens(hyphens), imageFilter(imageFilter), language(language), letterSpacing(letterSpacing), ligatures(ligatures), lineHeight(lineHeight), pageMargins(pageMargins), paragraphIndent(paragraphIndent), paragraphSpacing(paragraphSpacing), publisherStyles(publisherStyles), readingProgression(readingProgression), scroll(scroll), spread(spread), textAlign(textAlign), textColor(textColor), textNormalization(textNormalization), theme(theme), typeScale(typeScale), verticalText(verticalText), wordSpacing(wordSpacing), fit(fit), offsetFirstPage(offsetFirstPage), pageSpacing(pageSpacing), scrollAxis(scrollAxis), visibleScrollbar(visibleScrollbar) {}
+    explicit Preferences(std::optional<std::string> backgroundColor, std::optional<std::string> columnCount, std::optional<std::string> fontFamily, std::optional<double> fontSize, std::optional<double> fontWeight, std::optional<bool> hyphens, std::optional<ReaderImageFilter> imageFilter, std::optional<std::string> language, std::optional<double> letterSpacing, std::optional<bool> ligatures, std::optional<double> lineHeight, std::optional<double> pageMargins, std::optional<double> paragraphIndent, std::optional<double> paragraphSpacing, std::optional<bool> publisherStyles, std::optional<ReaderReadingProgression> readingProgression, std::optional<bool> scroll, std::optional<ReaderSpread> spread, std::optional<ReaderTextAlign> textAlign, std::optional<std::string> textColor, std::optional<bool> textNormalization, std::optional<ReaderTheme> theme, std::optional<double> typeScale, std::optional<bool> verticalText, std::optional<double> wordSpacing, std::optional<ReaderFit> fit, std::optional<bool> offsetFirstPage, std::optional<double> pageSpacing, std::optional<ReaderScrollAxis> scrollAxis, std::optional<bool> visibleScrollbar): backgroundColor(backgroundColor), columnCount(columnCount), fontFamily(fontFamily), fontSize(fontSize), fontWeight(fontWeight), hyphens(hyphens), imageFilter(imageFilter), language(language), letterSpacing(letterSpacing), ligatures(ligatures), lineHeight(lineHeight), pageMargins(pageMargins), paragraphIndent(paragraphIndent), paragraphSpacing(paragraphSpacing), publisherStyles(publisherStyles), readingProgression(readingProgression), scroll(scroll), spread(spread), textAlign(textAlign), textColor(textColor), textNormalization(textNormalization), theme(theme), typeScale(typeScale), verticalText(verticalText), wordSpacing(wordSpacing), fit(fit), offsetFirstPage(offsetFirstPage), pageSpacing(pageSpacing), scrollAxis(scrollAxis), visibleScrollbar(visibleScrollbar) {}
 
   public:
     friend bool operator==(const Preferences& lhs, const Preferences& rhs) = default;
@@ -95,7 +115,7 @@ namespace margelo::nitro {
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "fontSize"))),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "fontWeight"))),
         JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "hyphens"))),
-        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "imageFilter"))),
+        JSIConverter<std::optional<margelo::nitro::readium::ReaderImageFilter>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "imageFilter"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "language"))),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "letterSpacing"))),
         JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "ligatures"))),
@@ -104,20 +124,20 @@ namespace margelo::nitro {
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "paragraphIndent"))),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "paragraphSpacing"))),
         JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "publisherStyles"))),
-        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "readingProgression"))),
+        JSIConverter<std::optional<margelo::nitro::readium::ReaderReadingProgression>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "readingProgression"))),
         JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "scroll"))),
-        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "spread"))),
-        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "textAlign"))),
+        JSIConverter<std::optional<margelo::nitro::readium::ReaderSpread>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "spread"))),
+        JSIConverter<std::optional<margelo::nitro::readium::ReaderTextAlign>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "textAlign"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "textColor"))),
         JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "textNormalization"))),
-        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "theme"))),
+        JSIConverter<std::optional<margelo::nitro::readium::ReaderTheme>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "theme"))),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "typeScale"))),
         JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "verticalText"))),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "wordSpacing"))),
-        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "fit"))),
+        JSIConverter<std::optional<margelo::nitro::readium::ReaderFit>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "fit"))),
         JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "offsetFirstPage"))),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "pageSpacing"))),
-        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "scrollAxis"))),
+        JSIConverter<std::optional<margelo::nitro::readium::ReaderScrollAxis>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "scrollAxis"))),
         JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "visibleScrollbar")))
       );
     }
@@ -129,7 +149,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "fontSize"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.fontSize));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "fontWeight"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.fontWeight));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "hyphens"), JSIConverter<std::optional<bool>>::toJSI(runtime, arg.hyphens));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "imageFilter"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.imageFilter));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "imageFilter"), JSIConverter<std::optional<margelo::nitro::readium::ReaderImageFilter>>::toJSI(runtime, arg.imageFilter));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "language"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.language));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "letterSpacing"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.letterSpacing));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "ligatures"), JSIConverter<std::optional<bool>>::toJSI(runtime, arg.ligatures));
@@ -138,20 +158,20 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "paragraphIndent"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.paragraphIndent));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "paragraphSpacing"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.paragraphSpacing));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "publisherStyles"), JSIConverter<std::optional<bool>>::toJSI(runtime, arg.publisherStyles));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "readingProgression"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.readingProgression));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "readingProgression"), JSIConverter<std::optional<margelo::nitro::readium::ReaderReadingProgression>>::toJSI(runtime, arg.readingProgression));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "scroll"), JSIConverter<std::optional<bool>>::toJSI(runtime, arg.scroll));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "spread"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.spread));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "textAlign"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.textAlign));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "spread"), JSIConverter<std::optional<margelo::nitro::readium::ReaderSpread>>::toJSI(runtime, arg.spread));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "textAlign"), JSIConverter<std::optional<margelo::nitro::readium::ReaderTextAlign>>::toJSI(runtime, arg.textAlign));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "textColor"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.textColor));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "textNormalization"), JSIConverter<std::optional<bool>>::toJSI(runtime, arg.textNormalization));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "theme"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.theme));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "theme"), JSIConverter<std::optional<margelo::nitro::readium::ReaderTheme>>::toJSI(runtime, arg.theme));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "typeScale"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.typeScale));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "verticalText"), JSIConverter<std::optional<bool>>::toJSI(runtime, arg.verticalText));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "wordSpacing"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.wordSpacing));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "fit"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.fit));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "fit"), JSIConverter<std::optional<margelo::nitro::readium::ReaderFit>>::toJSI(runtime, arg.fit));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "offsetFirstPage"), JSIConverter<std::optional<bool>>::toJSI(runtime, arg.offsetFirstPage));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "pageSpacing"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.pageSpacing));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "scrollAxis"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.scrollAxis));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "scrollAxis"), JSIConverter<std::optional<margelo::nitro::readium::ReaderScrollAxis>>::toJSI(runtime, arg.scrollAxis));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "visibleScrollbar"), JSIConverter<std::optional<bool>>::toJSI(runtime, arg.visibleScrollbar));
       return obj;
     }
@@ -169,7 +189,7 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "fontSize")))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "fontWeight")))) return false;
       if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "hyphens")))) return false;
-      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "imageFilter")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::readium::ReaderImageFilter>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "imageFilter")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "language")))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "letterSpacing")))) return false;
       if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "ligatures")))) return false;
@@ -178,20 +198,20 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "paragraphIndent")))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "paragraphSpacing")))) return false;
       if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "publisherStyles")))) return false;
-      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "readingProgression")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::readium::ReaderReadingProgression>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "readingProgression")))) return false;
       if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "scroll")))) return false;
-      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "spread")))) return false;
-      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "textAlign")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::readium::ReaderSpread>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "spread")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::readium::ReaderTextAlign>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "textAlign")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "textColor")))) return false;
       if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "textNormalization")))) return false;
-      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "theme")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::readium::ReaderTheme>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "theme")))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "typeScale")))) return false;
       if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "verticalText")))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "wordSpacing")))) return false;
-      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "fit")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::readium::ReaderFit>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "fit")))) return false;
       if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "offsetFirstPage")))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "pageSpacing")))) return false;
-      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "scrollAxis")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::readium::ReaderScrollAxis>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "scrollAxis")))) return false;
       if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "visibleScrollbar")))) return false;
       return true;
     }

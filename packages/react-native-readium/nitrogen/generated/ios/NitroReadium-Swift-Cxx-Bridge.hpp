@@ -46,14 +46,36 @@ namespace margelo::nitro::readium { struct Preferences; }
 namespace margelo::nitro::readium { enum class PublicationErrorCode; }
 // Forward declaration of `PublicationErrorEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct PublicationErrorEvent; }
+// Forward declaration of `PublicationErrorKind` to properly resolve imports.
+namespace margelo::nitro::readium { enum class PublicationErrorKind; }
+// Forward declaration of `PublicationErrorStage` to properly resolve imports.
+namespace margelo::nitro::readium { enum class PublicationErrorStage; }
 // Forward declaration of `PublicationMetadata` to properly resolve imports.
 namespace margelo::nitro::readium { struct PublicationMetadata; }
 // Forward declaration of `PublicationReadyEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct PublicationReadyEvent; }
+// Forward declaration of `PublicationSource` to properly resolve imports.
+namespace margelo::nitro::readium { struct PublicationSource; }
+// Forward declaration of `ReaderFit` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderFit; }
+// Forward declaration of `ReaderImageFilter` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderImageFilter; }
+// Forward declaration of `ReaderReadingProgression` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderReadingProgression; }
+// Forward declaration of `ReaderScrollAxis` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderScrollAxis; }
+// Forward declaration of `ReaderSpread` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderSpread; }
+// Forward declaration of `ReaderTextAlign` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderTextAlign; }
+// Forward declaration of `ReaderTheme` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderTheme; }
 // Forward declaration of `ReadiumFile` to properly resolve imports.
 namespace margelo::nitro::readium { struct ReadiumFile; }
 // Forward declaration of `Rect` to properly resolve imports.
 namespace margelo::nitro::readium { struct Rect; }
+// Forward declaration of `ResolveSourceRequest` to properly resolve imports.
+namespace margelo::nitro::readium { struct ResolveSourceRequest; }
 // Forward declaration of `SearchOptions` to properly resolve imports.
 namespace margelo::nitro::readium { struct SearchOptions; }
 // Forward declaration of `SearchPage` to properly resolve imports.
@@ -68,8 +90,14 @@ namespace margelo::nitro::readium { struct SelectionAction; }
 namespace margelo::nitro::readium { struct SelectionEvent; }
 // Forward declaration of `SeriesInfo` to properly resolve imports.
 namespace margelo::nitro::readium { struct SeriesInfo; }
+// Forward declaration of `SourceRequestFailure` to properly resolve imports.
+namespace margelo::nitro::readium { struct SourceRequestFailure; }
+// Forward declaration of `SourceRequestReason` to properly resolve imports.
+namespace margelo::nitro::readium { enum class SourceRequestReason; }
 // Forward declaration of `Subject` to properly resolve imports.
 namespace margelo::nitro::readium { struct Subject; }
+// Forward declaration of `ZoomEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct ZoomEvent; }
 
 // Forward declarations of Swift defined types
 // Forward declaration of `HybridReadiumViewSpec_cxx` to properly resolve imports.
@@ -95,10 +123,21 @@ namespace NitroReadium { class HybridReadiumViewSpec_cxx; }
 #include "PreferencesChangedEvent.hpp"
 #include "PublicationErrorCode.hpp"
 #include "PublicationErrorEvent.hpp"
+#include "PublicationErrorKind.hpp"
+#include "PublicationErrorStage.hpp"
 #include "PublicationMetadata.hpp"
 #include "PublicationReadyEvent.hpp"
+#include "PublicationSource.hpp"
+#include "ReaderFit.hpp"
+#include "ReaderImageFilter.hpp"
+#include "ReaderReadingProgression.hpp"
+#include "ReaderScrollAxis.hpp"
+#include "ReaderSpread.hpp"
+#include "ReaderTextAlign.hpp"
+#include "ReaderTheme.hpp"
 #include "ReadiumFile.hpp"
 #include "Rect.hpp"
+#include "ResolveSourceRequest.hpp"
 #include "SearchOptions.hpp"
 #include "SearchPage.hpp"
 #include "SearchResult.hpp"
@@ -106,7 +145,10 @@ namespace NitroReadium { class HybridReadiumViewSpec_cxx; }
 #include "SelectionActionEvent.hpp"
 #include "SelectionEvent.hpp"
 #include "SeriesInfo.hpp"
+#include "SourceRequestFailure.hpp"
+#include "SourceRequestReason.hpp"
 #include "Subject.hpp"
+#include "ZoomEvent.hpp"
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/PromiseHolder.hpp>
 #include <NitroModules/Result.hpp>
@@ -226,6 +268,111 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline bool get_std__optional_bool_(const std::optional<bool>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<ReaderImageFilter>
+  /**
+   * Specialized version of `std::optional<ReaderImageFilter>`.
+   */
+  using std__optional_ReaderImageFilter_ = std::optional<ReaderImageFilter>;
+  inline std::optional<ReaderImageFilter> create_std__optional_ReaderImageFilter_(const ReaderImageFilter& value) noexcept {
+    return std::optional<ReaderImageFilter>(value);
+  }
+  inline bool has_value_std__optional_ReaderImageFilter_(const std::optional<ReaderImageFilter>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline ReaderImageFilter get_std__optional_ReaderImageFilter_(const std::optional<ReaderImageFilter>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<ReaderReadingProgression>
+  /**
+   * Specialized version of `std::optional<ReaderReadingProgression>`.
+   */
+  using std__optional_ReaderReadingProgression_ = std::optional<ReaderReadingProgression>;
+  inline std::optional<ReaderReadingProgression> create_std__optional_ReaderReadingProgression_(const ReaderReadingProgression& value) noexcept {
+    return std::optional<ReaderReadingProgression>(value);
+  }
+  inline bool has_value_std__optional_ReaderReadingProgression_(const std::optional<ReaderReadingProgression>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline ReaderReadingProgression get_std__optional_ReaderReadingProgression_(const std::optional<ReaderReadingProgression>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<ReaderSpread>
+  /**
+   * Specialized version of `std::optional<ReaderSpread>`.
+   */
+  using std__optional_ReaderSpread_ = std::optional<ReaderSpread>;
+  inline std::optional<ReaderSpread> create_std__optional_ReaderSpread_(const ReaderSpread& value) noexcept {
+    return std::optional<ReaderSpread>(value);
+  }
+  inline bool has_value_std__optional_ReaderSpread_(const std::optional<ReaderSpread>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline ReaderSpread get_std__optional_ReaderSpread_(const std::optional<ReaderSpread>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<ReaderTextAlign>
+  /**
+   * Specialized version of `std::optional<ReaderTextAlign>`.
+   */
+  using std__optional_ReaderTextAlign_ = std::optional<ReaderTextAlign>;
+  inline std::optional<ReaderTextAlign> create_std__optional_ReaderTextAlign_(const ReaderTextAlign& value) noexcept {
+    return std::optional<ReaderTextAlign>(value);
+  }
+  inline bool has_value_std__optional_ReaderTextAlign_(const std::optional<ReaderTextAlign>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline ReaderTextAlign get_std__optional_ReaderTextAlign_(const std::optional<ReaderTextAlign>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<ReaderTheme>
+  /**
+   * Specialized version of `std::optional<ReaderTheme>`.
+   */
+  using std__optional_ReaderTheme_ = std::optional<ReaderTheme>;
+  inline std::optional<ReaderTheme> create_std__optional_ReaderTheme_(const ReaderTheme& value) noexcept {
+    return std::optional<ReaderTheme>(value);
+  }
+  inline bool has_value_std__optional_ReaderTheme_(const std::optional<ReaderTheme>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline ReaderTheme get_std__optional_ReaderTheme_(const std::optional<ReaderTheme>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<ReaderFit>
+  /**
+   * Specialized version of `std::optional<ReaderFit>`.
+   */
+  using std__optional_ReaderFit_ = std::optional<ReaderFit>;
+  inline std::optional<ReaderFit> create_std__optional_ReaderFit_(const ReaderFit& value) noexcept {
+    return std::optional<ReaderFit>(value);
+  }
+  inline bool has_value_std__optional_ReaderFit_(const std::optional<ReaderFit>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline ReaderFit get_std__optional_ReaderFit_(const std::optional<ReaderFit>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<ReaderScrollAxis>
+  /**
+   * Specialized version of `std::optional<ReaderScrollAxis>`.
+   */
+  using std__optional_ReaderScrollAxis_ = std::optional<ReaderScrollAxis>;
+  inline std::optional<ReaderScrollAxis> create_std__optional_ReaderScrollAxis_(const ReaderScrollAxis& value) noexcept {
+    return std::optional<ReaderScrollAxis>(value);
+  }
+  inline bool has_value_std__optional_ReaderScrollAxis_(const std::optional<ReaderScrollAxis>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline ReaderScrollAxis get_std__optional_ReaderScrollAxis_(const std::optional<ReaderScrollAxis>& optional) noexcept {
     return optional.value();
   }
   
@@ -629,6 +776,21 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.value();
   }
   
+  // pragma MARK: std::optional<PublicationErrorKind>
+  /**
+   * Specialized version of `std::optional<PublicationErrorKind>`.
+   */
+  using std__optional_PublicationErrorKind_ = std::optional<PublicationErrorKind>;
+  inline std::optional<PublicationErrorKind> create_std__optional_PublicationErrorKind_(const PublicationErrorKind& value) noexcept {
+    return std::optional<PublicationErrorKind>(value);
+  }
+  inline bool has_value_std__optional_PublicationErrorKind_(const std::optional<PublicationErrorKind>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline PublicationErrorKind get_std__optional_PublicationErrorKind_(const std::optional<PublicationErrorKind>& optional) noexcept {
+    return optional.value();
+  }
+  
   // pragma MARK: std::function<void(const PublicationErrorEvent& /* event */)>
   /**
    * Specialized version of `std::function<void(const PublicationErrorEvent&)>`.
@@ -663,6 +825,240 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.has_value();
   }
   inline std::function<void(const PublicationErrorEvent& /* event */)> get_std__optional_std__function_void_const_PublicationErrorEvent_____event______(const std::optional<std::function<void(const PublicationErrorEvent& /* event */)>>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::shared_ptr<Promise<bool>>
+  /**
+   * Specialized version of `std::shared_ptr<Promise<bool>>`.
+   */
+  using std__shared_ptr_Promise_bool__ = std::shared_ptr<Promise<bool>>;
+  inline std::shared_ptr<Promise<bool>> create_std__shared_ptr_Promise_bool__() noexcept {
+    return Promise<bool>::create();
+  }
+  inline PromiseHolder<bool> wrap_std__shared_ptr_Promise_bool__(std::shared_ptr<Promise<bool>> promise) noexcept {
+    return PromiseHolder<bool>(std::move(promise));
+  }
+  
+  // pragma MARK: std::function<void(bool /* result */)>
+  /**
+   * Specialized version of `std::function<void(bool)>`.
+   */
+  using Func_void_bool = std::function<void(bool /* result */)>;
+  /**
+   * Wrapper class for a `std::function<void(bool / * result * /)>`, this can be used from Swift.
+   */
+  class Func_void_bool_Wrapper final {
+  public:
+    explicit Func_void_bool_Wrapper(std::function<void(bool /* result */)>&& func): _function(std::make_unique<std::function<void(bool /* result */)>>(std::move(func))) {}
+    inline void call(bool result) const noexcept {
+      _function->operator()(result);
+    }
+  private:
+    std::unique_ptr<std::function<void(bool /* result */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_bool create_Func_void_bool(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_bool_Wrapper wrap_Func_void_bool(Func_void_bool value) noexcept {
+    return Func_void_bool_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::function<void(const std::exception_ptr& /* error */)>
+  /**
+   * Specialized version of `std::function<void(const std::exception_ptr&)>`.
+   */
+  using Func_void_std__exception_ptr = std::function<void(const std::exception_ptr& /* error */)>;
+  /**
+   * Wrapper class for a `std::function<void(const std::exception_ptr& / * error * /)>`, this can be used from Swift.
+   */
+  class Func_void_std__exception_ptr_Wrapper final {
+  public:
+    explicit Func_void_std__exception_ptr_Wrapper(std::function<void(const std::exception_ptr& /* error */)>&& func): _function(std::make_unique<std::function<void(const std::exception_ptr& /* error */)>>(std::move(func))) {}
+    inline void call(std::exception_ptr error) const noexcept {
+      _function->operator()(error);
+    }
+  private:
+    std::unique_ptr<std::function<void(const std::exception_ptr& /* error */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_std__exception_ptr create_Func_void_std__exception_ptr(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_std__exception_ptr_Wrapper wrap_Func_void_std__exception_ptr(Func_void_std__exception_ptr value) noexcept {
+    return Func_void_std__exception_ptr_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>
+  /**
+   * Specialized version of `std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure&)>`.
+   */
+  using Func_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure = std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>;
+  /**
+   * Wrapper class for a `std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& / * failure * /)>`, this can be used from Swift.
+   */
+  class Func_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure_Wrapper final {
+  public:
+    explicit Func_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure_Wrapper(std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>&& func): _function(std::make_unique<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>>(std::move(func))) {}
+    inline std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>> call(SourceRequestFailure failure) const noexcept {
+      auto __result = _function->operator()(failure);
+      return __result;
+    }
+  private:
+    std::unique_ptr<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure create_Func_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure_Wrapper wrap_Func_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure(Func_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure value) noexcept {
+    return Func_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>
+  /**
+   * Specialized version of `std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>`.
+   */
+  using std__shared_ptr_Promise_std__shared_ptr_Promise_bool____ = std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>;
+  inline std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>> create_std__shared_ptr_Promise_std__shared_ptr_Promise_bool____() noexcept {
+    return Promise<std::shared_ptr<Promise<bool>>>::create();
+  }
+  inline PromiseHolder<std::shared_ptr<Promise<bool>>> wrap_std__shared_ptr_Promise_std__shared_ptr_Promise_bool____(std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>> promise) noexcept {
+    return PromiseHolder<std::shared_ptr<Promise<bool>>>(std::move(promise));
+  }
+  
+  // pragma MARK: std::function<void(const std::shared_ptr<Promise<bool>>& /* result */)>
+  /**
+   * Specialized version of `std::function<void(const std::shared_ptr<Promise<bool>>&)>`.
+   */
+  using Func_void_std__shared_ptr_Promise_bool__ = std::function<void(const std::shared_ptr<Promise<bool>>& /* result */)>;
+  /**
+   * Wrapper class for a `std::function<void(const std::shared_ptr<Promise<bool>>& / * result * /)>`, this can be used from Swift.
+   */
+  class Func_void_std__shared_ptr_Promise_bool___Wrapper final {
+  public:
+    explicit Func_void_std__shared_ptr_Promise_bool___Wrapper(std::function<void(const std::shared_ptr<Promise<bool>>& /* result */)>&& func): _function(std::make_unique<std::function<void(const std::shared_ptr<Promise<bool>>& /* result */)>>(std::move(func))) {}
+    inline void call(std::shared_ptr<Promise<bool>> result) const noexcept {
+      _function->operator()(result);
+    }
+  private:
+    std::unique_ptr<std::function<void(const std::shared_ptr<Promise<bool>>& /* result */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_std__shared_ptr_Promise_bool__ create_Func_void_std__shared_ptr_Promise_bool__(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_std__shared_ptr_Promise_bool___Wrapper wrap_Func_void_std__shared_ptr_Promise_bool__(Func_void_std__shared_ptr_Promise_bool__ value) noexcept {
+    return Func_void_std__shared_ptr_Promise_bool___Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>>
+  /**
+   * Specialized version of `std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& / * failure * /)>>`.
+   */
+  using std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____const_SourceRequestFailure_____failure______ = std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>>;
+  inline std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>> create_std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____const_SourceRequestFailure_____failure______(const std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>& value) noexcept {
+    return std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>>(value);
+  }
+  inline bool has_value_std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____const_SourceRequestFailure_____failure______(const std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)> get_std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____const_SourceRequestFailure_____failure______(const std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::shared_ptr<Promise<PublicationSource>>
+  /**
+   * Specialized version of `std::shared_ptr<Promise<PublicationSource>>`.
+   */
+  using std__shared_ptr_Promise_PublicationSource__ = std::shared_ptr<Promise<PublicationSource>>;
+  inline std::shared_ptr<Promise<PublicationSource>> create_std__shared_ptr_Promise_PublicationSource__() noexcept {
+    return Promise<PublicationSource>::create();
+  }
+  inline PromiseHolder<PublicationSource> wrap_std__shared_ptr_Promise_PublicationSource__(std::shared_ptr<Promise<PublicationSource>> promise) noexcept {
+    return PromiseHolder<PublicationSource>(std::move(promise));
+  }
+  
+  // pragma MARK: std::function<void(const PublicationSource& /* result */)>
+  /**
+   * Specialized version of `std::function<void(const PublicationSource&)>`.
+   */
+  using Func_void_PublicationSource = std::function<void(const PublicationSource& /* result */)>;
+  /**
+   * Wrapper class for a `std::function<void(const PublicationSource& / * result * /)>`, this can be used from Swift.
+   */
+  class Func_void_PublicationSource_Wrapper final {
+  public:
+    explicit Func_void_PublicationSource_Wrapper(std::function<void(const PublicationSource& /* result */)>&& func): _function(std::make_unique<std::function<void(const PublicationSource& /* result */)>>(std::move(func))) {}
+    inline void call(PublicationSource result) const noexcept {
+      _function->operator()(result);
+    }
+  private:
+    std::unique_ptr<std::function<void(const PublicationSource& /* result */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_PublicationSource create_Func_void_PublicationSource(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_PublicationSource_Wrapper wrap_Func_void_PublicationSource(Func_void_PublicationSource value) noexcept {
+    return Func_void_PublicationSource_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>
+  /**
+   * Specialized version of `std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest&)>`.
+   */
+  using Func_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest = std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>;
+  /**
+   * Wrapper class for a `std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& / * request * /)>`, this can be used from Swift.
+   */
+  class Func_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest_Wrapper final {
+  public:
+    explicit Func_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest_Wrapper(std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>&& func): _function(std::make_unique<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>>(std::move(func))) {}
+    inline std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>> call(ResolveSourceRequest request) const noexcept {
+      auto __result = _function->operator()(request);
+      return __result;
+    }
+  private:
+    std::unique_ptr<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest create_Func_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest_Wrapper wrap_Func_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest(Func_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest value) noexcept {
+    return Func_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>
+  /**
+   * Specialized version of `std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>`.
+   */
+  using std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource____ = std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>;
+  inline std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>> create_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource____() noexcept {
+    return Promise<std::shared_ptr<Promise<PublicationSource>>>::create();
+  }
+  inline PromiseHolder<std::shared_ptr<Promise<PublicationSource>>> wrap_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource____(std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>> promise) noexcept {
+    return PromiseHolder<std::shared_ptr<Promise<PublicationSource>>>(std::move(promise));
+  }
+  
+  // pragma MARK: std::function<void(const std::shared_ptr<Promise<PublicationSource>>& /* result */)>
+  /**
+   * Specialized version of `std::function<void(const std::shared_ptr<Promise<PublicationSource>>&)>`.
+   */
+  using Func_void_std__shared_ptr_Promise_PublicationSource__ = std::function<void(const std::shared_ptr<Promise<PublicationSource>>& /* result */)>;
+  /**
+   * Wrapper class for a `std::function<void(const std::shared_ptr<Promise<PublicationSource>>& / * result * /)>`, this can be used from Swift.
+   */
+  class Func_void_std__shared_ptr_Promise_PublicationSource___Wrapper final {
+  public:
+    explicit Func_void_std__shared_ptr_Promise_PublicationSource___Wrapper(std::function<void(const std::shared_ptr<Promise<PublicationSource>>& /* result */)>&& func): _function(std::make_unique<std::function<void(const std::shared_ptr<Promise<PublicationSource>>& /* result */)>>(std::move(func))) {}
+    inline void call(std::shared_ptr<Promise<PublicationSource>> result) const noexcept {
+      _function->operator()(result);
+    }
+  private:
+    std::unique_ptr<std::function<void(const std::shared_ptr<Promise<PublicationSource>>& /* result */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_std__shared_ptr_Promise_PublicationSource__ create_Func_void_std__shared_ptr_Promise_PublicationSource__(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_std__shared_ptr_Promise_PublicationSource___Wrapper wrap_Func_void_std__shared_ptr_Promise_PublicationSource__(Func_void_std__shared_ptr_Promise_PublicationSource__ value) noexcept {
+    return Func_void_std__shared_ptr_Promise_PublicationSource___Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>>
+  /**
+   * Specialized version of `std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& / * request * /)>>`.
+   */
+  using std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____const_ResolveSourceRequest_____request______ = std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>>;
+  inline std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>> create_std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____const_ResolveSourceRequest_____request______(const std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>& value) noexcept {
+    return std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>>(value);
+  }
+  inline bool has_value_std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____const_ResolveSourceRequest_____request______(const std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)> get_std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____const_ResolveSourceRequest_____request______(const std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>>& optional) noexcept {
     return optional.value();
   }
   
@@ -807,6 +1203,43 @@ namespace margelo::nitro::readium::bridge::swift {
     return optional.value();
   }
   
+  // pragma MARK: std::function<void(const ZoomEvent& /* event */)>
+  /**
+   * Specialized version of `std::function<void(const ZoomEvent&)>`.
+   */
+  using Func_void_ZoomEvent = std::function<void(const ZoomEvent& /* event */)>;
+  /**
+   * Wrapper class for a `std::function<void(const ZoomEvent& / * event * /)>`, this can be used from Swift.
+   */
+  class Func_void_ZoomEvent_Wrapper final {
+  public:
+    explicit Func_void_ZoomEvent_Wrapper(std::function<void(const ZoomEvent& /* event */)>&& func): _function(std::make_unique<std::function<void(const ZoomEvent& /* event */)>>(std::move(func))) {}
+    inline void call(ZoomEvent event) const noexcept {
+      _function->operator()(event);
+    }
+  private:
+    std::unique_ptr<std::function<void(const ZoomEvent& /* event */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_ZoomEvent create_Func_void_ZoomEvent(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_ZoomEvent_Wrapper wrap_Func_void_ZoomEvent(Func_void_ZoomEvent value) noexcept {
+    return Func_void_ZoomEvent_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<std::function<void(const ZoomEvent& /* event */)>>
+  /**
+   * Specialized version of `std::optional<std::function<void(const ZoomEvent& / * event * /)>>`.
+   */
+  using std__optional_std__function_void_const_ZoomEvent_____event______ = std::optional<std::function<void(const ZoomEvent& /* event */)>>;
+  inline std::optional<std::function<void(const ZoomEvent& /* event */)>> create_std__optional_std__function_void_const_ZoomEvent_____event______(const std::function<void(const ZoomEvent& /* event */)>& value) noexcept {
+    return std::optional<std::function<void(const ZoomEvent& /* event */)>>(value);
+  }
+  inline bool has_value_std__optional_std__function_void_const_ZoomEvent_____event______(const std::optional<std::function<void(const ZoomEvent& /* event */)>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::function<void(const ZoomEvent& /* event */)> get_std__optional_std__function_void_const_ZoomEvent_____event______(const std::optional<std::function<void(const ZoomEvent& /* event */)>>& optional) noexcept {
+    return optional.value();
+  }
+  
   // pragma MARK: std::vector<SearchResult>
   /**
    * Specialized version of `std::vector<SearchResult>`.
@@ -850,28 +1283,6 @@ namespace margelo::nitro::readium::bridge::swift {
   Func_void_SearchPage create_Func_void_SearchPage(void* NON_NULL swiftClosureWrapper) noexcept;
   inline Func_void_SearchPage_Wrapper wrap_Func_void_SearchPage(Func_void_SearchPage value) noexcept {
     return Func_void_SearchPage_Wrapper(std::move(value));
-  }
-  
-  // pragma MARK: std::function<void(const std::exception_ptr& /* error */)>
-  /**
-   * Specialized version of `std::function<void(const std::exception_ptr&)>`.
-   */
-  using Func_void_std__exception_ptr = std::function<void(const std::exception_ptr& /* error */)>;
-  /**
-   * Wrapper class for a `std::function<void(const std::exception_ptr& / * error * /)>`, this can be used from Swift.
-   */
-  class Func_void_std__exception_ptr_Wrapper final {
-  public:
-    explicit Func_void_std__exception_ptr_Wrapper(std::function<void(const std::exception_ptr& /* error */)>&& func): _function(std::make_unique<std::function<void(const std::exception_ptr& /* error */)>>(std::move(func))) {}
-    inline void call(std::exception_ptr error) const noexcept {
-      _function->operator()(error);
-    }
-  private:
-    std::unique_ptr<std::function<void(const std::exception_ptr& /* error */)>> _function;
-  } SWIFT_NONCOPYABLE;
-  Func_void_std__exception_ptr create_Func_void_std__exception_ptr(void* NON_NULL swiftClosureWrapper) noexcept;
-  inline Func_void_std__exception_ptr_Wrapper wrap_Func_void_std__exception_ptr(Func_void_std__exception_ptr value) noexcept {
-    return Func_void_std__exception_ptr_Wrapper(std::move(value));
   }
   
   // pragma MARK: std::optional<SearchOptions>

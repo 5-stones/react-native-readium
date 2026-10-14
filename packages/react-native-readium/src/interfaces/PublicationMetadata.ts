@@ -5,9 +5,9 @@ export type {
   BelongsTo,
   AccessibilityCertification,
   Accessibility,
-} from '../specs/ReadiumView.nitro';
+} from '../specs';
 
-import type { PublicationMetadata as SpecPublicationMetadata } from '../specs/ReadiumView.nitro';
+import type { PublicationMetadata as SpecPublicationMetadata } from '../specs';
 
 /**
  * Publication metadata following Readium Web Publication Manifest spec.

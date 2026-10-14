@@ -21,7 +21,8 @@ enum class PublicationErrorCode(@DoNotStrip @Keep val value: Int) {
   OPENFAILED(2),
   PROTECTIONNOTSUPPORTED(3),
   RESTRICTED(4),
-  CANCELLED(5);
+  CANCELLED(5),
+  READFAILED(6);
 
   companion object
 }

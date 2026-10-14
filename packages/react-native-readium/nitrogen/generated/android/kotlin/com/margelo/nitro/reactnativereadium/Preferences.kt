@@ -37,7 +37,7 @@ data class Preferences(
   val hyphens: Boolean?,
   @DoNotStrip
   @Keep
-  val imageFilter: String?,
+  val imageFilter: ReaderImageFilter?,
   @DoNotStrip
   @Keep
   val language: String?,
@@ -64,16 +64,16 @@ data class Preferences(
   val publisherStyles: Boolean?,
   @DoNotStrip
   @Keep
-  val readingProgression: String?,
+  val readingProgression: ReaderReadingProgression?,
   @DoNotStrip
   @Keep
   val scroll: Boolean?,
   @DoNotStrip
   @Keep
-  val spread: String?,
+  val spread: ReaderSpread?,
   @DoNotStrip
   @Keep
-  val textAlign: String?,
+  val textAlign: ReaderTextAlign?,
   @DoNotStrip
   @Keep
   val textColor: String?,
@@ -82,7 +82,7 @@ data class Preferences(
   val textNormalization: Boolean?,
   @DoNotStrip
   @Keep
-  val theme: String?,
+  val theme: ReaderTheme?,
   @DoNotStrip
   @Keep
   val typeScale: Double?,
@@ -94,7 +94,7 @@ data class Preferences(
   val wordSpacing: Double?,
   @DoNotStrip
   @Keep
-  val fit: String?,
+  val fit: ReaderFit?,
   @DoNotStrip
   @Keep
   val offsetFirstPage: Boolean?,
@@ -103,7 +103,7 @@ data class Preferences(
   val pageSpacing: Double?,
   @DoNotStrip
   @Keep
-  val scrollAxis: String?,
+  val scrollAxis: ReaderScrollAxis?,
   @DoNotStrip
   @Keep
   val visibleScrollbar: Boolean?
@@ -118,7 +118,7 @@ data class Preferences(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(backgroundColor: String?, columnCount: String?, fontFamily: String?, fontSize: Double?, fontWeight: Double?, hyphens: Boolean?, imageFilter: String?, language: String?, letterSpacing: Double?, ligatures: Boolean?, lineHeight: Double?, pageMargins: Double?, paragraphIndent: Double?, paragraphSpacing: Double?, publisherStyles: Boolean?, readingProgression: String?, scroll: Boolean?, spread: String?, textAlign: String?, textColor: String?, textNormalization: Boolean?, theme: String?, typeScale: Double?, verticalText: Boolean?, wordSpacing: Double?, fit: String?, offsetFirstPage: Boolean?, pageSpacing: Double?, scrollAxis: String?, visibleScrollbar: Boolean?): Preferences {
+    private fun fromCpp(backgroundColor: String?, columnCount: String?, fontFamily: String?, fontSize: Double?, fontWeight: Double?, hyphens: Boolean?, imageFilter: ReaderImageFilter?, language: String?, letterSpacing: Double?, ligatures: Boolean?, lineHeight: Double?, pageMargins: Double?, paragraphIndent: Double?, paragraphSpacing: Double?, publisherStyles: Boolean?, readingProgression: ReaderReadingProgression?, scroll: Boolean?, spread: ReaderSpread?, textAlign: ReaderTextAlign?, textColor: String?, textNormalization: Boolean?, theme: ReaderTheme?, typeScale: Double?, verticalText: Boolean?, wordSpacing: Double?, fit: ReaderFit?, offsetFirstPage: Boolean?, pageSpacing: Double?, scrollAxis: ReaderScrollAxis?, visibleScrollbar: Boolean?): Preferences {
       return Preferences(backgroundColor, columnCount, fontFamily, fontSize, fontWeight, hyphens, imageFilter, language, letterSpacing, ligatures, lineHeight, pageMargins, paragraphIndent, paragraphSpacing, publisherStyles, readingProgression, scroll, spread, textAlign, textColor, textNormalization, theme, typeScale, verticalText, wordSpacing, fit, offsetFirstPage, pageSpacing, scrollAxis, visibleScrollbar)
     }
   }

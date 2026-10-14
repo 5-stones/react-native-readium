@@ -46,14 +46,36 @@ namespace margelo::nitro::readium { struct Preferences; }
 namespace margelo::nitro::readium { enum class PublicationErrorCode; }
 // Forward declaration of `PublicationErrorEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct PublicationErrorEvent; }
+// Forward declaration of `PublicationErrorKind` to properly resolve imports.
+namespace margelo::nitro::readium { enum class PublicationErrorKind; }
+// Forward declaration of `PublicationErrorStage` to properly resolve imports.
+namespace margelo::nitro::readium { enum class PublicationErrorStage; }
 // Forward declaration of `PublicationMetadata` to properly resolve imports.
 namespace margelo::nitro::readium { struct PublicationMetadata; }
 // Forward declaration of `PublicationReadyEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct PublicationReadyEvent; }
+// Forward declaration of `PublicationSource` to properly resolve imports.
+namespace margelo::nitro::readium { struct PublicationSource; }
+// Forward declaration of `ReaderFit` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderFit; }
+// Forward declaration of `ReaderImageFilter` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderImageFilter; }
+// Forward declaration of `ReaderReadingProgression` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderReadingProgression; }
+// Forward declaration of `ReaderScrollAxis` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderScrollAxis; }
+// Forward declaration of `ReaderSpread` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderSpread; }
+// Forward declaration of `ReaderTextAlign` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderTextAlign; }
+// Forward declaration of `ReaderTheme` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderTheme; }
 // Forward declaration of `ReadiumFile` to properly resolve imports.
 namespace margelo::nitro::readium { struct ReadiumFile; }
 // Forward declaration of `Rect` to properly resolve imports.
 namespace margelo::nitro::readium { struct Rect; }
+// Forward declaration of `ResolveSourceRequest` to properly resolve imports.
+namespace margelo::nitro::readium { struct ResolveSourceRequest; }
 // Forward declaration of `SearchOptions` to properly resolve imports.
 namespace margelo::nitro::readium { struct SearchOptions; }
 // Forward declaration of `SearchPage` to properly resolve imports.
@@ -68,8 +90,14 @@ namespace margelo::nitro::readium { struct SelectionAction; }
 namespace margelo::nitro::readium { struct SelectionEvent; }
 // Forward declaration of `SeriesInfo` to properly resolve imports.
 namespace margelo::nitro::readium { struct SeriesInfo; }
+// Forward declaration of `SourceRequestFailure` to properly resolve imports.
+namespace margelo::nitro::readium { struct SourceRequestFailure; }
+// Forward declaration of `SourceRequestReason` to properly resolve imports.
+namespace margelo::nitro::readium { enum class SourceRequestReason; }
 // Forward declaration of `Subject` to properly resolve imports.
 namespace margelo::nitro::readium { struct Subject; }
+// Forward declaration of `ZoomEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct ZoomEvent; }
 
 // Include C++ defined types
 #include "Accessibility.hpp"
@@ -91,10 +119,21 @@ namespace margelo::nitro::readium { struct Subject; }
 #include "PreferencesChangedEvent.hpp"
 #include "PublicationErrorCode.hpp"
 #include "PublicationErrorEvent.hpp"
+#include "PublicationErrorKind.hpp"
+#include "PublicationErrorStage.hpp"
 #include "PublicationMetadata.hpp"
 #include "PublicationReadyEvent.hpp"
+#include "PublicationSource.hpp"
+#include "ReaderFit.hpp"
+#include "ReaderImageFilter.hpp"
+#include "ReaderReadingProgression.hpp"
+#include "ReaderScrollAxis.hpp"
+#include "ReaderSpread.hpp"
+#include "ReaderTextAlign.hpp"
+#include "ReaderTheme.hpp"
 #include "ReadiumFile.hpp"
 #include "Rect.hpp"
+#include "ResolveSourceRequest.hpp"
 #include "SearchOptions.hpp"
 #include "SearchPage.hpp"
 #include "SearchResult.hpp"
@@ -102,7 +141,10 @@ namespace margelo::nitro::readium { struct Subject; }
 #include "SelectionActionEvent.hpp"
 #include "SelectionEvent.hpp"
 #include "SeriesInfo.hpp"
+#include "SourceRequestFailure.hpp"
+#include "SourceRequestReason.hpp"
 #include "Subject.hpp"
+#include "ZoomEvent.hpp"
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/Result.hpp>
 #include <exception>

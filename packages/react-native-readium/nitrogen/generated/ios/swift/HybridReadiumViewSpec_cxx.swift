@@ -343,6 +343,112 @@ open class HybridReadiumViewSpec_cxx {
     }
   }
   
+  public final var shouldRefreshSource: bridge.std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____const_SourceRequestFailure_____failure______ {
+    @inline(__always)
+    get {
+      return { () -> bridge.std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____const_SourceRequestFailure_____failure______ in
+        if let __unwrappedValue = self.__implementation.shouldRefreshSource {
+          return bridge.create_std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____const_SourceRequestFailure_____failure______({ () -> bridge.Func_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure in
+            let __closureWrapper = Func_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure(__unwrappedValue)
+            return bridge.create_Func_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__implementation.shouldRefreshSource = { () -> ((_ failure: SourceRequestFailure) -> Promise<Promise<Bool>>)? in
+        if bridge.has_value_std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____const_SourceRequestFailure_____failure______(newValue) {
+          let __unwrapped = bridge.get_std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____const_SourceRequestFailure_____failure______(newValue)
+          return { () -> (SourceRequestFailure) -> Promise<Promise<Bool>> in
+            let __wrappedFunction = bridge.wrap_Func_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure(__unwrapped)
+            return { (__failure: SourceRequestFailure) -> Promise<Promise<Bool>> in
+              let __result = __wrappedFunction.call(__failure)
+              return { () -> Promise<Promise<Bool>> in
+                let __promise = Promise<Promise<Bool>>()
+                let __resolver = { (__result: Promise<Bool>) in
+                  __promise.resolve(withResult: __result)
+                }
+                let __rejecter = { (__error: Error) in
+                  __promise.reject(withError: __error)
+                }
+                let __resolverCpp = { () -> bridge.Func_void_std__shared_ptr_Promise_bool__ in
+                  let __closureWrapper = Func_void_std__shared_ptr_Promise_bool__(__resolver)
+                  return bridge.create_Func_void_std__shared_ptr_Promise_bool__(__closureWrapper.toUnsafe())
+                }()
+                let __rejecterCpp = { () -> bridge.Func_void_std__exception_ptr in
+                  let __closureWrapper = Func_void_std__exception_ptr(__rejecter)
+                  return bridge.create_Func_void_std__exception_ptr(__closureWrapper.toUnsafe())
+                }()
+                let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_std__shared_ptr_Promise_bool____(__result)
+                __promiseHolder.addOnResolvedListener(__resolverCpp)
+                __promiseHolder.addOnRejectedListener(__rejecterCpp)
+                return __promise
+              }()
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
+    }
+  }
+  
+  public final var resolveSource: bridge.std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____const_ResolveSourceRequest_____request______ {
+    @inline(__always)
+    get {
+      return { () -> bridge.std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____const_ResolveSourceRequest_____request______ in
+        if let __unwrappedValue = self.__implementation.resolveSource {
+          return bridge.create_std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____const_ResolveSourceRequest_____request______({ () -> bridge.Func_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest in
+            let __closureWrapper = Func_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest(__unwrappedValue)
+            return bridge.create_Func_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__implementation.resolveSource = { () -> ((_ request: ResolveSourceRequest) -> Promise<Promise<PublicationSource>>)? in
+        if bridge.has_value_std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____const_ResolveSourceRequest_____request______(newValue) {
+          let __unwrapped = bridge.get_std__optional_std__function_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____const_ResolveSourceRequest_____request______(newValue)
+          return { () -> (ResolveSourceRequest) -> Promise<Promise<PublicationSource>> in
+            let __wrappedFunction = bridge.wrap_Func_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest(__unwrapped)
+            return { (__request: ResolveSourceRequest) -> Promise<Promise<PublicationSource>> in
+              let __result = __wrappedFunction.call(__request)
+              return { () -> Promise<Promise<PublicationSource>> in
+                let __promise = Promise<Promise<PublicationSource>>()
+                let __resolver = { (__result: Promise<PublicationSource>) in
+                  __promise.resolve(withResult: __result)
+                }
+                let __rejecter = { (__error: Error) in
+                  __promise.reject(withError: __error)
+                }
+                let __resolverCpp = { () -> bridge.Func_void_std__shared_ptr_Promise_PublicationSource__ in
+                  let __closureWrapper = Func_void_std__shared_ptr_Promise_PublicationSource__(__resolver)
+                  return bridge.create_Func_void_std__shared_ptr_Promise_PublicationSource__(__closureWrapper.toUnsafe())
+                }()
+                let __rejecterCpp = { () -> bridge.Func_void_std__exception_ptr in
+                  let __closureWrapper = Func_void_std__exception_ptr(__rejecter)
+                  return bridge.create_Func_void_std__exception_ptr(__closureWrapper.toUnsafe())
+                }()
+                let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource____(__result)
+                __promiseHolder.addOnResolvedListener(__resolverCpp)
+                __promiseHolder.addOnRejectedListener(__rejecterCpp)
+                return __promise
+              }()
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
+    }
+  }
+  
   public final var onDecorationActivated: bridge.std__optional_std__function_void_const_DecorationActivatedEvent_____event______ {
     @inline(__always)
     get {
@@ -429,6 +535,38 @@ open class HybridReadiumViewSpec_cxx {
           return { () -> (SelectionActionEvent) -> Void in
             let __wrappedFunction = bridge.wrap_Func_void_SelectionActionEvent(__unwrapped)
             return { (__event: SelectionActionEvent) -> Void in
+              __wrappedFunction.call(__event)
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
+    }
+  }
+  
+  public final var onZoomChange: bridge.std__optional_std__function_void_const_ZoomEvent_____event______ {
+    @inline(__always)
+    get {
+      return { () -> bridge.std__optional_std__function_void_const_ZoomEvent_____event______ in
+        if let __unwrappedValue = self.__implementation.onZoomChange {
+          return bridge.create_std__optional_std__function_void_const_ZoomEvent_____event______({ () -> bridge.Func_void_ZoomEvent in
+            let __closureWrapper = Func_void_ZoomEvent(__unwrappedValue)
+            return bridge.create_Func_void_ZoomEvent(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__implementation.onZoomChange = { () -> ((_ event: ZoomEvent) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_const_ZoomEvent_____event______(newValue) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_const_ZoomEvent_____event______(newValue)
+          return { () -> (ZoomEvent) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_ZoomEvent(__unwrapped)
+            return { (__event: ZoomEvent) -> Void in
               __wrappedFunction.call(__event)
             }
           }()
@@ -526,6 +664,50 @@ open class HybridReadiumViewSpec_cxx {
   public final func cancelSearch() -> bridge.Result_void_ {
     do {
       try self.__implementation.cancelSearch()
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func zoomIn() -> bridge.Result_void_ {
+    do {
+      try self.__implementation.zoomIn()
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func zoomOut() -> bridge.Result_void_ {
+    do {
+      try self.__implementation.zoomOut()
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func setZoom(scale: Double) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.setZoom(scale: scale)
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func resetZoom() -> bridge.Result_void_ {
+    do {
+      try self.__implementation.resetZoom()
       return bridge.create_Result_void_()
     } catch (let __error) {
       let __exceptionPtr = __error.toCpp()

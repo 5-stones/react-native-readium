@@ -50,9 +50,9 @@ internal fun nitroPreferencesToEpub(prefs: Preferences): ReadiumEpubPreferences 
   // When theme is sepia and no explicit colors are set, inject our unified
   // sepia colors so the result matches iOS and web exactly.
   val bgColor = prefs.backgroundColor?.let { parseReadiumColor(it) }
-    ?: if (prefs.theme == "sepia" && prefs.backgroundColor == null) parseReadiumColor(SEPIA_BACKGROUND) else null
+    ?: if (prefs.theme == ReaderTheme.SEPIA && prefs.backgroundColor == null) parseReadiumColor(SEPIA_BACKGROUND) else null
   val txtColor = prefs.textColor?.let { parseReadiumColor(it) }
-    ?: if (prefs.theme == "sepia" && prefs.textColor == null) parseReadiumColor(SEPIA_TEXT) else null
+    ?: if (prefs.theme == ReaderTheme.SEPIA && prefs.textColor == null) parseReadiumColor(SEPIA_TEXT) else null
 
   return try {
     ReadiumEpubPreferences(
@@ -110,55 +110,71 @@ private fun parseReadiumColor(hex: String): ReadiumColor? {
   }
 }
 
-private fun parseTheme(value: String): Theme? = when (value.lowercase()) {
-  "light" -> Theme.LIGHT
-  "dark" -> Theme.DARK
-  "sepia" -> Theme.SEPIA
-  else -> null
+private fun parseTheme(value: ReaderTheme): Theme = when (value) {
+  ReaderTheme.LIGHT -> Theme.LIGHT
+  ReaderTheme.DARK -> Theme.DARK
+  ReaderTheme.SEPIA -> Theme.SEPIA
 }
 
-private fun parseColumnCount(value: String): ColumnCount? = when (value.lowercase()) {
+/**
+ * The column count, which crosses the bridge as a string.
+ *
+ * Not a generated enum, because nitrogen would name the case for `'1'` in a
+ * way Swift cannot spell — so this is the one preference parsed by hand, and
+ * the one that has to answer for a value it does not know.
+ *
+ * `'1'` and `'2'` are the deprecated spellings of `'one'` and `'two'`; see
+ * `ReaderColumnCountLegacy` in `src/interfaces/Preferences.ts`.
+ */
+private fun parseColumnCount(value: String): ColumnCount? = when (value) {
   "auto" -> ColumnCount.AUTO
-  "1" -> ColumnCount.ONE
-  "2" -> ColumnCount.TWO
-  else -> null
+  "one", "1" -> ColumnCount.ONE
+  "two", "2" -> ColumnCount.TWO
+  else -> {
+    Log.w(TAG, "Ignoring unknown columnCount '$value'")
+    null
+  }
 }
 
-private fun parseImageFilter(value: String): ImageFilter? = when (value.lowercase()) {
-  "darken" -> ImageFilter.DARKEN
-  "invert" -> ImageFilter.INVERT
-  else -> null
+private fun parseImageFilter(value: ReaderImageFilter): ImageFilter = when (value) {
+  ReaderImageFilter.DARKEN -> ImageFilter.DARKEN
+  ReaderImageFilter.INVERT -> ImageFilter.INVERT
 }
 
-private fun parseReadingProgression(value: String): NavReadingProgression? = when (value.lowercase()) {
-  "ltr" -> NavReadingProgression.LTR
-  "rtl" -> NavReadingProgression.RTL
-  else -> null
+private fun parseReadingProgression(
+  value: ReaderReadingProgression
+): NavReadingProgression = when (value) {
+  ReaderReadingProgression.LTR -> NavReadingProgression.LTR
+  ReaderReadingProgression.RTL -> NavReadingProgression.RTL
 }
 
-private fun parseSpread(value: String): NavSpread? = when (value.lowercase()) {
-  "auto" -> NavSpread.AUTO
-  "never" -> NavSpread.NEVER
-  "always" -> NavSpread.ALWAYS
-  else -> null
+private fun parseSpread(value: ReaderSpread): NavSpread = when (value) {
+  ReaderSpread.AUTO -> NavSpread.AUTO
+  ReaderSpread.NEVER -> NavSpread.NEVER
+  ReaderSpread.ALWAYS -> NavSpread.ALWAYS
 }
 
-private fun parseTextAlign(value: String): TextAlign? = when (value.lowercase()) {
-  "center" -> TextAlign.CENTER
-  "justify" -> TextAlign.JUSTIFY
-  "start" -> TextAlign.START
-  "end" -> TextAlign.END
-  "left" -> TextAlign.LEFT
-  "right" -> TextAlign.RIGHT
-  else -> null
+private fun parseTextAlign(value: ReaderTextAlign): TextAlign = when (value) {
+  ReaderTextAlign.CENTER -> TextAlign.CENTER
+  ReaderTextAlign.JUSTIFY -> TextAlign.JUSTIFY
+  ReaderTextAlign.START -> TextAlign.START
+  ReaderTextAlign.END -> TextAlign.END
+  ReaderTextAlign.LEFT -> TextAlign.LEFT
+  ReaderTextAlign.RIGHT -> TextAlign.RIGHT
 }
 
-private fun parseFit(value: String): Fit? = when (value.lowercase()) {
-  "cover" -> Fit.COVER
-  "contain" -> Fit.CONTAIN
-  "width" -> Fit.WIDTH
-  "height" -> Fit.HEIGHT
-  else -> null
+/**
+ * The nearest fit the PDF navigator accepts.
+ *
+ * `PdfiumPreferences` requires `fit` to be one of `CONTAIN` or `WIDTH` and
+ * throws otherwise — and the throw is caught where the whole preference set is
+ * built, so asking for `cover` or `height` used to discard `pageSpacing`,
+ * `readingProgression` and `scrollAxis` along with it. iOS narrows these the
+ * same way.
+ */
+private fun parseFit(value: ReaderFit): Fit = when (value) {
+  ReaderFit.CONTAIN, ReaderFit.HEIGHT -> Fit.CONTAIN
+  ReaderFit.COVER, ReaderFit.WIDTH -> Fit.WIDTH
 }
 
 /**
@@ -223,10 +239,9 @@ internal fun nitroDecorationToReadium(dec: Decoration): ReadiumDecoration? {
   )
 }
 
-private fun parseAxis(value: String): Axis? = when (value.lowercase()) {
-  "horizontal" -> Axis.HORIZONTAL
-  "vertical" -> Axis.VERTICAL
-  else -> null
+private fun parseAxis(value: ReaderScrollAxis): Axis = when (value) {
+  ReaderScrollAxis.HORIZONTAL -> Axis.HORIZONTAL
+  ReaderScrollAxis.VERTICAL -> Axis.VERTICAL
 }
 
 internal fun parseColorString(colorString: String?): Int {

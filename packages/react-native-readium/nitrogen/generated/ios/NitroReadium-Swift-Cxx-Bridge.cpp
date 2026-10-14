@@ -46,6 +46,64 @@ namespace margelo::nitro::readium::bridge::swift {
     };
   }
   
+  // pragma MARK: std::function<void(bool /* result */)>
+  Func_void_bool create_Func_void_bool(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroReadium::Func_void_bool::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](bool result) mutable -> void {
+      swiftClosure.call(result);
+    };
+  }
+  
+  // pragma MARK: std::function<void(const std::exception_ptr& /* error */)>
+  Func_void_std__exception_ptr create_Func_void_std__exception_ptr(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroReadium::Func_void_std__exception_ptr::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const std::exception_ptr& error) mutable -> void {
+      swiftClosure.call(error);
+    };
+  }
+  
+  // pragma MARK: std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>
+  Func_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure create_Func_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroReadium::Func_std__shared_ptr_Promise_std__shared_ptr_Promise_bool_____SourceRequestFailure::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const SourceRequestFailure& failure) mutable -> std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>> {
+      auto __result = swiftClosure.call(failure);
+      return __result;
+    };
+  }
+  
+  // pragma MARK: std::function<void(const std::shared_ptr<Promise<bool>>& /* result */)>
+  Func_void_std__shared_ptr_Promise_bool__ create_Func_void_std__shared_ptr_Promise_bool__(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroReadium::Func_void_std__shared_ptr_Promise_bool__::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const std::shared_ptr<Promise<bool>>& result) mutable -> void {
+      swiftClosure.call(result);
+    };
+  }
+  
+  // pragma MARK: std::function<void(const PublicationSource& /* result */)>
+  Func_void_PublicationSource create_Func_void_PublicationSource(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroReadium::Func_void_PublicationSource::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const PublicationSource& result) mutable -> void {
+      swiftClosure.call(result);
+    };
+  }
+  
+  // pragma MARK: std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>
+  Func_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest create_Func_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroReadium::Func_std__shared_ptr_Promise_std__shared_ptr_Promise_PublicationSource_____ResolveSourceRequest::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const ResolveSourceRequest& request) mutable -> std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>> {
+      auto __result = swiftClosure.call(request);
+      return __result;
+    };
+  }
+  
+  // pragma MARK: std::function<void(const std::shared_ptr<Promise<PublicationSource>>& /* result */)>
+  Func_void_std__shared_ptr_Promise_PublicationSource__ create_Func_void_std__shared_ptr_Promise_PublicationSource__(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroReadium::Func_void_std__shared_ptr_Promise_PublicationSource__::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const std::shared_ptr<Promise<PublicationSource>>& result) mutable -> void {
+      swiftClosure.call(result);
+    };
+  }
+  
   // pragma MARK: std::function<void(const DecorationActivatedEvent& /* event */)>
   Func_void_DecorationActivatedEvent create_Func_void_DecorationActivatedEvent(void* NON_NULL swiftClosureWrapper) noexcept {
     auto swiftClosure = NitroReadium::Func_void_DecorationActivatedEvent::fromUnsafe(swiftClosureWrapper);
@@ -70,19 +128,19 @@ namespace margelo::nitro::readium::bridge::swift {
     };
   }
   
+  // pragma MARK: std::function<void(const ZoomEvent& /* event */)>
+  Func_void_ZoomEvent create_Func_void_ZoomEvent(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroReadium::Func_void_ZoomEvent::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const ZoomEvent& event) mutable -> void {
+      swiftClosure.call(event);
+    };
+  }
+  
   // pragma MARK: std::function<void(const SearchPage& /* result */)>
   Func_void_SearchPage create_Func_void_SearchPage(void* NON_NULL swiftClosureWrapper) noexcept {
     auto swiftClosure = NitroReadium::Func_void_SearchPage::fromUnsafe(swiftClosureWrapper);
     return [swiftClosure = std::move(swiftClosure)](const SearchPage& result) mutable -> void {
       swiftClosure.call(result);
-    };
-  }
-  
-  // pragma MARK: std::function<void(const std::exception_ptr& /* error */)>
-  Func_void_std__exception_ptr create_Func_void_std__exception_ptr(void* NON_NULL swiftClosureWrapper) noexcept {
-    auto swiftClosure = NitroReadium::Func_void_std__exception_ptr::fromUnsafe(swiftClosureWrapper);
-    return [swiftClosure = std::move(swiftClosure)](const std::exception_ptr& error) mutable -> void {
-      swiftClosure.call(error);
     };
   }
   

@@ -1,7 +1,7 @@
 import type {
   Capabilities,
   PublicationReadyEvent as SpecPublicationReadyEvent,
-} from '../specs/ReadiumView.nitro';
+} from '../specs';
 import type { PublicationMetadata } from './PublicationMetadata';
 import type { Link } from './Link';
 

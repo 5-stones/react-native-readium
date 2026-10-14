@@ -30,12 +30,18 @@ namespace margelo::nitro::readium {
       prototype.registerHybridSetter("onPreferencesChanged", &HybridReadiumViewSpec::setOnPreferencesChanged);
       prototype.registerHybridGetter("onPublicationError", &HybridReadiumViewSpec::getOnPublicationError);
       prototype.registerHybridSetter("onPublicationError", &HybridReadiumViewSpec::setOnPublicationError);
+      prototype.registerHybridGetter("shouldRefreshSource", &HybridReadiumViewSpec::getShouldRefreshSource);
+      prototype.registerHybridSetter("shouldRefreshSource", &HybridReadiumViewSpec::setShouldRefreshSource);
+      prototype.registerHybridGetter("resolveSource", &HybridReadiumViewSpec::getResolveSource);
+      prototype.registerHybridSetter("resolveSource", &HybridReadiumViewSpec::setResolveSource);
       prototype.registerHybridGetter("onDecorationActivated", &HybridReadiumViewSpec::getOnDecorationActivated);
       prototype.registerHybridSetter("onDecorationActivated", &HybridReadiumViewSpec::setOnDecorationActivated);
       prototype.registerHybridGetter("onSelectionChange", &HybridReadiumViewSpec::getOnSelectionChange);
       prototype.registerHybridSetter("onSelectionChange", &HybridReadiumViewSpec::setOnSelectionChange);
       prototype.registerHybridGetter("onSelectionAction", &HybridReadiumViewSpec::getOnSelectionAction);
       prototype.registerHybridSetter("onSelectionAction", &HybridReadiumViewSpec::setOnSelectionAction);
+      prototype.registerHybridGetter("onZoomChange", &HybridReadiumViewSpec::getOnZoomChange);
+      prototype.registerHybridSetter("onZoomChange", &HybridReadiumViewSpec::setOnZoomChange);
       prototype.registerHybridMethod("goTo", &HybridReadiumViewSpec::goTo);
       prototype.registerHybridMethod("goForward", &HybridReadiumViewSpec::goForward);
       prototype.registerHybridMethod("goBackward", &HybridReadiumViewSpec::goBackward);
@@ -43,6 +49,10 @@ namespace margelo::nitro::readium {
       prototype.registerHybridMethod("search", &HybridReadiumViewSpec::search);
       prototype.registerHybridMethod("loadMoreSearchResults", &HybridReadiumViewSpec::loadMoreSearchResults);
       prototype.registerHybridMethod("cancelSearch", &HybridReadiumViewSpec::cancelSearch);
+      prototype.registerHybridMethod("zoomIn", &HybridReadiumViewSpec::zoomIn);
+      prototype.registerHybridMethod("zoomOut", &HybridReadiumViewSpec::zoomOut);
+      prototype.registerHybridMethod("setZoom", &HybridReadiumViewSpec::setZoom);
+      prototype.registerHybridMethod("resetZoom", &HybridReadiumViewSpec::resetZoom);
     });
   }
 
