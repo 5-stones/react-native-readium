@@ -11,7 +11,10 @@ import {
   toPublicationErrorEvent,
   toReadFailureEvent,
 } from '../../src/utils/publicationError';
-import { normalizePublicationURL } from '../utils/publicationUtils';
+import {
+  absolutePublicationURL,
+  normalizePublicationURL,
+} from '../utils/publicationUtils';
 import { createPublicationFetch } from '../utils/publicationFetch';
 import {
   createRelocationGuard,
@@ -113,9 +116,12 @@ export const useEpubSource = ({
   const openAt = useCallback(async () => {
     generationRef.current += 1;
     const resolve = resolveRef.current;
-    const url = resolve
+    const resolved = resolve
       ? (await resolve({ url: identityRef.current, reason: 'open' })).url
       : identityRef.current;
+    // Absolute from here on: the navigator puts this base in each chapter's
+    // CSP, which a relative one silently breaks. See `absolutePublicationURL`.
+    const url = absolutePublicationURL(resolved);
 
     sourceURLRef.current = url;
     baseRef.current = normalizePublicationURL(url);
@@ -131,12 +137,13 @@ export const useEpubSource = ({
     if (!resolve) return false;
 
     const generation = generationRef.current;
-    const { url } = await resolve({
+    const { url: resolved } = await resolve({
       url: identityRef.current,
       reason: 'refresh',
     });
     if (generation !== generationRef.current) return false; // open abandoned
 
+    const url = absolutePublicationURL(resolved);
     sourceURLRef.current = url;
     baseRef.current = normalizePublicationURL(url);
     // Only once there is a manifest. The open's own requests — the manifest
