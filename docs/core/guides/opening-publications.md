@@ -17,13 +17,48 @@ title: Opening publications
 />
 ```
 
-| `file` field      |                                                                                                                                                         |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `url`             | iOS and Android: a local path or `file://` URL to an EPUB or PDF. Web: the URL of an unpacked EPUB's `manifest.json`, or of a PDF; see [Web](./web.md). |
-| `initialLocation` | A `Locator` to open at, typically one you saved from [`onLocationChange`](./navigation.md#tracking-the-reading-position).                               |
-| `credentials`     | A secret for a protected publication, such as an LCP passphrase; see [Readium LCP](/lcp/usage#opening-a-book).                                          |
+| `file` field      |                                                                                                                                                                                                                                          |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `url`             | iOS and Android: an `http(s)://` URL to stream, or a local path or `file://` URL to a file you downloaded; see [below](#streaming-or-downloading). Web: the URL of an unpacked EPUB's `manifest.json`, or of a PDF; see [Web](./web.md). |
+| `initialLocation` | A `Locator` to open at, typically one you saved from [`onLocationChange`](./navigation.md#tracking-the-reading-position).                                                                                                                |
+| `credentials`     | A secret for a protected publication, such as an LCP passphrase; see [Readium LCP](/lcp/usage#opening-a-book).                                                                                                                           |
 
 Setting `file` to a different `url` opens that publication in the same view.
+
+When the URL you can fetch is not the URL that identifies the publication — a signed location
+that expires, or an endpoint that wants a credential — supply it with `resolveSource` instead of
+putting it in `file.url`. See [Guarded sources](./guarded-sources.md).
+
+## Streaming or downloading
+
+On iOS and Android a publication can be read either way, and the only difference is what
+`file.url` points at.
+
+```tsx
+// Streamed: read over the network, page by page.
+<ReadiumView file={{ url: 'https://cdn.example.com/book.epub' }} />
+
+// Downloaded: fetched to disk by your app first, then read from there.
+<ReadiumView file={{ url: `${RNFS.DocumentDirectoryPath}/book.epub` }} />
+```
+
+**Streaming** opens immediately and stores nothing. The toolkits fetch byte ranges as the reader
+moves, so only what's read is transferred — though an archive under 5 MB is small enough that it's
+fetched and held whole when it opens. Reading needs the network to stay reachable, and if the URL
+carries a credential that expires, [`resolveSource`](./guarded-sources.md) is how it gets
+replaced.
+
+**Downloading** is your app's job: fetch the file with whatever you already use, then point
+`file.url` at the path. The reader then works offline, nothing expires mid-chapter, and page turns
+never wait on a request — at the cost of storage and of waiting for the whole book before any of
+it can be read. A guarded download endpoint is yours to authenticate, since the library isn't
+making that request.
+
+Nothing in the view changes between the two, so an app can offer both: stream to start reading
+now, download for later.
+
+Web has no choice to make — the browser fetches everything, and there's no filesystem to download
+to.
 
 ## When the publication is ready
 

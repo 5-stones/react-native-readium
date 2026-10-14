@@ -19,6 +19,7 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       items: [
         'guides/opening-publications',
+        'guides/guarded-sources',
         'guides/navigation',
         'guides/preferences',
         'guides/highlights',
