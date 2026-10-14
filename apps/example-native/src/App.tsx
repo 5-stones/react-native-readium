@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { HomeScreen, ReaderBottomSheet } from 'common-app';
+import { HomeScreen, ReaderBottomSheet, books } from 'common-app';
 import type { BookOption } from 'common-app';
 
 import { LcpPanel, LicenseModal, PassphrasePrompt, useLcp } from './lcp';
@@ -11,54 +11,6 @@ import { TabBar } from './TabBar';
 import type { Tab } from './TabBar';
 import type { LcpClientKind } from './lcp';
 
-const books: BookOption[] = [
-  {
-    id: 'moby-dick',
-    title: 'Moby Dick',
-    author: 'Herman Melville',
-    asset: 'https://www.gutenberg.org/ebooks/2701.epub3.images',
-  },
-  {
-    id: 'confessions',
-    title: 'The Confessions of St. Augustine',
-    author: 'Augustine of Hippo',
-    asset: 'https://www.gutenberg.org/ebooks/3296.epub3.images',
-  },
-  {
-    id: 'svg-in-spine',
-    title: 'SVG In Spine (Fixed Layout)',
-    author: 'Unknown',
-    asset: 'svg-in-spine.epub',
-  },
-  {
-    id: 'brothers-karamazov',
-    title: 'The Brothers Karamazov',
-    author: 'Fyodor Dostoevsky',
-    asset: 'the-brothers-karamazov.epub',
-  },
-  {
-    id: 'sense-and-sensibility',
-    title: 'Sense and Sensibility (PDF)',
-    author: 'Jane Austen',
-    asset: 'sense-and-sensibility.pdf',
-  },
-  // LCP test books, passphrase "test". Debug builds open them without liblcp, through the
-  // basic-profile client in ios/BasicProfileLCPClient.swift and android/app/src/lcpTestClient.
-  {
-    id: 'lcp-daisy',
-    title: 'Daisy (LCP PDF)',
-    author: 'EDRLab test license · passphrase "test"',
-    asset: 'lcp-daisy.lcpdf',
-    protection: 'lcp',
-  },
-  {
-    id: 'lcp-moby-dick',
-    title: 'Moby Dick (LCP EPUB)',
-    author: 'Basic-profile fixture · passphrase "test"',
-    asset: 'lcp-moby-dick.epub',
-    protection: 'lcp',
-  },
-];
 
 interface AppProps {
   /** Set by native code; see AppDelegate.swift and MainActivity.kt. */

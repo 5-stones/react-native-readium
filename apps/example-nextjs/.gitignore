@@ -1,2 +1,6 @@
 .next
 node_modules
+
+# Built by `yarn make:streaming-book` from the epub beside it. ~7.5 MB of
+# mostly padding, and reproducible, so it is not worth committing.
+/publications/*-streaming.epub
