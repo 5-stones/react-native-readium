@@ -13,7 +13,9 @@ import { Locator, TimelineItem } from '@readium/shared';
  */
 export function createNavigatorListeners(
   onLocationChangeWithTotalProgression: (locator: Locator) => void,
-  onPositionChange?: (position: number | null) => void
+  onPositionChange?: (position: number | null) => void,
+  /** The reader selected some text, or cleared what was selected. */
+  onTextSelected?: (selection: BasicTextSelection | null) => void
 ): EpubNavigatorListeners {
   return {
     frameLoaded: function (_wnd: Window): void {
@@ -29,6 +31,9 @@ export function createNavigatorListeners(
       window.focus();
     },
     tap: function (_e: FrameClickEvent): boolean {
+      // The browser drops the selection on a tap, so whatever was shown for
+      // it goes too. Not consumed: the navigator still turns the page.
+      onTextSelected?.(null);
       return false;
     },
     click: function (_e: FrameClickEvent): boolean {
@@ -58,8 +63,10 @@ export function createNavigatorListeners(
       }
       return false;
     },
-    textSelected: function (_selection: BasicTextSelection): void {
-      // noop
+    textSelected: function (selection: BasicTextSelection): void {
+      // An empty selection is the browser reporting one being cleared, which
+      // reads the same to a consumer as there being nothing selected.
+      onTextSelected?.(selection.text ? selection : null);
     },
     contentProtection: function (
       _type: string,

@@ -82,8 +82,23 @@ export function Reader({ file }: { file: ReadiumFile }) {
 Decorations live in your state: persist them however you like, and pass them back in when the
 book reopens.
 
-Text selection is native-only: on web the three props above have no effect, and
-`capabilities.selection` is false. See [Web](./web.md#what-differs-from-native).
+## Where the selection menu comes from
+
+iOS and Android add your `selectionActions` to the operating system's own selection menu — the
+bubble that appears over selected text — and the system places and dismisses it.
+
+A browser has no such menu, and none can be added to its context menu, so on web the library
+draws one itself: a small popup beside the selection, labels only, with the same items and the
+same `onSelectionAction` payload. Nothing in your code changes between platforms.
+
+Two things to know on web:
+
+- A decoration is anchored by searching the chapter for the selected text, because the web
+  navigator reports a selection as its chapter plus that text and nothing more. A phrase that
+  appears twice in a chapter can therefore be highlighted at the wrong occurrence. Native is
+  unaffected.
+- The browser keeps the text visually selected after you pick an action, until the reader taps
+  elsewhere. There is no way to clear it through the navigator yet.
 
 On Android, Readium disables text selection in protected publications, so LCP books can't be
 highlighted there.

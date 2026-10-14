@@ -14,13 +14,16 @@ import { pdfCapabilities, WEB_ABILITIES } from '../capabilities';
  * has them build UI that nothing ever drives.
  */
 describe('web capabilities', () => {
-  it('claims no search, and no text selection, for EPUB', () => {
-    // `onSelectionChange`, `onSelectionAction` and `selectionActions` are not
-    // wired on web; `navigatorListeners.textSelected` is a no-op.
-    expect(WEB_ABILITIES.epub).toMatchObject({
-      search: false,
-      selection: false,
-    });
+  it('claims no search for EPUB', () => {
+    expect(WEB_ABILITIES.epub.search).toBe(false);
+  });
+
+  /**
+   * Reported through `onSelectionChange`, with `selectionActions` offered in a
+   * menu the library draws — a browser has no system menu to add them to.
+   */
+  it('claims text selection for EPUB', () => {
+    expect(WEB_ABILITIES.epub.selection).toBe(true);
   });
 
   it('claims decorations for EPUB, which useDecorationsObserver implements', () => {

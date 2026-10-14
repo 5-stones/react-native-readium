@@ -4,7 +4,11 @@ import { useDeepCompareEffect } from 'use-deep-compare';
 import { EpubNavigator, EpubPreferences } from '@readium/navigator';
 import { Locator, Publication } from '@readium/shared';
 
+import type { BasicTextSelection } from '@readium/navigator-html-injectables';
+
 import type { ReadiumProps } from '../../src/components/ReadiumView';
+import type { WebSelection } from '../utils/selection';
+import { toReadiumViewLocator } from '../utils/selection';
 import type { Preferences } from '../../src/interfaces/Preferences';
 import {
   assessCapabilities,
@@ -28,6 +32,9 @@ interface RefProps
     | 'onPublicationReady'
     | 'onPreferencesChanged'
     | 'onPublicationError'
+    | 'onSelectionChange'
+    | 'onSelectionAction'
+    | 'selectionActions'
     | 'resolveSource'
     | 'shouldRefreshSource'
   > {
@@ -44,6 +51,9 @@ export const useEpubNavigator = ({
   onPublicationReady,
   onPreferencesChanged,
   onPublicationError,
+  onSelectionChange,
+  onSelectionAction,
+  selectionActions,
   resolveSource,
   shouldRefreshSource,
   container,
@@ -68,6 +78,78 @@ export const useEpubNavigator = ({
     publicationRef,
   });
   const [positions, setPositions] = useState<Locator[]>([]);
+  /**
+   * What the reader has selected, if anything.
+   *
+   * Kept here as well as reported, because the selection menu is the
+   * library's to draw on web: a browser offers nothing for a selection the
+   * way iOS and Android offer the system's own menu, so `selectionActions`
+   * would mean nothing unless something renders them.
+   */
+  const [selection, setSelection] = useState<WebSelection | null>(null);
+  /** Read rather than captured, so the listeners outlive a changed callback. */
+  const onSelectionChangeRef = useRef(onSelectionChange);
+  onSelectionChangeRef.current = onSelectionChange;
+  const onSelectionActionRef = useRef(onSelectionAction);
+  onSelectionActionRef.current = onSelectionAction;
+
+  /**
+   * Whether anything was selected last time, so that clearing one is reported
+   * once rather than on every tap — which is most taps, a page turn being a
+   * tap.
+   */
+  const hadSelectionRef = useRef(false);
+
+  const handleTextSelected = useCallback(
+    (selected: BasicTextSelection | null) => {
+      if (!selected?.locator) {
+        setSelection(null);
+        if (hadSelectionRef.current) {
+          hadSelectionRef.current = false;
+          onSelectionChangeRef.current?.({});
+        }
+        return;
+      }
+
+      hadSelectionRef.current = true;
+
+      const locator = toReadiumViewLocator(selected.locator);
+      setSelection({
+        locator,
+        selectedText: selected.text,
+        // The library's own business: where to put the menu.
+        rect: {
+          x: selected.x,
+          y: selected.y,
+          width: selected.width,
+          height: selected.height,
+        },
+      });
+      onSelectionChangeRef.current?.({
+        locator,
+        selectedText: selected.text,
+      });
+    },
+    []
+  );
+
+  /** The reader picked one of `selectionActions`. */
+  const activateSelectionAction = useCallback(
+    (actionId: string) => {
+      const current = selection;
+      setSelection(null);
+      hadSelectionRef.current = false;
+
+      if (!current) return;
+
+      onSelectionActionRef.current?.({
+        locator: current.locator,
+        selectedText: current.selectedText,
+        actionId,
+      });
+    },
+    [selection]
+  );
   const readingOrder = useRef<Locator[]>([]);
 
   const isEpub = !!file?.url && isEpubURL(file.url);
@@ -168,7 +250,8 @@ export const useEpubNavigator = ({
       // 5. Create navigator listeners
       const listeners = createNavigatorListeners(
         onLocationChangeWithTotalProgression,
-        onPositionChange
+        onPositionChange,
+        handleTextSelected
       );
 
       // 6. Process initial location, sanitizing the position number to match
@@ -259,8 +342,17 @@ export const useEpubNavigator = ({
     return {
       navigator: undefined,
       positions: [],
+      selection: null,
+      selectionActions: [],
+      activateSelectionAction,
     };
   }
 
-  return { navigator, positions };
+  return {
+    navigator,
+    positions,
+    selection,
+    selectionActions: selectionActions ?? [],
+    activateSelectionAction,
+  };
 };
