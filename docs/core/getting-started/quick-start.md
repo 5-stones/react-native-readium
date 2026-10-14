@@ -22,8 +22,10 @@ export function Reader({ path }: { path: string }) {
 }
 ```
 
-On iOS and Android, `file.url` is a local path, such as a book your app downloaded into its
-documents folder. On web it's the URL of an unpacked EPUB's `manifest.json`; see [Web](../guides/web.md).
+On iOS and Android, `file.url` is either an `http(s)://` URL, which is read over the network as
+you turn pages, or a local path to a file your app downloaded into its documents folder — see
+[Streaming or downloading](../guides/opening-publications.md#streaming-or-downloading). On web
+it's the URL of an unpacked EPUB's `manifest.json`; see [Web](../guides/web.md).
 
 ## Where to go next
 
