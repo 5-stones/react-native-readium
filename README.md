@@ -109,7 +109,28 @@ yarn example ios    # or: yarn example android
 yarn docs           # run the documentation site locally
 ```
 
-Each package is released on its own from its directory with `yarn release`.
+## Release
+
+Each package releases on its own, from its own directory:
+
+```sh
+cd packages/react-native-readium   # or packages/react-native-readium-lcp
+yarn release                       # or: yarn release minor / major / 5.3.0
+```
+
+That runs [release-it](https://github.com/release-it/release-it), which:
+
+1. works out the next version from the commits since the last tag, and writes `CHANGELOG.md`
+   from them — so a release is only as good as the commit messages, which follow
+   [conventional commits](https://www.conventionalcommits.org);
+2. snapshots the documentation for a new major or minor, via the `after:bump` hook
+   (`docs/scripts/cut-docs-version.js`) — `X.Y.0` becomes docs version `X.Y`, and the snapshot is
+   staged so it lands in the release commit. Patches and prereleases don't cut one;
+3. commits as `chore: release X.Y.Z`, tags `vX.Y.Z`, publishes to npm, and opens a GitHub
+   release.
+
+Nothing else needs doing by hand: the package's `prepare` script builds `lib/` before publishing,
+and the tag is what the docs site builds from.
 
 ## Contributing
 
