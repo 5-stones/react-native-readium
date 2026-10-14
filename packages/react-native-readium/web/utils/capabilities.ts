@@ -16,9 +16,7 @@ export const WEB_ABILITIES = {
     zoom: false,
     search: false,
     decorations: true,
-    // The navigator does report selections, but the web view wires none of
-    // `selectionActions`, `onSelectionChange` or `onSelectionAction`.
-    selection: false,
+    selection: true,
   },
   // Zoom is driven through the PDF ref's own methods.
   pdf: { zoom: true, search: false, decorations: false, selection: false },

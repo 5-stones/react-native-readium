@@ -7,6 +7,7 @@ import {
   usePdfNavigator,
   useDecorationsObserver,
 } from '../../web/hooks';
+import { SelectionActionMenu } from '../../web/components';
 import { convertToNavigatorLocator } from '../../web/utils/locationNormalizer';
 import { isSupportedPublicationURL } from '../../web/utils/publicationFormat';
 import { toPublicationErrorEvent } from '../utils/publicationError';
@@ -44,6 +45,9 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
       onPreferencesChanged,
       onPublicationError,
       onDecorationActivated,
+      onSelectionChange,
+      onSelectionAction,
+      selectionActions,
       onZoomChange,
       style = {},
       height,
@@ -59,7 +63,13 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
       ? Object.fromEntries(decorations.map((g) => [g.name, g.decorations]))
       : undefined;
 
-    const { navigator: epubNavigator, positions } = useEpubNavigator({
+    const {
+      navigator: epubNavigator,
+      positions,
+      selection,
+      selectionActions: epubSelectionActions,
+      activateSelectionAction,
+    } = useEpubNavigator({
       file,
       resolveSource,
       shouldRefreshSource,
@@ -68,6 +78,9 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
       onPublicationReady,
       onPreferencesChanged,
       onPublicationError,
+      onSelectionChange,
+      onSelectionAction,
+      selectionActions,
       container,
       onPositionChange: setCurrentPosition,
     });
@@ -314,6 +327,13 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
           id="readium-container"
           aria-label="Publication"
         />
+        {selection && (
+          <SelectionActionMenu
+            actions={epubSelectionActions}
+            rect={selection.rect}
+            onAction={activateSelectionAction}
+          />
+        )}
       </View>
     );
   }

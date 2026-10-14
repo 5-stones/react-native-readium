@@ -123,7 +123,14 @@ export interface ReadiumViewProps extends HybridViewProps {
   preferences?: Preferences;
   /** Highlights and underlines to render, in named groups. */
   decorations?: DecorationGroup[];
-  /** Items added to the text-selection menu; picking one fires `onSelectionAction`. */
+  /**
+   * Items added to the text-selection menu; picking one fires
+   * `onSelectionAction`.
+   *
+   * The menu is the operating system's on iOS and Android. A browser has
+   * none, so on web the library draws one beside the selection, with these
+   * same items.
+   */
   selectionActions?: SelectionAction[];
   /** The reading position changed, e.g. the user turned a page. Save it to reopen there. */
   onLocationChange?: (locator: Locator) => void;
