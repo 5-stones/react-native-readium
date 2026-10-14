@@ -69,6 +69,14 @@ void JHybridReadiumViewStateUpdater::updateViewProps(jni::alias_ref<jni::JClass>
     hybridView->setOnPublicationError(props->onPublicationError.value);
     props->onPublicationError.isDirty = false;
   }
+  if (props->shouldRefreshSource.isDirty) {
+    hybridView->setShouldRefreshSource(props->shouldRefreshSource.value);
+    props->shouldRefreshSource.isDirty = false;
+  }
+  if (props->resolveSource.isDirty) {
+    hybridView->setResolveSource(props->resolveSource.value);
+    props->resolveSource.isDirty = false;
+  }
   if (props->onDecorationActivated.isDirty) {
     hybridView->setOnDecorationActivated(props->onDecorationActivated.value);
     props->onDecorationActivated.isDirty = false;
@@ -80,6 +88,10 @@ void JHybridReadiumViewStateUpdater::updateViewProps(jni::alias_ref<jni::JClass>
   if (props->onSelectionAction.isDirty) {
     hybridView->setOnSelectionAction(props->onSelectionAction.value);
     props->onSelectionAction.isDirty = false;
+  }
+  if (props->onZoomChange.isDirty) {
+    hybridView->setOnZoomChange(props->onZoomChange.value);
+    props->onZoomChange.isDirty = false;
   }
 
   // Update hybridRef if it changed

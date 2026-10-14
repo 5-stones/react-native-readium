@@ -19,7 +19,7 @@ private let sepiaText = "#5f4b32"
 func nitroPreferencesToEPUB(_ prefs: Preferences) -> EPUBPreferences {
   // When theme is sepia and no explicit colors are set, inject our unified
   // sepia colors so the result matches Android and web exactly.
-  let isSepia = prefs.theme == "sepia"
+  let isSepia = prefs.theme == .sepia
   let bgColor = prefs.backgroundColor.flatMap { ReadiumNavigator.Color(hex: $0) }
     ?? (isSepia && prefs.backgroundColor == nil ? ReadiumNavigator.Color(hex: sepiaBackground) : nil)
   let txtColor = prefs.textColor.flatMap { ReadiumNavigator.Color(hex: $0) }
@@ -32,7 +32,7 @@ func nitroPreferencesToEPUB(_ prefs: Preferences) -> EPUBPreferences {
     fontSize: prefs.fontSize,
     fontWeight: prefs.fontWeight,
     hyphens: prefs.hyphens,
-    imageFilter: prefs.imageFilter.flatMap { ImageFilter(rawValue: $0) },
+    imageFilter: prefs.imageFilter.flatMap { ImageFilter(rawValue: $0.stringValue) },
     language: prefs.language.map { Language(code: .bcp47($0)) },
     letterSpacing: prefs.letterSpacing,
     ligatures: prefs.ligatures,
@@ -41,45 +41,55 @@ func nitroPreferencesToEPUB(_ prefs: Preferences) -> EPUBPreferences {
     paragraphIndent: prefs.paragraphIndent,
     paragraphSpacing: prefs.paragraphSpacing,
     publisherStyles: prefs.publisherStyles,
-    readingProgression: prefs.readingProgression.flatMap { ReadiumNavigator.ReadingProgression(rawValue: $0) },
+    readingProgression: prefs.readingProgression.flatMap { ReadiumNavigator.ReadingProgression(rawValue: $0.stringValue) },
     scroll: prefs.scroll,
-    spread: prefs.spread.flatMap { Spread(rawValue: $0) },
-    textAlign: prefs.textAlign.flatMap { TextAlignment(rawValue: $0) },
+    spread: prefs.spread.flatMap { Spread(rawValue: $0.stringValue) },
+    textAlign: prefs.textAlign.flatMap { TextAlignment(rawValue: $0.stringValue) },
     textColor: txtColor,
     textNormalization: prefs.textNormalization,
-    theme: prefs.theme.flatMap { Theme(rawValue: $0) },
+    theme: prefs.theme.flatMap { Theme(rawValue: $0.stringValue) },
     typeScale: prefs.typeScale,
     verticalText: prefs.verticalText,
     wordSpacing: prefs.wordSpacing
   )
 }
 
-private func parseFit(_ fit: String) -> ReadiumNavigator.Fit? {
-  switch fit.lowercased() {
-  case "contain", "height":
+private func parseFit(_ fit: ReaderFit) -> ReadiumNavigator.Fit {
+  switch fit {
+  case .contain, .height:
     return .page
-  case "cover", "width":
+  case .cover, .width:
     return .width
-  default:
-    return .auto
   }
 }
 
-private func parseColumnCount(_ columnCount: String) -> ReadiumNavigator.ColumnCount? {
-  switch columnCount.lowercased() {
-  case "1", "one":
-    return .one
-  case "2", "two":
-    return .two
+/**
+ The column count, which crosses the bridge as a string.
+
+ Not a generated enum, because nitrogen would name the case for `'1'` `.1`,
+ which does not compile — so this is the one preference parsed by hand, and the
+ one that has to answer for a value it does not know.
+
+ `'1'` and `'2'` are the deprecated spellings of `'one'` and `'two'`; see
+ `ReaderColumnCountLegacy` in `src/interfaces/Preferences.ts`.
+ */
+private func parseColumnCount(
+  _ columnCount: String
+) -> ReadiumNavigator.ColumnCount? {
+  switch columnCount {
   case "auto":
     return .auto
+  case "one", "1":
+    return .one
+  case "two", "2":
+    return .two
   default:
     return nil
   }
 }
 
 func nitroPreferencesToPDF(_ prefs: Preferences) -> PDFPreferences {
-  let isSepia = prefs.theme == "sepia"
+  let isSepia = prefs.theme == .sepia
   let bgColor = prefs.backgroundColor.flatMap { ReadiumNavigator.Color(hex: $0) }
     ?? (isSepia && prefs.backgroundColor == nil ? ReadiumNavigator.Color(hex: sepiaBackground) : nil)
 
@@ -88,10 +98,10 @@ func nitroPreferencesToPDF(_ prefs: Preferences) -> PDFPreferences {
     fit: prefs.fit.flatMap { parseFit($0) },
     offsetFirstPage: prefs.offsetFirstPage,
     pageSpacing: prefs.pageSpacing,
-    readingProgression: prefs.readingProgression.flatMap { ReadiumNavigator.ReadingProgression(rawValue: $0) },
+    readingProgression: prefs.readingProgression.flatMap { ReadiumNavigator.ReadingProgression(rawValue: $0.stringValue) },
     scroll: prefs.scroll,
-    scrollAxis: prefs.scrollAxis.flatMap { ReadiumNavigator.Axis(rawValue: $0) },
-    spread: prefs.spread.flatMap { Spread(rawValue: $0) },
+    scrollAxis: prefs.scrollAxis.flatMap { ReadiumNavigator.Axis(rawValue: $0.stringValue) },
+    spread: prefs.spread.flatMap { Spread(rawValue: $0.stringValue) },
     visibleScrollbar: prefs.visibleScrollbar,
   )
 }

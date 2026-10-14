@@ -1,329 +1,51 @@
+/**
+ * The `ReadiumView` itself: what it takes, what it reports and what it can be
+ * told to do.
+ *
+ * The vocabulary it speaks in is declared beside it — one file per concern,
+ * each a `.nitro.ts`, because nitrogen only loads files named that way.
+ */
+
 import {
   type HybridView,
   type HybridViewProps,
   type HybridViewMethods,
 } from 'react-native-nitro-modules';
-
-// ── Locator ──────────────────────────────────────────────────────────────────
-
-/** Where in its resource a `Locator` points. */
-export interface LocatorLocations {
-  /** How far into the resource, from 0 to 1. */
-  progression?: number;
-  /** The position in the publication, counting from 1, as in `positions`. */
-  position?: number;
-  /** How far into the whole publication, from 0 to 1. */
-  totalProgression?: number;
-}
-
-/** Text around a location, e.g. a search match in context. */
-export interface LocatorText {
-  /** The text just before. */
-  before?: string;
-  /** The text at the location. */
-  highlight?: string;
-  /** The text just after. */
-  after?: string;
-}
-
-/**
- * A location in a publication, as Readium describes it: reading positions, bookmarks,
- * highlights and search results are all locators. Store them as they are to reopen there later.
- */
-export interface Locator {
-  /** The resource (e.g. a chapter's file) within the publication. */
-  href: string;
-  /** The resource's media type. */
-  type: string;
-  target?: number;
-  title?: string;
-  locations?: LocatorLocations;
-  text?: LocatorText;
-}
-
-// ── Link ─────────────────────────────────────────────────────────────────────
-
-export interface Link {
-  href: string;
-  title?: string;
-  rels?: string[];
-  languages?: string[];
-  depth?: number;
-  hasChildren?: boolean;
-  parentHref?: string;
-  position?: number;
-}
-
-// ── Preferences ──────────────────────────────────────────────────────────────
-
-export interface EpubPreferences {
-  backgroundColor?: string;
-  columnCount?: string;
-  fontFamily?: string;
-  fontSize?: number;
-  fontWeight?: number;
-  hyphens?: boolean;
-  imageFilter?: string;
-  language?: string;
-  letterSpacing?: number;
-  ligatures?: boolean;
-  lineHeight?: number;
-  pageMargins?: number;
-  paragraphIndent?: number;
-  paragraphSpacing?: number;
-  publisherStyles?: boolean;
-  readingProgression?: string;
-  scroll?: boolean;
-  spread?: string;
-  textAlign?: string;
-  textColor?: string;
-  textNormalization?: boolean;
-  theme?: string;
-  typeScale?: number;
-  verticalText?: boolean;
-  wordSpacing?: number;
-}
-
-export interface PdfPreferences {
-  backgroundColor?: string;
-  fit?: string;
-  offsetFirstPage?: boolean;
-  pageSpacing?: number;
-  readingProgression?: string;
-  scroll?: boolean;
-  scrollAxis?: string;
-  spread?: string;
-  visibleScrollbar?: boolean;
-}
-
-export interface Preferences extends EpubPreferences, PdfPreferences {}
-
-// ── Capabilities ─────────────────────────────────────────────────────────────
-
-/**
- * Something the reader can do with the publication it opened.
- *
- * Every `Preferences` field, plus the abilities that are not preferences.
- */
-// export type Capabilities = {
-//   [K in keyof Preferences]-?: boolean;
-// } & {
-//   zoom: boolean;
-//   search: boolean;
-//   decorations: boolean;
-//   selection: boolean;
-// };
-
-export type Capabilities = {
-  backgroundColor: boolean;
-  columnCount: boolean;
-  fontFamily: boolean;
-  fontSize: boolean;
-  fontWeight: boolean;
-  hyphens: boolean;
-  imageFilter: boolean;
-  language: boolean;
-  letterSpacing: boolean;
-  ligatures: boolean;
-  lineHeight: boolean;
-  pageMargins: boolean;
-  paragraphIndent: boolean;
-  paragraphSpacing: boolean;
-  publisherStyles: boolean;
-  readingProgression: boolean;
-  scroll: boolean;
-  spread: boolean;
-  textAlign: boolean;
-  textColor: boolean;
-  textNormalization: boolean;
-  theme: boolean;
-  typeScale: boolean;
-  verticalText: boolean;
-  wordSpacing: boolean;
-
-  fit: boolean;
-  offsetFirstPage: boolean;
-  pageSpacing: boolean;
-  scrollAxis: boolean;
-  visibleScrollbar: boolean;
-
-  zoom: boolean;
-  search: boolean;
-  decorations: boolean;
-  selection: boolean;
-};
-
-// ── Decoration ───────────────────────────────────────────────────────────────
-
-/** How a decoration looks. */
-export interface DecorationStyle {
-  /** `'highlight'` or `'underline'`. */
-  type: string;
-  /** Its color, as a CSS color. */
-  tint?: string;
-  isActive?: boolean;
-  id?: string;
-  html?: string;
-  css?: string;
-  layout?: string;
-  width?: string;
-}
-
-/** One annotation rendered over the publication, such as a highlight. */
-export interface Decoration {
-  /** Your identifier for it, unique within its group. */
-  id: string;
-  /** Where it is. */
-  locator: Locator;
-  /** How it looks. */
-  style: DecorationStyle;
-  /** Your own data, such as a note or the selected text. */
-  extras?: Record<string, string>;
-}
-
-/** A named set of decorations, such as `"highlights"`. */
-export interface DecorationGroup {
-  name: string;
-  decorations: Decoration[];
-}
-
-// ── Rect / Point ─────────────────────────────────────────────────────────────
-
-export interface Rect {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
-export interface Point {
-  x: number;
-  y: number;
-}
-
-// ── Selection ────────────────────────────────────────────────────────────────
-
-/** An item added to the text-selection menu. */
-export interface SelectionAction {
-  /** Reported as `actionId` when the user picks it. */
-  id: string;
-  /** The menu item's text. */
-  label: string;
-}
-
-// ── Publication Metadata ─────────────────────────────────────────────────────
-
-export interface Contributor {
-  name: string;
-  sortAs?: string;
-  identifier?: string;
-  role?: string;
-  position?: number;
-}
-
-export interface Subject {
-  name: string;
-  sortAs?: string;
-  code?: string;
-  scheme?: string;
-}
-
-export interface SeriesInfo {
-  name: string;
-  position?: number;
-}
-
-export interface BelongsTo {
-  series?: SeriesInfo[];
-  collection?: SeriesInfo[];
-}
-
-export interface AccessibilityCertification {
-  certifiedBy?: string;
-  credential?: string;
-  report?: string;
-}
-
-export interface Accessibility {
-  conformsTo?: string[];
-  certification?: AccessibilityCertification;
-  accessMode?: string[];
-  accessModeSufficient?: string[];
-  feature?: string[];
-  hazard?: string[];
-  summary?: string;
-}
-
-export interface PublicationMetadata {
-  title: string;
-  sortAs?: string;
-  subtitle?: string;
-  identifier?: string;
-  conformsTo?: string[];
-  accessibility?: Accessibility;
-  modified?: string;
-  published?: string;
-  language?: string[];
-  author?: Contributor[];
-  translator?: Contributor[];
-  editor?: Contributor[];
-  artist?: Contributor[];
-  illustrator?: Contributor[];
-  letterer?: Contributor[];
-  penciler?: Contributor[];
-  colorist?: Contributor[];
-  inker?: Contributor[];
-  narrator?: Contributor[];
-  contributor?: Contributor[];
-  publisher?: Contributor[];
-  imprint?: Contributor[];
-  subject?: Subject[];
-  layout?: string;
-  readingProgression?: string;
-  description?: string;
-  duration?: number;
-  numberOfPages?: number;
-  belongsTo?: BelongsTo;
-}
-
-// ── Search ────────────────────────────────────────────────────────────────────
-
-export interface SearchOptions {
-  caseSensitive?: boolean;
-  diacriticSensitive?: boolean;
-  wholeWord?: boolean;
-  regularExpression?: boolean;
-  language?: string;
-}
-
-export interface SearchResult {
-  locator: Locator;
-  before?: string;
-  highlight?: string;
-  after?: string;
-}
-
-/**
- * A single page of search results, returned by `search()` and
- * `loadMoreSearchResults()`. Results are paginated lazily: keep calling
- * `loadMoreSearchResults()` while `hasMore` is true.
- */
-export interface SearchPage {
-  /** The matches in this page (may be empty on the terminal page). */
-  results: SearchResult[];
-  /** True while more pages remain to be fetched via `loadMoreSearchResults()`. */
-  hasMore: boolean;
-  /** Total number of matches across the whole search, when the service knows it. */
-  totalCount?: number;
-  /** False when the publication has no search service (e.g. not searchable). */
-  isSupported: boolean;
-}
+import type {
+  DecorationActivatedEvent,
+  DecorationGroup,
+} from './decorations.nitro';
+import type { PublicationErrorEvent } from './errors.nitro';
+import type { Link, Locator } from './locator.nitro';
+import type { PublicationMetadata } from './metadata.nitro';
+import type {
+  Capabilities,
+  Preferences,
+  PreferencesChangedEvent,
+} from './preferences.nitro';
+import type { SearchOptions, SearchPage } from './search.nitro';
+import type {
+  SelectionAction,
+  SelectionActionEvent,
+  SelectionEvent,
+} from './selection.nitro';
+import type {
+  PublicationSource,
+  ResolveSourceRequest,
+  SourceRequestFailure,
+} from './source.nitro';
 
 // ── Events ───────────────────────────────────────────────────────────────────
 
 /** Reported by `onPublicationReady` once a publication opens. */
 export interface PublicationReadyEvent {
-  /** The table of contents, nested through each link's `children`. */
+  /**
+   * The table of contents, flat, each link carrying where it sits in the tree.
+   *
+   * Flat because a nested one would need `Link` to reference itself, which
+   * nitrogen cannot generate. JS rebuilds the tree before a consumer sees it
+   * (src/utils/buildLinkTree.ts).
+   */
   tableOfContents: Link[];
   /** One locator per position in the publication, e.g. for a page slider. */
   positions: Locator[];
@@ -338,64 +60,21 @@ export interface PublicationReadyEvent {
 }
 
 /**
- * Why a publication could not be opened.
- * - `protectionNotSupported`: protected with a scheme no registered content protection handles.
- * - `restricted`: a protection matched but refused access, e.g. an expired license.
- * - `cancelled`: restricted with no error, e.g. the passphrase prompt was dismissed.
+ * Reports the reader's magnification, including changes the reader makes with
+ * a pinch or a double tap rather than through `setZoom`.
+ *
+ * `scale` is relative to the fitted page — 1 means one page sized to the
+ * viewport — rather than being a raw platform scale factor, which would depend
+ * on the page's own dimensions and so mean something different in every
+ * publication (and, in a scanned one, on every page).
  */
-export type PublicationErrorCode =
-  | 'fileNotFound'
-  | 'formatNotSupported'
-  | 'openFailed'
-  | 'protectionNotSupported'
-  | 'restricted'
-  | 'cancelled';
-
-/**
- * The publication could not be opened, as native reports it. JS turns it into the public
- * `PublicationErrorEvent` (src/interfaces/PublicationError.ts).
- */
-export interface PublicationErrorEvent {
-  /** The `file.url` whose open failed. */
-  url: string;
-  /** Why, the same on every platform: branch on it, or map it to your own localized text. */
-  code: PublicationErrorCode;
-  /** The platform's own description; becomes the public event's `detail`. */
-  message: string;
-  /** For a protected publication, its DRM scheme's URI. */
-  protectionScheme?: string;
-}
-
-/** Reported by `onPreferencesChanged` once preferences are applied. */
-export interface PreferencesChangedEvent {
-  /** Which preferences and features apply now. */
-  capabilities: Capabilities;
-}
-
-/** Reported by `onDecorationActivated` when the user taps a decoration. */
-export interface DecorationActivatedEvent {
-  /** The decoration tapped. */
-  decoration: Decoration;
-  /** The name of its group. */
-  group: string;
-  rect?: Rect;
-  point?: Point;
-}
-
-/** Reported by `onSelectionChange` as the user adjusts a selection. */
-export interface SelectionEvent {
-  /** Where the selection is; undefined once it's cleared. */
-  locator?: Locator;
-  selectedText?: string;
-}
-
-/** Reported by `onSelectionAction` when the user picks one of the `selectionActions`. */
-export interface SelectionActionEvent {
-  /** Where the selection is, e.g. to create a highlight there. */
-  locator: Locator;
-  selectedText: string;
-  /** The `id` of the action picked. */
-  actionId: string;
+export interface ZoomEvent {
+  /** Current magnification, where 1 is the page fitted to the reader. */
+  scale: number;
+  /** Smallest `scale` the current layout allows. */
+  min: number;
+  /** Largest `scale` the current layout allows. */
+  max: number;
 }
 
 // ── File ─────────────────────────────────────────────────────────────────────
@@ -403,8 +82,15 @@ export interface SelectionActionEvent {
 /** The publication a `ReadiumView` opens. */
 export interface ReadiumFile {
   /**
-   * iOS and Android: a local path or `file://` URL to an EPUB or PDF. Web: the URL of an unpacked
-   * EPUB's `manifest.json`, or of a PDF.
+   * Where the publication is.
+   *
+   * iOS and Android take either an `http(s)://` URL, read over the network as
+   * the reader turns pages, or a local path or `file://` URL to a file you
+   * downloaded yourself. Web takes the URL of an unpacked EPUB's
+   * `manifest.json`, or of a PDF.
+   *
+   * With `resolveSource` set this is the publication's identity rather than
+   * somewhere to fetch from, and is never fetched.
    */
   url: string;
   /** Where to start reading, e.g. a locator saved from `onLocationChange`. */
@@ -418,31 +104,173 @@ export interface ReadiumFile {
 
 // ── HybridView ───────────────────────────────────────────────────────────────
 
+/**
+ * What a `ReadiumView` takes, and the definition the public `ReadiumProps`
+ * (src/components/ReadiumView.types.ts) is built from: everything a consumer
+ * passes straight through to the view is declared here once, and that file
+ * names only what it adds or changes.
+ */
 export interface ReadiumViewProps extends HybridViewProps {
+  /**
+   * The publication to open, and where to start. Setting a different `url` opens that
+   * publication in the same view.
+   */
   file?: ReadiumFile;
+  /**
+   * How the reader lays out and styles the publication: theme, font size, margins, …. Readium's
+   * defaults apply to anything left out. Check `capabilities` for what applies.
+   */
   preferences?: Preferences;
+  /** Highlights and underlines to render, in named groups. */
   decorations?: DecorationGroup[];
+  /** Items added to the text-selection menu; picking one fires `onSelectionAction`. */
   selectionActions?: SelectionAction[];
+  /** The reading position changed, e.g. the user turned a page. Save it to reopen there. */
   onLocationChange?: (locator: Locator) => void;
+  /**
+   * The publication opened: its metadata, table of contents, positions and
+   * capabilities. The public event's table of contents is nested; this one is
+   * flat, with each link's place in the tree on it.
+   */
   onPublicationReady?: (event: PublicationReadyEvent) => void;
+  /** Preferences were applied; reports which ones now apply. */
   onPreferencesChanged?: (event: PreferencesChangedEvent) => void;
+  /**
+   * Something went wrong with the publication; `code` says what and `stage`
+   * says how bad. The public event adds the `message` that goes with `code`.
+   */
   onPublicationError?: (event: PublicationErrorEvent) => void;
+  /**
+   * Whether a failed request should prompt a new location from
+   * `resolveSource`.
+   *
+   * Left unset, the platform decides, and the default is the shapes a
+   * credential that has expired or been refused takes: a 401 or a 403 on every
+   * platform, and on web also an `unreadable` failure, which exists because a
+   * cross-origin error response withholds its status. Native always has the
+   * status, so it has no equivalent.
+   *
+   * Return false to let the failure stand. It is then reported through
+   * `onPublicationError` with `stage: 'read'`, on every platform, so a
+   * consumer can offer a retry rather than leaving a page quietly missing.
+   *
+   * Worth overriding where those statuses mean something else: a host that
+   * answers 403 for "not permitted" rather than "credential stale" gains
+   * nothing from a new location, and a host that signals expiry with a 404 or
+   * a 400 would otherwise never be refreshed at all.
+   *
+   * Always asynchronous, even where the answer is a comparison: native cannot
+   * wait on the JS thread for a value, so an answer always arrives as a
+   * promise.
+   *
+   * A location that keeps failing is not asked for again indefinitely: two
+   * relocations without a request succeeding in between, and ten seconds for
+   * this and `resolveSource` together to answer a failure before it is left to
+   * stand. Only one failure is answered at a time, so a predicate that never
+   * settles would otherwise hold back every later one.
+   *
+   * Requires `resolveSource`. On iOS and Android, leaving it unset means an
+   * ordinary expiry never crosses the bridge to be classified; setting it
+   * costs a round trip per failed read.
+   */
+  shouldRefreshSource?: (failure: SourceRequestFailure) => Promise<boolean>;
+  /**
+   * Where to read `file` from, when that is not `file.url` itself — a signed
+   * url, say, which `file.url` should not be because it expires.
+   *
+   * `file.url` remains the publication's identity: it decides when a different
+   * publication has been opened and keys the positions you save, and it is not
+   * fetched while this is set. This supplies only the location, and is asked
+   * again whenever a request fails, without the publication being treated as
+   * a new one.
+   *
+   * Called before the first open and on each refresh — never per request. The
+   * request says which publication, and whether this is the first location or
+   * a replacement.
+   *
+   * Answering a failed request is on a ten second deadline, shared with
+   * `shouldRefreshSource`; past it the failure stands. Resolving with an empty
+   * url, or rejecting, declines.
+   */
+  resolveSource?: (request: ResolveSourceRequest) => Promise<PublicationSource>;
+  /** The user tapped a decoration, e.g. a highlight. */
   onDecorationActivated?: (event: DecorationActivatedEvent) => void;
+  /** The text selection changed, as the user adjusts it. */
   onSelectionChange?: (event: SelectionEvent) => void;
+  /** The user picked one of the `selectionActions`. */
   onSelectionAction?: (event: SelectionActionEvent) => void;
+  /**
+   * A PDF's magnification changed, including by a pinch.
+   *
+   * Web only, and declared here anyway so that the view has one definition:
+   * iOS and Android hand a PDF to PDFKit and AndroidPdfViewer, both of which
+   * zoom by themselves and report nothing back, so there is nothing for them
+   * to relay.
+   */
+  onZoomChange?: (event: ZoomEvent) => void;
 }
 
+/**
+ * What a `ReadiumView` can be told to do, and the definition the public
+ * `ReadiumViewRef` (src/components/ReadiumView.types.ts) is built from.
+ *
+ * Everything here is a consumer's to call except `destroy`, which is the
+ * component's own teardown.
+ */
 export interface ReadiumViewMethods extends HybridViewMethods {
+  /** Goes to a location: a chapter, a bookmark, a search result or one of the `positions`. */
   goTo(locator: Locator): void;
+  /** Goes to the next page. */
   goForward(): void;
+  /** Goes to the previous page. */
   goBackward(): void;
+  /**
+   * Releases the publication and everything showing it.
+   *
+   * The component's own, called when it unmounts — which is why the public ref
+   * leaves it out: a consumer unmounts the view instead.
+   */
   destroy(): void;
-  /** Starts a new full-text search and resolves with the first page of results. */
+  /**
+   * Starts a new full-text search and resolves with the first page of results.
+   * Most apps should use `useSearch` instead.
+   *
+   * @platform iOS, Android. On web, resolves a page with `isSupported: false`.
+   */
   search(query: string, options?: SearchOptions): Promise<SearchPage>;
-  /** Resolves with the next page of results for the in-flight search. */
+  /**
+   * Resolves with the next page of results for the in-flight search. Wait for
+   * each page before asking for the next: a search cannot be advanced
+   * concurrently.
+   */
   loadMoreSearchResults(): Promise<SearchPage>;
   /** Cancels the in-flight search and releases the iterator. */
   cancelSearch(): void;
+  /**
+   * Magnifies a PDF one step.
+   *
+   * @platform web. iOS and Android hand a PDF to PDFKit and AndroidPdfViewer,
+   * which own their own magnification, so this does nothing there.
+   */
+  zoomIn(): void;
+  /**
+   * Reduces a PDF's magnification one step.
+   *
+   * @platform web. Does nothing on iOS and Android; see `zoomIn`.
+   */
+  zoomOut(): void;
+  /**
+   * Sets a PDF's magnification, where 1 is the page fitted to the view.
+   *
+   * @platform web. Does nothing on iOS and Android; see `zoomIn`.
+   */
+  setZoom(scale: number): void;
+  /**
+   * Fits the PDF's page to the view again.
+   *
+   * @platform web. Does nothing on iOS and Android; see `zoomIn`.
+   */
+  resetZoom(): void;
 }
 
 export type ReadiumView = HybridView<ReadiumViewProps, ReadiumViewMethods>;

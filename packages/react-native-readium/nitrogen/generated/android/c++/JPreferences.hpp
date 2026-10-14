@@ -10,6 +10,20 @@
 #include <fbjni/fbjni.h>
 #include "Preferences.hpp"
 
+#include "JReaderFit.hpp"
+#include "JReaderImageFilter.hpp"
+#include "JReaderReadingProgression.hpp"
+#include "JReaderScrollAxis.hpp"
+#include "JReaderSpread.hpp"
+#include "JReaderTextAlign.hpp"
+#include "JReaderTheme.hpp"
+#include "ReaderFit.hpp"
+#include "ReaderImageFilter.hpp"
+#include "ReaderReadingProgression.hpp"
+#include "ReaderScrollAxis.hpp"
+#include "ReaderSpread.hpp"
+#include "ReaderTextAlign.hpp"
+#include "ReaderTheme.hpp"
 #include <optional>
 #include <string>
 
@@ -44,8 +58,8 @@ namespace margelo::nitro::readium {
       jni::local_ref<jni::JDouble> fontWeight = this->getFieldValue(fieldFontWeight);
       static const auto fieldHyphens = clazz->getField<jni::JBoolean>("hyphens");
       jni::local_ref<jni::JBoolean> hyphens = this->getFieldValue(fieldHyphens);
-      static const auto fieldImageFilter = clazz->getField<jni::JString>("imageFilter");
-      jni::local_ref<jni::JString> imageFilter = this->getFieldValue(fieldImageFilter);
+      static const auto fieldImageFilter = clazz->getField<JReaderImageFilter>("imageFilter");
+      jni::local_ref<JReaderImageFilter> imageFilter = this->getFieldValue(fieldImageFilter);
       static const auto fieldLanguage = clazz->getField<jni::JString>("language");
       jni::local_ref<jni::JString> language = this->getFieldValue(fieldLanguage);
       static const auto fieldLetterSpacing = clazz->getField<jni::JDouble>("letterSpacing");
@@ -62,34 +76,34 @@ namespace margelo::nitro::readium {
       jni::local_ref<jni::JDouble> paragraphSpacing = this->getFieldValue(fieldParagraphSpacing);
       static const auto fieldPublisherStyles = clazz->getField<jni::JBoolean>("publisherStyles");
       jni::local_ref<jni::JBoolean> publisherStyles = this->getFieldValue(fieldPublisherStyles);
-      static const auto fieldReadingProgression = clazz->getField<jni::JString>("readingProgression");
-      jni::local_ref<jni::JString> readingProgression = this->getFieldValue(fieldReadingProgression);
+      static const auto fieldReadingProgression = clazz->getField<JReaderReadingProgression>("readingProgression");
+      jni::local_ref<JReaderReadingProgression> readingProgression = this->getFieldValue(fieldReadingProgression);
       static const auto fieldScroll = clazz->getField<jni::JBoolean>("scroll");
       jni::local_ref<jni::JBoolean> scroll = this->getFieldValue(fieldScroll);
-      static const auto fieldSpread = clazz->getField<jni::JString>("spread");
-      jni::local_ref<jni::JString> spread = this->getFieldValue(fieldSpread);
-      static const auto fieldTextAlign = clazz->getField<jni::JString>("textAlign");
-      jni::local_ref<jni::JString> textAlign = this->getFieldValue(fieldTextAlign);
+      static const auto fieldSpread = clazz->getField<JReaderSpread>("spread");
+      jni::local_ref<JReaderSpread> spread = this->getFieldValue(fieldSpread);
+      static const auto fieldTextAlign = clazz->getField<JReaderTextAlign>("textAlign");
+      jni::local_ref<JReaderTextAlign> textAlign = this->getFieldValue(fieldTextAlign);
       static const auto fieldTextColor = clazz->getField<jni::JString>("textColor");
       jni::local_ref<jni::JString> textColor = this->getFieldValue(fieldTextColor);
       static const auto fieldTextNormalization = clazz->getField<jni::JBoolean>("textNormalization");
       jni::local_ref<jni::JBoolean> textNormalization = this->getFieldValue(fieldTextNormalization);
-      static const auto fieldTheme = clazz->getField<jni::JString>("theme");
-      jni::local_ref<jni::JString> theme = this->getFieldValue(fieldTheme);
+      static const auto fieldTheme = clazz->getField<JReaderTheme>("theme");
+      jni::local_ref<JReaderTheme> theme = this->getFieldValue(fieldTheme);
       static const auto fieldTypeScale = clazz->getField<jni::JDouble>("typeScale");
       jni::local_ref<jni::JDouble> typeScale = this->getFieldValue(fieldTypeScale);
       static const auto fieldVerticalText = clazz->getField<jni::JBoolean>("verticalText");
       jni::local_ref<jni::JBoolean> verticalText = this->getFieldValue(fieldVerticalText);
       static const auto fieldWordSpacing = clazz->getField<jni::JDouble>("wordSpacing");
       jni::local_ref<jni::JDouble> wordSpacing = this->getFieldValue(fieldWordSpacing);
-      static const auto fieldFit = clazz->getField<jni::JString>("fit");
-      jni::local_ref<jni::JString> fit = this->getFieldValue(fieldFit);
+      static const auto fieldFit = clazz->getField<JReaderFit>("fit");
+      jni::local_ref<JReaderFit> fit = this->getFieldValue(fieldFit);
       static const auto fieldOffsetFirstPage = clazz->getField<jni::JBoolean>("offsetFirstPage");
       jni::local_ref<jni::JBoolean> offsetFirstPage = this->getFieldValue(fieldOffsetFirstPage);
       static const auto fieldPageSpacing = clazz->getField<jni::JDouble>("pageSpacing");
       jni::local_ref<jni::JDouble> pageSpacing = this->getFieldValue(fieldPageSpacing);
-      static const auto fieldScrollAxis = clazz->getField<jni::JString>("scrollAxis");
-      jni::local_ref<jni::JString> scrollAxis = this->getFieldValue(fieldScrollAxis);
+      static const auto fieldScrollAxis = clazz->getField<JReaderScrollAxis>("scrollAxis");
+      jni::local_ref<JReaderScrollAxis> scrollAxis = this->getFieldValue(fieldScrollAxis);
       static const auto fieldVisibleScrollbar = clazz->getField<jni::JBoolean>("visibleScrollbar");
       jni::local_ref<jni::JBoolean> visibleScrollbar = this->getFieldValue(fieldVisibleScrollbar);
       return Preferences(
@@ -99,7 +113,7 @@ namespace margelo::nitro::readium {
         fontSize != nullptr ? std::make_optional(fontSize->value()) : std::nullopt,
         fontWeight != nullptr ? std::make_optional(fontWeight->value()) : std::nullopt,
         hyphens != nullptr ? std::make_optional(static_cast<bool>(hyphens->value())) : std::nullopt,
-        imageFilter != nullptr ? std::make_optional(imageFilter->toStdString()) : std::nullopt,
+        imageFilter != nullptr ? std::make_optional(imageFilter->toCpp()) : std::nullopt,
         language != nullptr ? std::make_optional(language->toStdString()) : std::nullopt,
         letterSpacing != nullptr ? std::make_optional(letterSpacing->value()) : std::nullopt,
         ligatures != nullptr ? std::make_optional(static_cast<bool>(ligatures->value())) : std::nullopt,
@@ -108,20 +122,20 @@ namespace margelo::nitro::readium {
         paragraphIndent != nullptr ? std::make_optional(paragraphIndent->value()) : std::nullopt,
         paragraphSpacing != nullptr ? std::make_optional(paragraphSpacing->value()) : std::nullopt,
         publisherStyles != nullptr ? std::make_optional(static_cast<bool>(publisherStyles->value())) : std::nullopt,
-        readingProgression != nullptr ? std::make_optional(readingProgression->toStdString()) : std::nullopt,
+        readingProgression != nullptr ? std::make_optional(readingProgression->toCpp()) : std::nullopt,
         scroll != nullptr ? std::make_optional(static_cast<bool>(scroll->value())) : std::nullopt,
-        spread != nullptr ? std::make_optional(spread->toStdString()) : std::nullopt,
-        textAlign != nullptr ? std::make_optional(textAlign->toStdString()) : std::nullopt,
+        spread != nullptr ? std::make_optional(spread->toCpp()) : std::nullopt,
+        textAlign != nullptr ? std::make_optional(textAlign->toCpp()) : std::nullopt,
         textColor != nullptr ? std::make_optional(textColor->toStdString()) : std::nullopt,
         textNormalization != nullptr ? std::make_optional(static_cast<bool>(textNormalization->value())) : std::nullopt,
-        theme != nullptr ? std::make_optional(theme->toStdString()) : std::nullopt,
+        theme != nullptr ? std::make_optional(theme->toCpp()) : std::nullopt,
         typeScale != nullptr ? std::make_optional(typeScale->value()) : std::nullopt,
         verticalText != nullptr ? std::make_optional(static_cast<bool>(verticalText->value())) : std::nullopt,
         wordSpacing != nullptr ? std::make_optional(wordSpacing->value()) : std::nullopt,
-        fit != nullptr ? std::make_optional(fit->toStdString()) : std::nullopt,
+        fit != nullptr ? std::make_optional(fit->toCpp()) : std::nullopt,
         offsetFirstPage != nullptr ? std::make_optional(static_cast<bool>(offsetFirstPage->value())) : std::nullopt,
         pageSpacing != nullptr ? std::make_optional(pageSpacing->value()) : std::nullopt,
-        scrollAxis != nullptr ? std::make_optional(scrollAxis->toStdString()) : std::nullopt,
+        scrollAxis != nullptr ? std::make_optional(scrollAxis->toCpp()) : std::nullopt,
         visibleScrollbar != nullptr ? std::make_optional(static_cast<bool>(visibleScrollbar->value())) : std::nullopt
       );
     }
@@ -132,7 +146,7 @@ namespace margelo::nitro::readium {
      */
     [[maybe_unused]]
     static jni::local_ref<JPreferences::javaobject> fromCpp(const Preferences& value) {
-      using JSignature = JPreferences(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JBoolean>);
+      using JSignature = JPreferences(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JReaderImageFilter>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JReaderReadingProgression>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JReaderSpread>, jni::alias_ref<JReaderTextAlign>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JReaderTheme>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JReaderFit>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JReaderScrollAxis>, jni::alias_ref<jni::JBoolean>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -143,7 +157,7 @@ namespace margelo::nitro::readium {
         value.fontSize.has_value() ? jni::JDouble::valueOf(value.fontSize.value()) : nullptr,
         value.fontWeight.has_value() ? jni::JDouble::valueOf(value.fontWeight.value()) : nullptr,
         value.hyphens.has_value() ? jni::JBoolean::valueOf(value.hyphens.value()) : nullptr,
-        value.imageFilter.has_value() ? jni::make_jstring(value.imageFilter.value()) : nullptr,
+        value.imageFilter.has_value() ? JReaderImageFilter::fromCpp(value.imageFilter.value()) : nullptr,
         value.language.has_value() ? jni::make_jstring(value.language.value()) : nullptr,
         value.letterSpacing.has_value() ? jni::JDouble::valueOf(value.letterSpacing.value()) : nullptr,
         value.ligatures.has_value() ? jni::JBoolean::valueOf(value.ligatures.value()) : nullptr,
@@ -152,20 +166,20 @@ namespace margelo::nitro::readium {
         value.paragraphIndent.has_value() ? jni::JDouble::valueOf(value.paragraphIndent.value()) : nullptr,
         value.paragraphSpacing.has_value() ? jni::JDouble::valueOf(value.paragraphSpacing.value()) : nullptr,
         value.publisherStyles.has_value() ? jni::JBoolean::valueOf(value.publisherStyles.value()) : nullptr,
-        value.readingProgression.has_value() ? jni::make_jstring(value.readingProgression.value()) : nullptr,
+        value.readingProgression.has_value() ? JReaderReadingProgression::fromCpp(value.readingProgression.value()) : nullptr,
         value.scroll.has_value() ? jni::JBoolean::valueOf(value.scroll.value()) : nullptr,
-        value.spread.has_value() ? jni::make_jstring(value.spread.value()) : nullptr,
-        value.textAlign.has_value() ? jni::make_jstring(value.textAlign.value()) : nullptr,
+        value.spread.has_value() ? JReaderSpread::fromCpp(value.spread.value()) : nullptr,
+        value.textAlign.has_value() ? JReaderTextAlign::fromCpp(value.textAlign.value()) : nullptr,
         value.textColor.has_value() ? jni::make_jstring(value.textColor.value()) : nullptr,
         value.textNormalization.has_value() ? jni::JBoolean::valueOf(value.textNormalization.value()) : nullptr,
-        value.theme.has_value() ? jni::make_jstring(value.theme.value()) : nullptr,
+        value.theme.has_value() ? JReaderTheme::fromCpp(value.theme.value()) : nullptr,
         value.typeScale.has_value() ? jni::JDouble::valueOf(value.typeScale.value()) : nullptr,
         value.verticalText.has_value() ? jni::JBoolean::valueOf(value.verticalText.value()) : nullptr,
         value.wordSpacing.has_value() ? jni::JDouble::valueOf(value.wordSpacing.value()) : nullptr,
-        value.fit.has_value() ? jni::make_jstring(value.fit.value()) : nullptr,
+        value.fit.has_value() ? JReaderFit::fromCpp(value.fit.value()) : nullptr,
         value.offsetFirstPage.has_value() ? jni::JBoolean::valueOf(value.offsetFirstPage.value()) : nullptr,
         value.pageSpacing.has_value() ? jni::JDouble::valueOf(value.pageSpacing.value()) : nullptr,
-        value.scrollAxis.has_value() ? jni::make_jstring(value.scrollAxis.value()) : nullptr,
+        value.scrollAxis.has_value() ? JReaderScrollAxis::fromCpp(value.scrollAxis.value()) : nullptr,
         value.visibleScrollbar.has_value() ? jni::JBoolean::valueOf(value.visibleScrollbar.value()) : nullptr
       );
     }

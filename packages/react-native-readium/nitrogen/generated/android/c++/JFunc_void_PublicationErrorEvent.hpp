@@ -17,7 +17,11 @@
 #include <string>
 #include "PublicationErrorCode.hpp"
 #include "JPublicationErrorCode.hpp"
+#include "PublicationErrorStage.hpp"
+#include "JPublicationErrorStage.hpp"
 #include <optional>
+#include "PublicationErrorKind.hpp"
+#include "JPublicationErrorKind.hpp"
 
 namespace margelo::nitro::readium {
 

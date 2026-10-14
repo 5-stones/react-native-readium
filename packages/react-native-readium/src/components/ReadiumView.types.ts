@@ -1,19 +1,17 @@
-import type {
-  Preferences,
-  Locator,
-  File,
-  DecorationGroup,
-  SelectionAction,
-  PublicationReadyEvent,
-  PublicationErrorEvent,
-  DecorationActivatedEvent,
-  SelectionEvent,
-  SelectionActionEvent,
-  SearchOptions,
-  SearchPage,
-  ZoomEvent,
-  PreferencesChangedEvent,
-} from '../interfaces';
+import type { Preferences, File, PublicationReadyEvent } from '../interfaces';
+import type { ReadiumViewMethods, ReadiumViewProps } from '../specs';
+
+/**
+ * A request the library made for the publication, which failed.
+ *
+ * @interface
+ * @group Components
+ */
+export type {
+  PublicationSource,
+  ResolveSourceRequest,
+  SourceRequestFailure,
+} from '../specs';
 
 /**
  * Moves the reader, searches and zooms; get it with a ref on {@link ReadiumView}.
@@ -28,76 +26,53 @@ import type {
  * @interface
  * @group Components
  */
-export type ReadiumViewRef = {
-  /** Goes to a location: a chapter, a bookmark, a search result or one of the `positions`. */
-  goTo: (locator: Locator) => void;
-  /** Goes to the next page. */
-  goForward: () => void;
-  /** Goes to the previous page. */
-  goBackward: () => void;
-  /**
-   * Starts a new search and resolves with the first page of results. Most apps should use
-   * {@link useSearch} instead.
-   * @platform iOS, Android. On web, resolves a page with `isSupported: false`.
-   */
-  search: (query: string, options?: SearchOptions) => Promise<SearchPage>;
-  /**
-   * Resolves with the next page of results for the current search. Wait for each page before
-   * asking for the next: a search can't be advanced concurrently.
-   */
-  loadMoreSearchResults: () => Promise<SearchPage>;
-  /** Cancels the current search and releases it. */
-  cancelSearch: () => void;
-  /** Magnifies a PDF one step. */
-  zoomIn: () => void;
-  /** Reduces a PDF's magnification one step. */
-  zoomOut: () => void;
-  /** Sets a PDF's magnification, where 1 is the page fitted to the view. */
-  setZoom: (scale: number) => void;
-  /** Fits the PDF's page to the view again. */
-  resetZoom: () => void;
-};
+export type ReadiumViewRef = Omit<ReadiumViewMethods, 'destroy'>;
 
 /**
  * The props of {@link ReadiumView}.
  *
+ * Built from the view's own definition — `ReadiumViewProps` in
+ * `src/specs/ReadiumView.nitro.ts`, which the native bindings are generated
+ * from — so that a prop passed straight through to the view is declared, and
+ * documented, in one place. What follows is only what this surface adds or
+ * changes:
+ *
+ *   - `file` is required here. A view with nothing to open is a state the
+ *     library allows itself, not one to hand a consumer.
+ *   - `onPublicationReady` carries a nested table of contents, which the
+ *     bridge cannot: a self-referencing type is more than nitrogen can
+ *     generate, so it crosses flat and is rebuilt here.
+ *   - `preferences` offers the font families Readium knows as suggestions,
+ *     which the bridge cannot carry: nitrogen refuses "an enum or any string"
+ *     as ambiguous.
+ *   - `style` is the React Native view's, not the Readium view's.
+ *
+ * It takes nothing away any more: every prop the view understands is a prop a
+ * consumer may set.
+ *
  * @interface
  * @group Components
  */
-export type ReadiumProps = {
+export type ReadiumProps = Omit<
+  ReadiumViewProps,
+  'file' | 'preferences' | 'onPublicationReady'
+> & {
   /**
    * The publication to open, and where to start. Setting a different `url` opens that
    * publication in the same view.
    */
   file: File;
   /**
-   * How the reader lays out and styles the publication: theme, font size, margins, …. Readium's
-   * defaults apply to anything left out. Check `capabilities` for what applies.
+   * How the reader lays out and styles the publication: theme, font size,
+   * margins, …. Readium's defaults apply to anything left out. Check
+   * `capabilities` for what applies.
+   *
+   * The view's own preferences, with the font families Readium knows offered
+   * as suggestions; see {@link Preferences}.
    */
   preferences?: Preferences;
-  /** Highlights and underlines to render, in named groups. */
-  decorations?: DecorationGroup[];
-  /** Items added to the text-selection menu; picking one fires `onSelectionAction`. */
-  selectionActions?: SelectionAction[];
-  /** The view's style. */
-  style?: any;
-  /** The reading position changed, e.g. the user turned a page. Save it to reopen there. */
-  onLocationChange?: (locator: Locator) => void;
   /** The publication opened: its metadata, table of contents, positions and capabilities. */
   onPublicationReady?: (event: PublicationReadyEvent) => void;
-  /** Preferences were applied; reports which ones now apply. */
-  onPreferencesChanged?: (event: PreferencesChangedEvent) => void;
-  /** The publication couldn't be opened; `code` says why. Fires instead of `onPublicationReady`. */
-  onPublicationError?: (event: PublicationErrorEvent) => void;
-  /** The user tapped a decoration, e.g. a highlight. */
-  onDecorationActivated?: (event: DecorationActivatedEvent) => void;
-  /** The text selection changed, as the user adjusts it. */
-  onSelectionChange?: (event: SelectionEvent) => void;
-  /** The user picked one of the `selectionActions`. */
-  onSelectionAction?: (event: SelectionActionEvent) => void;
-  /**
-   * A PDF's magnification changed, including by a pinch.
-   * @platform web. The native PDF viewers zoom by themselves and report nothing.
-   */
-  onZoomChange?: (event: ZoomEvent) => void;
+  /** The view's style. */
+  style?: any;
 };

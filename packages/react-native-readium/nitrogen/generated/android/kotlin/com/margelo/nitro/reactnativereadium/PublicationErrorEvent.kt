@@ -25,10 +25,22 @@ data class PublicationErrorEvent(
   val code: PublicationErrorCode,
   @DoNotStrip
   @Keep
+  val stage: PublicationErrorStage,
+  @DoNotStrip
+  @Keep
   val message: String,
   @DoNotStrip
   @Keep
-  val protectionScheme: String?
+  val detail: String?,
+  @DoNotStrip
+  @Keep
+  val protectionScheme: String?,
+  @DoNotStrip
+  @Keep
+  val status: Double?,
+  @DoNotStrip
+  @Keep
+  val kind: PublicationErrorKind?
 ) {
   /* primary constructor */
 
@@ -40,8 +52,8 @@ data class PublicationErrorEvent(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(url: String, code: PublicationErrorCode, message: String, protectionScheme: String?): PublicationErrorEvent {
-      return PublicationErrorEvent(url, code, message, protectionScheme)
+    private fun fromCpp(url: String, code: PublicationErrorCode, stage: PublicationErrorStage, message: String, detail: String?, protectionScheme: String?, status: Double?, kind: PublicationErrorKind?): PublicationErrorEvent {
+      return PublicationErrorEvent(url, code, stage, message, detail, protectionScheme, status, kind)
     }
   }
 }

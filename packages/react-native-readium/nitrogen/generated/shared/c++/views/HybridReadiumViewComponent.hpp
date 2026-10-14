@@ -27,9 +27,14 @@
 #include "PublicationReadyEvent.hpp"
 #include "PreferencesChangedEvent.hpp"
 #include "PublicationErrorEvent.hpp"
+#include <NitroModules/Promise.hpp>
+#include "SourceRequestFailure.hpp"
+#include "PublicationSource.hpp"
+#include "ResolveSourceRequest.hpp"
 #include "DecorationActivatedEvent.hpp"
 #include "SelectionEvent.hpp"
 #include "SelectionActionEvent.hpp"
+#include "ZoomEvent.hpp"
 #include <memory>
 #include "HybridReadiumViewSpec.hpp"
 
@@ -61,9 +66,12 @@ namespace margelo::nitro::readium::views {
     CachedProp<std::optional<std::function<void(const PublicationReadyEvent& /* event */)>>> onPublicationReady;
     CachedProp<std::optional<std::function<void(const PreferencesChangedEvent& /* event */)>>> onPreferencesChanged;
     CachedProp<std::optional<std::function<void(const PublicationErrorEvent& /* event */)>>> onPublicationError;
+    CachedProp<std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>>> shouldRefreshSource;
+    CachedProp<std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>>> resolveSource;
     CachedProp<std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>>> onDecorationActivated;
     CachedProp<std::optional<std::function<void(const SelectionEvent& /* event */)>>> onSelectionChange;
     CachedProp<std::optional<std::function<void(const SelectionActionEvent& /* event */)>>> onSelectionAction;
+    CachedProp<std::optional<std::function<void(const ZoomEvent& /* event */)>>> onZoomChange;
     CachedProp<std::optional<std::function<void(const std::shared_ptr<HybridReadiumViewSpec>& /* ref */)>>> hybridRef;
 
   private:

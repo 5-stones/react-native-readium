@@ -18,7 +18,7 @@ public extension Preferences {
   /**
    * Create a new instance of `Preferences`.
    */
-  init(backgroundColor: String?, columnCount: String?, fontFamily: String?, fontSize: Double?, fontWeight: Double?, hyphens: Bool?, imageFilter: String?, language: String?, letterSpacing: Double?, ligatures: Bool?, lineHeight: Double?, pageMargins: Double?, paragraphIndent: Double?, paragraphSpacing: Double?, publisherStyles: Bool?, readingProgression: String?, scroll: Bool?, spread: String?, textAlign: String?, textColor: String?, textNormalization: Bool?, theme: String?, typeScale: Double?, verticalText: Bool?, wordSpacing: Double?, fit: String?, offsetFirstPage: Bool?, pageSpacing: Double?, scrollAxis: String?, visibleScrollbar: Bool?) {
+  init(backgroundColor: String?, columnCount: String?, fontFamily: String?, fontSize: Double?, fontWeight: Double?, hyphens: Bool?, imageFilter: ReaderImageFilter?, language: String?, letterSpacing: Double?, ligatures: Bool?, lineHeight: Double?, pageMargins: Double?, paragraphIndent: Double?, paragraphSpacing: Double?, publisherStyles: Bool?, readingProgression: ReaderReadingProgression?, scroll: Bool?, spread: ReaderSpread?, textAlign: ReaderTextAlign?, textColor: String?, textNormalization: Bool?, theme: ReaderTheme?, typeScale: Double?, verticalText: Bool?, wordSpacing: Double?, fit: ReaderFit?, offsetFirstPage: Bool?, pageSpacing: Double?, scrollAxis: ReaderScrollAxis?, visibleScrollbar: Bool?) {
     self.init({ () -> bridge.std__optional_std__string_ in
       if let __unwrappedValue = backgroundColor {
         return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
@@ -55,9 +55,9 @@ public extension Preferences {
       } else {
         return .init()
       }
-    }(), { () -> bridge.std__optional_std__string_ in
+    }(), { () -> bridge.std__optional_ReaderImageFilter_ in
       if let __unwrappedValue = imageFilter {
-        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+        return bridge.create_std__optional_ReaderImageFilter_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -109,9 +109,9 @@ public extension Preferences {
       } else {
         return .init()
       }
-    }(), { () -> bridge.std__optional_std__string_ in
+    }(), { () -> bridge.std__optional_ReaderReadingProgression_ in
       if let __unwrappedValue = readingProgression {
-        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+        return bridge.create_std__optional_ReaderReadingProgression_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -121,15 +121,15 @@ public extension Preferences {
       } else {
         return .init()
       }
-    }(), { () -> bridge.std__optional_std__string_ in
+    }(), { () -> bridge.std__optional_ReaderSpread_ in
       if let __unwrappedValue = spread {
-        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+        return bridge.create_std__optional_ReaderSpread_(__unwrappedValue)
       } else {
         return .init()
       }
-    }(), { () -> bridge.std__optional_std__string_ in
+    }(), { () -> bridge.std__optional_ReaderTextAlign_ in
       if let __unwrappedValue = textAlign {
-        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+        return bridge.create_std__optional_ReaderTextAlign_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -145,9 +145,9 @@ public extension Preferences {
       } else {
         return .init()
       }
-    }(), { () -> bridge.std__optional_std__string_ in
+    }(), { () -> bridge.std__optional_ReaderTheme_ in
       if let __unwrappedValue = theme {
-        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+        return bridge.create_std__optional_ReaderTheme_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -169,9 +169,9 @@ public extension Preferences {
       } else {
         return .init()
       }
-    }(), { () -> bridge.std__optional_std__string_ in
+    }(), { () -> bridge.std__optional_ReaderFit_ in
       if let __unwrappedValue = fit {
-        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+        return bridge.create_std__optional_ReaderFit_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -187,9 +187,9 @@ public extension Preferences {
       } else {
         return .init()
       }
-    }(), { () -> bridge.std__optional_std__string_ in
+    }(), { () -> bridge.std__optional_ReaderScrollAxis_ in
       if let __unwrappedValue = scrollAxis {
-        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+        return bridge.create_std__optional_ReaderScrollAxis_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -275,15 +275,8 @@ public extension Preferences {
   }
   
   @inline(__always)
-  var imageFilter: String? {
-    return { () -> String? in
-      if bridge.has_value_std__optional_std__string_(self.__imageFilter) {
-        let __unwrapped = bridge.get_std__optional_std__string_(self.__imageFilter)
-        return String(__unwrapped)
-      } else {
-        return nil
-      }
-    }()
+  var imageFilter: ReaderImageFilter? {
+    return self.__imageFilter.value
   }
   
   @inline(__always)
@@ -383,15 +376,8 @@ public extension Preferences {
   }
   
   @inline(__always)
-  var readingProgression: String? {
-    return { () -> String? in
-      if bridge.has_value_std__optional_std__string_(self.__readingProgression) {
-        let __unwrapped = bridge.get_std__optional_std__string_(self.__readingProgression)
-        return String(__unwrapped)
-      } else {
-        return nil
-      }
-    }()
+  var readingProgression: ReaderReadingProgression? {
+    return self.__readingProgression.value
   }
   
   @inline(__always)
@@ -407,27 +393,13 @@ public extension Preferences {
   }
   
   @inline(__always)
-  var spread: String? {
-    return { () -> String? in
-      if bridge.has_value_std__optional_std__string_(self.__spread) {
-        let __unwrapped = bridge.get_std__optional_std__string_(self.__spread)
-        return String(__unwrapped)
-      } else {
-        return nil
-      }
-    }()
+  var spread: ReaderSpread? {
+    return self.__spread.value
   }
   
   @inline(__always)
-  var textAlign: String? {
-    return { () -> String? in
-      if bridge.has_value_std__optional_std__string_(self.__textAlign) {
-        let __unwrapped = bridge.get_std__optional_std__string_(self.__textAlign)
-        return String(__unwrapped)
-      } else {
-        return nil
-      }
-    }()
+  var textAlign: ReaderTextAlign? {
+    return self.__textAlign.value
   }
   
   @inline(__always)
@@ -455,15 +427,8 @@ public extension Preferences {
   }
   
   @inline(__always)
-  var theme: String? {
-    return { () -> String? in
-      if bridge.has_value_std__optional_std__string_(self.__theme) {
-        let __unwrapped = bridge.get_std__optional_std__string_(self.__theme)
-        return String(__unwrapped)
-      } else {
-        return nil
-      }
-    }()
+  var theme: ReaderTheme? {
+    return self.__theme.value
   }
   
   @inline(__always)
@@ -503,15 +468,8 @@ public extension Preferences {
   }
   
   @inline(__always)
-  var fit: String? {
-    return { () -> String? in
-      if bridge.has_value_std__optional_std__string_(self.__fit) {
-        let __unwrapped = bridge.get_std__optional_std__string_(self.__fit)
-        return String(__unwrapped)
-      } else {
-        return nil
-      }
-    }()
+  var fit: ReaderFit? {
+    return self.__fit.value
   }
   
   @inline(__always)
@@ -539,15 +497,8 @@ public extension Preferences {
   }
   
   @inline(__always)
-  var scrollAxis: String? {
-    return { () -> String? in
-      if bridge.has_value_std__optional_std__string_(self.__scrollAxis) {
-        let __unwrapped = bridge.get_std__optional_std__string_(self.__scrollAxis)
-        return String(__unwrapped)
-      } else {
-        return nil
-      }
-    }()
+  var scrollAxis: ReaderScrollAxis? {
+    return self.__scrollAxis.value
   }
   
   @inline(__always)

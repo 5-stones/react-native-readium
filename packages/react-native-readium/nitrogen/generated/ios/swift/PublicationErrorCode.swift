@@ -29,6 +29,8 @@ public extension PublicationErrorCode {
         self = .restricted
       case "cancelled":
         self = .cancelled
+      case "readFailed":
+        self = .readfailed
       default:
         return nil
     }
@@ -51,6 +53,8 @@ public extension PublicationErrorCode {
         return "restricted"
       case .cancelled:
         return "cancelled"
+      case .readfailed:
+        return "readFailed"
     }
   }
 }

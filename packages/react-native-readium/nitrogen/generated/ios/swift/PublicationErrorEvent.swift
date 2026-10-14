@@ -18,10 +18,28 @@ public extension PublicationErrorEvent {
   /**
    * Create a new instance of `PublicationErrorEvent`.
    */
-  init(url: String, code: PublicationErrorCode, message: String, protectionScheme: String?) {
-    self.init(std.string(url), code, std.string(message), { () -> bridge.std__optional_std__string_ in
+  init(url: String, code: PublicationErrorCode, stage: PublicationErrorStage, message: String, detail: String?, protectionScheme: String?, status: Double?, kind: PublicationErrorKind?) {
+    self.init(std.string(url), code, stage, std.string(message), { () -> bridge.std__optional_std__string_ in
+      if let __unwrappedValue = detail {
+        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__string_ in
       if let __unwrappedValue = protectionScheme {
         return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = status {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_PublicationErrorKind_ in
+      if let __unwrappedValue = kind {
+        return bridge.create_std__optional_PublicationErrorKind_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -39,8 +57,25 @@ public extension PublicationErrorEvent {
   }
   
   @inline(__always)
+  var stage: PublicationErrorStage {
+    return self.__stage
+  }
+  
+  @inline(__always)
   var message: String {
     return String(self.__message)
+  }
+  
+  @inline(__always)
+  var detail: String? {
+    return { () -> String? in
+      if bridge.has_value_std__optional_std__string_(self.__detail) {
+        let __unwrapped = bridge.get_std__optional_std__string_(self.__detail)
+        return String(__unwrapped)
+      } else {
+        return nil
+      }
+    }()
   }
   
   @inline(__always)
@@ -53,5 +88,22 @@ public extension PublicationErrorEvent {
         return nil
       }
     }()
+  }
+  
+  @inline(__always)
+  var status: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__status) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__status)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var kind: PublicationErrorKind? {
+    return self.__kind.value
   }
 }

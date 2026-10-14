@@ -22,6 +22,20 @@ namespace margelo::nitro::readium { struct LocatorLocations; }
 namespace margelo::nitro::readium { struct LocatorText; }
 // Forward declaration of `Preferences` to properly resolve imports.
 namespace margelo::nitro::readium { struct Preferences; }
+// Forward declaration of `ReaderImageFilter` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderImageFilter; }
+// Forward declaration of `ReaderReadingProgression` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderReadingProgression; }
+// Forward declaration of `ReaderSpread` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderSpread; }
+// Forward declaration of `ReaderTextAlign` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderTextAlign; }
+// Forward declaration of `ReaderTheme` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderTheme; }
+// Forward declaration of `ReaderFit` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderFit; }
+// Forward declaration of `ReaderScrollAxis` to properly resolve imports.
+namespace margelo::nitro::readium { enum class ReaderScrollAxis; }
 // Forward declaration of `DecorationGroup` to properly resolve imports.
 namespace margelo::nitro::readium { struct DecorationGroup; }
 // Forward declaration of `Decoration` to properly resolve imports.
@@ -56,6 +70,18 @@ namespace margelo::nitro::readium { struct PreferencesChangedEvent; }
 namespace margelo::nitro::readium { struct PublicationErrorEvent; }
 // Forward declaration of `PublicationErrorCode` to properly resolve imports.
 namespace margelo::nitro::readium { enum class PublicationErrorCode; }
+// Forward declaration of `PublicationErrorStage` to properly resolve imports.
+namespace margelo::nitro::readium { enum class PublicationErrorStage; }
+// Forward declaration of `PublicationErrorKind` to properly resolve imports.
+namespace margelo::nitro::readium { enum class PublicationErrorKind; }
+// Forward declaration of `SourceRequestFailure` to properly resolve imports.
+namespace margelo::nitro::readium { struct SourceRequestFailure; }
+// Forward declaration of `PublicationSource` to properly resolve imports.
+namespace margelo::nitro::readium { struct PublicationSource; }
+// Forward declaration of `ResolveSourceRequest` to properly resolve imports.
+namespace margelo::nitro::readium { struct ResolveSourceRequest; }
+// Forward declaration of `SourceRequestReason` to properly resolve imports.
+namespace margelo::nitro::readium { enum class SourceRequestReason; }
 // Forward declaration of `DecorationActivatedEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct DecorationActivatedEvent; }
 // Forward declaration of `Rect` to properly resolve imports.
@@ -66,6 +92,8 @@ namespace margelo::nitro::readium { struct Point; }
 namespace margelo::nitro::readium { struct SelectionEvent; }
 // Forward declaration of `SelectionActionEvent` to properly resolve imports.
 namespace margelo::nitro::readium { struct SelectionActionEvent; }
+// Forward declaration of `ZoomEvent` to properly resolve imports.
+namespace margelo::nitro::readium { struct ZoomEvent; }
 // Forward declaration of `SearchPage` to properly resolve imports.
 namespace margelo::nitro::readium { struct SearchPage; }
 // Forward declaration of `SearchResult` to properly resolve imports.
@@ -80,6 +108,13 @@ namespace margelo::nitro::readium { struct SearchOptions; }
 #include "LocatorLocations.hpp"
 #include "LocatorText.hpp"
 #include "Preferences.hpp"
+#include "ReaderImageFilter.hpp"
+#include "ReaderReadingProgression.hpp"
+#include "ReaderSpread.hpp"
+#include "ReaderTextAlign.hpp"
+#include "ReaderTheme.hpp"
+#include "ReaderFit.hpp"
+#include "ReaderScrollAxis.hpp"
 #include "DecorationGroup.hpp"
 #include <vector>
 #include "Decoration.hpp"
@@ -100,13 +135,20 @@ namespace margelo::nitro::readium { struct SearchOptions; }
 #include "PreferencesChangedEvent.hpp"
 #include "PublicationErrorEvent.hpp"
 #include "PublicationErrorCode.hpp"
+#include "PublicationErrorStage.hpp"
+#include "PublicationErrorKind.hpp"
+#include <NitroModules/Promise.hpp>
+#include "SourceRequestFailure.hpp"
+#include "PublicationSource.hpp"
+#include "ResolveSourceRequest.hpp"
+#include "SourceRequestReason.hpp"
 #include "DecorationActivatedEvent.hpp"
 #include "Rect.hpp"
 #include "Point.hpp"
 #include "SelectionEvent.hpp"
 #include "SelectionActionEvent.hpp"
+#include "ZoomEvent.hpp"
 #include "SearchPage.hpp"
-#include <NitroModules/Promise.hpp>
 #include "SearchResult.hpp"
 #include "SearchOptions.hpp"
 
@@ -212,6 +254,20 @@ namespace margelo::nitro::readium {
     inline void setOnPublicationError(const std::optional<std::function<void(const PublicationErrorEvent& /* event */)>>& onPublicationError) noexcept override {
       _swiftPart.setOnPublicationError(onPublicationError);
     }
+    inline std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>> getShouldRefreshSource() noexcept override {
+      auto __result = _swiftPart.getShouldRefreshSource();
+      return __result;
+    }
+    inline void setShouldRefreshSource(const std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<bool>>>>(const SourceRequestFailure& /* failure */)>>& shouldRefreshSource) noexcept override {
+      _swiftPart.setShouldRefreshSource(shouldRefreshSource);
+    }
+    inline std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>> getResolveSource() noexcept override {
+      auto __result = _swiftPart.getResolveSource();
+      return __result;
+    }
+    inline void setResolveSource(const std::optional<std::function<std::shared_ptr<Promise<std::shared_ptr<Promise<PublicationSource>>>>(const ResolveSourceRequest& /* request */)>>& resolveSource) noexcept override {
+      _swiftPart.setResolveSource(resolveSource);
+    }
     inline std::optional<std::function<void(const DecorationActivatedEvent& /* event */)>> getOnDecorationActivated() noexcept override {
       auto __result = _swiftPart.getOnDecorationActivated();
       return __result;
@@ -232,6 +288,13 @@ namespace margelo::nitro::readium {
     }
     inline void setOnSelectionAction(const std::optional<std::function<void(const SelectionActionEvent& /* event */)>>& onSelectionAction) noexcept override {
       _swiftPart.setOnSelectionAction(onSelectionAction);
+    }
+    inline std::optional<std::function<void(const ZoomEvent& /* event */)>> getOnZoomChange() noexcept override {
+      auto __result = _swiftPart.getOnZoomChange();
+      return __result;
+    }
+    inline void setOnZoomChange(const std::optional<std::function<void(const ZoomEvent& /* event */)>>& onZoomChange) noexcept override {
+      _swiftPart.setOnZoomChange(onZoomChange);
     }
 
   public:
@@ -278,6 +341,30 @@ namespace margelo::nitro::readium {
     }
     inline void cancelSearch() override {
       auto __result = _swiftPart.cancelSearch();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void zoomIn() override {
+      auto __result = _swiftPart.zoomIn();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void zoomOut() override {
+      auto __result = _swiftPart.zoomOut();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void setZoom(double scale) override {
+      auto __result = _swiftPart.setZoom(std::forward<decltype(scale)>(scale));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void resetZoom() override {
+      auto __result = _swiftPart.resetZoom();
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

@@ -112,6 +112,16 @@ using namespace margelo::nitro::readium::views;
     swiftPart.setOnPublicationError(newViewProps.onPublicationError.value);
     newViewProps.onPublicationError.isDirty = false;
   }
+  // shouldRefreshSource: optional
+  if (newViewProps.shouldRefreshSource.isDirty) {
+    swiftPart.setShouldRefreshSource(newViewProps.shouldRefreshSource.value);
+    newViewProps.shouldRefreshSource.isDirty = false;
+  }
+  // resolveSource: optional
+  if (newViewProps.resolveSource.isDirty) {
+    swiftPart.setResolveSource(newViewProps.resolveSource.value);
+    newViewProps.resolveSource.isDirty = false;
+  }
   // onDecorationActivated: optional
   if (newViewProps.onDecorationActivated.isDirty) {
     swiftPart.setOnDecorationActivated(newViewProps.onDecorationActivated.value);
@@ -126,6 +136,11 @@ using namespace margelo::nitro::readium::views;
   if (newViewProps.onSelectionAction.isDirty) {
     swiftPart.setOnSelectionAction(newViewProps.onSelectionAction.value);
     newViewProps.onSelectionAction.isDirty = false;
+  }
+  // onZoomChange: optional
+  if (newViewProps.onZoomChange.isDirty) {
+    swiftPart.setOnZoomChange(newViewProps.onZoomChange.value);
+    newViewProps.onZoomChange.isDirty = false;
   }
 
   swiftPart.afterUpdate();

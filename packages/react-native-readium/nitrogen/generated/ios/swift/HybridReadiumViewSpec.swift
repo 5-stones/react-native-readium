@@ -18,9 +18,12 @@ public protocol HybridReadiumViewSpec_protocol: HybridObject, HybridView {
   var onPublicationReady: ((_ event: PublicationReadyEvent) -> Void)? { get set }
   var onPreferencesChanged: ((_ event: PreferencesChangedEvent) -> Void)? { get set }
   var onPublicationError: ((_ event: PublicationErrorEvent) -> Void)? { get set }
+  var shouldRefreshSource: ((_ failure: SourceRequestFailure) -> Promise<Promise<Bool>>)? { get set }
+  var resolveSource: ((_ request: ResolveSourceRequest) -> Promise<Promise<PublicationSource>>)? { get set }
   var onDecorationActivated: ((_ event: DecorationActivatedEvent) -> Void)? { get set }
   var onSelectionChange: ((_ event: SelectionEvent) -> Void)? { get set }
   var onSelectionAction: ((_ event: SelectionActionEvent) -> Void)? { get set }
+  var onZoomChange: ((_ event: ZoomEvent) -> Void)? { get set }
 
   // Methods
   func goTo(locator: Locator) throws -> Void
@@ -30,6 +33,10 @@ public protocol HybridReadiumViewSpec_protocol: HybridObject, HybridView {
   func search(query: String, options: SearchOptions?) throws -> Promise<SearchPage>
   func loadMoreSearchResults() throws -> Promise<SearchPage>
   func cancelSearch() throws -> Void
+  func zoomIn() throws -> Void
+  func zoomOut() throws -> Void
+  func setZoom(scale: Double) throws -> Void
+  func resetZoom() throws -> Void
 }
 
 public extension HybridReadiumViewSpec_protocol {

@@ -3,9 +3,9 @@ export type {
   Decoration,
   DecorationGroup,
   DecorationActivatedEvent,
-} from '../specs/ReadiumView.nitro';
+} from '../specs';
 
-import type { Decoration } from '../specs/ReadiumView.nitro';
+import type { Decoration } from '../specs';
 
 /**
  * @deprecated Use DecorationGroup[] instead
