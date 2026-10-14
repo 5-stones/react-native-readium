@@ -16,6 +16,30 @@ import { isEpubURL } from './publicationFormat';
  * suffix itself, case sensitively, and so derived a directory of its own for a
  * url like `MANIFEST.JSON` that the navigator had already accepted.
  */
+/**
+ * The publication's url with an origin on it.
+ *
+ * A relative url is a reasonable thing to pass — `/book/manifest.json` is
+ * what a web app naturally writes — but it cannot stay relative, because the
+ * navigator puts the publication's base into a Content-Security-Policy on
+ * every chapter it builds: `img-src <base> blob: data:`. A bare path is not a
+ * valid CSP source expression, so the browser discards it and the chapter's
+ * own images, stylesheets and fonts are blocked before a single request is
+ * made — a broken image with nothing in the network log to explain it.
+ *
+ * Left alone where there is no document to resolve against, which is anywhere
+ * this is reached during server rendering.
+ */
+export function absolutePublicationURL(url: string): string {
+  if (typeof window === 'undefined' || !url) return url;
+
+  try {
+    return new URL(url, window.location.href).href;
+  } catch {
+    return url;
+  }
+}
+
 export function normalizePublicationURL(url: string): string {
   if (isEpubURL(url)) {
     // The directory the manifest sits in, taken from the path alone so that a
