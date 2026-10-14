@@ -101,3 +101,6 @@ apps/example-native/.env
 docs/.docusaurus/
 docs/core/api/
 docs/lcp/api/
+
+# TypeScript incremental build state
+*.tsbuildinfo

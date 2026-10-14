@@ -38,8 +38,17 @@ const BookDetails: React.FC<{
   book: BookOption;
   onOpenReader: () => void;
 }> = ({ book, onOpenReader }) => {
+  const insets = useSafeAreaInsets();
+
   return (
-    <ScrollView contentContainerStyle={styles.detailsContent}>
+    <ScrollView
+      contentContainerStyle={[
+        styles.detailsContent,
+        // The sheet reaches under Android's navigation bar; the button at the
+        // end of this list must not.
+        { paddingBottom: 32 + insets.bottom },
+      ]}
+    >
       <View style={styles.detailsCover}>
         <MaterialIcons name="menu-book" size={100} color="#888" />
       </View>
@@ -71,6 +80,13 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
   const [readerHandle, setReaderHandle] = useState<ReaderHandle | null>(null);
   const [contentMode, setContentMode] = useState<ContentMode>('reader');
   const wasOpen = useRef(false);
+  /**
+   * The sheet reaches the bottom of the window, and on Android the window
+   * reaches under the navigation bar — so the reader has to stop above it.
+   * The native view draws edge to edge inside whatever bounds it is given and
+   * does not inset itself.
+   */
+  const insets = useSafeAreaInsets();
 
   const handleSheetChange = useCallback(
     (index: number) => {
@@ -137,7 +153,12 @@ export const ReaderBottomSheet: React.FC<ReaderBottomSheetProps> = ({
             )}
 
             {book ? (
-              <View style={styles.readerContainer}>
+              <View
+                style={[
+                  styles.readerContainer,
+                  { paddingBottom: insets.bottom },
+                ]}
+              >
                 <Reader
                   key={book.id}
                   asset={book.asset}

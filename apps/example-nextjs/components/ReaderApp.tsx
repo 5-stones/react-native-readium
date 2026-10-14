@@ -5,7 +5,7 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { HomeScreen, ReaderBottomSheet } from 'common-app';
+import { HomeScreen, ReaderBottomSheet, books } from 'common-app';
 import type { BookOption } from 'common-app';
 
 import { configureRNVI } from '../utils/configureRNVI';
@@ -13,42 +13,6 @@ import { usePersistedPreferences } from '../hooks/usePersistedPreferences';
 
 const SELECTED_BOOK_KEY = 'selected-book-id';
 
-const books: BookOption[] = [
-  {
-    id: 'brothers-karamazov',
-    title: 'The Brothers Karamazov',
-    author: 'Fyodor Dostoevsky',
-    asset: '/the-brothers-karamazov_epub/manifest.json',
-  },
-  {
-    id: 'alice-in-wonderland',
-    title: "Alice's Adventures in Wonderland",
-    author: 'Lewis Carroll',
-    asset: 'https://alice.dita.digital/manifest.json',
-  },
-  {
-    id: 'bella-the-dragon',
-    title: 'Bella The Dragon (Fixed Layout)',
-    author: 'Barbara Nick',
-    asset:
-      'https://publication-server.readium.org/webpub/Z3M6Ly9yZWFkaXVtLXBsYXlncm91bmQtZmlsZXMvZGVtby9CZWxsYU9yaWdpbmFsMy5lcHVi/manifest.json',
-  },
-  {
-    id: 'moby-dick',
-    title: 'Moby Dick',
-    author: 'Herman Melville',
-    asset: '/moby-dick_epub/manifest.json',
-  },
-  {
-    id: 'sense-and-sensibility',
-    title: 'Sense and Sensibility (PDF)',
-    author: 'Jane Austen',
-    // Served from this app's public/ dir so it is same-origin. pdf.js fetches
-    // the bytes over XHR, so a cross-origin PDF without CORS headers (as
-    // gutenberg.org serves) cannot be read on web at all.
-    asset: '/sense-and-sensibility.pdf',
-  },
-];
 
 const styles = StyleSheet.create({
   container: {

@@ -21,6 +21,7 @@ import { ReaderButton } from './ReaderButton';
 import { HighlightColorPicker, HighlightEditDialog } from './highlights';
 
 import { useBook } from '../hooks/useBook';
+import { resolveSource } from '../utils/resolveSource';
 import { useReaderState } from '../hooks/useReaderState';
 import { useHighlights } from '../hooks/useHighlights';
 
@@ -150,11 +151,41 @@ export const Reader: React.FC<ReaderProps> = ({
   } = useHighlights();
 
   const [openError, setOpenError] = useState<PublicationErrorEvent>();
+  /**
+   * A read the library gave up on. Held separately from [openError]: the
+   * publication is open and the page on screen is intact, so this is worth a
+   * banner and a retry, not a teardown.
+   */
+  const [readError, setReadError] = useState<PublicationErrorEvent>();
+  /** Bumped to reopen the publication; see {@link retryReadFailure}. */
+  const [reloadAttempt, setReloadAttempt] = useState(0);
   const [isProtected, setIsProtected] = useState(false);
+
+  const handlePublicationError = useCallback((event: PublicationErrorEvent) => {
+    if (event.stage === 'read') {
+      setReadError(event);
+      return;
+    }
+    setOpenError(event);
+  }, []);
+
+  /**
+   * Reopens the publication where the reader left off.
+   *
+   * A remount rather than anything cleverer: the library answers a failed
+   * request by asking `resolveSource` for a new location all by itself, so
+   * what is left for a consumer is the case where that was declined — and
+   * then opening again, at the locator last reported, is the whole recovery.
+   */
+  const retryReadFailure = useCallback(() => {
+    setReadError(undefined);
+    setReloadAttempt((attempt) => attempt + 1);
+  }, []);
 
   const handlePublicationReady = React.useCallback(
     (event: PublicationReadyEvent) => {
       setOpenError(undefined);
+      setReadError(undefined);
       setIsProtected(event.isProtected);
       baseHandlePublicationReady(event);
     },
@@ -247,19 +278,27 @@ export const Reader: React.FC<ReaderProps> = ({
 
         <View style={styles.readiumContainer}>
           <ReadiumView
+            // Reopening is a remount, and `initialLocation` is what carries
+            // the reader's place across it.
+            key={reloadAttempt}
             ref={ref}
-            file={file}
+            file={
+              reloadAttempt && location
+                ? { ...file, initialLocation: location }
+                : file
+            }
             preferences={preferences}
             onPreferencesChanged={handlePreferencesChanged}
             decorations={decorations}
             selectionActions={selectionActions}
             onLocationChange={handleLocationChange}
             onPublicationReady={handlePublicationReady}
-            onPublicationError={setOpenError}
+            onPublicationError={handlePublicationError}
             onDecorationActivated={handleDecorationActivated}
             onSelectionChange={handleSelectionChange}
             onSelectionAction={handleSelectionAction}
             onZoomChange={handleZoomChange}
+            resolveSource={resolveSource}
           />
         </View>
 
@@ -278,6 +317,21 @@ export const Reader: React.FC<ReaderProps> = ({
             {openError.detail ? (
               <Text style={styles.errorDetail}>{openError.detail}</Text>
             ) : null}
+          </View>
+        ) : null}
+
+        {readError && !openError ? (
+          <View style={styles.readFailureBanner}>
+            <Text testID="read-failure" style={styles.readFailureText}>
+              {readError.message}
+            </Text>
+            <Text
+              testID="read-failure-retry"
+              style={styles.readFailureRetry}
+              onPress={retryReadFailure}
+            >
+              Retry
+            </Text>
           </View>
         ) : null}
 

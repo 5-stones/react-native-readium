@@ -30,6 +30,21 @@ enum FIT {
 
 type Spread = 'auto' | 'never' | 'always';
 
+/**
+ * What the reader does when a preference is unset.
+ *
+ * A control that shows nothing until it is tapped looks broken, so each of
+ * these displays the value in force rather than the value chosen. The numbers
+ * come from Readium: `columnCount` and `spread` default to `auto`, and the PDF
+ * navigator opens at `fit: width`, `scrollAxis: vertical`.
+ */
+const UNSET = {
+  columnCount: 'auto',
+  spread: 'auto',
+  fit: FIT.width,
+  scrollAxis: 'vertical',
+} as const;
+
 export const PreferencesEditor = ({
   preferences,
   onChange,
@@ -70,7 +85,7 @@ export const PreferencesEditor = ({
   };
 
   const nextFit = useCallback(
-    (fit?: 'cover' | 'contain' | 'width' | 'height') => {
+    (fit: 'cover' | 'contain' | 'width' | 'height' = UNSET.fit) => {
       if (fit === FIT.contain) {
         return FIT.cover;
       } else if (fit === FIT.cover) {
@@ -91,7 +106,7 @@ export const PreferencesEditor = ({
     });
   };
 
-  const nextSpread = useCallback((spread?: Spread): Spread => {
+  const nextSpread = useCallback((spread: Spread = UNSET.spread): Spread => {
     if (spread === 'auto') {
       return 'never';
     } else if (spread === 'never') {
@@ -108,14 +123,14 @@ export const PreferencesEditor = ({
     });
   };
 
-  type ColumnCount = 'auto' | '1' | '2';
+  type ColumnCount = NonNullable<Preferences['columnCount']>;
 
   const nextColumnCount = useCallback(
-    (columnCount?: ColumnCount): ColumnCount => {
+    (columnCount: ColumnCount = UNSET.columnCount): ColumnCount => {
       if (columnCount === 'auto') {
-        return '1';
-      } else if (columnCount === '1') {
-        return '2';
+        return 'one';
+      } else if (columnCount === 'one') {
+        return 'two';
       } else {
         return 'auto';
       }
@@ -141,7 +156,9 @@ export const PreferencesEditor = ({
     onChange({
       ...preferences,
       scrollAxis:
-        preferences.scrollAxis === 'vertical' ? 'horizontal' : 'vertical',
+        (preferences.scrollAxis ?? UNSET.scrollAxis) === 'vertical'
+          ? 'horizontal'
+          : 'vertical',
     });
   };
 
@@ -240,7 +257,7 @@ export const PreferencesEditor = ({
                 activeOpacity={0.7}
               >
                 <Text style={styles.themeButtonText}>
-                  {preferences.fit?.toUpperCase()}
+                  {(preferences.fit ?? UNSET.fit).toUpperCase()}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -259,7 +276,7 @@ export const PreferencesEditor = ({
                 activeOpacity={0.7}
               >
                 <Text style={styles.themeButtonText}>
-                  {preferences.spread?.toUpperCase()}
+                  {(preferences.spread ?? UNSET.spread).toUpperCase()}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -278,7 +295,7 @@ export const PreferencesEditor = ({
                 activeOpacity={0.7}
               >
                 <Text style={styles.themeButtonText}>
-                  {preferences.columnCount}
+                  {(preferences.columnCount ?? UNSET.columnCount).toUpperCase()}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -317,7 +334,7 @@ export const PreferencesEditor = ({
                 activeOpacity={0.7}
               >
                 <Text style={styles.themeButtonText}>
-                  {preferences.scrollAxis}
+                  {(preferences.scrollAxis ?? UNSET.scrollAxis).toUpperCase()}
                 </Text>
               </TouchableOpacity>
             </View>

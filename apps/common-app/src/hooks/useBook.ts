@@ -1,32 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 import type { File, Locator } from 'react-native-readium';
 import RNFS from '../utils/RNFS';
+import { classify, localPathFor } from '../utils/bookStorage';
 
 interface UseBookOptions {
   /** See {@link BookOption.asset}. */
   asset?: string;
   initialLocation?: Locator;
-}
-
-type SourceKind = 'remote' | 'path' | 'bundled';
-
-/**
- * Classifies an asset by its shape, so callers describe *where* a
- * publication is rather than *how* to fetch it.
- */
-function classify(asset: string): SourceKind {
-  if (/^https?:\/\//i.test(asset)) return 'remote';
-  if (asset.startsWith('file://') || asset.startsWith('/')) return 'path';
-  return 'bundled';
-}
-
-/** Filename to cache a remote publication under, derived from its URL. */
-function cacheNameFor(asset: string): string {
-  const withoutQuery = asset.split('?')[0].split('#')[0];
-  const name = withoutQuery.substring(withoutQuery.lastIndexOf('/') + 1);
-  // Fall back to something stable if the URL ends in a slash.
-  return name || 'publication';
 }
 
 async function copyBundledAsset(
@@ -43,9 +24,10 @@ async function copyBundledAsset(
 /**
  * Makes [asset] available to the reader, and returns the url to open.
  *
- * Remote publications are downloaded and bundled ones copied out, both into the
- * documents directory, so that later opens are local and work offline. Anything
- * already there is reused.
+ * A remote publication is opened where it is. Downloading one is a separate,
+ * deliberate act — downloading everything is also how you never find out
+ * whether reading remotely works. A bundled one has to be copied out first;
+ * there is no reading it in place.
  */
 export async function resolveAsset(asset: string): Promise<string> {
   // Web has no filesystem - RNFS is a stub there - so reading the asset where
@@ -55,37 +37,20 @@ export async function resolveAsset(asset: string): Promise<string> {
   }
 
   const kind = classify(asset);
-  if (kind === 'path') {
+  if (kind === 'path' || kind === 'remote') {
     return asset;
   }
 
-  const name = kind === 'bundled' ? asset : cacheNameFor(asset);
-  const localPath = `${RNFS.DocumentDirectoryPath}/${name}`;
+  const localPath = localPathFor(asset)!;
+  if (await RNFS.exists(localPath)) return localPath;
 
-  if (await RNFS.exists(localPath)) {
-    console.log('File already exists. Skipping.', localPath);
-    return localPath;
-  }
-
-  if (kind === 'bundled') {
-    console.log(`Copying bundled asset '${asset}' to '${localPath}'`);
-    await copyBundledAsset(asset, localPath);
-    return localPath;
-  }
-
-  console.log(`Downloading '${asset}' to '${localPath}'`);
-  const { promise } = RNFS.downloadFile({
-    fromUrl: asset,
-    toFile: localPath,
-    background: true,
-    discretionary: true,
-  });
-  await promise;
+  await copyBundledAsset(asset, localPath);
   return localPath;
 }
 
 /**
- * Resolves a book's [asset] into a file the reader can open.
+ * Resolves a book's [asset] into a file the reader can open, and lets a remote
+ * one be stored for offline reading.
  *
  * The publication's format is deliberately not part of this: Readium sniffs it
  * natively, and the web view picks its navigator from the URL, so neither the
@@ -95,6 +60,8 @@ export const useBook = ({ asset, initialLocation }: UseBookOptions) => {
   const [file, setFile] = useState<File>();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  /** Whether a stored copy is what is being read, rather than the remote url. */
+  const [isDownloaded, setIsDownloaded] = useState(false);
 
   useEffect(() => {
     if (!asset) {
@@ -108,8 +75,14 @@ export const useBook = ({ asset, initialLocation }: UseBookOptions) => {
 
     (async () => {
       try {
-        const url = await resolveAsset(asset);
+        const local = localPathFor(asset);
+        // A copy already on disk is what to read, whatever the asset says.
+        const stored =
+          !!local && classify(asset) === 'remote' && (await RNFS.exists(local));
+        const url = stored ? local! : await resolveAsset(asset);
+
         if (!cancelled) {
+          setIsDownloaded(stored);
           setFile({ url, initialLocation });
         }
       } catch (err) {
@@ -130,5 +103,5 @@ export const useBook = ({ asset, initialLocation }: UseBookOptions) => {
     };
   }, [asset, initialLocation]);
 
-  return { file, isLoading, error };
+  return { file, isLoading, error, isDownloaded };
 };
