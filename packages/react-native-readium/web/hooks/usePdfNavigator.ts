@@ -16,13 +16,32 @@ import type {
   PreferencesChangedEvent,
   PublicationErrorEvent,
 } from '../../src/interfaces';
+import type {
+  PublicationSource,
+  ResolveSourceRequest,
+  SourceRequestFailure,
+} from '../../src/components/ReadiumView.types';
 import { assessCapabilities, pdfCapabilities } from '../utils/capabilities';
 import { PdfNavigator } from '../classes';
 import { isPdfURL, mapPdfPreferences } from '../utils';
-import { toPublicationErrorEvent } from '../../src/utils/publicationError';
+import {
+  toPublicationErrorEvent,
+  toReadFailureEvent,
+} from '../../src/utils/publicationError';
+import { failureFromError } from '../utils/publicationFetch';
+import {
+  createRelocationGuard,
+  looksRefreshable,
+} from '../utils/relocationGuard';
 
 interface UsePdfNavigatorProps {
   file: ReadiumFile;
+  /** See {@link ReadiumProps.resolveSource}. */
+  resolveSource?: (request: ResolveSourceRequest) => Promise<PublicationSource>;
+  /** See {@link ReadiumProps.shouldRefreshSource}. */
+  shouldRefreshSource?: (
+    failure: SourceRequestFailure
+  ) => boolean | Promise<boolean>;
   preferences: Preferences;
   container: HTMLElement | null;
   onLocationChange?: (locator: Locator) => void;
@@ -120,6 +139,8 @@ export const usePdfNavigator = ({
   onPublicationReady,
   onPreferencesChanged,
   onPublicationError,
+  resolveSource,
+  shouldRefreshSource,
   onZoomChange,
   initialPage = 1,
   onError = (error: any) => {
@@ -128,6 +149,12 @@ export const usePdfNavigator = ({
 }: UsePdfNavigatorProps): PdfNavigator | undefined => {
   const [navigatorId, setNavigatorId] = useState(0);
   const pdfRef = useRef<PDFDocumentProxy | null>(null);
+  /**
+   * Whether this publication has ever opened. `pdfRef` is cleared between
+   * load attempts, so it cannot tell a failure to open from one that cost a
+   * reader their page.
+   */
+  const hasOpenedRef = useRef(false);
   const loadingTaskRef = useRef<PDFDocumentLoadingTask | null>(null);
   const [pageNumber, setPageNumber] = useState(initialPage);
   const [pageCount, setPageCount] = useState(0);
@@ -144,7 +171,100 @@ export const usePdfNavigator = ({
   pageNumberRef.current = pageNumber;
 
   const isPdf = !!file?.url && isPdfURL(file.url);
-  const url = file?.url;
+
+  // `file.url` identifies the publication; `sourceURL` is the location fetched,
+  // which `resolveSource` may replace without the publication having changed.
+  const [sourceURL, setSourceURL] = useState<string | undefined>(
+    resolveSource ? undefined : file?.url
+  );
+  const url = sourceURL;
+  /** Read where the open must not re-run because the callback changed. */
+  const resolveSourceRef = useRef(resolveSource);
+  resolveSourceRef.current = resolveSource;
+  /** Where to land after a refresh reloads the document, rather than at the
+   *  initial location the reader has long since moved away from. */
+  const restorePageRef = useRef<number | null>(null);
+  /** The publication's identity, for a refresh that captures no props. */
+  const fileURLRef = useRef(file?.url ?? '');
+  if (fileURLRef.current !== (file?.url ?? '')) hasOpenedRef.current = false;
+  fileURLRef.current = file?.url ?? '';
+  /**
+   * Bumped on every refresh so the document is loaded again even when the
+   * location resolved to the same url — which is also what recovers a first
+   * load that failed.
+   */
+  const [openAttempt, setOpenAttempt] = useState(0);
+  /** Decides when a failed load earns a new location. Shared with EPUB. */
+  const guardRef = useRef(createRelocationGuard());
+  const shouldRefreshRef = useRef(shouldRefreshSource);
+  shouldRefreshRef.current = shouldRefreshSource;
+  const onErrorRef = useRef(onPublicationError);
+  onErrorRef.current = onPublicationError;
+  /**
+   * Settled by the load, so a refresh can wait for the reload it implies
+   * rather than resolving as soon as the location is recorded.
+   */
+  const reloadRef = useRef<{
+    attempt: number;
+    settle: (ok: boolean) => void;
+  } | null>(null);
+  /** Mirrors `openAttempt`, so a waiter can name the load it is waiting for. */
+  const attemptRef = useRef(0);
+  attemptRef.current = openAttempt;
+
+  /**
+   * Keyed by attempt: a relocation triggered by an earlier failure has a load
+   * of its own in flight, and would otherwise settle a waiter that is waiting
+   * for a later one.
+   */
+  const settleReload = useCallback((attempt: number, ok: boolean) => {
+    const waiting = reloadRef.current;
+    if (!waiting || waiting.attempt !== attempt) return;
+    reloadRef.current = null;
+    waiting.settle(ok);
+  }, []);
+
+  /**
+   * A load that failed because the location expired is answered by asking for
+   * a new one and loading again. Unlike a chapter fetch there is nothing to
+   * retry in place: a range request lives inside the document.
+   */
+  const relocateRef = useRef<(error: unknown) => void>(() => {});
+
+  useEffect(() => {
+    if (!isPdf) return;
+    const resolve = resolveSourceRef.current;
+    if (!resolve) {
+      setSourceURL(file?.url);
+      return;
+    }
+
+    // Stop using the previous book's location at once. Keeping it leaves that
+    // document rendered and interactive while this one is resolved — and for
+    // good if resolving rejects — with its events read as this book's.
+    setSourceURL(undefined);
+
+    let cancelled = false;
+    resolve({ url: file?.url ?? '', reason: 'open' })
+      .then(({ url: resolved }: PublicationSource) => {
+        if (!cancelled) setSourceURL(resolved);
+      })
+      .catch((error: any) => {
+        if (cancelled) return;
+        onPublicationError?.(
+          toPublicationErrorEvent({
+            url: file?.url ?? '',
+            code: 'openFailed',
+            stage: 'open',
+            detail: String(error?.message ?? error),
+          })
+        );
+      });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPdf, file?.url]);
 
   const setZoom = useCallback((scale: number) => {
     setZoomState((current) => {
@@ -364,6 +484,7 @@ export const usePdfNavigator = ({
         if (cancelled) return;
 
         pdfRef.current = pdf;
+        hasOpenedRef.current = true;
         setPageCount(pdf.numPages);
 
         const outline = await pdf.getOutline().catch(() => null);
@@ -619,17 +740,14 @@ export const usePdfNavigator = ({
         };
 
         setIsReady(true);
+        settleReload(openAttempt, true);
+        guardRef.current.noteSuccess();
       } catch (error) {
         if (!cancelled) {
           setIsReady(false);
+          settleReload(openAttempt, false);
           onError(error);
-          onPublicationError?.(
-            toPublicationErrorEvent({
-              url,
-              code: 'openFailed',
-              message: String((error as any)?.message ?? error),
-            })
-          );
+          relocateRef.current(error);
         }
       }
     })();
@@ -648,7 +766,58 @@ export const usePdfNavigator = ({
       pdfRef.current = null;
       setIsReady(false);
     };
-  }, [isPdf, container, url]);
+  }, [isPdf, container, url, openAttempt]);
+
+  /**
+   * Answers a failed load by asking for a new location and loading again.
+   * Reports the failure instead when a new location is not the answer.
+   *
+   * Loading again rather than re-pointing, because pdf.js holds its url for
+   * the life of the document and reads ranges from it all session. The page
+   * the reader is on is carried across, so this is not a reopen.
+   */
+  relocateRef.current = (error: unknown) => {
+    const url = sourceURL ?? fileURLRef.current;
+    const failure = failureFromError(url, error);
+
+    const detail = String((error as any)?.message ?? error);
+    const report = () =>
+      onErrorRef.current?.(
+        hasOpenedRef.current
+          ? toReadFailureEvent(failure, detail)
+          : toPublicationErrorEvent({
+              url,
+              code: 'openFailed',
+              stage: 'open',
+              detail: detail,
+            })
+      );
+
+    if (!resolveSourceRef.current) {
+      report();
+      return;
+    }
+
+    void guardRef.current
+      .answer({
+        failure,
+        observedSource: url,
+        currentSource: url,
+        shouldRefresh: shouldRefreshRef.current ?? looksRefreshable,
+        report,
+        relocate: async () => {
+          const { url: resolved } = await resolveSourceRef.current!({
+            url: fileURLRef.current,
+            reason: 'refresh',
+          });
+          restorePageRef.current = pageNumberRef.current;
+          setSourceURL(resolved);
+          setOpenAttempt((n) => n + 1);
+          return true;
+        },
+      })
+      .catch(report);
+  };
 
   // ── Initial location ───────────────────────────────────────────────────────
 
@@ -659,15 +828,23 @@ export const usePdfNavigator = ({
   // reopened at page 1, however far through it the reader had been.
   useEffect(() => {
     if (!isPdf || !isReady || !url) return;
-    if (appliedInitialLocationFor.current === url) return;
+    const openKey = `${url}#${openAttempt}`;
+    if (appliedInitialLocationFor.current === openKey) return;
 
-    appliedInitialLocationFor.current = url;
-    if (initialLocation) goToLocator(initialLocation);
+    appliedInitialLocationFor.current = openKey;
+
+    // A refresh reloads the document at a new location, so the reader is put
+    // back where they were rather than where they started.
+    const restoreTo = restorePageRef.current;
+    restorePageRef.current = null;
+    if (restoreTo !== null) goToPage(restoreTo);
+    else if (initialLocation) goToLocator(initialLocation);
     else if (initialPage > 1) goToPage(initialPage);
   }, [
     isPdf,
     isReady,
     url,
+    openAttempt,
     initialLocation,
     initialPage,
     goToLocator,

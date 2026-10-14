@@ -35,6 +35,8 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
   (
     {
       file,
+      resolveSource,
+      shouldRefreshSource,
       preferences = NO_PREFERENCES,
       decorations,
       onLocationChange,
@@ -59,6 +61,8 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
 
     const { navigator: epubNavigator, positions } = useEpubNavigator({
       file,
+      resolveSource,
+      shouldRefreshSource,
       preferences,
       onLocationChange,
       onPublicationReady,
@@ -70,6 +74,10 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
 
     const pdfNavigator = usePdfNavigator({
       file,
+      resolveSource,
+      // Was never passed, so a PDF's read failures ignored the consumer's
+      // policy and fell back to the platform's.
+      shouldRefreshSource,
       preferences,
       container,
       onLocationChange,
@@ -172,16 +180,19 @@ export const ReadiumView = React.forwardRef<ReadiumViewRef, ReadiumProps>(
       const report = url
         ? {
             code: 'formatNotSupported' as const,
-            message:
+            detail:
               `Expected a url ending in 'manifest.json' for an unpacked EPUB, ` +
               `or in '.pdf' for a PDF. Got '${url}'.`,
           }
         : {
             code: 'fileNotFound' as const,
-            message: 'No url was given for the publication.',
+            detail: 'No url was given for the publication.',
           };
 
-      onPublicationError(toPublicationErrorEvent({ url, ...report }));
+      // Neither url opens anything, so both are a failure to open.
+      onPublicationError(
+        toPublicationErrorEvent({ url, stage: 'open', ...report })
+      );
     }, [url, onPublicationError]);
 
     // Generate position label text

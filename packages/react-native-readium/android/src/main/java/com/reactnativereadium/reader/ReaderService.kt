@@ -6,6 +6,7 @@ import com.margelo.nitro.reactnativereadium.PublicationErrorCode
 import com.reactnativereadium.utils.LinkOrLocator
 import com.reactnativereadium.utils.fileFromPath
 import java.util.Locale
+import kotlin.time.Duration.Companion.seconds
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
 import org.readium.r2.shared.publication.firstWithHref
@@ -16,6 +17,11 @@ import org.readium.r2.shared.publication.services.protectionError
 import org.readium.r2.shared.util.FileExtension
 import org.readium.r2.shared.util.asset.AssetRetriever
 import org.readium.r2.shared.util.format.FormatHints
+import org.readium.r2.shared.util.AbsoluteUrl
+import org.readium.r2.shared.util.data.ReadError
+import org.readium.r2.shared.util.asset.DefaultArchiveOpener
+import org.readium.r2.shared.util.asset.DefaultFormatSniffer
+import org.readium.r2.shared.util.asset.DefaultResourceFactory
 import org.readium.r2.shared.util.http.DefaultHttpClient
 import org.readium.r2.streamer.PublicationOpener
 import org.readium.r2.streamer.parser.DefaultPublicationParser
@@ -25,10 +31,49 @@ import org.readium.adapter.pdfium.document.PdfiumDocumentFactory
 class ReaderService(
   private val reactContext: ReactApplicationContext
 ) {
-  private val httpClient = DefaultHttpClient()
+  private val httpClient = DefaultHttpClient(
+    connectTimeout = CONNECT_TIMEOUT,
+    readTimeout = READ_TIMEOUT
+  )
+
+  /**
+   * Where the open publication's resources are fetched from. Replaced to move
+   * a publication whose location has expired; read on every read, so the next
+   * one uses it.
+   */
+  @Volatile
+  var sourceLocation: AbsoluteUrl? = null
+    private set
+
+  fun setSourceLocation(url: AbsoluteUrl?) {
+    sourceLocation = url
+  }
+
+  /**
+   * Answers a failed read: moves the location and returns true to have the
+   * read tried again. Set by the view, which owns the policy.
+   */
+  @Volatile
+  var recoverRead: (suspend (url: AbsoluteUrl, error: ReadError) -> Boolean)? =
+    null
+
+  /** A read succeeded, which is what makes the location trustworthy again. */
+  @Volatile
+  var onReadSucceeded: (() -> Unit)? = null
+
+  /** A publication is about to open, so anything held about the last one is stale. */
+  @Volatile
+  var onPublicationOpening: (() -> Unit)? = null
+
   private val assetRetriever = AssetRetriever(
-    reactContext.contentResolver,
-    httpClient
+    RebasingResourceFactory(
+      currentUrl = { sourceLocation },
+      inner = DefaultResourceFactory(reactContext.contentResolver, httpClient),
+      recover = { url, error -> recoverRead?.invoke(url, error) ?: false },
+      noteSuccess = { onReadSucceeded?.invoke() }
+    ),
+    DefaultArchiveOpener(),
+    DefaultFormatSniffer()
   )
   private val publicationParser = DefaultPublicationParser(
     context = reactContext,
@@ -87,6 +132,12 @@ class ReaderService(
     onError: (OpenError) -> Unit,
     callback: suspend (fragment: BaseReaderFragment) -> Unit
   ) {
+    // A location belongs to the publication it was resolved for. Carrying one
+    // into the next open would have that publication's resources read from the
+    // previous one's location — the wrong book, under the right title.
+    sourceLocation = null
+    onPublicationOpening?.invoke()
+
     val publicationUrl = if (fileName.startsWith("http://") || fileName.startsWith("https://")) {
       runCatching { org.readium.r2.shared.util.AbsoluteUrl(fileName) }.getOrNull()
     } else {
@@ -211,5 +262,22 @@ class ReaderService(
     object ImportDatabaseFailed : Event()
 
     class OpenBookError(val errorMessage: String?) : Event()
+  }
+
+  companion object {
+    /**
+     * How long a request for a publication's bytes may stall before it fails.
+     *
+     * Unset, `HttpURLConnection` waits forever: a CDN that stops answering
+     * leaves a blank page and nothing to report, because the navigator cannot
+     * paint a page until the read behind it returns. Bounding the stall turns
+     * that into a `readFailed` the consumer can act on.
+     *
+     * Mirrors `requestTimeout` in `ReaderService.swift`. Web caps a whole
+     * request instead, for want of a stall to measure; see
+     * `SOURCE_REQUEST_TIMEOUT_MS` in `web/utils/publicationFetch.ts`.
+     */
+    private val CONNECT_TIMEOUT = 15.seconds
+    private val READ_TIMEOUT = 15.seconds
   }
 }

@@ -6,28 +6,87 @@ import UIKit
 
 final class ReaderService: Loggable {
   var app: AppModule?
-  private let assetRetriever: AssetRetriever
-  private let parser: PublicationParser
   private var subscriptions = Set<AnyCancellable>()
 
+  /// Where the open publication's resources are fetched from, when that is not
+  /// where it was opened from. Read on every read, so replacing it moves the
+  /// publication without reopening it.
+  private let sourceLocationLock = NSLock()
+  private var _sourceLocation: (any AbsoluteURL)?
+
+  var sourceLocation: (any AbsoluteURL)? {
+    sourceLocationLock.lock()
+    defer { sourceLocationLock.unlock() }
+    return _sourceLocation
+  }
+
+  func setSourceLocation(_ url: (any AbsoluteURL)?) {
+    sourceLocationLock.lock()
+    defer { sourceLocationLock.unlock() }
+    _sourceLocation = url
+  }
+
+  /// Answers a failed read: moves the location and returns true to have the
+  /// read tried again. Set by the view, which owns the policy.
+  var recoverRead: ((any AbsoluteURL, ReadError) async -> Bool)?
+
+  /// A read succeeded, which is what makes the location trustworthy again.
+  var onReadSucceeded: (() -> Void)?
+
+  /**
+   How long a request for a publication's bytes may stall before it fails.
+
+   `URLSessionConfiguration.default` allows 60 seconds, which is a minute of
+   blank page on a CDN that has stopped answering: the navigator cannot paint a
+   page until the read behind it returns, and nothing cancels it. Bounding the
+   stall turns that into a `readFailed` the consumer can act on.
+
+   The resource timeout is deliberately left alone. It caps a whole transfer
+   rather than a stall, so any value short enough to help here would also kill
+   a large read that is making honest progress on a slow connection.
+
+   Mirrors `READ_TIMEOUT` in `ReaderService.kt`. Web caps a whole request
+   instead, for want of a stall to measure; see `SOURCE_REQUEST_TIMEOUT_MS` in
+   `web/utils/publicationFetch.ts`.
+   */
+  private static let requestTimeout: TimeInterval = 15
+
+  private let httpClient = DefaultHTTPClient(
+    requestTimeout: ReaderService.requestTimeout
+  )
+
+  // Lazy because the resource factory asks this service for the location, and
+  // for a decision, on every read.
+  private lazy var assetRetriever: AssetRetriever = AssetRetriever(
+    formatSniffer: DefaultFormatSniffer(),
+    resourceFactory: RebasingResourceFactory(
+      currentURL: { [weak self] in self?.sourceLocation },
+      inner: DefaultResourceFactory(httpClient: self.httpClient),
+      recover: { [weak self] url, error in
+        guard let recover = self?.recoverRead else { return false }
+        return await recover(url, error)
+      },
+      noteSuccess: { [weak self] in self?.onReadSucceeded?() }
+    ),
+    archiveOpener: DefaultArchiveOpener()
+  )
+
+  private lazy var parser: PublicationParser = DefaultPublicationParser(
+    httpClient: self.httpClient,
+    assetRetriever: self.assetRetriever,
+    pdfFactory: DefaultPDFDocumentFactory()
+  )
+
   init() {
-    let httpClient = DefaultHTTPClient()
-    let assetRetriever = AssetRetriever(httpClient: httpClient)
-    let parser = DefaultPublicationParser(
-      httpClient: httpClient,
-      assetRetriever: assetRetriever,
-      pdfFactory: DefaultPDFDocumentFactory()
-    )
-
-    self.assetRetriever = assetRetriever
-    self.parser = parser
-
     do {
       self.app = try AppModule()
     } catch {
       log(.error, "Failed to instantiate AppModule: \(error)")
     }
   }
+
+  /// A publication is about to open, so anything held about the last one is stale.
+  var onPublicationOpening: (() -> Void)?
 
   func buildViewController(
     url: String,
@@ -39,6 +98,12 @@ final class ReaderService: Loggable {
     completion: @escaping (ReaderViewController) -> Void,
     onError: @escaping (ReaderError) -> Void
   ) {
+    // A location belongs to the publication it was resolved for. Carrying one
+    // into the next open would have that publication's resources read from the
+    // previous one's location — the wrong book, under the right title.
+    setSourceLocation(nil)
+    onPublicationOpening?()
+
     guard let reader = self.app?.reader else { return }
     self.url(path: url)
       .flatMap { self.openPublication(at: $0, credentials: credentials, allowUserInteraction: true, sender: sender) }
