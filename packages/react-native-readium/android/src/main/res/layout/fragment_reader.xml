@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--
+  The reader, with its reading margin and the position label in it.
+
+  The label floats over the bottom margin rather than taking a strip of its
+  own, so there is one surface behind both — `reader_root`, whose colour the
+  reader's theme sets. Two surfaces meant two colour changes a frame apart,
+  which was visible; and the page is inset by its own margin, so nothing is
+  laid out under the label.
+-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_reader_container"
+    android:id="@+id/reader_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent">
+
+    <!-- Padded by the fragment, which knows whether the format wants a margin. -->
+    <FrameLayout
+        android:id="@+id/fragment_reader_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/position_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:paddingHorizontal="10dp"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+</FrameLayout>

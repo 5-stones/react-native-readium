@@ -1,9 +1,9 @@
 package com.reactnativereadium.reader
 
 import android.graphics.Color
-import android.view.Gravity
-import android.widget.FrameLayout
+import android.view.View
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -11,16 +11,18 @@ import org.readium.r2.shared.publication.Publication
 import org.readium.r2.shared.publication.services.positions
 
 /**
- * Manages the position label display for the reader.
- * Similar to iOS PositionLabelManager, this class handles the display of current position
- * and total position count in a TextView overlay.
+ * Keeps the reader's position label up to date: "12 / 340", or a percentage
+ * where the publication has no positions.
+ *
+ * The label floats over the page's bottom margin and is hidden while it has
+ * nothing to say. Its colour is the only thing it owns: the surface behind it
+ * belongs to the reader's root view. See `res/layout/fragment_reader.xml`.
  */
 class PositionLabelManager(
-    private val containerView: FrameLayout,
+    private val label: TextView,
     private val publication: Publication,
     private val lifecycleScope: CoroutineScope
 ) {
-    private val label: TextView = TextView(containerView.context)
     private var positionsCount: Int? = null
     private var positionsLoadingJob: Job? = null
     private var lastKnownPosition: Int? = null
@@ -30,42 +32,20 @@ class PositionLabelManager(
         setupLabel()
     }
 
-    companion object {
-        private const val LABEL_TEXT_SIZE_SP = 12f
-        private const val LABEL_PADDING_HORIZONTAL_DP = 10
-        private const val LABEL_PADDING_VERTICAL_DP = 5
-        private const val LABEL_BOTTOM_MARGIN_DP = 20
-        private const val LABEL_ELEVATION_DP = 4f
+    private fun setupLabel() {
+        // The theme decides the colour; until it says, this suits a light page.
+        setTextColor(Color.DKGRAY)
     }
 
-    private fun setupLabel() {
-        val density = containerView.resources.displayMetrics.density
+    /** Sets the label's colour from the reader's theme. */
+    fun setTextColor(@ColorInt text: Int) {
+        label.setTextColor(text)
+    }
 
-        label.apply {
-            textSize = LABEL_TEXT_SIZE_SP
-            setTextColor(Color.DKGRAY) // Default, will be updated based on theme
-            setBackgroundColor(Color.TRANSPARENT)
-            gravity = Gravity.CENTER
-            setPadding(
-                (LABEL_PADDING_HORIZONTAL_DP * density).toInt(),
-                (LABEL_PADDING_VERTICAL_DP * density).toInt(),
-                (LABEL_PADDING_HORIZONTAL_DP * density).toInt(),
-                (LABEL_PADDING_VERTICAL_DP * density).toInt()
-            )
-            elevation = LABEL_ELEVATION_DP * density
-        }
-
-        val params = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.WRAP_CONTENT,
-            FrameLayout.LayoutParams.WRAP_CONTENT
-        ).apply {
-            gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
-            bottomMargin = (LABEL_BOTTOM_MARGIN_DP * density).toInt()
-        }
-
-        containerView.addView(label, params)
-        // Ensure label is above navigator fragment
-        label.bringToFront()
+    /** Shown only when it has something to say, so it costs no space when not. */
+    private fun show(text: String?) {
+        label.text = text
+        label.visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
     }
 
     /**
@@ -75,7 +55,7 @@ class PositionLabelManager(
     fun update(position: Int?, totalProgression: Double?) {
         lastKnownPosition = position
         lastKnownProgression = totalProgression
-        label.text = positionLabelText(position, totalProgression)
+        show(positionLabelText(position, totalProgression))
     }
 
     private fun positionLabelText(position: Int?, totalProgression: Double?): String? {
@@ -106,7 +86,7 @@ class PositionLabelManager(
                 positionsCount = positions.size
 
                 // Refresh label with the new count
-                label.text = positionLabelText(lastKnownPosition, lastKnownProgression)
+                show(positionLabelText(lastKnownPosition, lastKnownProgression))
             } catch (e: Exception) {
                 // Failed to load positions, continue showing position without total
             }
@@ -114,19 +94,14 @@ class PositionLabelManager(
     }
 
     /**
-     * Update the text color of the position label.
-     * Should be called on the main thread.
-     */
-    fun setTextColor(color: Int) {
-        label.setTextColor(color)
-    }
-
-    /**
-     * Cancel any ongoing loading operations and remove the label from the view hierarchy.
+     * Stops loading positions, and leaves the label with nothing to say.
+     *
+     * The label belongs to the layout now, so it is not removed — the fragment
+     * that owns it is going away anyway.
      */
     fun cleanup() {
         positionsLoadingJob?.cancel()
         positionsLoadingJob = null
-        containerView.removeView(label)
+        show(null)
     }
 }
