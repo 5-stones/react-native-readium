@@ -22,10 +22,48 @@ const THEME_COLORS = {
 // Matches Readium's default pageGutter of 20px
 const PAGE_GUTTER_BASE = 20;
 
+/**
+ * Our column counts as the navigator's, which wants a number.
+ *
+ * Nothing translated these, and the navigator's guards discard a string — so
+ * asking for two columns quietly did nothing.
+ *
+ * `auto` is the absence of a count, which is how the navigator spells it.
+ */
+const COLUMN_COUNTS: Record<string, number | null> = {
+  'auto': null,
+  'one': 1,
+  'two': 2,
+  // The deprecated spellings, still accepted; see `ReaderColumnCountLegacy`.
+  '1': 1,
+  '2': 2,
+};
+
+/**
+ * The text alignments Readium CSS knows, as its `TextAlignment` enum lists
+ * them. `center` and `end` are ours alone: the navigator's guard drops a value
+ * it does not know, and mapping `end` onto `right` would be wrong in a
+ * right-to-left publication.
+ */
+const WEB_TEXT_ALIGNMENTS = ['start', 'left', 'right', 'justify'];
+
 export function mapEpubPreferences(
   preferences: Record<string, any>
 ): EpubPreferences {
   const mapped: Record<string, any> = { ...preferences };
+
+  if (preferences.columnCount !== undefined) {
+    mapped.columnCount = COLUMN_COUNTS[preferences.columnCount] ?? null;
+  }
+
+  // Dropped rather than sent: the navigator would discard it anyway, and
+  // leaving it out says so where someone is reading this.
+  if (
+    preferences.textAlign !== undefined &&
+    !WEB_TEXT_ALIGNMENTS.includes(preferences.textAlign)
+  ) {
+    delete mapped.textAlign;
+  }
 
   // Map pageMargins to pageGutter (the navigator uses pageGutter, not pageMargins)
   // Our app uses a multiplier (0.5-4.0), but Readium expects pixel values

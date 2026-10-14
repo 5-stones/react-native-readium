@@ -4,6 +4,27 @@ import { EpubNavigator, EpubPreferences } from '@readium/navigator';
 import { PdfNavigator } from '../classes';
 import { Preferences, Capabilities } from '../../src/interfaces';
 /**
+ * What the web reader can do beyond its preferences, by format.
+ *
+ * Stated here rather than inline so it can be read back in a test: a consumer
+ * is told to branch on `capabilities` rather than on the platform, so a flag
+ * that claims more than the web view implements sends them to build UI that
+ * nothing will ever drive.
+ */
+export const WEB_ABILITIES = {
+  epub: {
+    zoom: false,
+    search: false,
+    decorations: true,
+    // The navigator does report selections, but the web view wires none of
+    // `selectionActions`, `onSelectionChange` or `onSelectionAction`.
+    selection: false,
+  },
+  // Zoom is driven through the PDF ref's own methods.
+  pdf: { zoom: true, search: false, decorations: false, selection: false },
+} as const;
+
+/**
  * Evaluates what the web EPUB reader can do with the publication it opened.
  */
 const epubCapabilities = (
@@ -54,20 +75,16 @@ const epubCapabilities = (
     visibleScrollbar: false,
 
     // Web / Fixed Features
-    zoom: false,
-    search: false,
-    decorations: true,
-    selection: true,
+    ...WEB_ABILITIES.epub,
   };
 };
 
 /**
  * Evaluates capabilities for the web PDF reader.
  */
-export const pdfCapabilities = (preferences?: Preferences): Capabilities => {
-  // TODO: currently the preferences argument is unused.
-  // If/when we implement more PDF preferences, some may be dependent on others,
-  // so that would be used at that time.
+// The parameter is unused, and kept for parity with `epubCapabilities`: a PDF
+// capability does not yet depend on another preference's value.
+export const pdfCapabilities = (_preferences?: Preferences): Capabilities => {
   return {
     backgroundColor: false,
     columnCount: false,
@@ -102,10 +119,7 @@ export const pdfCapabilities = (preferences?: Preferences): Capabilities => {
     scrollAxis: false,
     visibleScrollbar: false,
 
-    zoom: true, // Driven via Web PDF Ref methods
-    search: false,
-    decorations: false,
-    selection: false,
+    ...WEB_ABILITIES.pdf,
   };
 };
 

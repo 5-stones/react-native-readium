@@ -82,6 +82,9 @@ export function Reader({ file }: { file: ReadiumFile }) {
 Decorations live in your state: persist them however you like, and pass them back in when the
 book reopens.
 
+Text selection is native-only: on web the three props above have no effect, and
+`capabilities.selection` is false. See [Web](./web.md#what-differs-from-native).
+
 On Android, Readium disables text selection in protected publications, so LCP books can't be
 highlighted there.
 
