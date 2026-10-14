@@ -21,7 +21,7 @@
  *
  * https://readium.org/webpub-manifest/contexts/default/
  */
-export function normalizeLocalizedString(value: any): string {
+function normalizeLocalizedString(value: any): string {
   if (!value) return '';
 
   // Format 1: Plain string (spec-compliant shorthand)
@@ -33,9 +33,9 @@ export function normalizeLocalizedString(value: any): string {
     if (value.translations) {
       const translations = value.translations;
       return (
-        translations['undefined'] ||
-        translations['und'] ||
-        translations['en'] ||
+        translations.undefined ||
+        translations.und ||
+        translations.en ||
         (Object.values(translations)[0] as string) ||
         ''
       );
@@ -43,9 +43,9 @@ export function normalizeLocalizedString(value: any): string {
 
     // Check if it's already a plain language map object
     return (
-      value['undefined'] ||
-      value['und'] ||
-      value['en'] ||
+      value.undefined ||
+      value.und ||
+      value.en ||
       (Object.values(value)[0] as string) ||
       ''
     );
@@ -65,7 +65,7 @@ export function normalizeLocalizedString(value: any): string {
  *
  * https://readium.org/webpub-manifest/schema/contributor-object.schema.json
  */
-export function normalizeContributors(value: any): any[] | undefined {
+function normalizeContributors(value: any): any[] | undefined {
   if (!value) return undefined;
 
   // Handle TypeScript library's Contributors class format (has .items property)
@@ -111,7 +111,7 @@ export function normalizeContributors(value: any): any[] | undefined {
  *
  * https://readium.org/webpub-manifest/schema/subject.schema.json
  */
-export function normalizeSubjects(value: any): any[] | undefined {
+function normalizeSubjects(value: any): any[] | undefined {
   if (!value) return undefined;
 
   // Handle Subjects class format (has .items property)

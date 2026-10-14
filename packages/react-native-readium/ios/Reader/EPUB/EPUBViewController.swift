@@ -73,12 +73,6 @@ class EPUBViewController: ReaderViewController, SelectionActionHandlerDelegate {
       return navigator as! EPUBNavigatorViewController
     }
 
-    func updateSelectionActions(_ selectionActions: [SelectionActionData]?) {
-      // On iOS, selection actions must be set during navigator initialization
-      // Dynamic updates would require recreating the navigator, which we don't support yet
-      print("Warning: Updating selection actions after initialization is not supported on iOS")
-    }
-
     override func viewDidLoad() {
       super.viewDidLoad()
 

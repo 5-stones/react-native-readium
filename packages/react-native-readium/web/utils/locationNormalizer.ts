@@ -10,7 +10,7 @@ import type { Link, Locator as LocalLocator } from '../../src/interfaces';
  * @param href - The href to normalize
  * @returns The normalized href without leading slash
  */
-export function normalizeHref(href: string): string {
+function normalizeHref(href: string): string {
   if (href.startsWith('/')) {
     return href.substring(1);
   }
@@ -23,7 +23,7 @@ export function normalizeHref(href: string): string {
  * @param location - The Link or Locator to normalize
  * @returns A new location object with normalized href
  */
-export function normalizeLocation<T extends { href: string }>(location: T): T {
+function normalizeLocation<T extends { href: string }>(location: T): T {
   return {
     ...location,
     href: normalizeHref(location.href),

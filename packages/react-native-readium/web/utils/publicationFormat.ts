@@ -20,7 +20,7 @@
  * fragment (`book.pdf#page=3`), and a signed URL may carry its credential in
  * the query.
  */
-export const publicationURLPath = (url: string): string =>
+const publicationURLPath = (url: string): string =>
   url.toLowerCase().split(/[?#]/)[0];
 
 /** An unpacked EPUB is addressed by its manifest. */
