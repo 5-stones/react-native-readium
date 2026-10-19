@@ -1,38 +1,27 @@
-
-
 # [5.3.0](https://github.com/5-stones/react-native-readium/compare/v5.2.0...v5.3.0) (2026-10-14)
-
 
 ### Bug Fixes
 
-* **android:** accept file:// URLs as well as paths ([12486f6](https://github.com/5-stones/react-native-readium/commit/12486f6c0f53c5e39c9637a6e7c70f1810601e9c))
-* **android:** decode percent-escapes in file:// URLs ([d662e8c](https://github.com/5-stones/react-native-readium/commit/d662e8cd579ed11554ae30fbdc7b0a231a760524))
-* **android:** leave safe areas to the app, and give the page a margin ([2213b37](https://github.com/5-stones/react-native-readium/commit/2213b3726b7d830bbdcffa6ac806aeddd0e81ace))
-* **example:** close button reopened an empty reader sheet ([d6b57d0](https://github.com/5-stones/react-native-readium/commit/d6b57d0e001ec72d668b791e300f994b9873721a))
-* **example:** keep acquired LCP books by file name and license ([b44dda3](https://github.com/5-stones/react-native-readium/commit/b44dda3c8ab12bc80ba132931cec66c90ff9ec6e))
-* **example:** sign the generated LCP fixture with a real certificate ([774cd15](https://github.com/5-stones/react-native-readium/commit/774cd15d814048841da2f821bf46c2f75356d998))
-* **ios, android:** core follow-ups for content protection ([8e8684f](https://github.com/5-stones/react-native-readium/commit/8e8684f5a6fdf82a664fda5d9efc302a3758f020))
-* **ios:** report missing files instead of crashing, and show real text ([5c1d76d](https://github.com/5-stones/react-native-readium/commit/5c1d76df42b8ace3234e07f0a43574f18eef11e2))
-* **ios:** retain the DirectionalNavigationAdapter so edge taps turn pages ([e185ecf](https://github.com/5-stones/react-native-readium/commit/e185ecf971fe9e8808f9bcba16fdba0dcc388035))
-* require compatible Nitro modules peer ([cf748c6](https://github.com/5-stones/react-native-readium/commit/cf748c68db3c47a0324e11cfb0b0827cc788fd3d))
-* respect React Native architecture filters ([99122fe](https://github.com/5-stones/react-native-readium/commit/99122fed697ce4ba8b7610693162b9d2ee0ee85c))
-* **web:** give the publication's base url an origin ([47d01b9](https://github.com/5-stones/react-native-readium/commit/47d01b9b86a6bc395248ce7521f1076258f37765))
-* **web:** report a url no navigator can open ([b37dd1e](https://github.com/5-stones/react-native-readium/commit/b37dd1e382d4ca47e6deac08e87afad3265ea251))
-* **web:** send the preferences the navigator understands ([0801627](https://github.com/5-stones/react-native-readium/commit/08016277507f2cb3e9a5de2ac5132f376c9ca1d8))
-
+- **android:** accept file:// URLs as well as paths ([12486f6](https://github.com/5-stones/react-native-readium/commit/12486f6c0f53c5e39c9637a6e7c70f1810601e9c))
+- **android:** decode percent-escapes in file:// URLs ([d662e8c](https://github.com/5-stones/react-native-readium/commit/d662e8cd579ed11554ae30fbdc7b0a231a760524))
+- **android:** leave safe areas to the app, and give the page a margin ([2213b37](https://github.com/5-stones/react-native-readium/commit/2213b3726b7d830bbdcffa6ac806aeddd0e81ace))
+- **ios, android:** core follow-ups for content protection ([8e8684f](https://github.com/5-stones/react-native-readium/commit/8e8684f5a6fdf82a664fda5d9efc302a3758f020))
+- **ios:** report missing files instead of crashing, and show real text ([5c1d76d](https://github.com/5-stones/react-native-readium/commit/5c1d76df42b8ace3234e07f0a43574f18eef11e2))
+- **ios:** retain the DirectionalNavigationAdapter so edge taps turn pages ([e185ecf](https://github.com/5-stones/react-native-readium/commit/e185ecf971fe9e8808f9bcba16fdba0dcc388035))
+- require compatible Nitro modules peer ([cf748c6](https://github.com/5-stones/react-native-readium/commit/cf748c68db3c47a0324e11cfb0b0827cc788fd3d))
+- respect React Native architecture filters ([99122fe](https://github.com/5-stones/react-native-readium/commit/99122fed697ce4ba8b7610693162b9d2ee0ee85c))
+- **web:** give the publication's base url an origin ([47d01b9](https://github.com/5-stones/react-native-readium/commit/47d01b9b86a6bc395248ce7521f1076258f37765))
+- **web:** report a url no navigator can open ([b37dd1e](https://github.com/5-stones/react-native-readium/commit/b37dd1e382d4ca47e6deac08e87afad3265ea251))
+- **web:** send the preferences the navigator understands ([0801627](https://github.com/5-stones/react-native-readium/commit/08016277507f2cb3e9a5de2ac5132f376c9ca1d8))
 
 ### Features
 
-* add react-native-readium-lcp ([5a05f4e](https://github.com/5-stones/react-native-readium/commit/5a05f4ece7af2a19d77dfcf39eb4f37ea5073fec))
-* **android, ios, web:** resolve a publication's location on demand ([9a01a08](https://github.com/5-stones/react-native-readium/commit/9a01a08901333b853391aa66e0e887ee690786ea))
-* **android:** turn pages by tapping the left and right edges of an epub ([b3952ca](https://github.com/5-stones/react-native-readium/commit/b3952ca42ca9811f23b7c9c306a26fa90cc678ae))
-* **example:** configure liblcp from .env ([d555bde](https://github.com/5-stones/react-native-readium/commit/d555bde80c16166cc7d6c1faab4018b368c631dc))
-* **example:** LCP tab, test books and basic-profile test client ([a43dd6e](https://github.com/5-stones/react-native-readium/commit/a43dd6eed94668464826a21db46f5b79c954244a))
-* **ios, android, web:** content protection events, credentials, and open tracking ([f862da5](https://github.com/5-stones/react-native-readium/commit/f862da56ceadcb8e0a405ed62fe16d378eeda671))
-* **ios, android:** allow host apps to register content protections ([315fefd](https://github.com/5-stones/react-native-readium/commit/315fefd0b047c183a5952bc8f5d92d4665892e54)), closes [#9](https://github.com/5-stones/react-native-readium/issues/9)
-* **lcp:** link liblcp from the environment and adapt it on iOS ([6d3919a](https://github.com/5-stones/react-native-readium/commit/6d3919a90f677775167518e8ddbb15b073e0054e))
-* same publication error message on every platform ([26e6dd7](https://github.com/5-stones/react-native-readium/commit/26e6dd7701adc268ca2a5ce7008db27b8b26e490))
-* **web:** highlight text, with the selection menu the library draws ([d78851f](https://github.com/5-stones/react-native-readium/commit/d78851f701c63d024d1bbce869414905850f163d))
+- **android, ios, web:** resolve a publication's location on demand ([9a01a08](https://github.com/5-stones/react-native-readium/commit/9a01a08901333b853391aa66e0e887ee690786ea))
+- **android:** turn pages by tapping the left and right edges of an epub ([b3952ca](https://github.com/5-stones/react-native-readium/commit/b3952ca42ca9811f23b7c9c306a26fa90cc678ae))
+- **ios, android, web:** content protection events, credentials, and open tracking ([f862da5](https://github.com/5-stones/react-native-readium/commit/f862da56ceadcb8e0a405ed62fe16d378eeda671))
+- **ios, android:** allow host apps to register content protections ([315fefd](https://github.com/5-stones/react-native-readium/commit/315fefd0b047c183a5952bc8f5d92d4665892e54)), closes [#9](https://github.com/5-stones/react-native-readium/issues/9)
+- same publication error message on every platform ([26e6dd7](https://github.com/5-stones/react-native-readium/commit/26e6dd7701adc268ca2a5ce7008db27b8b26e490))
+- **web:** highlight text, with the selection menu the library draws ([d78851f](https://github.com/5-stones/react-native-readium/commit/d78851f701c63d024d1bbce869414905850f163d))
 
 # [5.2.0](https://github.com/5-stones/react-native-readium/compare/v5.1.1...v5.2.0) (2026-09-28)
 
